@@ -63,7 +63,9 @@ Conventions:
 
 - A dash where a name should be means Parsons recorded no name — stored as an
   empty value, not as a dash
-- `d.` alone means died, date unknown
+- `d.` means the person had already died when Parsons recorded the genealogy,
+  during her fieldwork of 1918–19. It bounds the death rather than leaving it
+  open: `d.` alone means she did not record the year, `d. 1913` that she did
 - A parenthesised English name, such as "Hazel" at 90, is plate data and is
   stored as an alternate name
 - A person appearing twice on the plate is stored once; the repetition becomes a

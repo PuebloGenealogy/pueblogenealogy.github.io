@@ -252,7 +252,7 @@ AUTHOR = "Elizabeth Heger-Vlahovic"
 # a property is created; while empty no tag is emitted and the output is
 # unchanged. It lives here rather than as a hand-placed file in docs/ because
 # docs/ is generated and a stray file there would be easy to lose.
-GOOGLE_SITE_VERIFICATION = ""
+GOOGLE_SITE_VERIFICATION = "7SJ_xFuG2D2skZIWOxUhmKwkBZUXD3HOkisTxSxSIlQ"
 
 
 def describe(spec, n_persons, n_gens):
@@ -1149,6 +1149,10 @@ def navigating_html(spec):
     founding person, so it is correct on every table regardless of size."""
     r = spec["roots"][0]
     return f"""
+    <li>A number after a name is the person&rsquo;s age when the data was collected.
+        <em>d.</em> means they had already died when Parsons recorded the genealogy,
+        during her fieldwork of 1918&ndash;19; where she knew the year she gives it,
+        as in <em>d.&nbsp;1913</em>.</li>
     <li>Every person number is a stable link &mdash; <code>#p{r}</code> addresses
         person {r}&rsquo;s first printed line, and the address bar keeps it while
         you read.</li>
@@ -1952,6 +1956,17 @@ def write_site(today, built):
   <p>Nothing has been corrected, normalised or filled in. Where the plate contains a
      misprint it is reproduced and annotated rather than silently fixed; where Parsons
      recorded no name, the entry stays blank.</p>
+
+  <h2>When the genealogies were recorded</h2>
+  <p>Parsons recorded Genealogy I at Laguna in <strong>February 1918</strong>. She
+     returned in <strong>June 1919</strong> for Genealogies II, III and IV, and used
+     that visit to revise Genealogy I as well &mdash; chiefly the spelling of the
+     names. The ages and vital notes on the plates are therefore as of that fieldwork,
+     not as of publication in 1923.</p>
+  <p>This is what <em>d.</em> means on a plate: the person had already died when
+     Parsons recorded the genealogy. Where she knew the year she gives it, as in
+     <em>d.&nbsp;1913</em>; <em>d.</em> alone means she did not record it. A number
+     after a name is that person&rsquo;s age when the data was collected.</p>
 
   <h2>Provenance and use</h2>
   <p>This is Laguna Pueblo material. Parsons's Laguna fieldwork is itself contested:

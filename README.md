@@ -85,7 +85,13 @@ python3 -m http.server 4173 --directory docs
   III, not yet transcribed. Their cross-references are preserved verbatim.
 - **Blank names.** A dash on the plate means Parsons recorded no name; these are
   stored as empty `name_as_printed`, not as a dash.
-- **`d.` alone** means died, date unknown.
+- **`d.`** means the person had already died when Parsons recorded the
+  genealogy, during her fieldwork of 1918–19. `d.` alone means she did not
+  record the year; `d. 1913` that she did. A number after a name is that
+  person's age when the data was collected.
+- **Dates of record.** Genealogy I was taken in February 1918; Parsons returned
+  in June 1919 for Genealogies II, III and IV, and revised Genealogy I on that
+  visit, chiefly the spelling of the names.
 - **English names in parentheses on Table 4** (Hugh, Frank, Paul and Joe
   Johnson, and Mana) are *printed on the plate*. They are transcription, not
   additions to it.
