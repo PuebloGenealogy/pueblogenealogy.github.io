@@ -1604,9 +1604,12 @@ def jsonld_chart(spec, description, today):
         "isBasedOn": {"@type": "CreativeWork", "name": "Laguna Genealogies",
                       "author": {"@type": "Person", "name": "Elsie Clews Parsons"},
                       "datePublished": "1923"},
-        "isPartOf": {"@type": "WebSite",
-                     "name": "Laguna Genealogies: A Digital Edition",
-                     "url": SITE + "/"},
+        # Google's Dataset validator rejects a WebSite here: the "belongs to a
+        # larger collection" relation is includedInDataCatalog + DataCatalog,
+        # even though Dataset.isPartOf accepts any CreativeWork in schema.org.
+        "includedInDataCatalog": {"@type": "DataCatalog",
+                                  "name": "Laguna Genealogies: A Digital Edition",
+                                  "url": SITE + "/"},
         "dateModified": today.isoformat(),
         "image": OG_IMAGE,
         "inLanguage": ["en", "kjq"],
@@ -1640,14 +1643,35 @@ def check_structured_data(paths):
     rather than an eye.
     """
     required = ("name", "description", "url")
+
+    # Google's Dataset validator is stricter than schema.org about what type may
+    # sit in each field. isPartOf: {"@type": "WebSite"} is legal schema.org and
+    # was still reported as an invalid object type -- the collection relation it
+    # wants is includedInDataCatalog + DataCatalog. Only fields this build emits
+    # are listed; add a row when a new one is emitted.
+    field_types = {
+        "creator": ("Person", "Organization"),
+        "includedInDataCatalog": ("DataCatalog",),
+        "isBasedOn": ("CreativeWork", "Book", "ScholarlyArticle"),
+        "distribution": ("DataDownload",),
+        "spatialCoverage": ("Place",),
+        "publisher": ("Person", "Organization"),
+    }
     problems = []
 
     def walk(obj):
         if isinstance(obj, dict):
             if obj.get("@type") == "Dataset":
+                who = obj.get("name", "(unnamed)")
                 missing = [f for f in required if not obj.get(f)]
                 if missing:
-                    problems.append(f"{obj.get('name', '(unnamed)')}: missing {missing}")
+                    problems.append(f"{who}: missing {missing}")
+                for field, allowed in field_types.items():
+                    val = obj.get(field)
+                    if isinstance(val, dict) and val.get("@type") not in allowed:
+                        problems.append(
+                            f"{who}: {field} is {val.get('@type')!r}, "
+                            f"expected one of {list(allowed)}")
             for v in obj.values():
                 walk(v)
         elif isinstance(obj, list):
@@ -1719,9 +1743,9 @@ def jsonld_site(built, today):
              "description": describe(spec, st["persons"], st["gens"]),
              "creator": {"@type": "Person", "name": AUTHOR},
              "license": "https://creativecommons.org/licenses/by/4.0/",
-             "isPartOf": {"@type": "WebSite",
-                          "name": "Laguna Genealogies: A Digital Edition",
-                          "url": SITE + "/"}}
+             "includedInDataCatalog": {"@type": "DataCatalog",
+                                       "name": "Laguna Genealogies: A Digital Edition",
+                                       "url": SITE + "/"}}
             for spec, st in built
         ],
     }
