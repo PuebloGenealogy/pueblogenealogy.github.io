@@ -38,6 +38,14 @@ page means the guard fired. Investigate before doing anything else.
 Confirm the final line lists `og-cover.jpg` — if it warns the asset is missing,
 social cards will be blank.
 
+The build must also end with `N JSON-LD blocks valid` and **exit 0**. If it
+prints `STRUCTURED DATA INVALID` it exits 1: a Dataset somewhere is missing a
+required field. Nothing looks different on the page — the cost is silent loss of
+rich results — so fix it rather than shipping past it. Note that a nested
+Dataset (the landing page's `hasPart` entries) is validated as a Dataset in its
+own right, not as a pointer, so it needs its own `name`, `description` and
+`url`.
+
 ## Gate 3 — privacy
 
 ```bash

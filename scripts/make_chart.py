@@ -1627,6 +1627,55 @@ def jsonld_chart(spec, description, today):
             + json.dumps(data, ensure_ascii=False) + "</script>")
 
 
+def check_structured_data(paths):
+    """
+    Walk every JSON-LD block in the built pages and assert that each Dataset --
+    at any nesting depth -- carries the fields Google requires.
+
+    This exists because a nested Dataset is validated as a Dataset in its own
+    right, not as a pointer to one: the landing page's hasPart entries were once
+    name-and-url stubs, and Search Console reported them as invalid items even
+    though the page they pointed at was complete. A malformed block costs rich
+    results silently -- nothing renders differently -- so it needs a build check
+    rather than an eye.
+    """
+    required = ("name", "description", "url")
+    problems = []
+
+    def walk(obj):
+        if isinstance(obj, dict):
+            if obj.get("@type") == "Dataset":
+                missing = [f for f in required if not obj.get(f)]
+                if missing:
+                    problems.append(f"{obj.get('name', '(unnamed)')}: missing {missing}")
+            for v in obj.values():
+                walk(v)
+        elif isinstance(obj, list):
+            for v in obj:
+                walk(v)
+
+    n = 0
+    for path in paths:
+        html = path.read_text(encoding="utf-8")
+        for block in re.findall(
+                r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
+            try:
+                data = json.loads(block)
+            except json.JSONDecodeError as e:
+                problems.append(f"{path.name}: JSON-LD does not parse -- {e}")
+                continue
+            n += 1
+            walk(data)
+
+    if problems:
+        print("  STRUCTURED DATA INVALID:")
+        for p in problems:
+            print(f"    {p}")
+        return False
+    print(f"  {n} JSON-LD blocks valid")
+    return True
+
+
 def jsonld_breadcrumb(spec):
     """Breadcrumbs, so a result shows 'Laguna Genealogies > Genealogy N'."""
     data = {
@@ -1659,11 +1708,21 @@ def jsonld_site(built, today):
         "keywords": KEYWORDS,
         "about": {"@type": "Place", "name": "Laguna Pueblo, New Mexico"},
         "citation": CITATION_TEXT,
+        # Each part is validated as a Dataset in its own right, not as a
+        # pointer, so a name-and-url stub fails on the required "description".
+        # These carry the same generated description, creator and licence as the
+        # table's own page -- one source, so they cannot disagree.
         "hasPart": [
             {"@type": "Dataset",
              "name": f"Genealogy {spec['numeral']} — Parsons 1923",
-             "url": f"{SITE}/{spec['slug']}/"}
-            for spec, _ in built
+             "url": f"{SITE}/{spec['slug']}/",
+             "description": describe(spec, st["persons"], st["gens"]),
+             "creator": {"@type": "Person", "name": AUTHOR},
+             "license": "https://creativecommons.org/licenses/by/4.0/",
+             "isPartOf": {"@type": "WebSite",
+                          "name": "Laguna Genealogies: A Digital Edition",
+                          "url": SITE + "/"}}
+            for spec, st in built
         ],
     }
     return ('<script type="application/ld+json">'
@@ -2132,6 +2191,11 @@ def main():
         _, stats = build_table(spec, public=True, today=today)
         built.append((spec, stats))
     write_site(today=today, built=built)
+
+    pages = [DOCS / "index.html"] + [
+        DOCS / spec["slug"] / "index.html" for spec, _ in built]
+    if not check_structured_data(pages):
+        return 1
     return 0
 
 
