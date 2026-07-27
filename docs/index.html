@@ -182,11 +182,11 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
 .key-lead{height:.5rem;border-block-end:1px solid var(--rule)}
 
 /* ---- plate bar --------------------------------------------------------- */
+/* The bar holds only the tools now that the plate caption is gone; flex-end
+   keeps find and scale where they have always sat, hard right. */
 .plate-bar{max-width:var(--measure-wide);margin:0 auto;
-  padding:0 var(--s5) var(--s3);display:flex;justify-content:space-between;
+  padding:0 var(--s5) var(--s3);display:flex;justify-content:flex-end;
   align-items:baseline;gap:var(--s3) var(--s4);flex-wrap:wrap}
-.plate-cap{font-variant:small-caps;letter-spacing:.14em;font-size:.8125rem;
-  color:var(--muted)}
 .plate-tools{display:flex;align-items:center;gap:var(--s3);
   font-family:var(--font-ui);flex-wrap:wrap}
 /* :not([hidden]) -- an unconditional display would defeat the hidden

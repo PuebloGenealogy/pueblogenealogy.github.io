@@ -180,11 +180,11 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
 .key-lead{height:.5rem;border-block-end:1px solid var(--rule)}
 
 /* ---- plate bar --------------------------------------------------------- */
+/* The bar holds only the tools now that the plate caption is gone; flex-end
+   keeps find and scale where they have always sat, hard right. */
 .plate-bar{max-width:var(--measure-wide);margin:0 auto;
-  padding:0 var(--s5) var(--s3);display:flex;justify-content:space-between;
+  padding:0 var(--s5) var(--s3);display:flex;justify-content:flex-end;
   align-items:baseline;gap:var(--s3) var(--s4);flex-wrap:wrap}
-.plate-cap{font-variant:small-caps;letter-spacing:.14em;font-size:.8125rem;
-  color:var(--muted)}
 .plate-tools{display:flex;align-items:center;gap:var(--s3);
   font-family:var(--font-ui);flex-wrap:wrap}
 /* :not([hidden]) -- an unconditional display would defeat the hidden
@@ -495,10 +495,8 @@ footer code{font-family:var(--font-ui);font-size:.9em}
   </div>
   <p class="imprint">73 individuals &middot; four generations &middot; 14 marriages &middot; 58 parent&ndash;child links</p>
 </div>
-<section class="key" aria-label="Key to the chart"><span class="k"><span class="num">7.</span> <span class="k-label">person number — a link; select for details</span></span><span class="k"><span class="plus">+</span> <span class="k-label">spouse, on the line below</span></span><span class="k"><span class="sex">F. M.</span> <span class="k-label">sex as printed</span></span><span class="k"><span class="blank">———</span> <span class="k-label">no name recorded</span></span><span class="k"><span class="clan">Sun</span> <span class="k-label">clan — matrilineal</span></span><span class="k"><span class="vital">d. 1908.</span> <span class="k-label">age or vital note, as printed</span></span><span class="k"><span class="key-bracket"></span> <span class="k-label">sibling group, hung on the mother&#x27;s line</span></span><span class="k"><span class="key-lead"></span> <span class="k-label">descent — the leader rule</span></span></section>
 <main>
 <div class="plate-bar">
-  <span class="plate-cap">Plate &mdash; after the 1923 foldout; layout preserved</span>
   <span class="plate-tools">
     <search><form id="find" hidden>
       <label class="visually-hidden" for="find-q">Find a person by number or name</label>

@@ -819,11 +819,11 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
 .key-lead{height:.5rem;border-block-end:1px solid var(--rule)}
 
 /* ---- plate bar --------------------------------------------------------- */
+/* The bar holds only the tools now that the plate caption is gone; flex-end
+   keeps find and scale where they have always sat, hard right. */
 .plate-bar{max-width:var(--measure-wide);margin:0 auto;
-  padding:0 var(--s5) var(--s3);display:flex;justify-content:space-between;
+  padding:0 var(--s5) var(--s3);display:flex;justify-content:flex-end;
   align-items:baseline;gap:var(--s3) var(--s4);flex-wrap:wrap}
-.plate-cap{font-variant:small-caps;letter-spacing:.14em;font-size:.8125rem;
-  color:var(--muted)}
 .plate-tools{display:flex;align-items:center;gap:var(--s3);
   font-family:var(--font-ui);flex-wrap:wrap}
 /* :not([hidden]) -- an unconditional display would defeat the hidden
@@ -1436,11 +1436,14 @@ def ruler_html(spec, n_gens):
 
 def key_html():
     """
-    The editor's key, always visible between title page and plate. Specimens
-    reuse the real chart classes so the key can never drift from the chart's
-    styling; explanatory words are new UI text and speak in the UI stack.
-    No specimen may use a glyph outside the font subset, and no key item may
-    carry class="eng" or class="census" -- the leak grep matches those.
+    The editor's key. NOT CURRENTLY RENDERED -- the old always-visible band
+    between title page and plate was removed pending a redesign; this function
+    and the .key CSS are kept as the starting point for it.
+
+    Specimens reuse the real chart classes so the key can never drift from the
+    chart's styling; explanatory words are new UI text and speak in the UI
+    stack. No specimen may use a glyph outside the font subset, and no key item
+    may carry class="eng" or class="census" -- the leak grep matches those.
     """
     items = [
         ('<span class="num">7.</span>', "person number — a link; select for details"),
@@ -1831,10 +1834,8 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
   </div>
   <p class="imprint">{imprint}</p>
 </div>
-{key_html()}
 <main>
 <div class="plate-bar">
-  <span class="plate-cap">Plate &mdash; after the 1923 foldout; layout preserved</span>
   <span class="plate-tools">
     <search><form id="find" hidden>
       <label class="visually-hidden" for="find-q">Find a person by number or name</label>
