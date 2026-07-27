@@ -1,70 +1,94 @@
-# Parsons 1923 — Genealogy I
+# Laguna Genealogies — a digital edition of Parsons 1923
 
-A machine-readable, editable reconstruction of **Table 1, "Genealogy I"** from
-Elsie Clews Parsons, *"Laguna Genealogies"*, Anthropological Papers
-of the American Museum of Natural History, vol. 19 (1923).
+**https://pueblogenealogy.github.io/**
 
-104 individuals · 27 marriages · 80 parent–child links · 5 generation columns ·
-two founding couples (1+2 and 54+55).
+A machine-readable, searchable edition of the genealogical plates published with
+Elsie Clews Parsons, *"Laguna Genealogies"*, **Anthropological Papers of the
+American Museum of Natural History**, vol. 19, pt. 5 (1923), pp. 133–292.
+
+| Plate | | |
+|---|---|---|
+| [Table 1 — Genealogy I](https://pueblogenealogy.github.io/genealogy-i/) | 104 individuals · 5 generations · 27 marriages · 80 parent–child links | founding couples 1+2, 54+55 |
+| [Table 4 — Genealogy IV](https://pueblogenealogy.github.io/genealogy-iv/) | 73 individuals · 4 generations · 14 marriages · 58 parent–child links | founding couples 1+2, 59+60 |
+| Table 2 — Genealogy II | in preparation | |
+| Table 3 — Genealogy III | in preparation | |
+
+The plates are transcribed character by character, including the Americanist
+phonetic diacritics, and redrawn as text you can search, copy and cite. Nothing
+is corrected, normalised or filled in: misprints are reproduced and annotated
+rather than silently fixed, and where Parsons recorded no name the entry stays
+blank.
+
+## The privacy boundary
+
+**The published edition is the 1923 transcription only** — no English names, no
+census matches, no identification of living people. This is enforced by
+structure, not by memory:
+
+- `data/` and `build/` are git-ignored, so research never enters git history.
+- The public build reads `scripts/transcription*.py`, which contain nothing but
+  the 1923 baseline. There is no code path from the spreadsheet to `docs/`.
+- `make_chart.py --public` scans its own output for research chips and aborts,
+  deleting the file, if any appear. Verified by injecting one deliberately.
+
+Git history is permanent — deleting a file later does not remove it, and any
+clone made in the meantime keeps it. Run `git status` and confirm no `.xlsx` is
+listed **before** your first commit.
 
 ## Files
 
 | Path | What it is | Published? |
 |---|---|---|
-| `data/parsons_genealogy_I.xlsx` | **Edit this.** The transcription plus your research columns. | No — git-ignored |
-| `build/genealogy-i-private.html` | Local chart, includes your research columns. | No — git-ignored |
-| `docs/` | Everything that goes on the public website. **Generated — never edit by hand.** | **Yes** |
-| `sources/parsons-1923-table-1.jpg` | Source scan, 16172 × 11798 px. | In repo, not served |
-| `scripts/transcription.py` | The 1923 baseline as data. Immutable. | Yes |
-| `scripts/build_workbook.py` | Creates the workbook. **Overwrites your edits — don't re-run.** | Yes |
-| `scripts/make_chart.py` | Rebuilds the chart. Safe to re-run. | Yes |
-| `scripts/subset_font.py` | Rebuilds the embedded font subset. Rarely needed. | Yes |
-| `vendor/gentium/` | SIL Gentium (OFL) plus the generated subset. | Subset only, inside the page |
+| `scripts/make_chart.py` | The renderer: layout, CSS, JS, metadata. Everything visual lives here | Yes |
+| `scripts/transcription.py`, `transcription_iv.py` | The 1923 baseline as data. Immutable | Yes |
+| `docs/` | The public website. **Generated — never edit by hand** | **Yes** |
+| `assets/og-cover.jpg` | Social preview card, derived from the plate scan | Yes |
+| `sources/` | Source scans (Table 1 is 16172 × 11798 px) | In repo, not served |
+| `vendor/gentium/` | SIL Gentium (OFL) plus the generated subset | Subset only, inside the page |
+| `data/parsons_genealogy_I.xlsx` | Transcription plus private research columns | No — git-ignored |
+| `build/` | Local build including research columns | No — git-ignored |
 
-## The two builds
-
-```bash
-python3 scripts/make_chart.py            # private -> build/  (may show research data)
-python3 scripts/make_chart.py --public   # published -> docs/ (1923 baseline only)
-```
-
-The public build reads `scripts/transcription.py`, never the workbook. Before it
-writes anything it greps its own output for English-name and census chips and
-deletes the file if it finds either — so a leak fails loudly instead of sitting
-in `docs/` waiting to be committed.
-
-`--public` also regenerates `docs/index.html`, `robots.txt`, `sitemap.xml`,
-`.nojekyll` and `docs/fonts/OFL.txt`.
-
-### The privacy boundary
-
-The public edition is **the 1923 transcription only** — no English names, no
-census matches. This is enforced by structure, not by memory:
-
-- `data/` and `build/` are git-ignored, so your research never enters git history.
-- The public build reads `scripts/transcription.py`, which contains nothing but
-  the 1923 baseline. There is no code path from the spreadsheet to `docs/`.
-- `make_chart.py --public` scans its own output for research chips and aborts,
-  deleting the file, if any appear. Verified by injecting one deliberately.
-
-Git history is permanent — deleting a file later does not remove it. Run
-`git status` and confirm no `.xlsx` is listed **before** your first commit.
-
-## Workflow
-
-Add English names, census matches and notes in the **green** columns of the
-`PERSONS` sheet (`english_name`, `census_name`, `census_year`,
-`match_confidence`, `notes`). Then:
+## Build
 
 ```bash
-python3 scripts/make_chart.py
+python3 scripts/transcription.py          # structural self-check
+python3 scripts/make_chart.py --public    # the published site -> docs/
+python3 scripts/make_chart.py             # private build -> build/ (needs data/*.xlsx)
 ```
 
-The chart shows filled-in English names as highlighted chips and census matches
-as blue chips, next to the Keresan name.
+`--public` regenerates the chart pages, the landing page, `404.html`,
+`robots.txt`, `sitemap.xml`, `.nojekyll`, `og-cover.jpg` and
+`docs/fonts/OFL.txt`. **Everything in `docs/` is output.** To change the design,
+edit `make_chart.py`.
 
-Grey columns are the 1923 transcription — leave them alone so the data stays
-auditable against the plate. Blue columns are lookup formulas.
+Preview locally on port 4173:
+
+```bash
+python3 -m http.server 4173 --directory docs
+```
+
+## Things worth knowing about these plates
+
+- **Clan descent is matrilineal.** Every sibling group carries its mother's
+  clan. This held across all unions and was used to verify the bracket
+  readings — it is what caught errors during Table 1, and it is why the
+  structure can be trusted. If a sibling group is attached to the wrong mother,
+  the clans disagree and the check fails.
+- **Person 8 (Yu˙si) appears twice** on Table 1 — as husband of 7 and 73 in the
+  upper half, and as a son of 58+59 in the lower half. He is the link between
+  the two founding lines. The chart draws him once, with a cross-reference
+  standing in for the repeat, exactly as the plate does.
+- **Misprint at 76 (Table 1).** The `+` line under 76 is numbered *68* but names
+  Shuwaiʼᶦri, Turkey — person **67**. Person 67's own cross-reference confirms
+  it. Recorded as 67, with the misprint documented on union `U23`.
+- **Persons 12 and 73** have further spouses and offspring in Genealogies II and
+  III, not yet transcribed. Their cross-references are preserved verbatim.
+- **Blank names.** A dash on the plate means Parsons recorded no name; these are
+  stored as empty `name_as_printed`, not as a dash.
+- **`d.` alone** means died, date unknown.
+- **English names in parentheses on Table 4** (Hugh, Frank, Paul and Joe
+  Johnson, and Mana) are *printed on the plate*. They are transcription, not
+  additions to it.
 
 ## Matching to census records
 
@@ -72,44 +96,35 @@ auditable against the plate. Blue columns are lookup formulas.
 (`Kiwaʼd˙yuwi` → `kiwadyuwi`). Use it to join against census spellings, which
 vary widely from Parsons' Americanist transcription.
 
-## Things worth knowing about this plate
+## Provenance and use
 
-- **Clan descent is matrilineal.** Every sibling group carries its mother's clan.
-  This held for all 27 unions and was used to verify the bracket readings.
-- **Person 8 (Yu˙si) appears twice** — as husband of 7 and 73 in the upper half,
-  and as a son of 58+59 in the lower half. He is the link between the two
-  founding lines. The chart draws him once, with a cross-reference standing in
-  for the repeated sibling group, exactly as the plate does.
-- **Misprint at 76.** The `+` line under 76 is numbered *68* but names
-  Shuwaiʼᶦri, Turkey — that is person **67**. Person 67's own cross-reference
-  ("For second wife and offspring see below, 76, 90-3") confirms it. Recorded as
-  67, with the misprint documented on union `U23`.
-- **Persons 12 and 73** have further spouses and offspring in Genealogy II and
-  III (Tables 2 and 3 of the same publication), not transcribed here. Their
-  cross-references are preserved verbatim.
-- **Blank names.** A dash on the plate means Parsons recorded no name; these are
-  stored as empty `name_as_printed`, not as a dash.
-- **`d.` alone** means died, date unknown.
+This is Laguna Pueblo material. Parsons's Laguna fieldwork is itself contested:
+she published information that members of the community regarded as restricted.
+This edition transcribes an already published source and adds no new information
+about the community. It is offered as a finding aid for the printed record.
 
-## Adding another plate
+The 1923 publication is in the public domain in the United States. The
+transcription, encoding and layout are by Elizabeth Heger-Vlahovic and are
+released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Please
+cite both this edition and Parsons — see [`CITATION.cff`](CITATION.cff).
+
+Corrections are welcome and are recorded as dated commits, so the edition carries
+its own revision history.
+
+## Adding a plate
+
+`make_chart.py` is table-agnostic. Add an entry to `TABLES`, remove the matching
+`PENDING` entry, write `scripts/transcription_<n>.py` on the same schema, then
+run `--public`. Counts in the page copy are computed from the data, never typed.
 
 Two documents govern this, for two different readers:
 
 - **[METHOD.md](METHOD.md)** — the editorial method. Why readings are made the
   way they are, what the structural checks prove, what is and is not published.
   Read this to judge whether the edition is trustworthy.
-- **`.claude/skills/transcribe-plate/SKILL.md`** — the working procedure, for
-  Claude Code. Invoke it with `/transcribe-plate` when you have a new plate
-  scan. It runs as a sequence of gates, each of which must pass before the next.
+- **`.claude/skills/transcribe-plate/SKILL.md`** — the working procedure, run
+  with `/transcribe-plate`. A sequence of gates, each of which must pass before
+  the next.
 
-The single most useful thing to know: **clan descent is matrilineal, so clan
-membership independently verifies every bracket you read.** If a sibling group
-is attached to the wrong mother, the clans will disagree and the check fails.
-That is what caught errors during Table 1, and it is why the structure can be
-trusted.
-
-## Adding Genealogy II and III
-
-The schema already carries a `genealogy` dimension in spirit: `cross_ref` values
-point at `Gen. II` / `Gen. III` ids. To merge those tables later, transcribe them
-the same way and prefix ids by table (e.g. `II-158`) so cross-references resolve.
+Cross-references already point at `Gen. II` / `Gen. III` ids; when those tables
+are transcribed, prefix ids by table (e.g. `II-158`) so they resolve.
