@@ -3,6 +3,30 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-27 — Search Console verified, fieldwork notes recovered from v1
+
+- **Google Search Console ownership verified** on the URL-prefix property for
+  `https://pueblogenealogy.github.io/`. The token is in
+  `GOOGLE_SITE_VERIFICATION` in `make_chart.py`; blanking it drops the tag on
+  the next build and ownership lapses. A Domain property cannot work here —
+  `github.io` is on the Public Suffix List.
+- **Recovered two editorial additions from v1.** Fable's clone sat 5 commits
+  behind v1's `main`, so this edition never had them. Three of the five were a
+  chart key that Fable had independently rebuilt; the other two were content:
+  the dates of record (Genealogy I taken February 1918, Parsons returning June
+  1919 for II–IV and revising I, chiefly name spellings) and what `d.` asserts
+  (already dead *at time of recording*, year given when known). Both are now on
+  the landing page, in each table's reading notes, and in METHOD.md/README.md.
+- **v1 mirrored before deletion** to
+  `_backup-v1-laguna-genealogy-tables-2026-07-27/` — bare mirror plus working
+  copy, `git fsck` clean, 19 commits over 4 refs, test-restored successfully.
+  Deleting the repo itself is still outstanding; it needs `delete_repo` scope,
+  which `gh auth refresh` cannot obtain non-interactively.
+
+**Lesson worth keeping:** mirror before you delete. The two recovered notes
+would have been lost silently, and nothing in the working tree hinted they
+existed.
+
 ## 2026-07-27 — v2 published at pueblogenealogy.github.io
 
 **The site moved to its own org, repo and root URL.**

@@ -133,16 +133,19 @@ if git reports object corruption, that is the likely cause.
 
 See `CHANGELOG.md` for what changed when.
 
+**Done 2026-07-27:** Google Search Console ownership **verified** on the
+URL-prefix property for `https://pueblogenealogy.github.io/`. The token lives in
+`GOOGLE_SITE_VERIFICATION` in `make_chart.py` and is emitted on the landing page
+— **do not blank it**, or ownership lapses on the next build.
+
 **Outstanding:**
-- **Google Search Console** — create a **URL-prefix** property for
-  `https://pueblogenealogy.github.io/` (not Domain — `github.io` is a public
-  suffix), paste the token into `GOOGLE_SITE_VERIFICATION` in `make_chart.py`,
-  rebuild, submit the sitemap. Google retired the sitemap ping endpoint in 2023,
-  so the console is the only route. Same again for Bing Webmaster Tools.
-- **Retire the v1 site.** Until then both sites carry near-identical content and
-  split their own ranking; v1 is older and already indexed, so it likely
-  outranks v2. Short of deleting it, adding `rel=canonical` on v1's pages
-  pointing at the v2 equivalents hands the accumulated ranking over.
+- **Delete the v1 repo** — `prettyph3nom/laguna-genealogy-tables`. Elizabeth
+  chose full deletion; it needs the `delete_repo` scope (`gh auth refresh -h
+  github.com -s delete_repo`) or the web UI. A verified full mirror is at
+  `_backup-v1-laguna-genealogy-tables-2026-07-27/` one level up from this repo.
+  Until it is gone, both sites carry near-identical content and compete.
+- **Bing Webmaster Tools** — import from Google Search Console rather than
+  verifying separately; it also feeds DuckDuckGo.
 - **Inbound links** — a fresh `*.github.io` has no authority. Zenodo archive for
   a DOI (`CITATION.cff` already exists), then the Wikipedia *Elsie Clews
   Parsons* external links.
