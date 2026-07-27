@@ -1,0 +1,46 @@
+# ---------------------------------------------------------------------------
+# PRIVACY BOUNDARY -- read before changing anything here.
+#
+# The published edition is the 1923 transcription only. Research columns
+# (english_name, census_name, census_year, match_confidence, notes) may concern
+# people who are still living, and this repository is PUBLIC because GitHub
+# Pages requires it on the free plan.
+#
+# Git history is effectively permanent: deleting a file in a later commit does
+# not remove it from history, and any clone or fork made in the meantime keeps
+# it. So these must never be committed even once.
+# ---------------------------------------------------------------------------
+
+# The working spreadsheet -- contains your research columns. Never publish.
+data/*.xlsx
+data/*.csv
+
+# Local build output generated from the spreadsheet, so it may contain
+# research data. The public build writes to docs/ instead.
+build/
+
+# Excel lock files (appear while the workbook is open)
+~$*.xlsx
+.~lock.*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# macOS
+.DS_Store
+.Spotlight-V100
+.Trashes
+Icon?
+
+# Editors and tooling
+.vscode/
+.idea/
+*.swp
+
+# Local Claude Code permissions -- machine-specific. The skill in
+# .claude/skills/ IS committed: it is the transcription procedure and belongs
+# with the edition.
+.claude/settings.local.json

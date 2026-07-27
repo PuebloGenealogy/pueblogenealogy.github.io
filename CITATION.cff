@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+title: "Laguna Genealogies: A Digital Edition of Parsons 1923"
+message: >-
+  If you use this edition, please cite both it and the 1923 publication it
+  transcribes (see references).
+type: dataset
+authors:
+  - family-names: Heger-Vlahovic
+    given-names: Elizabeth
+abstract: >-
+  A verified digital transcription of the genealogical plates published with
+  Elsie Clews Parsons's "Laguna Genealogies" (1923). Table 1, "Genealogy I",
+  records 104 individuals across five generations, with 27 marriages and 80
+  parent-child links. Table 4, "Genealogy IV", records 73 individuals across
+  four generations, with 14 marriages and 58 parent-child links. Both are
+  transcribed character by character including Americanist phonetic diacritics,
+  and encoded as a normalised persons/unions/children schema. Clan descent is
+  matrilineal, which provides an independent structural check on every bracket
+  reading.
+keywords:
+  - Laguna Pueblo
+  - genealogy
+  - Elsie Clews Parsons
+  - Keresan
+  - digital edition
+  - Southwest anthropology
+license: CC-BY-4.0
+repository-code: "https://github.com/PuebloGenealogy/pueblogenealogy.github.io"
+url: "https://pueblogenealogy.github.io/"
+references:
+  - type: article
+    title: "Laguna Genealogies"
+    authors:
+      - family-names: Parsons
+        given-names: Elsie Clews
+    year: 1923
+    journal: "Anthropological Papers of the American Museum of Natural History"
+    volume: "19"
+    issue: "5"
+    start: 133
+    end: 292
+    publisher:
+      name: "American Museum of Natural History"
+    location:
+      name: "New York"

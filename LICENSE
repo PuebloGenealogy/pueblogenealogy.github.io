@@ -1,0 +1,48 @@
+This repository contains material under three different terms. Please read
+which is which before reusing anything.
+
+
+1. THE UNDERLYING PUBLICATION — public domain
+------------------------------------------------------------------------
+Elsie Clews Parsons, "Laguna Genealogies", Anthropological Papers of the
+American Museum of Natural History, vol. 19, pt. 5 (1923), pp. 133-292.
+
+Published in 1923 and therefore in the public domain in the United States.
+The source scan in sources/ is a reproduction of that public-domain plate.
+
+
+2. THE TRANSCRIPTION, ENCODING, CODE AND LAYOUT — CC BY 4.0
+------------------------------------------------------------------------
+Copyright (c) 2026 Elizabeth Heger-Vlahovic
+
+This covers scripts/, docs/, and the structured data: the character-by-character
+reading of the plate, the normalised PERSONS / UNIONS / CHILDREN schema, the
+editorial notes, and the code that renders the chart.
+
+Licensed under the Creative Commons Attribution 4.0 International License.
+    https://creativecommons.org/licenses/by/4.0/
+
+You may share and adapt this material for any purpose, including commercially,
+provided you give appropriate credit. Please cite both this edition and the
+Parsons publication it transcribes — see CITATION.cff.
+
+
+3. THE EMBEDDED TYPEFACE — SIL Open Font License 1.1
+------------------------------------------------------------------------
+vendor/gentium/ contains SIL Gentium 7.000, and the published pages embed a
+subset of it. Gentium is copyright (c) SIL International, licensed under the
+SIL Open Font License, Version 1.1. The full licence text is at
+vendor/gentium/OFL.txt and is served at docs/fonts/OFL.txt.
+
+"Gentium" is a Reserved Font Name under that licence. The subset shipped in
+this project is a modified version and is therefore named "Laguna Serif"
+instead. See scripts/subset_font.py.
+
+
+A NOTE ON THE CONTENT
+------------------------------------------------------------------------
+This is Laguna Pueblo material. The licences above concern copyright, which is
+not the only consideration that applies to Indigenous cultural heritage. Parsons
+published Laguna material that members of the community regarded as restricted.
+Anyone reusing this work is asked to weigh that history alongside the legal
+terms.
