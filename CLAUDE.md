@@ -138,14 +138,18 @@ URL-prefix property for `https://pueblogenealogy.github.io/`. The token lives in
 `GOOGLE_SITE_VERIFICATION` in `make_chart.py` and is emitted on the landing page
 — **do not blank it**, or ownership lapses on the next build.
 
+**Also done 2026-07-27:** the v1 repo `prettyph3nom/laguna-genealogy-tables` was
+**deleted**, and its site now 404s. This edition is the only one. A verified full
+mirror (19 commits, `git fsck` clean, test-restored) is kept at
+`_backup-v1-laguna-genealogy-tables-2026-07-27/`, one level up from this repo —
+it is the sole surviving copy of v1, so do not delete it casually.
+
 **Outstanding:**
-- **Delete the v1 repo** — `prettyph3nom/laguna-genealogy-tables`. Elizabeth
-  chose full deletion; it needs the `delete_repo` scope (`gh auth refresh -h
-  github.com -s delete_repo`) or the web UI. A verified full mirror is at
-  `_backup-v1-laguna-genealogy-tables-2026-07-27/` one level up from this repo.
-  Until it is gone, both sites carry near-identical content and compete.
 - **Bing Webmaster Tools** — import from Google Search Console rather than
-  verifying separately; it also feeds DuckDuckGo.
+  verifying separately; it also feeds DuckDuckGo. Import **only** the
+  `pueblogenealogy` property; the v1 one is dead.
+- **Remove the dead v1 property** from Google Search Console (and Bing, if it
+  was imported) so its reports stop appearing.
 - **Inbound links** — a fresh `*.github.io` has no authority. Zenodo archive for
   a DOI (`CITATION.cff` already exists), then the Wikipedia *Elsie Clews
   Parsons* external links.

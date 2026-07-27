@@ -17,6 +17,19 @@ Newest first.
   1919 for II–IV and revising I, chiefly name spellings) and what `d.` asserts
   (already dead *at time of recording*, year given when known). Both are now on
   the landing page, in each table's reading notes, and in METHOD.md/README.md.
+- **v1 deleted.** `prettyph3nom/laguna-genealogy-tables` is gone and
+  `prettyph3nom.github.io/laguna-genealogy-tables/` now 404s. This edition is
+  the only one. Verified after the fact: repo 404, site 404, v2 unaffected.
+- **Structured data corrected twice**, both found by Search Console rather than
+  by the build. First: the landing page's `hasPart` entries were name-and-url
+  stubs, and a nested Dataset is validated as a Dataset in its own right, so
+  both failed the required `description`. Second: `isPartOf: {"@type":
+  "WebSite"}` is valid schema.org but Google's Dataset validator rejects it —
+  the collection relation it accepts is `includedInDataCatalog` +
+  `DataCatalog`. `check_structured_data()` now guards both classes of failure
+  and fails the build with exit 1. **Validating against schema.org is not the
+  same as validating against Google**, and the check encodes only the rules we
+  have actually been told about.
 - **v1 mirrored before deletion** to
   `_backup-v1-laguna-genealogy-tables-2026-07-27/` — bare mirror plus working
   copy, `git fsck` clean, 19 commits over 4 refs, test-restored successfully.
