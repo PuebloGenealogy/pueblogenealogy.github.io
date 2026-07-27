@@ -17,6 +17,9 @@ Newest first.
   1919 for II–IV and revising I, chiefly name spellings) and what `d.` asserts
   (already dead *at time of recording*, year given when known). Both are now on
   the landing page, in each table's reading notes, and in METHOD.md/README.md.
+- **Search Console and Bing both verified**; sitemap submitted (3 URLs). The
+  dead v1 property was removed from Search Console. Bing was set up by importing
+  from Search Console — the v2 property only.
 - **v1 deleted.** `prettyph3nom/laguna-genealogy-tables` is gone and
   `prettyph3nom.github.io/laguna-genealogy-tables/` now 404s. This edition is
   the only one. Verified after the fact: repo 404, site 404, v2 unaffected.
