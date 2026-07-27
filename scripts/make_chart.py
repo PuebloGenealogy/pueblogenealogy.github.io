@@ -125,6 +125,126 @@ def print_zoom(n_gens):
 
 SITE = "https://pueblogenealogy.github.io"
 REPO = "https://github.com/PuebloGenealogy/pueblogenealogy.github.io"
+
+# The social preview card. A 1200x630 band of the real Table 1 plate, derived
+# once from sources/parsons-1923-table-1.jpg and committed at assets/og-cover.jpg
+# rather than regenerated per build -- the source scan is 33 MB and `sips` is
+# macOS-only, so a build step would be both slow and unportable. write_site()
+# copies it into docs/. Regenerate with:
+#   sips -s format jpeg -Z 1200 sources/parsons-1923-table-1.jpg --out /tmp/w.jpg
+#   sips -c 630 1200 /tmp/w.jpg --out assets/og-cover.jpg
+OG_IMAGE = f"{SITE}/og-cover.jpg"
+OG_ALT = ("A detail of the 1923 foldout plate: numbered individuals with Keresan "
+          "names, clans and marriage lines, in five generation columns.")
+
+# The subject terms, in one place: they feed the Dataset structured data and the
+# <meta name="keywords"> on the landing page. These describe the edition -- they
+# are not a place to add search bait the pages do not actually deliver.
+KEYWORDS = [
+    "Laguna Pueblo genealogy",
+    "Elsie Clews Parsons",
+    "Laguna Genealogies",
+    "Pueblo genealogy",
+    "Keresan",
+    "Kawaika",
+    "Southwest anthropology",
+    "American Museum of Natural History",
+    "Anthropological Papers",
+    "matrilineal clan descent",
+    "digital edition",
+    "New Mexico",
+]
+
+CITATION_TEXT = ('Elsie Clews Parsons, "Laguna Genealogies", Anthropological Papers '
+                 "of the American Museum of Natural History, vol. 19, pt. 5 (1923), "
+                 "pp. 133-292.")
+
+# The landing page's one-sentence summary, used for the meta description, the
+# Open Graph card and the CollectionPage structured data, so all three agree.
+SITE_DESCRIPTION = (
+    "A digital edition of the Laguna Pueblo genealogical plates published by "
+    "Elsie Clews Parsons in \"Laguna Genealogies\" (1923). Genealogies I and IV "
+    "transcribed character by character from the originals and redrawn as text "
+    "you can search, copy and check against the plate.")
+
+# Questions people actually type, answered on the page. The answers are the page
+# text verbatim, which is what FAQPage requires -- markup that answers something
+# the page does not say is a guideline violation, not a shortcut.
+FAQ = [
+    ("What are the Laguna Genealogies?",
+     "They are a set of foldout genealogical plates published by the anthropologist "
+     "Elsie Clews Parsons in \"Laguna Genealogies\", Anthropological Papers of the "
+     "American Museum of Natural History, volume 19, part 5 (1923), pages 133-292. "
+     "Each plate charts several generations of related families at Laguna Pueblo, "
+     "New Mexico, recording each person's number, sex, Keresan name and clan."),
+    ("Which plates are transcribed here?",
+     "Table 1 (Genealogy I) and Table 4 (Genealogy IV) are transcribed in full and "
+     "published on this site. Tables 2 and 3, Genealogies II and III, are referenced "
+     "by cross-references in Genealogy I but are not yet transcribed."),
+    ("How accurate is the transcription?",
+     "The plates are transcribed character by character, including the Americanist "
+     "phonetic diacritics, and nothing is corrected, normalised or filled in. Where "
+     "the plate contains a misprint it is reproduced and annotated rather than "
+     "silently fixed, and where Parsons recorded no name the entry is left blank. "
+     "Because clan descent at Laguna is matrilineal, every child's clan must match "
+     "its mother's, which independently verifies each bracket reading."),
+    ("Can I use this for family history research?",
+     "Yes. The edition is a finding aid for the printed 1923 record and is released "
+     "under CC BY 4.0. Note that it publishes the 1923 transcription only: no modern "
+     "names, census matches or identifications of living people are included."),
+    ("Why are the names hard to match to census records?",
+     "Parsons recorded names in an Americanist phonetic transcription, which differs "
+     "sharply from the spellings used by census takers. Each name is therefore also "
+     "stored as a diacritic-free key -- Kiwaʼd˙yuwi becomes kiwadyuwi -- so it can be "
+     "joined against records that spell the same name differently."),
+]
+
+
+def faq_html():
+    """The FAQ, as ordinary page text. The structured data quotes these answers."""
+    items = "".join(
+        f"    <details class=\"faq\">\n"
+        f"      <summary>{esc(q)}</summary>\n"
+        f"      <p>{esc(a)}</p>\n"
+        f"    </details>\n"
+        for q, a in FAQ)
+    return f"  <h2>Common questions</h2>\n{items}"
+
+
+def jsonld_faq():
+    data = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {"@type": "Question", "name": q,
+             "acceptedAnswer": {"@type": "Answer", "text": a}}
+            for q, a in FAQ
+        ],
+    }
+    return ('<script type="application/ld+json">'
+            + json.dumps(data, ensure_ascii=False) + "</script>")
+
+
+def social_meta(title, description, url, kind="article"):
+    """
+    The Open Graph and Twitter block. One definition for every page, so a card
+    can never be right on one page and missing on another.
+    """
+    return f"""<meta property="og:type" content="{kind}">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{esc(description)}">
+<meta property="og:url" content="{url}">
+<meta property="og:site_name" content="Laguna Genealogies: A Digital Edition">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="{OG_IMAGE}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{esc(OG_ALT)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{esc(description)}">
+<meta name="twitter:image" content="{OG_IMAGE}">
+<meta name="twitter:image:alt" content="{esc(OG_ALT)}">"""
 AUTHOR = "Elizabeth Heger-Vlahovic"
 
 # Google Search Console ownership token, from Settings -> Ownership verification
@@ -1484,6 +1604,37 @@ def jsonld_chart(spec, description, today):
                      "name": "Laguna Genealogies: A Digital Edition",
                      "url": SITE + "/"},
         "dateModified": today.isoformat(),
+        "image": OG_IMAGE,
+        "inLanguage": ["en", "kjq"],
+        "keywords": KEYWORDS,
+        "temporalCoverage": "1870/1923",
+        "spatialCoverage": {
+            "@type": "Place",
+            "name": "Laguna Pueblo, Valencia County, New Mexico, United States",
+        },
+        "citation": CITATION_TEXT,
+        "distribution": {
+            "@type": "DataDownload",
+            "encodingFormat": "text/html",
+            "contentUrl": canonical,
+        },
+    }
+    return ('<script type="application/ld+json">'
+            + json.dumps(data, ensure_ascii=False) + "</script>")
+
+
+def jsonld_breadcrumb(spec):
+    """Breadcrumbs, so a result shows 'Laguna Genealogies > Genealogy N'."""
+    data = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1,
+             "name": "Laguna Genealogies", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2,
+             "name": f"{spec['plate']} — Genealogy {spec['numeral']}",
+             "item": f"{SITE}/{spec['slug']}/"},
+        ],
     }
     return ('<script type="application/ld+json">'
             + json.dumps(data, ensure_ascii=False) + "</script>")
@@ -1495,11 +1646,15 @@ def jsonld_site(built, today):
         "@type": "CollectionPage",
         "name": "Laguna Genealogies: A Digital Edition",
         "url": SITE + "/",
-        "description": ("Digital editions of the genealogical plates from "
-                        "Elsie Clews Parsons, Laguna Genealogies (1923)."),
+        "description": SITE_DESCRIPTION,
         "creator": {"@type": "Person", "name": AUTHOR},
         "license": "https://creativecommons.org/licenses/by/4.0/",
         "dateModified": today.isoformat(),
+        "image": OG_IMAGE,
+        "inLanguage": ["en", "kjq"],
+        "keywords": KEYWORDS,
+        "about": {"@type": "Place", "name": "Laguna Pueblo, New Mexico"},
+        "citation": CITATION_TEXT,
         "hasPart": [
             {"@type": "Dataset",
              "name": f"Genealogy {spec['numeral']} — Parsons 1923",
@@ -1519,16 +1674,15 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
     canonical = f"{SITE}/{spec['slug']}/"
     tables = [(TABLES[k]["numeral"], TABLES[k]["slug"]) for k in sorted(TABLES)]
     if public:
+        social = social_meta(
+            f"Genealogy {spec['numeral']} &mdash; Parsons 1923, Laguna Pueblo",
+            description, canonical)
         head_extra = f"""<link rel="canonical" href="{canonical}">
 <meta name="description" content="{esc(description)}">
 <meta name="author" content="{esc(AUTHOR)}">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Genealogy {spec['numeral']} &mdash; Parsons 1923, Laguna Pueblo">
-<meta property="og:description" content="{esc(description)}">
-<meta property="og:url" content="{canonical}">
-<meta property="og:site_name" content="Laguna Genealogies: A Digital Edition">
-<meta name="twitter:card" content="summary">
-{jsonld_chart(spec, description, today)}"""
+{social}
+{jsonld_chart(spec, description, today)}
+{jsonld_breadcrumb(spec)}"""
         provenance = f"""
   <h2>Provenance</h2>
   <ul>
@@ -1661,6 +1815,19 @@ LANDING_CSS_EXTRA = """
   color:var(--muted);text-wrap:pretty}
 .prose h2{margin:var(--s6) 0 var(--s3)}
 .prose a{color:var(--accent)}
+.prose code{font-size:.9em}
+/* The FAQ. Open by default would bury the contents list, so each answer is a
+   disclosure -- but the text is in the DOM either way, which is what the
+   FAQPage structured data requires and what a crawler reads. */
+.faq{border-block-end:1px solid var(--rule-faint)}
+.faq:first-of-type{border-block-start:1px solid var(--rule-faint)}
+.faq summary{padding:var(--s3) 0;cursor:pointer;color:var(--ink);
+  list-style:none;display:flex;gap:var(--s3);align-items:baseline}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"+";color:var(--muted);font-variant-numeric:tabular-nums}
+.faq[open] summary::before{content:"\\2013"}
+.faq summary:hover{color:var(--accent)}
+.faq p{margin:0 0 var(--s4) var(--s4)}
 """
 
 
@@ -1679,6 +1846,13 @@ def write_site(today, built):
     licence = FONT_DIR / "OFL.txt"
     if licence.exists():
         shutil.copyfile(licence, DOCS / "fonts" / "OFL.txt")
+
+    # The social card. Copied rather than generated -- see OG_IMAGE.
+    cover = ROOT / "assets" / "og-cover.jpg"
+    if cover.exists():
+        shutil.copyfile(cover, DOCS / "og-cover.jpg")
+    else:
+        print("  WARNING: assets/og-cover.jpg missing -- social cards will be blank")
 
     (DOCS / "robots.txt").write_text(
         f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n", encoding="utf-8"
@@ -1729,18 +1903,18 @@ def write_site(today, built):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Laguna Genealogies &mdash; A Digital Edition of Parsons 1923</title>
+<title>Laguna Genealogies &mdash; Parsons 1923, a Digital Edition of the Laguna Pueblo Genealogical Plates</title>
 <link rel="canonical" href="{SITE}/">
-<meta name="description" content="Digital editions of the genealogical plates from Elsie Clews Parsons, Laguna Genealogies (1923), transcribed and encoded from the original.">
+<meta name="description" content="{esc(SITE_DESCRIPTION)}">
 <meta name="author" content="{esc(AUTHOR)}">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Laguna Genealogies: A Digital Edition">
-<meta property="og:description" content="Digital editions of the genealogical plates from Elsie Clews Parsons, Laguna Genealogies (1923).">
-<meta property="og:url" content="{SITE}/">
+<meta name="keywords" content="{esc(', '.join(KEYWORDS))}">
+{social_meta("Laguna Genealogies: A Digital Edition of Parsons 1923",
+             SITE_DESCRIPTION, SITE + "/", kind="website")}
 <meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme:light)">
 <meta name="theme-color" content="#191713" media="(prefers-color-scheme:dark)">
 <link rel="icon" href="{FAVICON}">
 {verify}{jsonld_site(built, today)}
+{jsonld_faq()}
 <style>{font_css()}{geom_css()}{CSS}{LANDING_CSS_EXTRA}</style>
 {THEME_SNIPPET}
 </head>
@@ -1763,10 +1937,18 @@ def write_site(today, built):
 <div class="prose">
   <h2>What this is</h2>
   <p>Elsie Clews Parsons published a set of foldout genealogical plates with
-     <em>Laguna Genealogies</em> in 1923. They are dense, hand-set, and hard to read
-     from a scan. This edition transcribes them character by character &mdash; including
-     the Americanist phonetic diacritics &mdash; and redraws them as text you can search,
-     copy, and check against the original.</p>
+     <em>Laguna Genealogies</em> in 1923, in the <em>Anthropological Papers of the
+     American Museum of Natural History</em>, vol. 19, pt. 5, pp. 133&ndash;292. They
+     chart several generations of related families at <strong>Laguna Pueblo</strong>
+     (Kawaika) in New Mexico, giving each person a number, a sex, a Keresan name and a
+     clan. They are dense, hand-set, and hard to read from a scan. This edition
+     transcribes them character by character &mdash; including the Americanist phonetic
+     diacritics &mdash; and redraws them as text you can search, copy, and check against
+     the original.</p>
+  <p>Every individual on a published plate has a stable address here: select any
+     person number to open their card, or link straight to them with a
+     <code>#p</code> anchor. Names, clans, marriages and parent&ndash;child links are
+     all real text, so they can be searched, copied and cited.</p>
   <p>Nothing has been corrected, normalised or filled in. Where the plate contains a
      misprint it is reproduced and annotated rather than silently fixed; where Parsons
      recorded no name, the entry stays blank.</p>
@@ -1784,6 +1966,7 @@ def write_site(today, built):
      <a href="{REPO}">project repository</a>.
      Corrections are welcome and are recorded as dated commits, so the edition carries
      its own revision history.</p>
+{faq_html()}
   <p class="updated">Last updated
      <time datetime="{stamp}">{today.strftime("%-d %B %Y")}</time>.</p>
 </div>
@@ -1792,7 +1975,44 @@ def write_site(today, built):
 </html>
 """
     (DOCS / "index.html").write_text(landing, encoding="utf-8")
-    print(f"  wrote docs/index.html, robots.txt, sitemap.xml, .nojekyll, fonts/OFL.txt")
+
+    # Pages serves docs/404.html for any unmatched path, at any depth, so this
+    # page's links must be site-absolute rather than relative.
+    not_found = f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Page not found &mdash; Laguna Genealogies</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#191713" media="(prefers-color-scheme:dark)">
+<link rel="icon" href="{FAVICON}">
+<style>{font_css()}{geom_css()}{CSS}{LANDING_CSS_EXTRA}</style>
+{THEME_SNIPPET}
+</head>
+<body>
+{masthead_html(tables, None, "/", "/")}
+<div class="titlepage">
+  <div class="plate-label">404</div>
+  <h1>PAGE NOT FOUND</h1>
+  <div class="rule-double"></div>
+</div>
+<div class="prose">
+  <p>That address is not part of this edition. The published plates are:</p>
+  <ul>
+{"".join(f'    <li><a href="/{spec["slug"]}/">{spec["plate"]} &mdash; Genealogy {spec["numeral"]}</a></li>' + chr(10) for spec, _ in built)}  </ul>
+  <p>Person links look like
+     <code>/genealogy-i/#p42</code> &mdash; if you followed one and landed here, the
+     table slug is probably wrong rather than the person number.</p>
+  <p><a href="/">Return to the contents</a>.</p>
+</div>
+</body>
+</html>
+"""
+    (DOCS / "404.html").write_text(not_found, encoding="utf-8")
+    print("  wrote docs/index.html, 404.html, robots.txt, sitemap.xml, "
+          ".nojekyll, og-cover.jpg, fonts/OFL.txt")
 
 
 def build_table(spec, public, today):
