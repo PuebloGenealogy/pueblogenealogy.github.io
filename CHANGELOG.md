@@ -3,6 +3,29 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — the person card drops the misprint note
+
+- **The card repeated an annotation the reader was already looking at.** Opening
+  the person card from the misnumbered `+` line under 76 appended
+  *(misprint, click here to see notes)* directly under the card's first line —
+  the same sentence, in the same red, as the `SIC_ROW` sitting on the chart row
+  the card was opened from and anchored to. Two statements of one fact in a
+  single glance. The card now carries **the number and nothing else**.
+- **The number swap stayed.** `data-printed` on the link still makes the card
+  read 68 from that line and 67 from person 67's other lines. That is plate
+  fidelity, not annotation, and it is the half of this that must not be
+  "simplified" away later. `.pcard-sic` and its CSS are deleted.
+- **Where the misprint is still explained:** the chart's own annotation row, and
+  the footer note at `#note-misprint`. Those are the only two places, by
+  decision — same shape as the rule that keeps `+`, `F.`/`M.` and the leader
+  rule decoded once, in the footer.
+- **A person-level variant was built first and rejected by the user**, so don't
+  rebuild it: the misprint was made a fact about the person (`Chart.sic` →
+  `data-sic` on the register entry → note on *every* one of that person's
+  cards). It worked — measured across all 214 chart lines, exactly the two
+  occurrences of 67 carried it and no one else — but it multiplied the
+  redundancy rather than removing it. Take it from git if it is ever wanted.
+
 ## 2026-07-28 — the theme button's static label said Auto
 
 - **Fixing a miss from the entry below.** The Auto state was removed from the
