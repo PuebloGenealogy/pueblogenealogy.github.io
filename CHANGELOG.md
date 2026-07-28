@@ -3,6 +3,41 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — the clan gets its own colour, the number gets air
+
+- **`--clan` is a third exception to "all text on a table page is `--ink`",**
+  after `--muted-fixed` on the statistics line and `--sic` on the misprint. Add
+  a fourth only with the same evidence.
+- **This is not the reverted per-clan palette, and the distinction is the whole
+  argument.** That one gave 13 clans 13 hues and collapsed to about one
+  just-noticeable difference under deuteranopia. This gives the *field* one
+  colour: two colours to tell apart, not thirteen, differing in lightness as
+  well as hue, so it survives any colour vision. Measured against every
+  background it can sit on — paper 5.86:1 light / 9.53:1 dark, panel 6.12 /
+  8.74, selected row 6.22 / 10.40 — all clear of the 4.5:1 text minimum.
+- **The values are `#7A5C1E` / `#DBB970`, which are `--accent`'s.** Not a
+  coincidence: this is the gold the clan carried before `body.chart`'s flatten,
+  and the `--sel-bg` comment has quoted those exact ratios as "the clan gold"
+  the whole time. **The token is deliberately separate from `--accent`** —
+  accent means *interactive* everywhere else, and recolouring the chrome must
+  never recolour the genealogy. Declared in **all five** palette blocks (the
+  `light-dark()` set plus three static fallbacks for Firefox ESR 115 and Safari
+  ≤17.4); miss one and a browser gets an unstyled clan.
+- **It flattens to black in print.** The offprint is black on white and gold
+  degrades to a weak grey; the colour never carried information the word itself
+  doesn't.
+- **`.2em` after the number's point**, so "65." reads as the entry's label
+  rather than the first word of the name. A margin, not a wider space
+  character — independent of the font, and whitespace collapsing can't eat it.
+- **Measured, because this is the invariant that breaks quietly:** column drift
+  **0.00px at all five generations**, unchanged from baseline. The widest line
+  on Table 1 grew 275.7px → 284.4px inside its 384px `--col` block, leaving
+  99.6px of slack, so nothing was pushed toward the stub and no sibling bracket
+  moved off its `mother_row`.
+- **Caught at Gate 4, worth repeating:** the comment above `.clan` still read
+  *"Clan is not colour-coded: it renders as text like every other field."* The
+  diff review is what found it. Read the diff, not just the build output.
+
 ## 2026-07-28 — the card drops the cross-reference row
 
 - **Second half of the entry below, same reasoning.** The card repeated the

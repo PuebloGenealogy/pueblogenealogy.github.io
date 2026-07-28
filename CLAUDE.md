@@ -193,8 +193,22 @@ widens the row and throws the sibling bracket off its `mother_row`. The
 annotation is a separate row counted with `row += 1`, exactly as a
 cross-reference row is, so everything below stays on the `--lh` grid — verified
 by walking all 24 child groups and confirming each still sits on its mother's
-line. `--sic` is the only colour on a table page that is not `--ink`; it is
-text, so it clears 4.5:1 on both papers alone (6.43:1 light, 7.19:1 dark).
+line. `--sic` is text, so it clears 4.5:1 on both papers alone (6.43:1 light,
+7.19:1 dark).
+
+**Three colours on a table page are not `--ink`**, and a fourth needs the same
+evidence: `--sic` on the misprint annotation, `--muted-fixed` on the statistics
+line, and **`--clan`** on the clan field (added 2026-07-28). `--clan` is *not*
+the per-clan palette that was reverted — that gave 13 clans 13 hues and
+collapsed under deuteranopia. This is one colour for the whole field, so two
+colours must be told apart rather than thirteen, and they differ in lightness as
+well as hue. Measured 5.86:1 on paper light / 9.53:1 dark, 6.22 / 10.40 on a
+selected row. Its values are `--accent`'s — it is the gold the clan carried
+before `body.chart`'s flatten — but the **token is separate on purpose**:
+`--accent` means *interactive* everywhere else, and recolouring the chrome must
+never recolour the genealogy. Declared in **all five** palette blocks; the three
+static fallbacks exist for engines without `light-dark()`, and missing one
+leaves that browser with an unstyled clan.
 
 Person references in the apparatus are linked by `_p()` at each call site,
 **never by regex over the prose**. The apparatus is full of numbers that are not

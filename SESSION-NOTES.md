@@ -4,7 +4,8 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-07-28**.
+Last updated **2026-07-28**, after a session spent entirely on the **person
+card** and the **printed line**.
 
 ---
 
@@ -13,13 +14,12 @@ Last updated **2026-07-28**.
 You may already have this file in context — a `SessionStart` hook
 (`.claude/hooks/session-start.sh`) loads it automatically and prefixes a
 `STALE:` or `UNCOMMITTED WORK:` line when either applies. If those warnings are
-present, believe them over anything written below. If the hook did not fire,
-nothing is lost; reading this file is the whole of it.
+present, believe them over anything written below.
 
 1. Read `CLAUDE.md` — especially **Design invariants** and **The one thing to
    get right**. Both encode failures that already happened.
-2. Read the top entries of `CHANGELOG.md`. 2026-07-28 has six, because the day
-   shipped six times; read them newest-first and stop when they stop mattering.
+2. Read the top entries of `CHANGELOG.md`, newest first. 2026-07-28 is long;
+   stop when the entries stop mattering.
 3. Bring the preview up: `preview_start`, config name `site`, serves `docs/` on
    `http://localhost:4173`.
 4. Loop: edit `scripts/make_chart.py` → `python3 scripts/make_chart.py --public`
@@ -33,122 +33,104 @@ carry today's date. So "rebuild produces no diff" is only a valid sync check
 committing — bumping `lastmod` tells crawlers the pages changed when they did
 not.
 
-**Two habits this project keeps re-learning:**
+**Three habits this project keeps re-learning:**
 
 - **Measure, don't look.** Column drift, contrast, row heights, bracket
   alignment — all of it has a number, and eyes have been wrong here before.
 - **Grep the built file, not the rendered DOM.** A browser read happens after
-  the page's script has run. That is exactly how `Theme: Auto` survived a check
-  that reported no "Auto" anywhere.
-
-**One practical note on the preview:** don't leave the browser viewport pinned
-to an emulated size. Responsive checks are worth doing, but reset to native
-afterwards — a viewport left at 1280×800 inside a larger window shows the user
-a cropped page and reads as a broken site.
+  the page's script has run. That is how `Theme: Auto` survived a check that
+  reported no "Auto" anywhere.
+- **Read the staged diff before committing.** `/publish` Gate 4 caught a comment
+  reading *"Clan is not colour-coded"* directly above the rule that had just
+  colour-coded it. The build was green; only the diff showed it.
 
 ## State
 
-Site live, archived, citable, and **fully published** — `main` is clean, no open
-PRs, `docs/` in sync with the renderer, and every live page verified
-SHA-256-identical to its committed version.
+Site live, archived, citable, and **fully published**. `main` is clean, no open
+PRs, `docs/` in sync with the renderer, every live page verified SHA-256-
+identical to its committed version.
 
 - Live: <https://pueblogenealogy.github.io/>
 - DOI (concept): `10.5281/zenodo.21637900` → <https://zenodo.org/records/21637901>
 - Published: Genealogy I and IV. Tables 2 and 3 await scans.
 
-Nothing is half-finished. What a table page is now, after a day of cutting the
-chrome back and then adding a little of it in again:
+**Five changes shipped on 2026-07-28**, all to how a person reads:
 
-- **No on-page chart key.** The notation lives in the footer's *Navigating this
-  chart* list — see the decision below.
-- Title block is the plate label, the numeral, the double rule and the
-  **statistics line**; no citation (the landing page keeps its own).
-- Plate bar: **Find left, Scale right**. Theme control toggles **Light ↔ Dark**,
-  no Auto.
-- Plate caption carries only the pan hint, and hides above 1400px and in print.
-- Footer apparatus is **two columns**, with every person reference linked.
-- **Table 1's misprint prints as 68**, as the plate has it — ringed in `--sic`
-  red, linked to person 67, with *(misprint, click here to see notes)* on its
-  own row beneath. It had been silently corrected to 67. If someone "fixes" it
-  back, that is the bug.
+1. The person card no longer repeats the **misprint note** — the chart row it
+   was opened from already carries it.
+2. The card **sets its own format** instead of inheriting the register's:
+   title at `--t-lg` underlined, indented `PARENTS:` / `SPOUSES:` /
+   `CHILDREN:` rows, each person a rounded chip.
+3. Chips carry the plate's **point after the number** — `56. Weʼdyumă`.
+4. The card no longer repeats the **cross-reference** row either.
+5. The **clan has its own colour** (`--clan`), and the number's point gained
+   `.2em` of air on every printed line.
 
 ## The open thread
 
-**There isn't one.** Every thread previous handoffs carried is closed: the chart
-key (built, removed, notation relocated), the empty repo, the glyph check, and
-the misprint fidelity error. The next session is **choosing**, not continuing.
-Read that as a good state, not a missing note.
+**There isn't one.** Nothing is half-finished. The next session is *choosing*.
 
-The largest remaining item by a wide margin is **Tables 2 and 3**, and it is
-blocked on scans, not on work. Everything else below is small or optional.
+The largest remaining item by a wide margin is **Tables 2 and 3**, blocked on
+scans, not on work.
 
-Three things to know before touching the table-page chrome again:
+Two things to know before touching the card or the printed line again:
 
-- **`navigating_html()` is load-bearing.** Its first three list items are the
-  only place on the page that `+`, `F.`/`M.` and the leader rule are decoded.
-  They have already been lost once by a change that looked purely cosmetic.
-- **Anything drawn on a `.line` must not take space.** Selection highlights and
-  the misprint ring are `outline` and `box-shadow` only, drawn *outside* the
-  border box — a border or padding moves the row and throws the sibling bracket
-  off its `mother_row`. Adding a row is fine if it is counted (`row += 1`) and
-  is exactly one `--lh` tall, as the misprint row and cross-reference rows are.
-- **A measured audit is in `CHANGELOG.md` and was deliberately not acted on.**
-  The page has four left edges at full width: masthead 8px, plate 59px, chrome
-  115px, prose 371px. The plate sits 56px left of the toolbar that controls it,
-  because the scroller is full-bleed while its chrome is capped at
-  `--measure-wide`. Below ~1400px they converge. Don't re-measure it; decide.
+- **Everything card-specific is scoped to `.pcard` or done on the clone in
+  `openCard`.** The card clones the register entry — one source of truth — so a
+  rule written without that scope silently reformats the 104-entry register
+  below the plate. Verify after any change: the register's relation links must
+  still compute `display:inline` and its entry titles `16px`.
+- **Chips are `.reg-rel > a`, direct children only.** A cross-reference row is
+  *also* a `.reg-rel`, and its links sit inside an `<em>` of running prose. A
+  descendant selector turns those into buttons mid-sentence. `openCard` now
+  drops those rows from the card outright, so nothing should reach the rule —
+  the `>` is what keeps it true if they ever come back.
 
-## Other things that could be picked up
+## Pick up next — small, and genuinely open
 
 | | Effort | Notes |
 |---|---|---|
-| Wikidata item | ~10 min, **needs the user** | Payload ready at `wikidata-quickstatements.txt`, all 18 ids verified live; creating the item needs a logged-in Wikidata account. **Not urgent** |
+| **Register's relation lists lack the point** | ~1 line | They read `56 Weʼdyumă` while the register's own *entry titles* read `56.`. The cards lost that inconsistency on 2026-07-28; the register still has it. One line in `rel_link` — but it changes the apparatus, not just the card, which is why it was left for a decision |
+| Wikidata item | ~10 min, **needs the user** | Payload ready at `wikidata-quickstatements.txt`, all 18 ids verified live; creating the item needs a logged-in account. **Not urgent** |
 | Wikipedia external link | Slow, **needs the user** | Propose on the *Elsie Clews Parsons* Talk page — a direct edit is a COI and gets reverted |
 | Tables 2 and 3 | Blocked on scans | Worth more than everything else here combined |
 
 ## Decisions already made — don't re-litigate
 
-- **No on-page chart key.** Built twice, removed twice. It is decode-once
-  material and the plate is what the reader came for; the notation belongs in
-  the footer, where it is. The code is deleted, not parked — if it is ever
-  wanted back, take it from git rather than leaving a third unreferenced copy.
-- **The plate's misprint is reproduced, not corrected.** This is the edition's
-  whole premise, and the chart had been quietly violating it. Declared as data
-  in `PLATE_NUMBER_MISPRINTS`, annotated in the apparatus.
-- **No custom domain** for now. `pueblogenealogy.github.io` is a GitHub
-  subdomain, not an owned domain, and the doi is the durable citable identifier
-  — it resolves independently of the host, which removed the strongest argument
-  for buying one. If this is revisited, decide it *before* seeding inbound
-  links, since those point permanently at whatever host is chosen.
-- **No colour-coding of sex, and no per-clan colours.** Both were built and
-  reverted; the measurements are in `CHANGELOG.md`. Short version: two colours
-  that must each clear 4.5:1 on the same paper cannot differ enough from each
-  other to be told apart — the sex pair measured 1.05:1 — and a 13-clan palette
-  chosen by optimisation still collapsed to about one just-noticeable
-  difference under deuteranopia. All text on a table page is `--ink`, with
-  exactly two deliberate exceptions: `--muted-fixed` on the statistics line and
-  `--sic` on the misprint annotation.
+- **No per-clan colours, and no colour-coding of sex.** Both built and reverted;
+  measurements in `CHANGELOG.md`. The sex pair measured 1.05:1, and a 13-clan
+  palette collapsed to about one just-noticeable difference under deuteranopia.
+  **`--clan` is not this decision re-opened** — it gives the *field* one colour,
+  so two colours must be told apart rather than thirteen, and they differ in
+  lightness as well as hue. **Three** colours on a table page are now not
+  `--ink`: `--sic`, `--muted-fixed`, `--clan`. A fourth needs the same evidence.
+- **The person card carries the number, never the annotation.** Both the
+  misprint note and the cross-reference were removed for one reason: the chart
+  row the reader opened the card *from* already prints them. Note the one
+  consequence, in case it is ever revisited — `xref_printed` prints a
+  cross-reference only at a person's **first** occurrence, so opening 67's card
+  from the misnumbered 68 line no longer surfaces it outside the register.
+- **A person-level misprint variant was built and rejected.** `Chart.sic` →
+  `data-sic` on the register entry → the note on *every* card of that person. It
+  worked and was measured; the user judged it multiplied the redundancy. Take it
+  from git (`c38d313^`) rather than rebuilding it.
+- **No on-page chart key.** Built twice, removed twice. The notation lives in
+  the footer's *Navigating this chart* list, whose first three items are the
+  only place `+`, `F.`/`M.` and the leader rule are decoded.
+- **The plate's misprint is reproduced, not corrected.** Table 1 prints **68**,
+  as the plate has it, ringed in `--sic`, linked to 67. If someone "fixes" it
+  back to 67, that is the bug.
+- **No custom domain** for now. The doi is the durable citable identifier and
+  resolves independently of the host. If revisited, decide it *before* seeding
+  inbound links.
 - **Publishing goes through `/publish`.** Its last gate is *record it in
   `CHANGELOG.md`*, and skipping the skill is how the changelog once fell behind.
-- **The Wikidata item is optional.** The doi already put the edition into
-  DataCite, and from there OpenAIRE and Google Dataset Search, which is the
-  discovery infrastructure that matters. Wikidata adds a slow, modest signal.
-  If it is done: paste `wikidata-quickstatements.txt` into
-  <https://quickstatements.toolforge.org/> while logged in. The payload uses
-  `P2093 author name string` rather than `P50 author` deliberately: P50 would
-  require creating a biographical item about a living person, which carries its
-  own notability bar and privacy questions. It links `P144 based on` to
-  `Q51498010`, the 1923 article's existing item.
 
 ## Closed — do not re-raise
 
-- **`prettyph3nom/laguna-genealogy` is deleted.** Verified three ways. It had
-  been carried in three handoffs.
-- **Glyph rendering on Windows and Android was checked on device** and both
-  render correctly. The cmap reasoning is kept in `CLAUDE.md` as the durable
-  evidence.
-- **The GitHub Pages build API misreports the deployed commit.** It labelled the
-  `536c43a` build `b1f7b1c`. The served bytes were correct; only the metadata
-  was wrong, and the decision was to leave it. Verify deploys by comparing the
-  live page's SHA-256 against the committed `docs/` file, not by reading the
-  build API.
+- **`prettyph3nom/laguna-genealogy` is deleted.** Verified three ways.
+- **Glyph rendering on Windows and Android was checked on device**; both render
+  correctly. The cmap reasoning is in `CLAUDE.md` as the durable evidence.
+- **The GitHub Pages build API misreports the deployed commit.** Verify deploys
+  by comparing the live page's SHA-256 against the committed `docs/` file, not
+  by reading the build API. This session did exactly that, five times.
