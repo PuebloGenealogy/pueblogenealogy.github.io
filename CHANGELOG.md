@@ -3,6 +3,39 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — the person card gets its own format
+
+- **The card was rendering the register's format.** It clones the register
+  entry — one source of truth, which is right — but it was also inheriting a
+  layout built for scanning 104 stacked entries. As a single card it now sets
+  its own: the printed line is the title at `--t-lg` (a new 1.125rem step,
+  added because the ramp stopped at `--t-md`) and underlined; the relation rows
+  keep the register's 1.4rem indent instead of having it zeroed; each label
+  gains a colon; each related person is a rounded chip.
+- **Scoping is the whole trick, and the next change here must keep it.** Every
+  CSS rule is under `.pcard` and every DOM edit is made on the *clone* in
+  `openCard`, never in `rel_row` or `rel_link`. The register renders the same
+  markup and must keep its dense list — verified after the change: its links
+  still compute `display:inline`, its entry titles still 16px.
+- **Chips are `.reg-rel > a`, direct children only.** A cross-reference row is
+  *also* a `.reg-rel`, but its links sit inside an `<em>` of running prose —
+  "For second wife and offspring see below, 76, 90-3". A descendant selector
+  turns those into buttons mid-sentence. This is the trap in this markup.
+- **Three edits to the clone, each with a reason not to do it the obvious way.**
+  The colon and the number's point are written as real text, not CSS `::after`,
+  so they survive a copy out of the card. The middot between relations is
+  *collapsed to a space*, not deleted — deleting the text node also closes the
+  gap after the label, and the space is what keeps copied text readable. Both
+  text edits are idempotent, so reopening a card cannot accumulate `56..`.
+- **Measured:** 4px radius chips, 26.6px tall, matching the 24px floor the
+  card's action buttons already use rather than `--tap`; checked in both
+  palettes and at 375px, where the card is the bottom sheet — chips wrap, no
+  overflow, no horizontal body scroll.
+- **Not done, and worth deciding:** the register's own relation lists still read
+  `56 Weʼdyumă` without the point, while its entry titles carry it. The card
+  just lost that inconsistency; the register still has it. One line in
+  `rel_link` if it should match.
+
 ## 2026-07-28 — the person card drops the misprint note
 
 - **The card repeated an annotation the reader was already looking at.** Opening
