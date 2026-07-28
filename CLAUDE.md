@@ -76,6 +76,14 @@ the private build; it needs `data/*.xlsx`, which is not in this clone.
 `SESSION-NOTES.md` as a handoff, and checks this file for claims the session
 falsified. Run it before stopping, not after.
 
+A `SessionStart` hook (`.claude/hooks/session-start.sh`) reads
+`SESSION-NOTES.md` into context at the start of every session, and flags it as
+stale when `scripts/` or `docs/` has moved since the notes were last committed.
+It fails open — if it errors, the session starts normally with no handoff. Note
+what it cannot do: hooks on session events are **shell commands only**, so it
+can guarantee the handoff is read but never write one. That is still
+`/wrap-session`'s job.
+
 **New plate:** `/transcribe-plate`. `make_chart.py` is table-agnostic: add a
 `TABLES` entry, drop the matching `PENDING` one, write
 `scripts/transcription_<n>.py` on the same schema. Counts in the page copy are
