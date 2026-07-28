@@ -84,9 +84,14 @@ computed from data, never typed.
 | `assets/og-cover.jpg` | Social card, derived once from the plate scan (see `OG_IMAGE`) |
 | `sources/` | Source scans, in repo but not served |
 | `METHOD.md` | Editorial method — why readings are made as they are |
+| `.zenodo.json` | Metadata for the archived deposit. Read from the **tagged commit**, so it must land on `main` before a release is cut |
+| `CITATION.cff` | How to cite. Carries the concept doi plus both dois under `identifiers` |
 
-Identity is two constants at the top of `make_chart.py`: `SITE` and `REPO`.
-Every canonical, sitemap entry and card derives from them.
+Identity is three constants at the top of `make_chart.py`: `SITE`, `REPO` and
+`DOI`. Every canonical, sitemap entry and card derives from them. `DOI` is the
+Zenodo **concept** doi, which always resolves to the newest release — never
+hard-code a version doi here, or every citation printed on the site rots at the
+next release.
 
 ## Layout
 
@@ -139,12 +144,32 @@ surviving copy** of the deleted v1 repo. Do not clean it up as stale.
 Site live and indexed-submitted; Search Console and Bing both verified;
 structured data valid and guarded at build time. v1 is deleted.
 
+**Archived at Zenodo**, concept doi `10.5281/zenodo.21637900`, first release
+`v1.0.0` (2026-07-28). The doi appears in `CITATION.cff`, the README badge, the
+citation block on every table page, and as `identifier` in the JSON-LD —
+`Dataset` on the table pages, `CollectionPage` on the landing page, which is
+the entity the deposit actually corresponds to. Archiving is automatic from now
+on: Zenodo's webhook is on the repo, so **cutting a GitHub release mints a new
+version doi**. `.zenodo.json` controls the record's metadata; without it Zenodo
+would title the deposit after the repo.
+
 **Outstanding:**
 - **Inbound links** — a fresh `*.github.io` has no authority, and no on-page
-  work substitutes. Zenodo archive for a DOI (`CITATION.cff` exists), then the
-  Wikipedia *Elsie Clews Parsons* external links.
-- **Custom domain** — the strongest remaining SEO upgrade; drops onto this repo
-  via a `CNAME` file.
+  work substitutes. Zenodo is done and is itself the first such link. Next, by
+  effort-to-return: a **Wikidata** item (heavily crawled, feeds Knowledge Graph,
+  none of Wikipedia's conflict-of-interest friction), then the Wikipedia *Elsie
+  Clews Parsons* external links — **propose on the Talk page**, since adding a
+  link to one's own work is a COI and tends to be reverted — then the AMNH
+  Digital Library, which hosts the original and could also supply the handle
+  `.zenodo.json` currently omits from `related_identifiers`.
+- **Custom domain** — **decide this before seeding any inbound links.** Every
+  link and citation placed from now on points permanently at whatever host is
+  chosen, and most will never be updated. Note the old framing of this as "the
+  strongest SEO upgrade" overstated it: Google treats `github.io` as a public
+  suffix, so no authority is inherited from it and none is lost by leaving. The
+  real argument is citation permanence and portability — a domain you own can
+  change hosts without breaking a doi-adjacent link — which is an argument for
+  doing it first or not at all. Drops onto this repo via a `CNAME` file.
 - Tables 2 and 3 await scans.
 - Phonetic glyphs: **font coverage proven, live device rendering still
   unchecked.** Reading the shipped woff2 binaries with fontTools, every one of
