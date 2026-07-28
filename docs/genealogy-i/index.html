@@ -656,7 +656,11 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
   <a class="wordmark" href="../">Laguna Genealogies</a>
   <nav aria-label="Tables"><a href="../genealogy-i/" aria-current="page"><span class="nav-word">Genealogy </span>I</a><a href="../genealogy-iv/"><span class="nav-word">Genealogy </span>IV</a></nav>
   <span class="mast-right">
-    <button id="theme" class="mast-btn" data-action="theme" hidden>Theme: Auto</button>
+    <!-- Bare "Theme" in the markup: the server cannot know which palette the
+         reader will resolve to, and applyTheme() names it on the first tick.
+         It must not say Auto -- there is no Auto state, and this label is what
+         ships in the HTML and shows in the moment before the script runs. -->
+    <button id="theme" class="mast-btn" data-action="theme" hidden>Theme</button>
   </span>
 </header>
 <div class="titlepage">

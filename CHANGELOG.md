@@ -3,6 +3,19 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — the theme button's static label said Auto
+
+- **Fixing a miss from the entry below.** The Auto state was removed from the
+  theme control, but the button still shipped `Theme: Auto` as its literal
+  markup; `applyTheme()` overwrote it on the first tick, so it was only visible
+  in the moment before the script ran. The static label is now bare `Theme`,
+  which is all the server can honestly say — it cannot know which palette a
+  reader resolves to.
+- **Worth recording is how it was missed.** The check that passed was
+  `!document.body.textContent.includes('Auto')`, run in the browser *after* the
+  script had already rewritten the label. Testing rendered state cannot see what
+  the HTML ships; for anything that exists in the markup, grep the built file.
+
 ## 2026-07-28 — selection highlights move off the text
 
 - **The highlight no longer sits on the words it highlights.** All three of them

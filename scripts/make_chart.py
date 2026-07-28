@@ -1756,7 +1756,11 @@ def masthead_html(tables, current_slug, prefix, home):
   {mark}
   <nav aria-label="Tables">{links}</nav>
   <span class="mast-right">
-    <button id="theme" class="mast-btn" data-action="theme" hidden>Theme: Auto</button>
+    <!-- Bare "Theme" in the markup: the server cannot know which palette the
+         reader will resolve to, and applyTheme() names it on the first tick.
+         It must not say Auto -- there is no Auto state, and this label is what
+         ships in the HTML and shows in the moment before the script runs. -->
+    <button id="theme" class="mast-btn" data-action="theme" hidden>Theme</button>
   </span>
 </header>"""
 
