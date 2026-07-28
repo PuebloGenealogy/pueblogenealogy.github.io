@@ -126,6 +126,15 @@ def print_zoom(n_gens):
 SITE = "https://pueblogenealogy.github.io"
 REPO = "https://github.com/PuebloGenealogy/pueblogenealogy.github.io"
 
+# The Zenodo CONCEPT doi, not a per-release one: it always resolves to the
+# newest archived version, so a citation printed on this page keeps working
+# when a later release adds Tables 2 and 3. The v1.0.0 version doi
+# (10.5281/zenodo.21637901) is recorded in CITATION.cff for anyone pinning a
+# snapshot; it deliberately does not appear here, where the reader wants the
+# edition rather than one frozen state of it.
+DOI = "10.5281/zenodo.21637900"
+DOI_URL = f"https://doi.org/{DOI}"
+
 # The social preview card. A 1200x630 band of the real Table 1 plate, derived
 # once from sources/parsons-1923-table-1.jpg and committed at assets/og-cover.jpg
 # rather than regenerated per build -- the source scan is 33 MB and `sips` is
@@ -1778,7 +1787,8 @@ def cite_html(spec, today):
        vol.&nbsp;19, pt.&nbsp;5 (1923), pp.&nbsp;133&ndash;292, {spec['plate']}.</p>
     <p>Digital transcription: {esc(AUTHOR)},
        <em>Laguna Genealogies: A Digital Edition</em>, {today.year},
-       {canonical}. CC&nbsp;BY&nbsp;4.0.</p>
+       {canonical}. CC&nbsp;BY&nbsp;4.0.
+       Archived at <a href="{DOI_URL}">doi:{DOI}</a>.</p>
   </blockquote>
   <p>To cite one person&rsquo;s line, use its number&rsquo;s link:
      <a href="#p{root_id}">{canonical}#p{root_id}</a> is person {root_id}.<span id="copy-mount"></span></p>"""
@@ -1795,6 +1805,10 @@ def jsonld_chart(spec, description, today):
         "description": description,
         "url": canonical,
         "creator": {"@type": "Person", "name": AUTHOR},
+        # A bare URL string, deliberately: Google's Dataset guidance names
+        # identifier for exactly this, and a string cannot trip the nested
+        # @type rules that have twice rejected valid schema.org here.
+        "identifier": DOI_URL,
         "license": "https://creativecommons.org/licenses/by/4.0/",
         "isBasedOn": {"@type": "CreativeWork", "name": "Laguna Genealogies",
                       "author": {"@type": "Person", "name": "Elsie Clews Parsons"},
@@ -1920,6 +1934,9 @@ def jsonld_site(built, today):
         "url": SITE + "/",
         "description": SITE_DESCRIPTION,
         "creator": {"@type": "Person", "name": AUTHOR},
+        # The deposit covers the whole edition, so this page -- which is the
+        # edition, not one table -- is where the doi is most precisely true.
+        "identifier": DOI_URL,
         "license": "https://creativecommons.org/licenses/by/4.0/",
         "dateModified": today.isoformat(),
         "image": OG_IMAGE,
