@@ -39,6 +39,13 @@ OUT = ROOT / "build" / "genealogy-i-private.html"
 DOCS = ROOT / "docs"
 FONT_DIR = ROOT / "vendor" / "gentium"
 
+# The misprint annotation, one row under the line it annotates. Table-agnostic:
+# the note it points at is the plate note, whose id every table that declares a
+# misprint must carry.
+SIC_ROW = ('<a class="sic" href="#note-misprint">'
+           "(misprint, click here to see notes)</a>")
+
+
 def _p(n, text=None):
     """
     An apparatus reference to a person on the same table: 8 -> <a href="#p8">8</a>.
@@ -505,10 +512,13 @@ def person_line(p, is_spouse, english_seen, printed_number=0):
     # The number is the plate's own citation apparatus, so it is a link: #p13
     # is the stable address of person 13's first printed line.
     if printed_number and printed_number != p["id"]:
-        bits.append(f'<a class="num num-sic" href="#p{p["id"]}">{printed_number}.</a>')
-        bits.append('<a class="sic" href="#note-misprint" '
-                    f'title="The plate prints {printed_number} here but names person '
-                    f'{p["id"]} — see the editorial note">misprint</a>')
+        # The plate's number, ringed. data-printed lets the person card show the
+        # same number when it is opened from THIS line -- the register keeps the
+        # true one, so the card must be told, not left to guess.
+        plus = bits.pop() if is_spouse else ""
+        bits.append(f'<span class="sic-ring">{plus} '
+                    f'<a class="num num-sic" data-printed="{printed_number}" '
+                    f'href="#p{p["id"]}">{printed_number}.</a></span>')
     else:
         bits.append(f'<a class="num" href="#p{p["id"]}">{p["id"]}.</a>')
     bits.append(f'<span class="sex">{esc(p["sex"])}.</span>')
@@ -632,6 +642,12 @@ class Chart:
                               f"p{other}" if first_sp else None))
                 row += 1
                 mother_row = row
+                # The misprint annotation is its own row, directly under the
+                # line it annotates -- the same slot a cross-reference takes,
+                # and counted the same way, so the rows below stay on the grid.
+                if u["printed_number"] and u["printed_number"] != other:
+                    block.append(("sic", SIC_ROW, None))
+                    row += 1
                 if sp["cross_ref"] and other not in self.xref_printed:
                     self.xref_printed.add(other)
                     for part in sp["cross_ref"].split("|"):
@@ -699,9 +715,12 @@ class Chart:
         lead_rows = {g[0] for g in groups}
         lines = []
         for i, (kind, content, anchor) in enumerate(block):
-            html_line = (wrap_line(content, lead=(i in lead_rows), anchor=anchor)
-                         if kind == "line"
-                         else f'<div class="xref">{content}</div>')
+            if kind == "line":
+                html_line = wrap_line(content, lead=(i in lead_rows), anchor=anchor)
+            elif kind == "sic":
+                html_line = f'<div class="sic-row">{content}</div>'
+            else:
+                html_line = f'<div class="xref">{content}</div>'
             if line_pad.get(i):
                 html_line = html_line.replace(
                     "<div ", f'<div style="margin-top:calc(var(--lh) * {line_pad[i]})" ', 1)
@@ -767,6 +786,11 @@ CSS = """
   /* chrome hairlines only -- never the plate's own rules */
   --rule-faint:#C4BFB4;
   --accent:#7A5C1E; --accent-strong:#5C450F; --ink-lineage:#3A342A;
+  /* The misprint red. Marks the plate's error where it occurs and nowhere
+     else, so it must clear 4.5:1 on BOTH papers on its own -- it is text,
+     and it is the only colour on a table page that is not --ink. Measured
+     6.16:1 on #FAF8F4 and 7.84:1 on #191713. */
+  --sic:#B3261E;
   --wash:#F4E6CA; --shadow:rgba(0,0,0,.07);
   /* Selected row. Moves AWAY from --paper rather than toward it, so the row
      that is picked out is the one where the text reads BEST, not worst: the
@@ -815,6 +839,7 @@ CSS = """
     --rule-faint:color-mix(in oklab,var(--rule) 45%,var(--paper));
     --accent:light-dark(#7A5C1E,#DBB970);
     --accent-strong:light-dark(#5C450F,#DBB970);
+    --sic:light-dark(#B3261E,#FF8A80);
     --ink-lineage:light-dark(#3A342A,#C9C0AF);
     --wash:light-dark(#F4E6CA,#2E250D);
     --shadow:light-dark(rgba(0,0,0,.07),rgba(0,0,0,.45));
@@ -834,6 +859,7 @@ CSS = """
       --paper:#191713; --panel:#221F1B; --ink:#E9E6DF; --muted:#A49E93;
       --rule:#756F66; --rule-faint:#423F38; --accent:#DBB970;
       --accent-strong:#DBB970; --ink-lineage:#C9C0AF; --wash:#2E250D;
+      --sic:#FF8A80;
       --shadow:rgba(0,0,0,.45); --eng-bg:#3A3016; --eng-fg:#F0DFAE;
       --cen-bg:#1D2E3D; --cen-fg:#BCD7EE;
       --sel-bg:#0E0C09;
@@ -842,6 +868,7 @@ CSS = """
       --paper:#FAF8F4; --panel:#FFFDF9; --ink:#1C1A17; --muted:#635D53;
       --rule:#7D766B; --rule-faint:#C4BFB4; --accent:#7A5C1E;
       --accent-strong:#5C450F; --ink-lineage:#3A342A; --wash:#F4E6CA;
+      --sic:#B3261E;
       --shadow:rgba(0,0,0,.07); --eng-bg:#E8DFC8; --eng-fg:#4A3A12;
       --cen-bg:#DCE6EF; --cen-fg:#22384C;
       --sel-bg:#FFFFFF;
@@ -851,6 +878,7 @@ CSS = """
     --paper:#191713; --panel:#221F1B; --ink:#E9E6DF; --muted:#A49E93;
     --rule:#756F66; --rule-faint:#423F38; --accent:#DBB970;
     --accent-strong:#DBB970; --ink-lineage:#C9C0AF; --wash:#2E250D;
+    --sic:#FF8A80;
     --shadow:rgba(0,0,0,.45); --eng-bg:#3A3016; --eng-fg:#F0DFAE;
     --cen-bg:#1D2E3D; --cen-fg:#BCD7EE;
     --sel-bg:#0E0C09;
@@ -1138,14 +1166,16 @@ body.chart .titlepage{max-width:var(--measure-wide)}
 a.num{text-decoration:none}
 a.num:hover{color:var(--accent);text-decoration:underline}
 a.num:focus-visible{color:var(--accent);text-decoration:underline}
-/* A number the plate misprints. It is set exactly like every other number --
-   this is what the plate says, and dimming or bracketing it would editorialise
-   inside the transcription. The marker beside it carries the annotation, in
-   the chrome's voice, and jumps to the note that explains the reading. */
-.sic{font:italic var(--t-xs) var(--font-ui);color:var(--muted);
-  text-decoration:underline dotted;text-underline-offset:.15em;
-  vertical-align:.15em;margin-inline-start:.15em}
-.sic:hover,.sic:focus-visible{color:var(--accent)}
+/* A number the plate misprints. The digits stay exactly as every other number
+   is set -- this is what the plate says -- and the ring around them is drawn
+   with outline, never border or padding: a border would widen the row and
+   throw the sibling bracket off its mother_row. The annotation itself is a
+   separate row below, so nothing is inserted into the printed line at all. */
+.sic-ring{outline:1.5px solid var(--sic);outline-offset:3px;border-radius:1rem}
+.sic-row{line-height:var(--lh);padding-inline-start:1.4rem;white-space:nowrap}
+.sic{font:italic .8rem var(--font-ui);color:var(--sic);
+  text-decoration:underline dotted;text-underline-offset:.15em}
+.sic:hover,.sic:focus-visible{text-decoration:underline solid}
 .sex{color:var(--muted)}
 /* + and ——— are text content (spouse marker, unrecorded name), so they hold
    the 4.5:1 text minimum via --muted; --rule is reserved for drawn rules. */
@@ -1269,7 +1299,13 @@ footer code{font-family:var(--font-ui);font-size:.9em}
   border:1px solid var(--rule);border-radius:3px;
   box-shadow:0 6px 24px var(--shadow);font-size:var(--t-base);line-height:1.55}
 .pcard .reg-rel{padding-inline-start:0;margin-block-start:var(--s1)}
-
+/* The misprint note inside a person card, directly under its first line. Same
+   red and same wording as the row on the chart, so the reader recognises it as
+   the same annotation rather than a second, different one. */
+.pcard-sic{margin:.15rem 0 0}
+.pcard-sic a{font:italic .8125rem var(--font-ui);color:var(--sic);
+  text-decoration:underline dotted;text-underline-offset:.15em}
+.pcard-sic a:hover,.pcard-sic a:focus-visible{text-decoration:underline solid}
 .pcard-actions{display:flex;gap:var(--s3);align-items:center;
   margin:var(--s3) 0 0;font-family:var(--font-ui);font-size:.8125rem}
 .pcard-actions button{font:var(--t-xs) var(--font-ui);color:var(--muted);
@@ -1590,6 +1626,16 @@ function openCard(a){
   body.className="pcard-body";
   body.innerHTML=reg.innerHTML;
   var line=body.querySelector(".reg-line");if(line)line.id="pcard-t";
+  /* Opened from a line the plate misnumbers: the card names the number the
+     reader is looking at, not the register's. The register itself keeps the
+     true number, so the printed one has to be carried on the link. */
+  var printed=a.dataset?a.dataset.printed:null;
+  if(printed&&line){
+    var n=line.querySelector(".num");if(n)n.textContent=printed+".";
+    var s=doc.createElement("p");s.className="pcard-sic";
+    s.innerHTML='<a href="#note-misprint">(misprint, click here to see notes)</a>';
+    line.insertAdjacentElement("afterend",s);
+  }
   card.appendChild(body);
   var act=doc.createElement("p");act.className="pcard-actions";
   var inner='<a href="#r'+id+'">Open register entry</a>';

@@ -3,6 +3,36 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — the misprint annotation gets its own row, and a colour
+
+Refines the entry below, same day.
+
+- **The annotation moved off the printed line.** It was sitting inline between
+  the number and the name — inside the transcription, in other words. It is now
+  *(misprint, click here to see notes)* on its **own row directly beneath** the
+  Shuwaiʼᶦri line, so the printed line contains only what the plate prints.
+- **`+ 68.` is ringed in red.** The ring is an `outline`, never a border or
+  padding: a border widens the row and throws the sibling bracket off its
+  `mother_row`, which is the failure this project has documented twice.
+- **`--sic`, a new colour, and the only thing on a table page that is not
+  `--ink`.** It is text, so it has to clear 4.5:1 on both papers by itself:
+  `#B3261E` measures **6.43:1** on the light paper, `#FF8A80` **7.19:1** on the
+  dark. Declared in all five theme blocks.
+- **The person card follows the line it was opened from.** From the misprinted
+  line it titles the card *68.* and repeats the red note under the first line;
+  from person 67's three other lines it still says *67.*, and the register entry
+  always says 67. Carried on `data-printed`, so the card is told rather than
+  left to guess — verified in all three states.
+- **The layout proof, because this added a row to the chart.** All **24** child
+  groups were walked before and after: every sibling bracket still sits on its
+  mother's line, 0 mismatches both times, and column drift is still 0px at every
+  generation. The annotation row is exactly one `--lh` tall (25px, same as a
+  `.line`) and is counted with `row += 1` like a cross-reference row, which is
+  what keeps everything below it on the grid.
+- Clicking the note from inside the card closes the card and lands on the
+  highlighted note, clear of the sticky bar. Table 4 emits none of this markup.
+
+
 ## 2026-07-28 — the misprint is printed as printed; footer goes two-column
 
 - **The plate's misprint is reproduced again, which is the point of the
