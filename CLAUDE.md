@@ -19,7 +19,10 @@ parent–child links, 5 generations. **Genealogy IV** (Table 4) — 73 individua
    on the next build.
 2. **The edition publishes the 1923 transcription only** — never research
    columns. See below; this is the thing that must not go wrong.
-3. `CHANGELOG.md` has the history. Read it instead of asking what changed.
+3. **`SESSION-NOTES.md` is where the last session stopped** — read it first.
+   It names the open thread and the decisions not to re-litigate. Rolling, not
+   a history; `/wrap-session` overwrites it.
+4. `CHANGELOG.md` has the history. Read it instead of asking what changed.
 
 ---
 
@@ -69,6 +72,10 @@ the private build; it needs `data/*.xlsx`, which is not in this clone.
 
 **Publish:** `/publish` — gated build, privacy check, push, live verification.
 
+**Finish a session:** `/wrap-session` — backfills `CHANGELOG.md`, rewrites
+`SESSION-NOTES.md` as a handoff, and checks this file for claims the session
+falsified. Run it before stopping, not after.
+
 **New plate:** `/transcribe-plate`. `make_chart.py` is table-agnostic: add a
 `TABLES` entry, drop the matching `PENDING` one, write
 `scripts/transcription_<n>.py` on the same schema. Counts in the page copy are
@@ -107,6 +114,29 @@ styling detail while actually asserting a different genealogy.
 
 Measure in the browser, don't judge by eye: walk `.node` depth and compare each
 `.block`'s left offset.
+
+## Design invariants
+
+Four rules that look like styling preferences and are not:
+
+1. **The root font size is pinned at 16px.** `GEOM` states the plate grid in rem
+   against it, so changing the root rescales `--col` and `--stub` and breaks the
+   drift invariant. The `--t-*` ramp exists to size **chrome and prose only** —
+   nothing inside `.sheet` is sized from it.
+2. **A selected or hovered `.line` may change `background`, `box-shadow` and
+   `outline` — nothing else.** Padding, border or height there moves the row and
+   throws the sibling bracket off its `mother_row`. That reads as a styling
+   detail while actually asserting a different genealogy.
+3. **`--rule` is not text.** `body.chart` flattens all text to `--ink` by
+   redefining `--muted`; the brackets and leader rules are deliberately excluded,
+   because they carry the genealogy's structure.
+4. **`--tap` floors every hit area** in the site chrome, and `--bar-h` derives
+   from it so anchor `scroll-margin` tracks the bar. Don't restate either.
+
+Two things that will look like bugs and aren't: `key_html()` and the `.key` CSS
+are **unreferenced on purpose** (see Outstanding), and below 26rem the word
+"Genealogy" in the table pills is visually hidden but kept in the accessible
+name, so the sticky bar stays two rows on a phone.
 
 ## Facts worth knowing
 
@@ -154,6 +184,14 @@ version doi**. `.zenodo.json` controls the record's metadata; without it Zenodo
 would title the deposit after the repo.
 
 **Outstanding:**
+- **Redesign the chart key** — the open design thread. The old always-visible
+  band was removed; `key_html()` and the `.key` CSS are kept, unreferenced, as
+  its starting point. Three notations are currently explained **nowhere** on the
+  page: `+` for spouse, `F.`/`M.` for sex, and the leader rule. Constraints
+  worth knowing before starting: it should work without JavaScript (`<details>`
+  does, a popover does not), and the print rule hides `.plate-tools`, so a key
+  parked in the toolbar silently vanishes from printed sheets unless forced open
+  in `@media print`.
 - **Inbound links** — a fresh `*.github.io` has no authority, and no on-page
   work substitutes. Zenodo is done and is itself the first such link. Next, by
   effort-to-return: a **Wikidata** item (heavily crawled, feeds Knowledge Graph,

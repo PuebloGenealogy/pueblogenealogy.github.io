@@ -3,6 +3,59 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — DOI minted; table pages reworked for readability and reach
+
+- **Archived at Zenodo; the edition has a DOI.** Concept doi
+  `10.5281/zenodo.21637900`, first release `v1.0.0`. Zenodo's webhook is on the
+  repo, so **cutting a GitHub release now mints a new version doi
+  automatically** — that is a side effect worth knowing before tagging
+  casually. `.zenodo.json` controls the record and is read from the **tagged
+  commit**, so it must be on `main` before a release is cut; without it Zenodo
+  titles the deposit after the repo. The doi is in `CITATION.cff`, the README
+  badge, the citation block on every table page, and as JSON-LD `identifier`
+  (`Dataset` on table pages, `CollectionPage` on the landing page, which is the
+  entity the deposit actually corresponds to). Always the **concept** doi, never
+  a version doi: a version doi on the page would rot every printed citation at
+  the next release.
+- **The chart key and the plate caption were removed** from the table pages.
+  `key_html()` and the `.key` CSS are kept but **unreferenced**, deliberately,
+  as the starting point for a redesign. Consequence to fix when that lands:
+  three notations — `+` for spouse, `F.`/`M.` for sex, and the leader rule — are
+  now explained nowhere on the page. The rest survive in the footer apparatus.
+- **Toolbar, typography and navigation reworked.** `--tap` floors every hit area
+  (32px mouse, 44px coarse pointer) and `--bar-h` derives from it. Table links
+  became labelled buttons with the current page a filled inversion, not a colour
+  shift, so it survives both themes and colour blindness. The apparatus moved
+  from 14px to fluid 16–18px, cutting the measure from ~96 to ~64 characters.
+  Generation columns are spelled out. The whole printed line now opens a
+  person's card, guarded so a text selection stays a copy gesture. `see above` /
+  `see below` are links, targeted from the union whose children the note stands
+  in for — never by parsing the English.
+- **Colour was tried three ways and ended flat.** Sex-coloured names (blue/pink)
+  and 13 per-clan colours were both built and both **reverted**. The
+  measurements are the reason, and are worth not re-deriving: two colours that
+  must each clear 4.5:1 on the same paper cannot differ from each other by much,
+  so the sex pair sat at **1.05:1** — hue-only, and unreadable under
+  deuteranopia. The 13-clan palette was chosen by optimisation, not by eye, and
+  its closest pairs still fell to about **one just-noticeable difference** under
+  deuteranopia. All text on a table page is now `--ink` via `body.chart`
+  redefining `--muted`; `--rule` is untouched, because the brackets and leader
+  rules are drawn structure, not text.
+- **Phonetic glyph coverage proven without a device.** Reading the shipped woff2
+  binaries with fontTools, all 85 characters in the transcription and all 94
+  rendered on Genealogy I are in the cmap of both faces. The faces are base64
+  data URIs, so nothing is fetched and nothing can 404, and no combining marks
+  are used. Tofu is ruled out by construction. Note macOS substitutes for any
+  font, so **no on-screen comparison here can demonstrate absence of
+  substitution — read the cmap, do not measure widths**. Live rendering on
+  Windows and Android is still unchecked.
+- **Custom domain considered and declined for now.** `pueblogenealogy.github.io`
+  is a GitHub subdomain, not an owned domain. The doi is now the durable citable
+  identifier and resolves independently of the host, which removes the strongest
+  argument for buying one. If that changes, do it **before** seeding inbound
+  links, since those point permanently at whatever host is chosen.
+- Zero column drift held at every step; re-measured after each change.
+
 ## 2026-07-27 — Search Console verified, fieldwork notes recovered from v1
 
 - **Google Search Console ownership verified** on the URL-prefix property for

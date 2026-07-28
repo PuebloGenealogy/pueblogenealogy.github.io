@@ -116,6 +116,16 @@ Add an entry to `CHANGELOG.md`: the date, what changed, and anything a future
 session would otherwise have to re-derive. This is what makes the next session
 cheap.
 
+Then refresh `SESSION-NOTES.md` if the open thread moved. It is a rolling
+handoff, not a history — overwrite it rather than appending.
+
+**Publishing is not releasing.** Pushing to `main` deploys the site and stops
+there. Cutting a **GitHub release** is a separate act with a side effect:
+Zenodo's webhook is on this repo, so a release mints a new version doi and a new
+archived deposit. Do not tag one casually to mark a checkpoint. When a release
+*is* wanted, `.zenodo.json` must already be on `main` — Zenodo reads it from the
+tagged commit — and the concept doi in `make_chart.py` never changes.
+
 ## If Pages serves the wrong thing
 
 Symptom: `/` returns 200 but every subpath 404s, and the title looks like the
