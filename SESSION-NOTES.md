@@ -10,6 +10,12 @@ Last updated **2026-07-28**.
 
 ## Start here in a new chat
 
+You may already have this file in context — a `SessionStart` hook
+(`.claude/hooks/session-start.sh`) loads it automatically and prefixes a
+`STALE:` or `UNCOMMITTED WORK:` line when either applies. If those warnings are
+present, believe them over anything written below. If the hook did not fire,
+nothing is lost; reading this file is the whole of it.
+
 1. Read `CLAUDE.md` — especially **Design invariants** and **The one thing to
    get right**. Both encode failures that already happened.
 2. Read the top entry of `CHANGELOG.md` for what shipped last.
@@ -26,16 +32,21 @@ carry today's date. So "rebuild produces no diff" is only a valid sync check
 committing — bumping `lastmod` tells crawlers the pages changed when they did
 not.
 
+**Closing out:** run `/wrap-session` before stopping. It backfills
+`CHANGELOG.md`, rewrites this file, and re-checks `CLAUDE.md` for claims the
+session falsified. It is not optional politeness — the 2026-07-28 session
+merged five PRs without it and the changelog silently fell a day behind.
+
 ## State
 
 Site live, archived, citable. Nothing is broken and nothing is half-finished:
-`main` is clean, no open PRs, `docs/` is in sync with the renderer.
+`main` is clean, no open PRs, `docs/` in sync with the renderer.
 
 - Live: <https://pueblogenealogy.github.io/>
 - DOI (concept): `10.5281/zenodo.21637900` → <https://zenodo.org/records/21637901>
 - Published: Genealogy I and IV. Tables 2 and 3 await scans.
 
-## The open design thread
+## The open thread
 
 **Redesign the chart key.** The old always-visible band was removed because it
 cost ~100px above the plate and was reference material a reader needs once.
@@ -52,15 +63,15 @@ What has to be true of the replacement:
   from printed sheets unless it is forced open in `@media print`. The old key
   printed; losing that would be a silent regression.
 
-Open question worth deciding first: should the key be permanently visible, or
-opened on demand? It is decode-once material, which argues for on-demand.
+Decide first: permanently visible, or opened on demand? It is decode-once
+material, which argues for on demand.
 
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
 | Glyph check on Windows/Android | 5 min, needs a device | Font coverage already proven; only live rendering is unknown |
-| Wikidata item | ~10 min | Payload already drafted and every ID verified; **not urgent** |
+| Wikidata item | ~10 min | Payload drafted, every ID verified against live Wikidata; **not urgent** |
 | Wikipedia external link | Slow | Propose on the *Elsie Clews Parsons* Talk page — a direct edit is a COI and gets reverted |
 | Tables 2 and 3 | Blocked | Needs scans. Worth more than everything else here combined |
 | Delete `prettyph3nom/laguna-genealogy` | 1 min, **needs the user** | Blocked on a token scope — see below |
@@ -90,14 +101,19 @@ Ask, or skip it.
 
 ## Decisions already made — don't re-litigate
 
-- **No custom domain** for now. The DOI is the durable citable identifier and
-  resolves independently of the host. If this is revisited, decide it *before*
-  seeding inbound links.
+- **No custom domain** for now. `pueblogenealogy.github.io` is a GitHub
+  subdomain, not an owned domain, and the doi is the durable citable identifier
+  — it resolves independently of the host, which removed the strongest argument
+  for buying one. If this is revisited, decide it *before* seeding inbound
+  links, since those point permanently at whatever host is chosen.
 - **No colour-coding of sex, and no per-clan colours.** Both were built and
-  reverted; the measurements are in `CHANGELOG.md`. Short version: colours that
-  must each clear 4.5:1 on the same paper cannot differ enough from each other
-  to be told apart, and both schemes collapsed under deuteranopia. All text on a
-  table page is `--ink`.
-- Publishing goes through `/publish`, whose last gate is *record it in
-  `CHANGELOG.md`*. The 2026-07-28 session merged PRs directly and skipped that
-  gate, which is why the changelog had to be backfilled. Use the skill.
+  reverted; the measurements are in `CHANGELOG.md`. Short version: two colours
+  that must each clear 4.5:1 on the same paper cannot differ enough from each
+  other to be told apart — the sex pair measured 1.05:1 — and a 13-clan palette
+  chosen by optimisation still collapsed to about one just-noticeable
+  difference under deuteranopia. All text on a table page is `--ink`.
+- **Publishing goes through `/publish`.** Its last gate is *record it in
+  `CHANGELOG.md`*, and skipping the skill is how the changelog fell behind.
+- **The Wikidata item is optional.** The doi already put the edition into
+  DataCite, and from there OpenAIRE and Google Dataset Search, which is the
+  discovery infrastructure that matters. Wikidata adds a slow, modest signal.

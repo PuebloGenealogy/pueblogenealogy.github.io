@@ -54,6 +54,41 @@ Newest first.
   identifier and resolves independently of the host, which removes the strongest
   argument for buying one. If that changes, do it **before** seeding inbound
   links, since those point permanently at whatever host is chosen.
+- **Session handoff made structural, not remembered.** Three pieces, because
+  the record kept depending on someone thinking of it: `SESSION-NOTES.md` is a
+  **rolling** handoff — overwrite it, never append, or it becomes a second
+  changelog and stops answering "what do I pick up?"; `/wrap-session` writes it
+  and backfills this file; and a `SessionStart` hook
+  (`.claude/hooks/session-start.sh`) reads it into a new session automatically,
+  so nothing has to be linked by hand. The hook also flags the two silent
+  failures — notes older than the last `scripts/`/`docs/` commit, and an
+  unclean tree — and fails open, exiting 0 with no output on any error.
+  **What a hook cannot do:** `prompt` and `agent` hook types are restricted to
+  tool events, so session-event hooks are shell commands only and can never
+  author a changelog entry. Reading is automatic; writing still needs the
+  skill. `Stop` was the wrong event — it fires after every assistant turn, not
+  at session end.
+- **`CLAUDE.md` gained a Design invariants section.** Four rules that read as
+  styling preferences and are not: the root font size is pinned at 16px because
+  `GEOM` states the plate grid in rem against it; a selected `.line` may change
+  `background`, `box-shadow` and `outline` and nothing else, or the sibling
+  bracket leaves its `mother_row`; `--rule` is excluded from the `body.chart`
+  text flattening because brackets are drawn structure, not text; and `--tap` /
+  `--bar-h` are stated once and derived. It also names the two things that look
+  like bugs and are deliberate — the unreferenced `key_html()`, and the
+  visually-hidden "Genealogy" in the table pills below 26rem.
+- **This changelog was itself the thing that went missing.** Five PRs merged
+  before anyone noticed the entry stopped at the previous day, because the
+  session merged PRs directly instead of running `/publish`, whose last gate is
+  *record it*. `/publish` now also says that publishing and releasing are
+  different acts — pushing deploys the site, but cutting a GitHub release mints
+  a new Zenodo version doi.
+- **Deleting `prettyph3nom/laguna-genealogy` is blocked on a token scope**, not
+  on work: `gh` holds `gist, read:org, repo, workflow` and repo deletion needs
+  `delete_repo`, granted through a browser flow no agent can drive. It is empty
+  and is **not** the v1 repo — v1 was `laguna-genealogy-tables`, which 404s
+  under both owners. Carried in `SESSION-NOTES.md` with a note not to retry it
+  blind.
 - Zero column drift held at every step; re-measured after each change.
 
 ## 2026-07-27 — Search Console verified, fieldwork notes recovered from v1
