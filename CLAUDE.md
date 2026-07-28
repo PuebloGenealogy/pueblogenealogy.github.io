@@ -19,7 +19,10 @@ parent–child links, 5 generations. **Genealogy IV** (Table 4) — 73 individua
    on the next build.
 2. **The edition publishes the 1923 transcription only** — never research
    columns. See below; this is the thing that must not go wrong.
-3. `CHANGELOG.md` has the history. Read it instead of asking what changed.
+3. **`SESSION-NOTES.md` is where the last session stopped** — read it first.
+   It names the open thread and the decisions not to re-litigate. Rolling, not
+   a history; `/wrap-session` overwrites it.
+4. `CHANGELOG.md` has the history. Read it instead of asking what changed.
 
 ---
 
@@ -68,6 +71,10 @@ the private build; it needs `data/*.xlsx`, which is not in this clone.
 `http://localhost:4173`. Loop: edit `make_chart.py` → rerun `--public` → reload.
 
 **Publish:** `/publish` — gated build, privacy check, push, live verification.
+
+**Finish a session:** `/wrap-session` — backfills `CHANGELOG.md`, rewrites
+`SESSION-NOTES.md` as a handoff, and checks this file for claims the session
+falsified. Run it before stopping, not after.
 
 **New plate:** `/transcribe-plate`. `make_chart.py` is table-agnostic: add a
 `TABLES` entry, drop the matching `PENDING` one, write
