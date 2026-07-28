@@ -53,14 +53,36 @@
   --rule-faint:#C4BFB4;
   --accent:#7A5C1E; --accent-strong:#5C450F; --ink-lineage:#3A342A;
   --wash:#F4E6CA; --shadow:rgba(0,0,0,.07);
+  /* Selected row. Moves AWAY from --paper rather than toward it, so the row
+     that is picked out is the one where the text reads BEST, not worst: the
+     clan gold goes 5.86:1 -> 6.22:1 on light and 9.53:1 -> 10.4:1 on dark,
+     where the old --wash tint dropped it to 5.04:1. The highlight itself is
+     therefore carried by the leading rule and ring, which are non-text and
+     clear 8.5:1, not by a background wash competing with the type. */
+  --sel-bg:#FFFFFF;
   /* research chips -- private build only; class names are the leak check's markers */
   --eng-bg:#E8DFC8; --eng-fg:#4A3A12; --cen-bg:#DCE6EF; --cen-fg:#22384C;
   /* two type voices: the plate speaks 1923, the chrome speaks 2026 */
   --font-plate:"Laguna Serif","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
   --font-ui:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  --bar-h:2.75rem; --measure:42rem; --measure-wide:72rem;
+  /* --tap floors every hit area in the site chrome. 2rem clears the 24px
+     WCAG 2.5.8 minimum with room to spare on a mouse; a coarse pointer gets
+     the full 44px below. --bar-h is derived so anchor scroll-margin, which
+     is keyed on it, tracks the bar instead of being restated. */
+  --tap:2rem; --bar-h:calc(var(--tap) + var(--s2) * 2);
+  /* Type ramp for the CHROME AND PROSE ONLY. Nothing inside the sheet is
+     sized from these: the plate's metrics are rem against the fixed 16px
+     root (see GEOM), so a size change there would move --col and --stub and
+     break the zero-drift invariant. --t-xs is a floor, not a default -- 13px
+     is as small as the uppercase, letterspaced labels are allowed to get.
+     --t-prose is the only fluid step; it grows on wide screens where the
+     measure can afford it. */
+  --t-xs:.8125rem; --t-sm:.875rem; --t-base:1rem; --t-md:1.0625rem;
+  --t-prose:clamp(1rem,.95rem + .28vw,1.125rem);
+  --measure:40rem; --measure-wide:72rem;
   --s1:.25rem; --s2:.5rem; --s3:.75rem; --s4:1rem; --s5:1.5rem; --s6:2.5rem; --s7:4rem;
 }
+@media (pointer:coarse){:root{--tap:2.75rem}}
 @supports (color: light-dark(#000,#fff)){
   :root{
     --paper:light-dark(#FAF8F4,#191713);
@@ -78,6 +100,7 @@
     --eng-fg:light-dark(#4A3A12,#F0DFAE);
     --cen-bg:light-dark(#DCE6EF,#1D2E3D);
     --cen-fg:light-dark(#22384C,#BCD7EE);
+    --sel-bg:light-dark(#FFFFFF,#0E0C09);
   }
 }
 /* Engines without light-dark() (Firefox ESR 115, Safari <=17.4): the same
@@ -91,6 +114,7 @@
       --accent-strong:#DBB970; --ink-lineage:#C9C0AF; --wash:#2E250D;
       --shadow:rgba(0,0,0,.45); --eng-bg:#3A3016; --eng-fg:#F0DFAE;
       --cen-bg:#1D2E3D; --cen-fg:#BCD7EE;
+      --sel-bg:#0E0C09;
     }
     :root[data-theme="light"]{
       --paper:#FAF8F4; --panel:#FFFDF9; --ink:#1C1A17; --muted:#635D53;
@@ -98,6 +122,7 @@
       --accent-strong:#5C450F; --ink-lineage:#3A342A; --wash:#F4E6CA;
       --shadow:rgba(0,0,0,.07); --eng-bg:#E8DFC8; --eng-fg:#4A3A12;
       --cen-bg:#DCE6EF; --cen-fg:#22384C;
+      --sel-bg:#FFFFFF;
     }
   }
   :root[data-theme="dark"]{
@@ -106,6 +131,7 @@
     --accent-strong:#DBB970; --ink-lineage:#C9C0AF; --wash:#2E250D;
     --shadow:rgba(0,0,0,.45); --eng-bg:#3A3016; --eng-fg:#F0DFAE;
     --cen-bg:#1D2E3D; --cen-fg:#BCD7EE;
+    --sel-bg:#0E0C09;
   }
 }
 @media (prefers-contrast:more){:root{--muted:var(--ink);--rule:var(--muted)}}
@@ -128,50 +154,86 @@ body{margin:0;background:var(--paper);color:var(--ink);
 .skip:focus{inset-inline-start:var(--s3)}
 
 /* ---- masthead (sticky site chrome) ------------------------------------- */
+/* The bar's own inline padding is pulled in by --s2, the same amount every
+   control adds back as hit area, so the enlarged targets stay optically
+   flush with the page edge instead of the chrome appearing to widen. */
 .masthead{position:sticky;inset-block-start:0;z-index:30;min-height:var(--bar-h);
-  display:flex;align-items:center;flex-wrap:wrap;gap:var(--s2) var(--s5);
-  padding:var(--s2) var(--s4);background:var(--paper);
+  display:flex;align-items:center;flex-wrap:wrap;gap:var(--s1) var(--s2);
+  padding:var(--s2) calc(var(--s4) - var(--s2));background:var(--paper);
   border-block-end:1px solid var(--rule-faint);
-  font:400 .72rem/1.2 var(--font-ui);letter-spacing:.08em}
+  font:400 var(--t-xs)/1.2 var(--font-ui);letter-spacing:.08em}
+/* One hit-area rule for every control in the bar: links included, since a
+   roman numeral is only a few px of glyph and was the worst target here. */
+.wordmark,.masthead nav a,.mast-btn{
+  display:inline-flex;align-items:center;min-height:var(--tap);
+  padding-inline:var(--s2);vertical-align:middle}
 .wordmark{text-transform:uppercase;letter-spacing:.14em;font-weight:600;
   color:var(--ink);text-decoration:none}
 a.wordmark:hover{color:var(--accent)}
 a.wordmark:focus-visible{color:var(--accent)}
-.masthead nav{color:var(--muted);text-transform:uppercase}
-.masthead nav a{color:var(--muted);text-decoration:underline;text-underline-offset:.25em}
-.masthead nav a:hover{color:var(--accent)}
-.masthead nav a:focus-visible{color:var(--accent)}
-.masthead nav a[aria-current="page"]{color:var(--ink);text-decoration:none}
-.mast-right{margin-inline-start:auto;display:flex;align-items:center;gap:var(--s4)}
-.mast-link{color:var(--muted);text-transform:uppercase;text-underline-offset:.25em}
-.mast-link:hover{color:var(--accent)}
-.mast-link:focus-visible{color:var(--accent)}
+.masthead nav{display:flex;flex-wrap:wrap;gap:var(--s1);
+  color:var(--muted);text-transform:uppercase}
+/* Table links are buttons, sharing the 2px radius of the Theme and Scale
+   controls rather than inventing a second button shape. The current page is
+   a filled inversion, not a colour shift, so "which table am I on" survives
+   both themes, a monochrome screen and colour-blind vision. aria-current is
+   the only source of truth for that state -- there is no parallel class to
+   fall out of step with it. */
+/* --s2 rather than --s3 inline: at 375px the two pills plus the Theme button
+   overran the row by 2.9px, and the tighter padding buys ~17px of headroom
+   so the bar settles at two rows instead of three. Targets stay far past the
+   24px minimum -- the labels alone are ~100px wide. */
+/* gap, not a literal space: the link is inline-flex, so "Genealogy " and the
+   numeral are two flex items and flex trims the space at the item boundary --
+   without this they read "GENEALOGYI". It costs nothing under the narrow
+   breakpoint below, where .nav-word is absolutely positioned and therefore
+   not a flex item at all. */
+.masthead nav a{justify-content:center;gap:.3em;padding-inline:var(--s2);
+  border:1px solid var(--rule-faint);border-radius:2px;
+  color:var(--muted);text-decoration:none;white-space:nowrap}
+.masthead nav a:hover{color:var(--ink);border-color:var(--rule)}
+.masthead nav a:focus-visible{color:var(--ink);border-color:var(--rule)}
+.masthead nav a[aria-current="page"]{background:var(--ink);color:var(--paper);
+  border-color:var(--ink);font-weight:600}
+/* Raising the chrome to 13px widened the labels, and below ~26rem the two
+   pills plus the Theme button overrun the row by 14px -- a third sticky row
+   on a phone. The word is hidden VISUALLY, not removed: the accessible name
+   stays "Genealogy I", and the pills fall back to the --tap square floor so
+   a bare numeral is still a 44px target. */
+@media (max-width:26rem){
+  .nav-word{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+    overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+  .masthead nav a{min-width:var(--tap)}
+}
+.mast-right{margin-inline-start:auto;display:flex;align-items:center;gap:var(--s2)}
 .mast-btn{font:inherit;letter-spacing:inherit;text-transform:uppercase;
   color:var(--muted);background:none;border:1px solid var(--rule-faint);
-  border-radius:2px;padding:.3rem .6rem;cursor:pointer;min-height:24px}
+  border-radius:2px;cursor:pointer}
 .mast-btn:hover{color:var(--ink);border-color:var(--rule)}
 .mast-btn:focus-visible{color:var(--ink);border-color:var(--rule)}
 
 /* ---- title page -------------------------------------------------------- */
 .titlepage{max-width:var(--measure);margin:0 auto;
   padding:var(--s7) var(--s5) var(--s5);text-align:center}
-.plate-label{font-variant:small-caps;letter-spacing:.22em;font-size:.8125rem;
+.plate-label{font-variant:small-caps;letter-spacing:.22em;font-size:var(--t-xs);
   color:var(--muted)}
 h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
   letter-spacing:.09em;line-height:1.15;margin:.35rem 0 0;text-wrap:balance}
 .rule-double{width:8rem;height:4px;margin:var(--s4) auto;
   border-block-start:2px solid var(--ink);border-block-end:1px solid var(--ink)}
-.cite{font-size:.9375rem;color:var(--muted);line-height:1.65}
+.cite{font-size:var(--t-base);color:var(--muted);line-height:1.65;
+  text-wrap:pretty}
 .imprint{margin-block-start:var(--s3);font-variant:small-caps;
-  letter-spacing:.22em;font-size:.8125rem;color:var(--muted)}
+  letter-spacing:.22em;font-size:var(--t-xs);color:var(--muted);
+  line-height:1.6}
 
 /* ---- editor's key ------------------------------------------------------ */
 .key{max-width:var(--measure-wide);margin:0 auto;
   padding:0 var(--s5) var(--s5);display:flex;flex-wrap:wrap;
   gap:var(--s2) var(--s5);justify-content:center;
-  font-size:.8125rem;line-height:1.55;color:var(--muted)}
+  font-size:var(--t-xs);line-height:1.55;color:var(--muted)}
 .key .k{white-space:nowrap}
-.key .k-label{font-family:var(--font-ui);font-size:.75rem}
+.key .k-label{font-family:var(--font-ui);font-size:var(--t-xs)}
 .key-bracket,.key-lead{display:inline-block;vertical-align:middle;
   width:1.1rem;height:.95rem;position:relative}
 .key-bracket{border-inline-start:1px solid var(--rule)}
@@ -193,18 +255,21 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
    attribute (author display beats the UA's [hidden]{display:none}) and ship
    a dead search form to no-JS readers. */
 #find:not([hidden]){display:flex;align-items:center;gap:var(--s2)}
-#find input{font:.8125rem var(--font-ui);color:var(--ink);
+/* 16px on the find field, not --t-xs: anything smaller and iOS Safari zooms
+   the viewport on focus, which on a horizontally scrolling plate is a nasty
+   way to lose your place. */
+#find input{font:var(--t-base) var(--font-ui);color:var(--ink);
   background:var(--panel);border:1px solid var(--rule);border-radius:2px;
-  padding:.35rem .6rem;width:17rem;max-width:60vw}
+  padding:.35rem .6rem;width:17rem;max-width:60vw;min-height:var(--tap)}
 #find input:focus-visible{outline:2px solid var(--accent-strong);
   outline-offset:1px}
-.find-note{font:.75rem var(--font-ui);color:var(--muted)}
+.find-note{font:var(--t-xs) var(--font-ui);color:var(--muted)}
 #scale-mount{display:flex;align-items:center;gap:var(--s1)}
-.scale-l{font:.72rem var(--font-ui);text-transform:uppercase;
+.scale-l{font:var(--t-xs) var(--font-ui);text-transform:uppercase;
   letter-spacing:.08em;color:var(--muted);margin-inline-end:var(--s1)}
-.scale-btn{font:.8125rem var(--font-ui);color:var(--muted);background:none;
+.scale-btn{font:var(--t-xs) var(--font-ui);color:var(--muted);background:none;
   border:1px solid var(--rule-faint);border-radius:2px;padding:.3rem .55rem;
-  cursor:pointer;min-height:24px}
+  cursor:pointer;min-height:var(--tap);min-width:var(--tap)}
 .scale-btn[aria-pressed="true"]{color:var(--ink);border-color:var(--rule)}
 .scale-btn:hover{color:var(--ink)}
 .scale-btn:focus-visible{color:var(--ink)}
@@ -240,7 +305,7 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
 .ruler{display:flex;align-items:flex-end;width:max-content;min-width:100%;
   height:2rem;margin-block-end:var(--s2);
   padding-inline-start:calc(var(--sheet-pad) + 1px);
-  font:600 .72rem/1.9 var(--font-ui);text-transform:uppercase;
+  font:600 var(--t-xs)/1.9 var(--font-ui);text-transform:uppercase;
   letter-spacing:.08em;color:var(--muted);
   border-block-end:1px solid var(--rule-faint);position:relative}
 .ruler .gen{flex:none;width:var(--col);margin-inline-end:var(--stub);
@@ -255,7 +320,7 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
   inset-inline-start:var(--s3);z-index:1;align-self:center}
 .ruler-chip{display:inline-block;white-space:nowrap;padding:.05rem .55rem;
   border:1px solid var(--rule-faint);border-radius:999px;background:var(--paper);
-  color:var(--ink);font:400 .72rem/1.9 var(--font-plate);text-transform:none;
+  color:var(--ink);font:400 var(--t-xs)/1.9 var(--font-plate);text-transform:none;
   letter-spacing:.02em;opacity:0}
 /* Progress hairline under the ruler: inks left-to-right as the plate pans. */
 .ruler::after{content:"";position:absolute;inset-inline:0;inset-block-end:-1px;
@@ -297,7 +362,23 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
 .line{line-height:var(--lh);
   scroll-margin-block:calc(var(--bar-h) + 1.5rem) 1rem;
   scroll-margin-inline:var(--stub)}
-.line:target{background:var(--wash);box-shadow:inset 2px 0 0 var(--accent)}
+/* Selected row -- reached by a #p anchor (:target) or by opening the person's
+   card (.is-selected, set in openCard). Background, box-shadow and outline
+   only: a padding or border change here would move the row and break the
+   bracket's mother_row alignment.
+   The signal is carried by the 4px leading rule and the ring, both
+   --accent-strong at ~8.5:1 against the page, because the BACKGROUND has
+   almost no room to move -- see --sel-bg. */
+.line:target,.line.is-selected{background:var(--sel-bg);
+  box-shadow:inset 4px 0 0 var(--accent-strong);
+  outline:2px solid var(--accent-strong);outline-offset:-1px}
+/* The whole row is the click target for the card (see rowClick). Hover is
+   BACKGROUND ONLY: any padding, border or height change here would move the
+   row and break the bracket's mother_row alignment. :has() is the feature
+   test -- where it is unsupported the row simply keeps the default cursor,
+   and the number link still works. */
+.line:has(a.num){cursor:pointer}
+.line:has(a.num):hover{background:color-mix(in oklab,var(--ink) 7%,transparent)}
 /* The plate's leader rule, filling the gap from the end of the mother's text to
    the child column: '1. F. Lupi. Sun (Navaho)————————3. F. Nayowʼ˙ăitsa. Sun'.
    It ends exactly at --col, where the child's bracket bar begins, so the two
@@ -346,7 +427,8 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 .alt,.brace{color:var(--muted)}
 .age{font-style:italic;font-variant-numeric:tabular-nums}
 .vital{font-style:italic;color:var(--muted)}
-.clan{color:var(--accent)}
+/* Clan is not colour-coded: it renders as text like every other field. */
+.clan{color:inherit}
 .blank{color:var(--muted);letter-spacing:-.05em}
 .eng{background:var(--eng-bg);color:var(--eng-fg);border-radius:2px;
   padding:.02em .38em;font-size:.86em;font-weight:600}
@@ -365,18 +447,24 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
    the next sibling group off its mother's row. */
 .xref-cell{padding:0;line-height:var(--lh);white-space:nowrap;max-width:none}
 .plate-caption{max-width:var(--measure-wide);margin:0 auto;
-  padding:0 var(--s5) var(--s5);font-size:.8125rem;line-height:1.55;
-  color:var(--muted)}
+  padding:0 var(--s5) var(--s5);font-size:var(--t-sm);line-height:1.6;
+  color:var(--muted);text-wrap:pretty}
 .pan-hint{display:none}
 @media (max-width:1400px){.pan-hint{display:inline}}
 
 /* ---- register of persons ----------------------------------------------- */
 .apparatus-register{max-width:var(--measure-wide);margin:0 auto;
   padding:var(--s6) var(--s5) 0}
+/* A section head must not be smaller than the prose it introduces, and at
+   13px small-caps it was. It tracks --t-prose rather than --t-base so it
+   stays level as the body grows on wide screens -- a fixed --t-base head
+   would fall behind again at the top of the clamp. Same size as the body is
+   deliberate: the small caps, the weight and the tracking do the work, which
+   is how the rest of this apparatus already distinguishes rank. */
 .apparatus-register h2,footer h2,.prose h2{font-family:var(--font-plate);
-  font-size:.8125rem;font-variant:small-caps;letter-spacing:.14em;
+  font-size:var(--t-prose);font-variant:small-caps;letter-spacing:.14em;
   font-weight:600;color:var(--ink);margin:0 0 var(--s3)}
-.reg-note{font:.75rem/1.5 var(--font-ui);color:var(--muted);margin:0 0 var(--s3)}
+.reg-note{font:var(--t-xs)/1.55 var(--font-ui);color:var(--muted);margin:0 0 var(--s3)}
 .register-d{background:var(--panel);border:1px solid var(--rule-faint);
   border-radius:2px}
 .register-d summary{cursor:pointer;padding:var(--s3) var(--s4);
@@ -388,12 +476,14 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 @media (min-width:900px){.reg-list{columns:2}}
 .reg{break-inside:avoid;padding:var(--s2);
   scroll-margin-block:calc(var(--bar-h) + 1.5rem) 1rem}
-.reg:target{background:var(--wash)}
+.reg:target{background:var(--sel-bg);
+  box-shadow:inset 4px 0 0 var(--accent-strong);
+  outline:2px solid var(--accent-strong);outline-offset:-1px}
 .reg + .reg{border-block-start:1px solid var(--rule-faint)}
-.reg-line{font-size:.9375rem}
-.reg-rel{font-size:.8125rem;line-height:1.6;color:var(--muted);
+.reg-line{font-size:var(--t-base);line-height:1.5}
+.reg-rel{font-size:var(--t-sm);line-height:1.65;color:var(--muted);
   padding-inline-start:1.4rem}
-.rel-l{font-family:var(--font-ui);font-size:.7rem;text-transform:uppercase;
+.rel-l{font-family:var(--font-ui);font-size:var(--t-xs);text-transform:uppercase;
   letter-spacing:.08em;color:var(--muted)}
 .reg-rel a{color:inherit;text-decoration:underline dotted;
   text-underline-offset:.15em}
@@ -401,9 +491,12 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 .reg-rel a:focus-visible{color:var(--accent)}
 
 /* ---- footer apparatus --------------------------------------------------- */
+/* The apparatus is long-form scholarly prose and was set at 14px, below a
+   comfortable reading size. --t-prose also shortens the measure in
+   characters at a fixed --measure, which is the other half of the fix. */
 footer{max-width:var(--measure);margin:0 auto;
-  padding:var(--s6) var(--s5) var(--s7);font-size:.875rem;color:var(--muted);
-  line-height:1.7;text-wrap:pretty}
+  padding:var(--s6) var(--s5) var(--s7);font-size:var(--t-prose);
+  color:var(--muted);line-height:1.7;text-wrap:pretty}
 footer h2{margin:var(--s6) 0 var(--s3)}
 footer h2:first-child{margin-block-start:0}
 footer ul{margin:.3rem 0;padding-left:1.2rem}
@@ -413,24 +506,24 @@ footer code{font-family:var(--font-ui);font-size:.9em}
 .cite-block{margin:var(--s3) 0;padding:var(--s3) var(--s4);
   background:var(--panel);border-inline-start:2px solid var(--rule)}
 .cite-block p{margin:.4rem 0}
-.copy-btn{font:.8125rem var(--font-ui);color:var(--muted);background:none;
+.copy-btn{font:var(--t-xs) var(--font-ui);color:var(--muted);background:none;
   border:1px solid var(--rule-faint);border-radius:2px;padding:.3rem .6rem;
-  cursor:pointer;margin-inline-start:var(--s2);min-height:24px}
+  cursor:pointer;margin-inline-start:var(--s2);min-height:var(--tap)}
 .copy-btn:hover{color:var(--ink);border-color:var(--rule)}
 .copy-btn:focus-visible{color:var(--ink);border-color:var(--rule)}
 .updated{margin-top:var(--s6);padding-top:var(--s4);
-  border-top:1px solid var(--rule-faint);font-size:.75rem}
-.print-url{display:none;font-size:.75rem}
+  border-top:1px solid var(--rule-faint);font-size:var(--t-xs)}
+.print-url{display:none;font-size:var(--t-xs)}
 
 /* ---- person card (popover; JS-filled from the register) ----------------- */
 .pcard{position:fixed;margin:var(--s2);padding:var(--s4);
   width:min(26rem,90vw);background:var(--panel);color:var(--ink);
   border:1px solid var(--rule);border-radius:3px;
-  box-shadow:0 6px 24px var(--shadow);font-size:.9375rem}
+  box-shadow:0 6px 24px var(--shadow);font-size:var(--t-base);line-height:1.55}
 .pcard .reg-rel{padding-inline-start:0;margin-block-start:var(--s1)}
 .pcard-actions{display:flex;gap:var(--s3);align-items:center;
   margin:var(--s3) 0 0;font-family:var(--font-ui);font-size:.8125rem}
-.pcard-actions button{font:.8125rem var(--font-ui);color:var(--muted);
+.pcard-actions button{font:var(--t-xs) var(--font-ui);color:var(--muted);
   background:none;border:1px solid var(--rule-faint);border-radius:2px;
   padding:.3rem .6rem;cursor:pointer;min-height:24px}
 .pcard-actions button:hover{color:var(--ink);border-color:var(--rule)}
@@ -452,6 +545,33 @@ footer code{font-family:var(--font-ui);font-size:.9em}
     border-radius:8px 8px 0 0;position-area:none}
 }
 
+/* ---- flat text colour, chart pages -------------------------------------- */
+/* Every piece of text on a table page renders in --ink, the colour of the h1.
+   --muted is REDEFINED rather than each rule rewritten -- the same technique
+   the prefers-contrast:more block above already uses -- which sweeps the
+   numbers, sex marks, ages, vital notes, cross-references, ruler, register
+   labels, citation and footer in one declaration.
+   --rule is deliberately NOT touched: the plate's brackets and leader rules
+   are drawn lines, not text, and they carry the genealogy's structure. */
+body.chart{--muted:var(--ink)}
+/* Colour was the only thing marking these as links, so they take an explicit
+   underline in its place -- dropping both would leave no affordance at all
+   (WCAG 1.4.1). The xref and register links already carry a dotted underline. */
+body.chart footer a,body.chart .pcard-actions a{
+  color:var(--ink);text-decoration:underline;text-underline-offset:.15em}
+/* Hover and focus still change, but by weight of underline rather than by
+   introducing a second colour. */
+body.chart a.wordmark:hover,body.chart a.wordmark:focus-visible,
+body.chart a.num:hover,body.chart a.num:focus-visible,
+body.chart .xref a:hover,body.chart .xref a:focus-visible,
+body.chart .reg-rel a:hover,body.chart .reg-rel a:focus-visible,
+body.chart .register-d summary:hover,
+body.chart .masthead nav a:hover,body.chart .masthead nav a:focus-visible{
+  color:var(--ink);text-decoration:underline}
+/* The one exception: the current-table pill is set ON --ink, so its text has
+   to stay --paper or it disappears into its own background. */
+body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
+
 /* ---- print: the offprint ------------------------------------------------ */
 @media print{
   :root,:root[data-theme]{color-scheme:light}
@@ -467,7 +587,8 @@ footer code{font-family:var(--font-ui);font-size:.9em}
   footer{break-before:page}
   footer a[href^="http"]::after,.prose a[href^="http"]::after{
     content:" (" attr(href) ")";font-size:.9em}
-  .line:target,.reg:target{background:none;box-shadow:none}
+  .line:target,.line.is-selected,.reg:target{
+    background:none;box-shadow:none;outline:none}
   a.num,.xref a{color:inherit;text-decoration:none}
   .print-url{display:block}
   @page{size:landscape;margin:12mm}
@@ -479,16 +600,16 @@ footer code{font-family:var(--font-ui);font-size:.9em}
 .contents li:first-child{border-block-start:1px solid var(--rule-faint)}
 .contents a{display:block;padding:var(--s4) var(--s2);text-decoration:none;
   color:inherit}
-.c-title{display:block;font-size:1.0625rem;color:var(--ink)}
+.c-title{display:block;font-size:var(--t-md);color:var(--ink)}
 .contents a:hover .c-title{color:var(--accent)}
 .contents a:focus-visible .c-title{color:var(--accent)}
-.c-stats{display:block;font-size:.8125rem;color:var(--muted);
-  margin-block-start:var(--s1)}
+.c-stats{display:block;font-size:var(--t-sm);color:var(--muted);
+  margin-block-start:var(--s1);line-height:1.6}
 .contents .pending{padding:var(--s4) var(--s2)}
 .contents .pending .c-title{color:var(--muted)}
-.pending-tag{font-style:italic;font-size:.9375rem}
+.pending-tag{font-style:italic;font-size:var(--t-base)}
 .prose{max-width:var(--measure);margin:0 auto;
-  padding:var(--s6) var(--s5) var(--s7);font-size:.875rem;line-height:1.7;
+  padding:var(--s6) var(--s5) var(--s7);font-size:var(--t-prose);line-height:1.7;
   color:var(--muted);text-wrap:pretty}
 .prose h2{margin:var(--s6) 0 var(--s3)}
 .prose a{color:var(--accent)}
@@ -511,9 +632,8 @@ footer code{font-family:var(--font-ui);font-size:.9em}
 <body>
 <header class="masthead">
   <span class="wordmark" aria-current="page">Laguna Genealogies</span>
-  <nav aria-label="Tables">Tables: <a href="genealogy-i/">I</a> &middot; <a href="genealogy-iv/">IV</a></nav>
+  <nav aria-label="Tables"><a href="genealogy-i/"><span class="nav-word">Genealogy </span>I</a><a href="genealogy-iv/"><span class="nav-word">Genealogy </span>IV</a></nav>
   <span class="mast-right">
-    <a class="mast-link" href="https://github.com/PuebloGenealogy/pueblogenealogy.github.io">Source</a>
     <button id="theme" class="mast-btn" data-action="theme" hidden>Theme: Auto</button>
   </span>
 </header>
