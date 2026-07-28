@@ -63,7 +63,30 @@ opened on demand? It is decode-once material, which argues for on-demand.
 | Wikidata item | ~10 min | Payload already drafted and every ID verified; **not urgent** |
 | Wikipedia external link | Slow | Propose on the *Elsie Clews Parsons* Talk page — a direct edit is a COI and gets reverted |
 | Tables 2 and 3 | Blocked | Needs scans. Worth more than everything else here combined |
-| Delete `prettyph3nom/laguna-genealogy` | 1 min | Empty, unrelated to v1. Needs `gh auth refresh -h github.com -s delete_repo` |
+| Delete `prettyph3nom/laguna-genealogy` | 1 min, **needs the user** | Blocked on a token scope — see below |
+
+## Carried over — blocked on the user, not on work
+
+**Delete the empty repo `prettyph3nom/laguna-genealogy`.** Attempted
+2026-07-28 and refused with `HTTP 403 … needs the "delete_repo" scope`. The
+`gh` token holds `gist, read:org, repo, workflow` — GitHub gates repo deletion
+behind a scope that has to be granted explicitly, and granting it is a browser
+OAuth flow no agent can drive.
+
+```bash
+gh auth refresh -h github.com -s delete_repo   # opens a browser; user only
+gh repo delete prettyph3nom/laguna-genealogy --yes
+```
+
+Or repo **Settings → Danger Zone → Delete this repository**.
+
+Safe to delete, verified twice: 0 KB, 0 forks, 0 stars, 0 issues, no branches.
+It is **not** the v1 repo — v1 was `laguna-genealogy-tables`, which 404s under
+both owners and is genuinely gone. This is an unrelated empty repo whose only
+cost is showing up beside the real one in lists like Zenodo's.
+
+**Don't retry the delete before the scope is granted** — it will 403 again.
+Ask, or skip it.
 
 ## Decisions already made — don't re-litigate
 
