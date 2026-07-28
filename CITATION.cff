@@ -25,6 +25,19 @@ keywords:
   - digital edition
   - Southwest anthropology
 license: CC-BY-4.0
+# The CONCEPT doi, which always resolves to the newest version. A citation made
+# against it keeps working when Tables 2 and 3 are added; the per-release doi is
+# under identifiers for anyone who needs to pin a specific version.
+doi: 10.5281/zenodo.21637900
+version: v1.0.0
+date-released: "2026-07-28"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.21637900
+    description: Concept DOI — always resolves to the latest version
+  - type: doi
+    value: 10.5281/zenodo.21637901
+    description: Version DOI — v1.0.0, Genealogies I and IV
 repository-code: "https://github.com/PuebloGenealogy/pueblogenealogy.github.io"
 url: "https://pueblogenealogy.github.io/"
 references:

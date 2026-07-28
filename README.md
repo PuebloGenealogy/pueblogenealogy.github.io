@@ -1,5 +1,7 @@
 # Laguna Genealogies — a digital edition of Parsons 1923
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21637900.svg)](https://doi.org/10.5281/zenodo.21637900)
+
 **https://pueblogenealogy.github.io/**
 
 A machine-readable, searchable edition of the genealogical plates published with
@@ -113,6 +115,13 @@ The 1923 publication is in the public domain in the United States. The
 transcription, encoding and layout are by Elizabeth Heger-Vlahovic and are
 released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Please
 cite both this edition and Parsons — see [`CITATION.cff`](CITATION.cff).
+
+Each release is archived at Zenodo. Cite
+[**10.5281/zenodo.21637900**](https://doi.org/10.5281/zenodo.21637900), which
+always resolves to the current version; a citation made against it keeps working
+when Tables 2 and 3 are added. Individual releases also carry their own DOI if
+you need to pin one — v1.0.0 is
+[10.5281/zenodo.21637901](https://doi.org/10.5281/zenodo.21637901).
 
 Corrections are welcome and are recorded as dated commits, so the edition carries
 its own revision history.
