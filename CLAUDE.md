@@ -212,8 +212,10 @@ to catch "58+59" links those too.
   The chart **prints 68** — the plate's number — ringed in `--sic` red, links it
   to person 67, and carries *(misprint, click here to see notes)* on its **own
   row below**, pointing at `#note-misprint`. Opening the person card from that
-  line shows 68 and repeats the note; from person 67's other lines it shows 67,
-  and the register always keeps 67. Declared in `transcription.py`'s
+  line shows 68; from person 67's other lines it shows 67, and the register
+  always keeps 67. **The card carries the number, never the annotation** — it
+  repeated the note until 2026-07-28, and that was redundant with the chart row
+  the reader opened it from. Declared in `transcription.py`'s
   `PLATE_NUMBER_MISPRINTS`, read through `union["printed_number"]`, carried to
   the card on `data-printed`; a table without one needs no entry. Do not "fix"
   this to 67: printing 67 makes the chart disagree with the scan, which is the

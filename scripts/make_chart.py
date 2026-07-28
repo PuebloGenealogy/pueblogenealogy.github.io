@@ -1303,13 +1303,6 @@ footer code{font-family:var(--font-ui);font-size:.9em}
   border:1px solid var(--rule);border-radius:3px;
   box-shadow:0 6px 24px var(--shadow);font-size:var(--t-base);line-height:1.55}
 .pcard .reg-rel{padding-inline-start:0;margin-block-start:var(--s1)}
-/* The misprint note inside a person card, directly under its first line. Same
-   red and same wording as the row on the chart, so the reader recognises it as
-   the same annotation rather than a second, different one. */
-.pcard-sic{margin:.15rem 0 0}
-.pcard-sic a{font:italic .8125rem var(--font-ui);color:var(--sic);
-  text-decoration:underline dotted;text-underline-offset:.15em}
-.pcard-sic a:hover,.pcard-sic a:focus-visible{text-decoration:underline solid}
 .pcard-actions{display:flex;gap:var(--s3);align-items:center;
   margin:var(--s3) 0 0;font-family:var(--font-ui);font-size:.8125rem}
 .pcard-actions button{font:var(--t-xs) var(--font-ui);color:var(--muted);
@@ -1632,13 +1625,13 @@ function openCard(a){
   var line=body.querySelector(".reg-line");if(line)line.id="pcard-t";
   /* Opened from a line the plate misnumbers: the card names the number the
      reader is looking at, not the register's. The register itself keeps the
-     true number, so the printed one has to be carried on the link. */
+     true number, so the printed one has to be carried on the link.
+     The card carries the number only, not the annotation -- the chart row the
+     reader opened it from already sits under its own '(misprint)' row, and the
+     footer note is one click from there. */
   var printed=a.dataset?a.dataset.printed:null;
   if(printed&&line){
     var n=line.querySelector(".num");if(n)n.textContent=printed+".";
-    var s=doc.createElement("p");s.className="pcard-sic";
-    s.innerHTML='<a href="#note-misprint">(misprint, click here to see notes)</a>';
-    line.insertAdjacentElement("afterend",s);
   }
   card.appendChild(body);
   var act=doc.createElement("p");act.className="pcard-actions";
