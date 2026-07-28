@@ -3,6 +3,30 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — the card drops the cross-reference row
+
+- **Second half of the entry below, same reasoning.** The card repeated the
+  plate's cross-reference — *"For second wife and offspring see below, 76,
+  90-3"* — which the chart already prints directly under the person's line. The
+  card is opened *from* that line, so the reader was told it twice in one
+  glance, exactly as with the misprint note. Removed on the clone; the register
+  keeps every row.
+- **The rule is structural, not per-person:** a relation row with no `.rel-l` is
+  a cross-reference. So `openCard` drops it without a list of ids, and a future
+  table is covered without an entry. **Persons 12, 67 and 73 carry one on
+  Table 1** (73 has two); Table 4 has none. Read that from the transcriptions'
+  `cross_ref` column, not by opening cards.
+- **The consequence to know before reverting this.** The chart prints a
+  cross-reference only at a person's **first** occurrence — `xref_printed`
+  dedupes it. Person 67's is therefore on line 67 and *not* on the misnumbered
+  68 line below, so opening 67's card from that line no longer surfaces the
+  cross-reference at all. It is still in the register entry, one click away on
+  the card itself, and on the chart at 67. A narrower rule — keep the row only
+  where the clicked line lacks it — was offered and not taken.
+- **Measured:** all 214 chart lines on Table 1 opened programmatically, zero
+  cards contain a cross-reference row; cards 12, 67 and 73 each now end at
+  their CHILDREN row; the register still carries all four rows.
+
 ## 2026-07-28 — the person card gets its own format
 
 - **The card was rendering the register's format.** It clones the register
