@@ -1,0 +1,16 @@
+CREATE
+LAST	Len	"Laguna Genealogies: A Digital Edition of Parsons 1923"
+LAST	Den	"digital transcription of the genealogical plates published with Elsie Clews Parsons's \"Laguna Genealogies\" (1923)"
+LAST	P31	Q1224889	S854	"https://doi.org/10.5281/zenodo.21637900"
+LAST	P31	Q1172284	S854	"https://doi.org/10.5281/zenodo.21637900"
+LAST	P1476	en:"Laguna Genealogies: A Digital Edition of Parsons 1923"
+LAST	P2093	"Elizabeth Heger-Vlahovic"	S854	"https://doi.org/10.5281/zenodo.21637900"
+LAST	P577	+2026-07-28T00:00:00Z/11	S854	"https://doi.org/10.5281/zenodo.21637900"
+LAST	P356	"10.5281/ZENODO.21637900"
+LAST	P275	Q20007257	S854	"https://doi.org/10.5281/zenodo.21637900"
+LAST	P407	Q1860
+LAST	P407	Q12645568
+LAST	P921	Q1800513
+LAST	P144	Q51498010	S854	"https://pueblogenealogy.github.io/"
+LAST	P953	"https://pueblogenealogy.github.io/"
+LAST	P973	"https://github.com/PuebloGenealogy/pueblogenealogy.github.io"
