@@ -3,6 +3,22 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — selection highlights move off the text
+
+- **The highlight no longer sits on the words it highlights.** All three of them
+  — the selected chart row, the register entry, and a targeted footer note —
+  used `box-shadow: inset 4px 0 0`, which paints a bar over the first glyphs,
+  plus an outline hugging the text at `outline-offset:-1px`. Every part of the
+  treatment is now drawn **outside** the border box: the leading rule is a
+  shadow offset `-.3rem` with no spread, the halo a `.3rem` spread behind it,
+  the ring an outline at a matching `+.3rem`.
+- **Still layout-neutral, which is the constraint that matters.** Shadows and
+  outlines take no space, so nothing moves: the selected row measures 25px,
+  exactly as an unselected one does, all 24 child groups still sit on their
+  mothers' lines, and column drift is 0px at every generation. Invariant 2
+  permits `background`, `box-shadow` and `outline` on a selected `.line` and
+  this uses only those three.
+
 ## 2026-07-28 — the misprint annotation gets its own row, and a colour
 
 Refines the entry below, same day.
@@ -31,7 +47,6 @@ Refines the entry below, same day.
   what keeps everything below it on the grid.
 - Clicking the note from inside the card closes the card and lands on the
   highlighted note, clear of the sticky bar. Table 4 emits none of this markup.
-
 
 ## 2026-07-28 — the misprint is printed as printed; footer goes two-column
 
@@ -75,7 +90,6 @@ Refines the entry below, same day.
   horizontal overflow, no console errors, build exit 0 with 6 JSON-LD blocks
   valid, structural self-checks pass on both tables.
 
-
 ## 2026-07-28 — toolbar splits left/right; the table title pages are cut back
 
 - **Find goes hard left, Scale hard right**, spanning the plate bar. The push is
@@ -100,7 +114,6 @@ Refines the entry below, same day.
 - Measured after: column drift **0px at every generation** on both tables, find
   flush left and scale flush right to the bar's content box on both, build exit
   0 with 6 JSON-LD blocks valid, no console errors.
-
 
 ## 2026-07-28 — the key comes back off the page; the notation moves to the footer
 

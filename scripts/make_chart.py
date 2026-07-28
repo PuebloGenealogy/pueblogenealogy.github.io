@@ -1113,12 +1113,17 @@ body.chart .titlepage{max-width:var(--measure-wide)}
    card (.is-selected, set in openCard). Background, box-shadow and outline
    only: a padding or border change here would move the row and break the
    bracket's mother_row alignment.
-   The signal is carried by the 4px leading rule and the ring, both
+   The signal is carried by the leading rule and the ring, both
    --accent-strong at ~8.5:1 against the page, because the BACKGROUND has
-   almost no room to move -- see --sel-bg. */
+   almost no room to move -- see --sel-bg.
+   Every part of it is drawn OUTSIDE the border box: an inset shadow put the
+   bar on top of the first glyphs, and a hugging outline sat on the text. The
+   leading rule is a shadow offset -.3rem with no spread, the halo a .3rem
+   spread behind it, the ring an outline at a matching offset. Nothing here
+   changes layout, so the row still cannot move off its mother_row. */
 .line:target,.line.is-selected{background:var(--sel-bg);
-  box-shadow:inset 4px 0 0 var(--accent-strong);
-  outline:2px solid var(--accent-strong);outline-offset:-1px}
+  box-shadow:-.3rem 0 0 0 var(--accent-strong),0 0 0 .3rem var(--sel-bg);
+  outline:2px solid var(--accent-strong);outline-offset:.3rem}
 /* The whole row is the click target for the card (see rowClick). Hover is
    BACKGROUND ONLY: any padding, border or height change here would move the
    row and break the bracket's mother_row alignment. :has() is the feature
@@ -1236,8 +1241,8 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 .reg{break-inside:avoid;padding:var(--s2);
   scroll-margin-block:calc(var(--bar-h) + 1.5rem) 1rem}
 .reg:target{background:var(--sel-bg);
-  box-shadow:inset 4px 0 0 var(--accent-strong);
-  outline:2px solid var(--accent-strong);outline-offset:-1px}
+  box-shadow:-.3rem 0 0 0 var(--accent-strong),0 0 0 .3rem var(--sel-bg);
+  outline:2px solid var(--accent-strong);outline-offset:.3rem}
 .reg + .reg{border-block-start:1px solid var(--rule-faint)}
 .reg-line{font-size:var(--t-base);line-height:1.5}
 .reg-rel{font-size:var(--t-sm);line-height:1.65;color:var(--muted);
@@ -1276,9 +1281,8 @@ footer li{margin:.25rem 0}
    notes they were sent to. */
 footer li[id]{scroll-margin-block:calc(var(--bar-h) + 1.5rem) 1rem}
 footer li:target{background:var(--sel-bg);
-  box-shadow:inset 4px 0 0 var(--accent-strong);
-  outline:2px solid var(--accent-strong);outline-offset:2px}
-
+  box-shadow:-.3rem 0 0 0 var(--accent-strong),0 0 0 .3rem var(--sel-bg);
+  outline:2px solid var(--accent-strong);outline-offset:.3rem}
 footer a{color:var(--accent)}
 footer code{font-family:var(--font-ui);font-size:.9em}
 .cite-block{margin:var(--s3) 0;padding:var(--s3) var(--s4);

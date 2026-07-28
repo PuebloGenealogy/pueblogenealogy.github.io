@@ -82,7 +82,10 @@ python3 -m http.server 4173 --directory docs
   standing in for the repeat, exactly as the plate does.
 - **Misprint at 76 (Table 1).** The `+` line under 76 is numbered *68* but names
   Shuwaiʼᶦri, Turkey — person **67**. Person 67's own cross-reference confirms
-  it. Recorded as 67, with the misprint documented on union `U23`.
+  it. The chart **prints 68, as the plate does**, ringed in red, links it to 67,
+  and sets *(misprint, click here to see notes)* on the row beneath, which jumps
+  to the editorial note. The reading is recorded on union `U23` and declared in
+  `PLATE_NUMBER_MISPRINTS`.
 - **Persons 12 and 73** have further spouses and offspring in Genealogies II and
   III, not yet transcribed. Their cross-references are preserved verbatim.
 - **Blank names.** A dash on the plate means Parsons recorded no name; these are

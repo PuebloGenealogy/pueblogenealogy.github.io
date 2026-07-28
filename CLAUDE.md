@@ -94,7 +94,7 @@ computed from data, never typed.
 | Path | What |
 |---|---|
 | `scripts/make_chart.py` | **The whole renderer** — CSS, JS, HTML, SEO, layout |
-| `scripts/transcription*.py` | The 1923 baseline as data. Immutable |
+| `scripts/transcription*.py` | The 1923 baseline as data. Immutable — *except* to record what the plate actually prints, e.g. `PLATE_NUMBER_MISPRINTS` |
 | `docs/` | Generated site. Never hand-edit |
 | `assets/og-cover.jpg` | Social card, derived once from the plate scan (see `OG_IMAGE`) |
 | `sources/` | Source scans, in repo but not served |
@@ -134,7 +134,10 @@ Four rules that look like styling preferences and are not:
 2. **A selected or hovered `.line` may change `background`, `box-shadow` and
    `outline` — nothing else.** Padding, border or height there moves the row and
    throws the sibling bracket off its `mother_row`. That reads as a styling
-   detail while actually asserting a different genealogy.
+   detail while actually asserting a different genealogy. All three selection
+   highlights — chart row, register entry, targeted footer note — draw
+   **outside** the border box for a second reason: an `inset` shadow paints its
+   bar over the first glyphs, and a hugging outline sits on the text.
 3. **`--rule` is not text.** `body.chart` flattens all text to `--ink` by
    redefining `--muted`; the brackets and leader rules are deliberately excluded,
    because they carry the genealogy's structure.
@@ -157,6 +160,47 @@ decode-once material and the plate is what the reader came for.
 is what hides above 1400px and in print; hiding only `.pan-hint` would leave an
 empty figcaption holding its bottom padding open.
 
+In the plate bar, Find sits left and Scale right, and the split is an **auto
+start-margin on `#scale-mount`, never `justify-content:space-between`**. `#find`
+carries `[hidden]` until the script unhides it, so space-between would strand
+the scale buttons on the left for a reader without JavaScript.
+
+A table page's title block is the plate label, the numeral, the double rule and
+the **statistics line** — no citation. The landing page keeps its citation.
+
+`--muted-fixed` is the real `--muted`, captured at `:root`. Invariant 3 flattens
+`--muted` to `--ink` on `body.chart`; a `var()` is substituted with the value the
+element it is *declared on* computes, so anything that must keep the dimmer grey
+through the flatten reads `--muted-fixed`. Only `.imprint` does, deliberately —
+so the statistics line matches the landing page's `.c-stats` grey while
+everything else on a table page stays `--ink`. Adding more users of it is
+re-opening the colour decision; measure the contrast if you do (`.imprint` is
+6.15:1 light, 6.73:1 dark).
+
+**The theme control has no Auto state.** It toggles Light ↔ Dark and the button
+always names a real palette. The system preference is still honoured: it is what
+a first visit resolves to, and no choice is written to storage until the reader
+presses the button, so an untouched control keeps following the OS.
+
+The footer apparatus is a **two-column grid of `.app-sec` sections** at
+`--measure-wide`, collapsing to one column below 56rem. Grid of whole sections,
+not CSS multicolumn — multicolumn will break a heading away from the list it
+introduces. This is also what puts the footer on the same left edge as the
+register above it.
+
+The misprint ring is an **`outline`**, never a border or padding: a border
+widens the row and throws the sibling bracket off its `mother_row`. The
+annotation is a separate row counted with `row += 1`, exactly as a
+cross-reference row is, so everything below stays on the `--lh` grid — verified
+by walking all 24 child groups and confirming each still sits on its mother's
+line. `--sic` is the only colour on a table page that is not `--ink`; it is
+text, so it clears 4.5:1 on both papers alone (6.43:1 light, 7.19:1 dark).
+
+Person references in the apparatus are linked by `_p()` at each call site,
+**never by regex over the prose**. The apparatus is full of numbers that are not
+people — 1923, vol. 19, pp. 133–292, U23, `d. 1908` — and a pattern loose enough
+to catch "58+59" links those too.
+
 ## Facts worth knowing
 
 - **Clan descent is matrilineal**, so a child's clan must equal its mother's.
@@ -165,7 +209,15 @@ empty figcaption holding its bottom padding open.
 - **Person 8 (Yu˙si) appears twice** on Table 1; drawn once, with a
   cross-reference standing in for the repeat.
 - **Misprint at 76 (Table 1):** the `+` line is numbered 68 but names person 67.
-  Recorded as 67, documented on union U23.
+  The chart **prints 68** — the plate's number — ringed in `--sic` red, links it
+  to person 67, and carries *(misprint, click here to see notes)* on its **own
+  row below**, pointing at `#note-misprint`. Opening the person card from that
+  line shows 68 and repeats the note; from person 67's other lines it shows 67,
+  and the register always keeps 67. Declared in `transcription.py`'s
+  `PLATE_NUMBER_MISPRINTS`, read through `union["printed_number"]`, carried to
+  the card on `data-printed`; a table without one needs no entry. Do not "fix"
+  this to 67: printing 67 makes the chart disagree with the scan, which is the
+  one thing the edition exists not to do.
 - **English names in parentheses are plate data**, not research additions —
   person 90 "Heʼsa (Hazel)" on Table 1, and the Johnsons and Mana on Table 4.
 - **`d.`** means the person had already died when Parsons recorded the
@@ -206,7 +258,9 @@ structured data valid and guarded at build time. v1 is deleted.
 
 **Archived at Zenodo**, concept doi `10.5281/zenodo.21637900`, first release
 `v1.0.0` (2026-07-28). The doi appears in `CITATION.cff`, the README badge, the
-citation block on every table page, and as `identifier` in the JSON-LD —
+**footer** citation block on every table page (`cite_html()` — the title-page
+citation was removed on 2026-07-28 and never carried the doi), and as
+`identifier` in the JSON-LD —
 `Dataset` on the table pages, `CollectionPage` on the landing page, which is
 the entity the deposit actually corresponds to. Archiving is automatic from now
 on: Zenodo's webhook is on the repo, so **cutting a GitHub release mints a new

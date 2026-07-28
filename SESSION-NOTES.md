@@ -47,6 +47,16 @@ Site live, archived, citable. Nothing is broken and nothing is half-finished:
 - Published: Genealogy I and IV. Tables 2 and 3 await scans.
 - **No on-page chart key**, by decision. The notation lives in the footer's
   *Navigating this chart* list. Nothing on the edition is half-built.
+- Table pages were reworked on 2026-07-28: no key, no title-page citation, the
+  plate caption is just the pan hint, Find sits left and Scale right, and the
+  statistics line sits under the title in the landing page's grey. The theme
+  control toggles Light ↔ Dark with no Auto. The footer apparatus is two
+  columns with every person reference linked.
+- **Table 1's misprint prints as 68 again**, as the plate has it: ringed in
+  `--sic` red, linked to person 67, with *(misprint, click here to see notes)*
+  on its own row beneath. It had been silently corrected to 67. If anyone
+  "fixes" it back, that is the bug — see `PLATE_NUMBER_MISPRINTS`. The ring is
+  an `outline` on purpose; a border there moves the row off `mother_row`.
 
 ## The open thread
 
