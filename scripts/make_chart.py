@@ -901,9 +901,29 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
   line-height:1.6}
 
 /* ---- editor's key ------------------------------------------------------ */
-.key{max-width:var(--measure-wide);margin:0 auto;
-  padding:0 var(--s5) var(--s5);display:flex;flex-wrap:wrap;
-  gap:var(--s2) var(--s5);justify-content:center;
+/* A disclosure, not the old always-visible band: the notation is decode-once
+   material and the band cost ~100px above the plate for it. The chrome is
+   .register-d's on purpose -- one disclosure look on this site, not two.
+   <details> because the key has to work with JavaScript off; a popover would
+   not. The default triangle marker is kept rather than the landing page's
+   "+"/"-" marker: "+" is chart notation for a spouse, and the key explains it
+   two lines below. */
+.key-d{inline-size:min(var(--measure-wide) - var(--s5) * 2,100% - var(--s5) * 2);
+  margin:0 auto var(--s3);background:var(--panel);
+  border:1px solid var(--rule-faint);border-radius:2px}
+/* The line-height is pinned so the padding can be solved from --tap: the box
+   then measures exactly --tap at both pointer sizes and the label is centred
+   in it. A bare min-block-size would clear the floor but leave the label
+   sitting high on a coarse pointer; the floor is kept as the guarantee. */
+.key-d>summary{cursor:pointer;min-block-size:var(--tap);
+  padding-block:calc((var(--tap) - 1.4em) / 2);padding-inline:var(--s4);
+  font:var(--t-xs)/1.4 var(--font-ui);color:var(--muted)}
+.key-d>summary:hover{color:var(--ink)}
+.key-d>summary:focus-visible{color:var(--ink);
+  outline:2px solid var(--accent-strong);outline-offset:-1px}
+.key-d[open]>summary{border-block-end:1px solid var(--rule-faint)}
+.key{display:flex;flex-wrap:wrap;padding:var(--s4);
+  gap:var(--s2) var(--s5);
   font-size:var(--t-xs);line-height:1.55;color:var(--muted)}
 .key .k{white-space:nowrap}
 .key .k-label{font-family:var(--font-ui);font-size:var(--t-xs)}
@@ -1252,6 +1272,17 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
   .masthead,.skip,.plate-tools,.pan-hint,.apparatus-register,[popover],
   .ruler-chipslot{display:none}
   .scroll{overflow:visible;padding:0}
+  /* The key prints, open, whatever the reader left it at on screen. Engines
+     disagree on how a closed <details> hides its content -- older ones via the
+     UA stylesheet, current ones via ::details-content -- so both mechanisms
+     are overridden; whichever the browser does not implement is ignored. */
+  .key-d>summary~*{display:block}
+  .key-d::details-content{content-visibility:visible;block-size:auto}
+  .key-d{background:none;border:0;inline-size:auto}
+  .key-d>summary{list-style:none;padding-inline:0;font-weight:600}
+  .key-d>summary::-webkit-details-marker{display:none}
+  .key-d[open]>summary{border:0}
+  .key{padding-inline:0}
   .scroll-shell::before,.scroll-shell::after,.ruler::after{display:none}
   .sheet{border:0;box-shadow:none}
   .plate-zoom{zoom:var(--print-zoom,.7)}
@@ -1296,9 +1327,9 @@ READING_COMMON = """
 # The redesign's one disclosure: the reading aids are 2026 apparatus, the sheet
 # is 1923. Printed with the editorial notes on every chart page.
 APPARATUS_NOTE = """
-    <li>The generation ruler above the chart, the linked person numbers, and the
-        register below the chart are editorial apparatus of this edition, not
-        part of the plate.</li>
+    <li>The key and generation ruler above the chart, the linked person numbers,
+        and the register below the chart are editorial apparatus of this edition,
+        not part of the plate.</li>
 """
 
 def navigating_html(spec):
@@ -1637,9 +1668,14 @@ def ruler_html(spec, n_gens):
 
 def key_html():
     """
-    The editor's key. NOT CURRENTLY RENDERED -- the old always-visible band
-    between title page and plate was removed pending a redesign; this function
-    and the .key CSS are kept as the starting point for it.
+    The editor's key, a closed disclosure between the title page and the plate
+    bar. It carries the only explanation on the page of three notations -- `+`
+    for a spouse, `F.`/`M.` for sex, and the leader rule -- so removing it
+    again silently un-documents them; the rest also survive in the footer.
+
+    It sits OUTSIDE .plate-tools deliberately. The print rule hides that span,
+    and a key parked in the toolbar would vanish from printed sheets; instead
+    @media print forces this disclosure open.
 
     Specimens reuse the real chart classes so the key can never drift from the
     chart's styling; explanatory words are new UI text and speak in the UI
@@ -1659,7 +1695,10 @@ def key_html():
     spans = "".join(
         f'<span class="k">{specimen} <span class="k-label">{esc(label)}</span></span>'
         for specimen, label in items)
-    return f'<section class="key" aria-label="Key to the chart">{spans}</section>'
+    return ('<details class="key-d">'
+            "<summary>Key to the notation</summary>"
+            f'<div class="key">{spans}</div>'
+            "</details>")
 
 
 def datalist_html(persons, drawn):
@@ -2044,6 +2083,7 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
   <p class="imprint">{imprint}</p>
 </div>
 <main>
+{key_html()}
 <div class="plate-bar">
   <span class="plate-tools">
     <search><form id="find" hidden>
