@@ -87,7 +87,7 @@
      is as small as the uppercase, letterspaced labels are allowed to get.
      --t-prose is the only fluid step; it grows on wide screens where the
      measure can afford it. */
-  --t-xs:.8125rem; --t-sm:.875rem; --t-base:1rem; --t-md:1.0625rem;
+  --t-xs:.8125rem; --t-sm:.875rem; --t-base:1rem; --t-md:1.0625rem; --t-lg:1.125rem;
   --t-prose:clamp(1rem,.95rem + .28vw,1.125rem);
   --measure:40rem; --measure-wide:72rem;
   --s1:.25rem; --s2:.5rem; --s3:.75rem; --s4:1rem; --s5:1.5rem; --s6:2.5rem; --s7:4rem;
@@ -566,7 +566,33 @@ footer code{font-family:var(--font-ui);font-size:.9em}
   width:min(26rem,90vw);background:var(--panel);color:var(--ink);
   border:1px solid var(--rule);border-radius:3px;
   box-shadow:0 6px 24px var(--shadow);font-size:var(--t-base);line-height:1.55}
-.pcard .reg-rel{padding-inline-start:0;margin-block-start:var(--s1)}
+/* The card reads as a card, not as one row lifted out of the register, so it
+   sets its own format. EVERY rule here is scoped to .pcard: the register below
+   the plate is the same markup -- the card clones it -- and must keep its dense
+   list format, where 104 entries are meant to be scanned, not read one at a
+   time. */
+/* The person's printed line is the card's title (it carries id="pcard-t", the
+   aria-labelledby target), so it takes the step above the body text and an
+   underline. The offset clears the phonetic marks that sit below the baseline
+   in the transcription; the default would cut through them. */
+.pcard .reg-line{font-size:var(--t-lg);line-height:1.45;
+  text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:.22em}
+/* Indented under that title. The register already indents these 1.4rem and the
+   card used to zero it out; it now keeps it, so the label hangs off the name. */
+.pcard .reg-rel{margin-block-start:var(--s2)}
+/* Each person is a chip. Direct children only -- a cross-reference row is also
+   a .reg-rel, but its links sit inside an <em> of running prose ("For second
+   wife and offspring see below, 76, 90-3") and must stay prose, not become
+   buttons mid-sentence. The border is the affordance here, so the register's
+   dotted underline is dropped rather than drawn on top of a box; hover moves
+   the border and the fill, which is what the rest of the chrome does. */
+.pcard .reg-rel > a{display:inline-block;text-decoration:none;
+  padding:.2rem .5rem;margin:.15rem .2rem .15rem 0;
+  border:1px solid var(--rule-faint);border-radius:4px;
+  line-height:1.3;white-space:nowrap;min-height:24px}
+.pcard .reg-rel > a:hover,.pcard .reg-rel > a:focus-visible{
+  text-decoration:none;border-color:var(--rule);background:var(--sel-bg)}
 .pcard-actions{display:flex;gap:var(--s3);align-items:center;
   margin:var(--s3) 0 0;font-family:var(--font-ui);font-size:.8125rem}
 .pcard-actions button{font:var(--t-xs) var(--font-ui);color:var(--muted);
@@ -944,6 +970,32 @@ function openCard(a){
   body.className="pcard-body";
   body.innerHTML=reg.innerHTML;
   var line=body.querySelector(".reg-line");if(line)line.id="pcard-t";
+  /* Three edits to the clone, none of them touching rel_row -- the register
+     renders the same markup and keeps its own format.
+       - The label gains a colon. Written as real text rather than a CSS
+         ::after so it survives a copy out of the card.
+       - Each number gains the point it is printed with everywhere else: the
+         plate writes "56.", and the card's own title line already does, so a
+         chip reading "56" was the odd one out.
+       - The middot between relations goes. In the card each relation is a
+         chip, so the gap between the boxes already separates them and the
+         middot is left floating in it. Collapsed to a space rather than
+         deleted: the space is what keeps the text readable when copied, and
+         deleting the node would also close the gap after the label.
+     Rows with no .rel-l are the cross-reference rows -- running prose, which
+     keeps its own punctuation and its inline links. Everything inside a
+     labelled row is rel_link output, so every .num in one is a relation. */
+  body.querySelectorAll(".reg-rel").forEach(function(r){
+    var l=r.querySelector(".rel-l");
+    if(!l)return;
+    if(l.textContent.slice(-1)!==":")l.textContent+=":";
+    r.querySelectorAll(".num").forEach(function(n){
+      if(n.textContent.slice(-1)!==".")n.textContent+=".";
+    });
+    r.childNodes.forEach(function(c){
+      if(c.nodeType===3&&c.textContent.indexOf("·")>=0)c.textContent=" ";
+    });
+  });
   /* Opened from a line the plate misnumbers: the card names the number the
      reader is looking at, not the register's. The register itself keeps the
      true number, so the printed one has to be carried on the link.
