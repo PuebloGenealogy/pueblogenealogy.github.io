@@ -57,6 +57,18 @@
      and it is the only colour on a table page that is not --ink. Measured
      6.16:1 on #FAF8F4 and 7.84:1 on #191713. */
   --sic:#B3261E;
+  /* The clan. One colour for the whole field, NOT one per clan -- a 13-clan
+     palette was built and reverted (it collapsed to about one just-noticeable
+     difference under deuteranopia) and this is not that decision re-opened.
+     Two colours have to be told apart here, not thirteen, and they differ in
+     lightness as well as hue, so the distinction survives any colour vision.
+     It is text, so it clears 4.5:1 on its own against every background it can
+     sit on: paper 5.86:1 light / 9.53:1 dark, panel 6.12 / 8.74, selected row
+     6.22 / 10.40. The values coincide with --accent -- this is the gold the
+     clan was set in before body.chart flattened the page to --ink -- but the
+     token is separate on purpose: --accent means "interactive" everywhere
+     else, and recolouring the chrome must not recolour the genealogy. */
+  --clan:#7A5C1E;
   --wash:#F4E6CA; --shadow:rgba(0,0,0,.07);
   /* Selected row. Moves AWAY from --paper rather than toward it, so the row
      that is picked out is the one where the text reads BEST, not worst: the
@@ -106,6 +118,7 @@
     --accent:light-dark(#7A5C1E,#DBB970);
     --accent-strong:light-dark(#5C450F,#DBB970);
     --sic:light-dark(#B3261E,#FF8A80);
+    --clan:light-dark(#7A5C1E,#DBB970);
     --ink-lineage:light-dark(#3A342A,#C9C0AF);
     --wash:light-dark(#F4E6CA,#2E250D);
     --shadow:light-dark(rgba(0,0,0,.07),rgba(0,0,0,.45));
@@ -125,7 +138,7 @@
       --paper:#191713; --panel:#221F1B; --ink:#E9E6DF; --muted:#A49E93;
       --rule:#756F66; --rule-faint:#423F38; --accent:#DBB970;
       --accent-strong:#DBB970; --ink-lineage:#C9C0AF; --wash:#2E250D;
-      --sic:#FF8A80;
+      --sic:#FF8A80; --clan:#DBB970;
       --shadow:rgba(0,0,0,.45); --eng-bg:#3A3016; --eng-fg:#F0DFAE;
       --cen-bg:#1D2E3D; --cen-fg:#BCD7EE;
       --sel-bg:#0E0C09;
@@ -134,7 +147,7 @@
       --paper:#FAF8F4; --panel:#FFFDF9; --ink:#1C1A17; --muted:#635D53;
       --rule:#7D766B; --rule-faint:#C4BFB4; --accent:#7A5C1E;
       --accent-strong:#5C450F; --ink-lineage:#3A342A; --wash:#F4E6CA;
-      --sic:#B3261E;
+      --sic:#B3261E; --clan:#7A5C1E;
       --shadow:rgba(0,0,0,.07); --eng-bg:#E8DFC8; --eng-fg:#4A3A12;
       --cen-bg:#DCE6EF; --cen-fg:#22384C;
       --sel-bg:#FFFFFF;
@@ -144,7 +157,7 @@
     --paper:#191713; --panel:#221F1B; --ink:#E9E6DF; --muted:#A49E93;
     --rule:#756F66; --rule-faint:#423F38; --accent:#DBB970;
     --accent-strong:#DBB970; --ink-lineage:#C9C0AF; --wash:#2E250D;
-    --sic:#FF8A80;
+    --sic:#FF8A80; --clan:#DBB970;
     --shadow:rgba(0,0,0,.45); --eng-bg:#3A3016; --eng-fg:#F0DFAE;
     --cen-bg:#1D2E3D; --cen-fg:#BCD7EE;
     --sel-bg:#0E0C09;
@@ -434,6 +447,14 @@ body.chart .titlepage{max-width:var(--measure-wide)}
     transition:border-color .12s ease}
 }
 .num{color:var(--muted);font-variant-numeric:tabular-nums}
+/* A little air after the number's point, so "65." reads as the entry's label
+   rather than as the first word of the name. A margin, not a wider space
+   character: it is independent of the font and cannot be swallowed by white-
+   space collapsing. Layout-safe -- the widest line on Table 1 ("+ 61. M.
+   Ishŭrneai (Garsia). Chaparral Cock") leaves 108px of slack inside its 384px
+   --col block, so nothing is pushed toward the stub. Printed person lines
+   only; the card's relation chips space themselves. */
+.line .num,.reg-line .num{margin-inline-end:.2em}
 a.num{text-decoration:none}
 a.num:hover{color:var(--accent);text-decoration:underline}
 a.num:focus-visible{color:var(--accent);text-decoration:underline}
@@ -455,8 +476,11 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 .alt,.brace{color:var(--muted)}
 .age{font-style:italic;font-variant-numeric:tabular-nums}
 .vital{font-style:italic;color:var(--muted)}
-/* Clan is not colour-coded: it renders as text like every other field. */
-.clan{color:inherit}
+/* The clan is the one field on a printed line that is not the person -- it is
+   what the matrilineal check is run on -- so it carries its own colour. Reads
+   through body.chart's flatten because --clan is its own token, exactly as
+   --sic and --muted-fixed do; see the token for the measured contrasts. */
+.clan{color:var(--clan)}
 .blank{color:var(--muted);letter-spacing:-.05em}
 .eng{background:var(--eng-bg);color:var(--eng-fg);border-radius:2px;
   padding:.02em .38em;font-size:.86em;font-weight:600}
@@ -664,7 +688,10 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
     content:" (" attr(href) ")";font-size:.9em}
   .line:target,.line.is-selected,.reg:target{
     background:none;box-shadow:none;outline:none}
-  a.num,.xref a{color:inherit;text-decoration:none}
+  /* The offprint is black on white. The clan gold prints as a weak grey, and
+     the colour was never carrying information a reader could not get from the
+     word itself, so it flattens here rather than degrading. */
+  a.num,.xref a,.clan{color:inherit;text-decoration:none}
   .print-url{display:block}
   @page{size:landscape;margin:12mm}
 }
