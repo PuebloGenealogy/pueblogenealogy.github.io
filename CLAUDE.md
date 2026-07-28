@@ -146,8 +146,20 @@ structured data valid and guarded at build time. v1 is deleted.
 - **Custom domain** — the strongest remaining SEO upgrade; drops onto this repo
   via a `CNAME` file.
 - Tables 2 and 3 await scans.
-- Phonetic glyphs unverified on **Windows and Android**. The embedded font
-  subset should make this a non-issue, but no device has been checked.
+- Phonetic glyphs: **font coverage proven, live device rendering still
+  unchecked.** Reading the shipped woff2 binaries with fontTools, every one of
+  the 85 characters in the transcription — and all 94 rendered on Genealogy I —
+  is in the cmap of both faces; `ᶦ` U+1DA6, `ᵘ` U+1D58, `ᵃ` U+1D43, `ʼ` U+02BC
+  and `˙` U+02D9 included. The faces are base64 data URIs, so nothing is
+  fetched and nothing can 404, and no combining marks are used, so there is no
+  mark positioning to vary by platform. Tofu is therefore ruled out by
+  construction. What is still unknown on **Windows and Android**: whether a
+  browser honours the embedded face at all (data-saver, forced-font settings),
+  how the `--font-ui` chrome stack resolves there (Segoe UI / Roboto change
+  metrics, not glyphs, and could move where the masthead wraps), and diacritic
+  quality at small sizes on low-DPI screens. Appearance risks, not corruption.
+  Note macOS substitutes for any font, so no on-screen comparison here can
+  demonstrate the absence of substitution — read the cmap, don't measure widths.
 
 ## Working style
 
