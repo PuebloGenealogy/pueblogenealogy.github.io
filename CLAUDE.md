@@ -141,10 +141,17 @@ Four rules that look like styling preferences and are not:
 4. **`--tap` floors every hit area** in the site chrome, and `--bar-h` derives
    from it so anchor `scroll-margin` tracks the bar. Don't restate either.
 
-Two things that will look like bugs and aren't: `key_html()` and the `.key` CSS
-are **unreferenced on purpose** (see Outstanding), and below 26rem the word
-"Genealogy" in the table pills is visually hidden but kept in the accessible
-name, so the sticky bar stays two rows on a phone.
+One thing that will look like a bug and isn't: below 26rem the word "Genealogy"
+in the table pills is visually hidden but kept in the accessible name, so the
+sticky bar stays two rows on a phone.
+
+The chart key is a `<details>` sitting **outside `.plate-tools`** on purpose —
+the print rule hides that span, so a key inside it would vanish from printed
+sheets. `@media print` forces the disclosure open, overriding both the way older
+engines hide closed `<details>` content and the way current ones do it via
+`::details-content`; in Chrome 148 only the latter fires and the legacy selector
+is inert, so **both must stay**. The key carries the only explanation on the
+page of `+` for spouse, `F.`/`M.` for sex, and the leader rule.
 
 ## Facts worth knowing
 
@@ -192,14 +199,6 @@ version doi**. `.zenodo.json` controls the record's metadata; without it Zenodo
 would title the deposit after the repo.
 
 **Outstanding:**
-- **Redesign the chart key** — the open design thread. The old always-visible
-  band was removed; `key_html()` and the `.key` CSS are kept, unreferenced, as
-  its starting point. Three notations are currently explained **nowhere** on the
-  page: `+` for spouse, `F.`/`M.` for sex, and the leader rule. Constraints
-  worth knowing before starting: it should work without JavaScript (`<details>`
-  does, a popover does not), and the print rule hides `.plate-tools`, so a key
-  parked in the toolbar silently vanishes from printed sheets unless forced open
-  in `@media print`.
 - **Inbound links** — a fresh `*.github.io` has no authority, and no on-page
   work substitutes. Zenodo is done and is itself the first such link. Next, by
   effort-to-return: a **Wikidata** item (heavily crawled, feeds Knowledge Graph,

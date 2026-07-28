@@ -45,26 +45,26 @@ Site live, archived, citable. Nothing is broken and nothing is half-finished:
 - Live: <https://pueblogenealogy.github.io/>
 - DOI (concept): `10.5281/zenodo.21637900` → <https://zenodo.org/records/21637901>
 - Published: Genealogy I and IV. Tables 2 and 3 await scans.
+- The chart key shipped 2026-07-28 as a closed `<details>` above the plate. The
+  page explains its own notation again; nothing on the edition is half-built.
 
 ## The open thread
 
-**Redesign the chart key.** The old always-visible band was removed because it
-cost ~100px above the plate and was reference material a reader needs once.
-`key_html()` and the `.key` CSS are still in `make_chart.py`, unreferenced, as
-the starting point.
+**There isn't one.** The key redesign — the thread every previous handoff
+named — is done and live, so the next session is choosing rather than
+continuing. Read that as a good state, not a missing note.
 
-What has to be true of the replacement:
+The largest remaining item by a wide margin is **Tables 2 and 3**, and it is
+blocked on scans, not on work. Everything else below is small, optional, or
+needs the user at a browser.
 
-- It must restore three notations currently explained nowhere on the page:
-  `+` (spouse, on the line below), `F.`/`M.` (sex as printed), and the leader
-  rule. The others survive in the footer apparatus.
-- It should work **without JavaScript** — `<details>` does, a popover does not.
-- The print rule hides `.plate-tools`. A key parked in the toolbar disappears
-  from printed sheets unless it is forced open in `@media print`. The old key
-  printed; losing that would be a silent regression.
-
-Decide first: permanently visible, or opened on demand? It is decode-once
-material, which argues for on demand.
+If the key is revisited, the two things that will look wrong and aren't are now
+recorded in `CLAUDE.md` under Design invariants: it sits **outside**
+`.plate-tools` because the print rule hides that span, and `@media print`
+carries **two** overrides for forcing a closed `<details>` open because engines
+disagree — in Chrome 148 only `::details-content` fires and the legacy selector
+is inert. Deleting either as redundant silently drops the key from printed
+sheets on some browser.
 
 ## Other things that could be picked up
 

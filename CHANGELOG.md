@@ -3,6 +3,44 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — the chart key returns, as a disclosure
+
+- **The key is back and the open design thread is closed.** Since the
+  always-visible band was removed earlier the same day, three notations had been
+  explained nowhere on the page — `+` for a spouse, `F.`/`M.` for sex, and the
+  leader rule. `key_html()` now renders a **closed `<details>`** between the
+  title page and the plate bar: **34px collapsed** against the old band's
+  ~100px, for material a reader decodes once. `key_html()` and the `.key` CSS
+  are therefore **no longer unreferenced** — the note in `CLAUDE.md` saying so
+  has been replaced.
+- **Why `<details>` and not a popover:** the key has to work with JavaScript
+  off. Nothing in the page script touches it — verified by grepping the shipped
+  script, which references `details`/`summary` only in two pre-existing places,
+  one of them the line-click guard that already excluded `summary` and so does
+  not hijack the disclosure.
+- **The key sits outside `.plate-tools`, deliberately.** The print rule hides
+  that span; a key parked in the toolbar would have vanished from printed
+  sheets, and the old band printed. `@media print` forces the disclosure open
+  using **both** mechanisms — the legacy `summary~*{display:block}` and
+  `::details-content` — because engines disagree. Measured in Chrome 148: with
+  the disclosure closed, only `::details-content` fires (34px → 106px); the
+  legacy selector alone was **inert**. Do not delete either one on the grounds
+  that it looks redundant.
+- **Chrome is `.register-d`'s**, so the site has one disclosure look, not two.
+  The default triangle marker is kept rather than the landing page's `+`/`–`
+  marker: `+` is chart notation for a spouse and the key explains it two lines
+  below, which would have been a genuine collision.
+- **The summary's padding is solved from `--tap`, not floored by it.** With the
+  line-height pinned, `calc((var(--tap) - 1.4em) / 2)` makes the hit area
+  measure exactly `--tap` at both pointer sizes with the label centred; a bare
+  `min-block-size` cleared the floor but left the label sitting high on a coarse
+  pointer. Measured 32px. The floor is kept as the guarantee.
+- **Measured, not assumed:** column drift **0px at every generation** on both
+  tables (I: 5 generations, IV: 4); no horizontal overflow at 375px with the key
+  open, items wrapping to 7 rows; masthead still two rows; no console errors.
+- The editorial-apparatus note now names the key alongside the generation ruler,
+  the person numbers and the register — it is 2026 apparatus, not the plate.
+
 ## 2026-07-28 — DOI minted; table pages reworked for readability and reach
 
 - **Archived at Zenodo; the edition has a DOI.** Concept doi
