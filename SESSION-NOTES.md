@@ -71,7 +71,7 @@ material, which argues for on demand.
 | | Effort | Notes |
 |---|---|---|
 | Glyph check on Windows/Android | 5 min, needs a device | Font coverage already proven; only live rendering is unknown |
-| Wikidata item | ~10 min | Payload drafted, every ID verified against live Wikidata; **not urgent** |
+| Wikidata item | ~10 min | Payload ready at `wikidata-quickstatements.txt`, all 18 ids verified live; **not urgent** |
 | Wikipedia external link | Slow | Propose on the *Elsie Clews Parsons* Talk page — a direct edit is a COI and gets reverted |
 | Tables 2 and 3 | Blocked | Needs scans. Worth more than everything else here combined |
 | Delete `prettyph3nom/laguna-genealogy` | 1 min, **needs the user** | Blocked on a token scope — see below |
@@ -117,3 +117,10 @@ Ask, or skip it.
 - **The Wikidata item is optional.** The doi already put the edition into
   DataCite, and from there OpenAIRE and Google Dataset Search, which is the
   discovery infrastructure that matters. Wikidata adds a slow, modest signal.
+  If it is done: paste `wikidata-quickstatements.txt` into
+  <https://quickstatements.toolforge.org/> while logged in — creating the item
+  needs a Wikidata account, so no agent can do it. The payload uses
+  `P2093 author name string` rather than `P50 author` deliberately: P50 would
+  require creating a biographical item about a living person, which carries its
+  own notability bar and privacy questions. It links `P144 based on` to
+  `Q51498010`, the 1923 article's existing item.
