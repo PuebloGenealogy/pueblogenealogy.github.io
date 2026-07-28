@@ -179,6 +179,16 @@ UNIONS = [
 ]
 
 # ---------------------------------------------------------------------------
+# PLATE_NUMBER_MISPRINTS  (union_id -> the number the plate prints on that '+'
+# line, where it is not the number of the person the line names)
+#
+# The edition reproduces the plate: the printed number is what is drawn, and
+# the reading that resolves it lives in the apparatus. Correcting it silently
+# in the chart would make the page disagree with the scan it transcribes.
+# ---------------------------------------------------------------------------
+PLATE_NUMBER_MISPRINTS = {"U23": 68}
+
+# ---------------------------------------------------------------------------
 # CHILDREN  (each bracketed sibling group in the plate)
 # union_id, mother_id, father_id, child_id, note
 #   father_id = 0 when the plate does not let paternity be assigned

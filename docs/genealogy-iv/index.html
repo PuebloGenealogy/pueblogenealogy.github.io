@@ -67,6 +67,13 @@
      WCAG 2.5.8 minimum with room to spare on a mouse; a coarse pointer gets
      the full 44px below. --bar-h is derived so anchor scroll-margin, which
      is keyed on it, tracks the bar instead of being restated. */
+  /* The real --muted, captured at :root. body.chart redefines --muted to
+     --ink for the table pages, and a var() is substituted with the value the
+     element it is declared on computes -- so anything that must keep the
+     dimmer grey THROUGH that flatten reads --muted-fixed instead. Declared
+     once here: every theme block below only ever restates --muted, and this
+     picks up whichever of those wins. */
+  --muted-fixed:var(--muted);
   --tap:2rem; --bar-h:calc(var(--tap) + var(--s2) * 2);
   /* Type ramp for the CHROME AND PROSE ONLY. Nothing inside the sheet is
      sized from these: the plate's metrics are rem against the fixed 16px
@@ -221,6 +228,18 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
   border-block-start:2px solid var(--ink);border-block-end:1px solid var(--ink)}
 .cite{font-size:var(--t-base);color:var(--muted);line-height:1.65;
   text-wrap:pretty}
+/* The table page's statistics line. --muted-fixed, not --muted: this is the
+   one thing on a table page that keeps the landing page's grey through
+   body.chart's flatten to --ink, so the two pages read as one edition. A step
+   larger than the landing page's .c-stats, which is --t-sm. */
+.imprint{margin-block-start:var(--s3);font-variant:small-caps;
+  letter-spacing:.14em;font-size:var(--t-base);color:var(--muted-fixed);
+  line-height:1.6}
+/* A table page's title block no longer holds the citation, so it no longer
+   needs the 40rem prose measure -- and at --t-base the statistics line does
+   not fit inside one. The landing page keeps --measure, because its citation
+   still has to read as prose. */
+body.chart .titlepage{max-width:var(--measure-wide)}
 
 /* ---- plate bar --------------------------------------------------------- */
 /* Find sits hard left, scale hard right, spanning the bar. The push comes from
@@ -402,6 +421,14 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
 a.num{text-decoration:none}
 a.num:hover{color:var(--accent);text-decoration:underline}
 a.num:focus-visible{color:var(--accent);text-decoration:underline}
+/* A number the plate misprints. It is set exactly like every other number --
+   this is what the plate says, and dimming or bracketing it would editorialise
+   inside the transcription. The marker beside it carries the annotation, in
+   the chrome's voice, and jumps to the note that explains the reading. */
+.sic{font:italic var(--t-xs) var(--font-ui);color:var(--muted);
+  text-decoration:underline dotted;text-underline-offset:.15em;
+  vertical-align:.15em;margin-inline-start:.15em}
+.sic:hover,.sic:focus-visible{color:var(--accent)}
 .sex{color:var(--muted)}
 /* + and ——— are text content (spouse marker, unrecorded name), so they hold
    the 4.5:1 text minimum via --muted; --rule is reserved for drawn rules. */
@@ -479,13 +506,32 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 /* The apparatus is long-form scholarly prose and was set at 14px, below a
    comfortable reading size. --t-prose also shortens the measure in
    characters at a fixed --measure, which is the other half of the fix. */
-footer{max-width:var(--measure);margin:0 auto;
+/* Two columns, so the apparatus stops being one long scroll and lands on the
+   same left edge as the register above it. --measure-wide, not --measure:
+   each column then measures about 34rem, still inside a comfortable line
+   length at --t-prose, and the font size does not change. Grid of whole
+   sections rather than CSS columns, because multicolumn would happily break a
+   heading away from the list it introduces. */
+footer{max-width:var(--measure-wide);margin:0 auto;
   padding:var(--s6) var(--s5) var(--s7);font-size:var(--t-prose);
   color:var(--muted);line-height:1.7;text-wrap:pretty}
+.app-cols{display:grid;grid-template-columns:1fr;gap:var(--s5) var(--s6);
+  align-items:start}
+@media (min-width:56rem){.app-cols{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.app-sec{break-inside:avoid}
 footer h2{margin:var(--s6) 0 var(--s3)}
-footer h2:first-child{margin-block-start:0}
+footer h2:first-child,.app-sec h2:first-child{margin-block-start:0}
 footer ul{margin:.3rem 0;padding-left:1.2rem}
 footer li{margin:.25rem 0}
+/* An apparatus note that something on the chart links to. Same scroll-margin
+   as .line and .reg so the sticky bar does not sit on top of it, and the same
+   target treatment, so a reader who followed a marker can see which of eight
+   notes they were sent to. */
+footer li[id]{scroll-margin-block:calc(var(--bar-h) + 1.5rem) 1rem}
+footer li:target{background:var(--sel-bg);
+  box-shadow:inset 4px 0 0 var(--accent-strong);
+  outline:2px solid var(--accent-strong);outline-offset:2px}
+
 footer a{color:var(--accent)}
 footer code{font-family:var(--font-ui);font-size:.9em}
 .cite-block{margin:var(--s3) 0;padding:var(--s3) var(--s4);
@@ -506,6 +552,7 @@ footer code{font-family:var(--font-ui);font-size:.9em}
   border:1px solid var(--rule);border-radius:3px;
   box-shadow:0 6px 24px var(--shadow);font-size:var(--t-base);line-height:1.55}
 .pcard .reg-rel{padding-inline-start:0;margin-block-start:var(--s1)}
+
 .pcard-actions{display:flex;gap:var(--s3);align-items:center;
   margin:var(--s3) 0 0;font-family:var(--font-ui);font-size:.8125rem}
 .pcard-actions button{font:var(--t-xs) var(--font-ui);color:var(--muted);
@@ -595,6 +642,7 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
   <div class="plate-label">Table 4</div>
   <h1>GENEALOGY IV</h1>
   <div class="rule-double"></div>
+  <p class="imprint">73 individuals &middot; four generations &middot; 14 marriages &middot; 58 parent&ndash;child links</p>
 </div>
 <main>
 <div class="plate-bar">
@@ -633,10 +681,14 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
   </details>
 </section>
 <footer id="apparatus">
-  <h2>The record</h2>
-  <ul><li>73 individuals across 4 generation columns; 14 marriages; 58 parent&ndash;child links.</li><li>Transcribed from the plate and verified against it. Clan descent is matrilineal, which gives every bracket an independent check; all 14 marriages pass it.</li></ul>
-  <h2>Navigating this chart</h2>
-  <ul>
+  <div class="app-cols">
+    <section class="app-sec">
+      <h2>The record</h2>
+      <ul><li>73 individuals across 4 generation columns; 14 marriages; 58 parent&ndash;child links.</li><li>Transcribed from the plate and verified against it. Clan descent is matrilineal, which gives every bracket an independent check; all 14 marriages pass it.</li></ul>
+    </section>
+    <section class="app-sec">
+      <h2>Navigating this chart</h2>
+      <ul>
     <li>A <em>+</em> at the start of a line marks a spouse, printed on the line
         below the person they married.</li>
     <li><em>F.</em> and <em>M.</em> give the sex of each person as printed.</li>
@@ -656,32 +708,37 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
         card, and Esc closes it. The Theme and Scale controls remember your
         choice.</li>
 </ul>
-  <h2>Editorial notes</h2>
-  <ul>
+    </section>
+    <section class="app-sec">
+      <h2>Editorial notes</h2>
+      <ul>
     <li>Clan membership is matrilineal: every sibling group carries its mother's clan.
         That rule was used to verify the bracket readings against the plate.</li>
     <li>A dash in place of a name means the plate printed no name.</li>
     <li>The dashed rule separating the two halves is an editorial addition,
-        not on the plate. It marks the two founding couples, 1+2 and 59+60.</li>
+        not on the plate. It marks the two founding couples, <a href="#p1">1</a>+<a href="#p2">2</a> and <a href="#p59">59</a>+<a href="#p60">60</a>.</li>
 
-    <li>Persons 3 and 4 appear twice on the plate. Person 4 links the two families:
-        husband of 3 in the upper half, son of 59+60 in the lower. They are drawn once,
-        with &ldquo;For descendants, see above&rdquo; standing in for the repeat, as the
-        plate has it.</li>
-    <li>Two sibling groups are printed collectively &mdash; &ldquo;36-43. 8 children
-        deceased&rdquo; and &ldquo;50-53. 4 children deceased&rdquo;. The plate assigns
+    <li>Persons <a href="#p3">3</a> and <a href="#p4">4</a> appear twice on the plate. Person <a href="#p4">4</a> links the
+        two families: husband of <a href="#p3">3</a> in the upper half, son of <a href="#p59">59</a>+<a href="#p60">60</a> in
+        the lower. They are drawn once, with &ldquo;For descendants, see above&rdquo;
+        standing in for the repeat, as the plate has it.</li>
+    <li>Two sibling groups are printed collectively &mdash;
+        &ldquo;<a href="#p36">36-43</a>. 8 children deceased&rdquo; and
+        &ldquo;<a href="#p50">50-53</a>. 4 children deceased&rdquo;. The plate assigns
         each of them a number, so each is drawn, with the collective setting recorded
         in the data.</li>
     <li>The English names in parentheses &mdash; Hugh, Frank, Paul and Joe Johnson,
         and Mana &mdash; are printed on the plate. They are part of the transcription,
         not additions to it.</li>
-    <li>Persons 19 and 20 are printed with no sex, and person 73 with no father: the
-        plate records neither, so neither is supplied.</li>
+    <li>Persons <a href="#p19">19</a> and <a href="#p20">20</a> are printed with no sex, and person <a href="#p73">73</a> with
+        no father: the plate records neither, so neither is supplied.</li>
 
     <li>The generation ruler above the chart, the linked person numbers, and the
         register below the chart are editorial apparatus of this edition, not
         part of the plate.</li>
 </ul>
+    </section>
+    <section class="app-sec">
   <h2>Provenance</h2>
   <ul>
     <li>This is a transcription of a plate in an existing published source. The
@@ -696,7 +753,9 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
         <a href="../fonts/OFL.txt">SIL Open Font License</a>, so the phonetic
         diacritics render the same everywhere.</li>
   </ul>
-  <h2>Citation</h2>
+    </section>
+    <section class="app-sec">
+      <h2>Citation</h2>
   <blockquote class="cite-block" id="cite-text">
     <p>Elsie Clews Parsons, &ldquo;Laguna Genealogies,&rdquo;
        <em>Anthropological Papers of the American Museum of Natural History</em>,
@@ -708,6 +767,8 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
   </blockquote>
   <p>To cite one person&rsquo;s line, use its number&rsquo;s link:
      <a href="#p1">https://pueblogenealogy.github.io/genealogy-iv/#p1</a> is person 1.<span id="copy-mount"></span></p>
+    </section>
+  </div>
   <p class="updated">Last updated
      <time datetime="2026-07-28">28 July 2026</time>.
      <span class="print-url">Published at https://pueblogenealogy.github.io/genealogy-iv/</span></p>
@@ -720,22 +781,28 @@ function $(s,c){return (c||doc).querySelector(s)}
 function store(k,v){try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
 function read(k){try{return localStorage.getItem(k)}catch(e){return null}}
 
-var THEMES=["auto","light","dark"];
+var THEMES=["light","dark"];
+function systemTheme(){
+  return (typeof matchMedia!=="undefined"
+    && matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+}
 function applyTheme(t){
-  if(t==="light"||t==="dark"){root.dataset.theme=t}
-  else{t="auto";delete root.dataset.theme}
+  if(t!=="light"&&t!=="dark"){t=systemTheme()}
+  root.dataset.theme=t;
   doc.querySelectorAll('meta[name="theme-color"]').forEach(function(m){
-    m.content=t==="light"?"#FAF8F4":t==="dark"?"#191713"
-      :(m.media&&m.media.indexOf("dark")>=0?"#191713":"#FAF8F4")});
+    m.content=t==="light"?"#FAF8F4":"#191713"});
   var b=$("#theme");if(b)b.textContent="Theme: "+t.charAt(0).toUpperCase()+t.slice(1);
 }
 function cycleTheme(){
-  var cur=root.dataset.theme||"auto";
+  var cur=root.dataset.theme==="dark"?"dark":"light";
   var next=THEMES[(THEMES.indexOf(cur)+1)%THEMES.length];
-  store("lg-theme",next==="auto"?null:next);applyTheme(next);
+  store("lg-theme",next);applyTheme(next);
 }
 var themeBtn=$("#theme");
-if(themeBtn){themeBtn.hidden=false;applyTheme(read("lg-theme")||"auto")}
+/* No stored choice resolves to the system preference and is NOT written back:
+   a reader who has never touched the control keeps following their OS until
+   they do. */
+if(themeBtn){themeBtn.hidden=false;applyTheme(read("lg-theme"))}
 
 function flip(b,txt){var o=b.textContent;b.textContent=txt;b.disabled=true;
   setTimeout(function(){b.textContent=o;b.disabled=false},1500)}

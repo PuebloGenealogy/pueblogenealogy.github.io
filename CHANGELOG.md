@@ -3,6 +3,49 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — the misprint is printed as printed; footer goes two-column
+
+- **The plate's misprint is reproduced again, which is the point of the
+  edition.** The `+` line under 76 on Table 1 is numbered **68** on the plate but
+  names Shuwaiʼᶦri, Turkey = person 67. The chart had been drawing it as *67* —
+  a silent correction, and a direct breach of the rule that misprints are
+  annotated and not fixed. It now prints **68**, links to `#p67`, and carries a
+  *misprint* marker that jumps to `#note-misprint` in the editorial notes, which
+  is highlighted on arrival. Declared as data in `transcription.py`'s new
+  `PLATE_NUMBER_MISPRINTS`, read through `union["printed_number"]` with
+  `getattr`, so Table 4 needs no entry and the renderer stays table-agnostic —
+  Table 1's numbering must not leak into it.
+- **The footer apparatus is a two-column grid** of `.app-sec` sections at
+  `--measure-wide`, one column below 56rem. Font size unchanged. Grid, not CSS
+  multicolumn: multicolumn will happily break an `h2` away from the `ul` it
+  introduces. Side effect worth having — the footer now shares a left edge with
+  the register above it, closing one of the four-left-edges findings recorded
+  two entries below.
+- **Person references in the apparatus are links.** `1+2`, `54+55`, `Person 8`,
+  `58+59`, `76`, `person 67`, and Table 4's `3`, `4`, `59+60`, `36-43`, `50-53`,
+  `19`, `20`, `73` all resolve to `#pN`. Done with a `_p()` helper at each call
+  site, **never a regex over the prose** — the apparatus is thick with numbers
+  that are not people (1923, vol. 19, pp. 133–292, U23), and a pattern loose
+  enough to catch `58+59` would link those too. Ranges point at their first
+  member, the rule `linkify_xref` already uses.
+- **The theme control lost its Auto state.** It toggles Light ↔ Dark, so the
+  button always names a real palette. The system preference is still honoured —
+  it is what a first visit resolves to, and nothing is written to storage until
+  the reader presses the button, so an untouched control keeps following the OS.
+- **The statistics line is back under the table title**, in the landing page's
+  grey and a step larger (16px against `.c-stats`' 14px). That needed
+  `--muted-fixed`: the real `--muted` captured at `:root`, because `body.chart`
+  redefines `--muted` to `--ink` and a `var()` takes the value of the element it
+  is declared on. `.imprint` is the only user, deliberately. Contrast measured
+  **6.15:1 light, 6.73:1 dark**. The title block also drops to `--measure-wide`
+  on table pages — it no longer holds a citation, and the line does not fit in a
+  40rem measure at 16px.
+- Measured after: column drift **0px at every generation** on both tables, no
+  dangling `#` anchors in either footer, footer one column at 375px with no
+  horizontal overflow, no console errors, build exit 0 with 6 JSON-LD blocks
+  valid, structural self-checks pass on both tables.
+
+
 ## 2026-07-28 — toolbar splits left/right; the table title pages are cut back
 
 - **Find goes hard left, Scale hard right**, spanning the plate bar. The push is

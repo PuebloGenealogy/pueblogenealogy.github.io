@@ -48,6 +48,13 @@
      WCAG 2.5.8 minimum with room to spare on a mouse; a coarse pointer gets
      the full 44px below. --bar-h is derived so anchor scroll-margin, which
      is keyed on it, tracks the bar instead of being restated. */
+  /* The real --muted, captured at :root. body.chart redefines --muted to
+     --ink for the table pages, and a var() is substituted with the value the
+     element it is declared on computes -- so anything that must keep the
+     dimmer grey THROUGH that flatten reads --muted-fixed instead. Declared
+     once here: every theme block below only ever restates --muted, and this
+     picks up whichever of those wins. */
+  --muted-fixed:var(--muted);
   --tap:2rem; --bar-h:calc(var(--tap) + var(--s2) * 2);
   /* Type ramp for the CHROME AND PROSE ONLY. Nothing inside the sheet is
      sized from these: the plate's metrics are rem against the fixed 16px
@@ -202,6 +209,18 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
   border-block-start:2px solid var(--ink);border-block-end:1px solid var(--ink)}
 .cite{font-size:var(--t-base);color:var(--muted);line-height:1.65;
   text-wrap:pretty}
+/* The table page's statistics line. --muted-fixed, not --muted: this is the
+   one thing on a table page that keeps the landing page's grey through
+   body.chart's flatten to --ink, so the two pages read as one edition. A step
+   larger than the landing page's .c-stats, which is --t-sm. */
+.imprint{margin-block-start:var(--s3);font-variant:small-caps;
+  letter-spacing:.14em;font-size:var(--t-base);color:var(--muted-fixed);
+  line-height:1.6}
+/* A table page's title block no longer holds the citation, so it no longer
+   needs the 40rem prose measure -- and at --t-base the statistics line does
+   not fit inside one. The landing page keeps --measure, because its citation
+   still has to read as prose. */
+body.chart .titlepage{max-width:var(--measure-wide)}
 
 /* ---- plate bar --------------------------------------------------------- */
 /* Find sits hard left, scale hard right, spanning the bar. The push comes from
@@ -383,6 +402,14 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
 a.num{text-decoration:none}
 a.num:hover{color:var(--accent);text-decoration:underline}
 a.num:focus-visible{color:var(--accent);text-decoration:underline}
+/* A number the plate misprints. It is set exactly like every other number --
+   this is what the plate says, and dimming or bracketing it would editorialise
+   inside the transcription. The marker beside it carries the annotation, in
+   the chrome's voice, and jumps to the note that explains the reading. */
+.sic{font:italic var(--t-xs) var(--font-ui);color:var(--muted);
+  text-decoration:underline dotted;text-underline-offset:.15em;
+  vertical-align:.15em;margin-inline-start:.15em}
+.sic:hover,.sic:focus-visible{color:var(--accent)}
 .sex{color:var(--muted)}
 /* + and ——— are text content (spouse marker, unrecorded name), so they hold
    the 4.5:1 text minimum via --muted; --rule is reserved for drawn rules. */
@@ -460,13 +487,32 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 /* The apparatus is long-form scholarly prose and was set at 14px, below a
    comfortable reading size. --t-prose also shortens the measure in
    characters at a fixed --measure, which is the other half of the fix. */
-footer{max-width:var(--measure);margin:0 auto;
+/* Two columns, so the apparatus stops being one long scroll and lands on the
+   same left edge as the register above it. --measure-wide, not --measure:
+   each column then measures about 34rem, still inside a comfortable line
+   length at --t-prose, and the font size does not change. Grid of whole
+   sections rather than CSS columns, because multicolumn would happily break a
+   heading away from the list it introduces. */
+footer{max-width:var(--measure-wide);margin:0 auto;
   padding:var(--s6) var(--s5) var(--s7);font-size:var(--t-prose);
   color:var(--muted);line-height:1.7;text-wrap:pretty}
+.app-cols{display:grid;grid-template-columns:1fr;gap:var(--s5) var(--s6);
+  align-items:start}
+@media (min-width:56rem){.app-cols{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.app-sec{break-inside:avoid}
 footer h2{margin:var(--s6) 0 var(--s3)}
-footer h2:first-child{margin-block-start:0}
+footer h2:first-child,.app-sec h2:first-child{margin-block-start:0}
 footer ul{margin:.3rem 0;padding-left:1.2rem}
 footer li{margin:.25rem 0}
+/* An apparatus note that something on the chart links to. Same scroll-margin
+   as .line and .reg so the sticky bar does not sit on top of it, and the same
+   target treatment, so a reader who followed a marker can see which of eight
+   notes they were sent to. */
+footer li[id]{scroll-margin-block:calc(var(--bar-h) + 1.5rem) 1rem}
+footer li:target{background:var(--sel-bg);
+  box-shadow:inset 4px 0 0 var(--accent-strong);
+  outline:2px solid var(--accent-strong);outline-offset:2px}
+
 footer a{color:var(--accent)}
 footer code{font-family:var(--font-ui);font-size:.9em}
 .cite-block{margin:var(--s3) 0;padding:var(--s3) var(--s4);
@@ -487,6 +533,7 @@ footer code{font-family:var(--font-ui);font-size:.9em}
   border:1px solid var(--rule);border-radius:3px;
   box-shadow:0 6px 24px var(--shadow);font-size:var(--t-base);line-height:1.55}
 .pcard .reg-rel{padding-inline-start:0;margin-block-start:var(--s1)}
+
 .pcard-actions{display:flex;gap:var(--s3);align-items:center;
   margin:var(--s3) 0 0;font-family:var(--font-ui);font-size:.8125rem}
 .pcard-actions button{font:var(--t-xs) var(--font-ui);color:var(--muted);

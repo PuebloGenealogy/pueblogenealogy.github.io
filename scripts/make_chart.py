@@ -39,6 +39,20 @@ OUT = ROOT / "build" / "genealogy-i-private.html"
 DOCS = ROOT / "docs"
 FONT_DIR = ROOT / "vendor" / "gentium"
 
+def _p(n, text=None):
+    """
+    An apparatus reference to a person on the same table: 8 -> <a href="#p8">8</a>.
+
+    Written explicitly at every call site, never by regex over the prose. The
+    apparatus is full of numbers that are not people -- 1923, vol. 19,
+    pp. 133-292, U23, d. 1908 -- and a pattern loose enough to catch "58+59"
+    would link those too. `text` carries a range or a phrase: _p(36, "36-43")
+    points a printed range at its first member, the same rule linkify_xref uses
+    on the chart.
+    """
+    return f'<a href="#p{n}">{n if text is None else text}</a>'
+
+
 # One entry per transcribed plate. Adding a table is an entry here plus its
 # transcription module -- nothing else in this file should need editing, which
 # is the point: Table 1's numbering must not leak into the renderer.
@@ -49,14 +63,18 @@ TABLES = {
         "module": "transcription",
         "roots": [1, 54],          # the founding women, in plate order
         "slug": "genealogy-i",
-        "couples": "1+2 and 54+55",
-        "notes": """
-    <li>Person 8 (Yu&#729;si) appears twice on the plate &mdash; as husband in the upper half
-        and as a son of 58+59 in the lower half. Here he is drawn once, in the lower half,
-        with a cross-reference standing in for the repeated sibling group.</li>
-    <li>The &lsquo;+&rsquo; line under 76 is numbered 68 on the plate but names
-        Shuwai&#700;&#7590;ri, Turkey &mdash; person 67. Drawn as 67; the misprint is
-        recorded on union U23.</li>
+        "couples": f"{_p(1)}+{_p(2)} and {_p(54)}+{_p(55)}",
+        "notes": f"""
+    <li>{_p(8, "Person 8")} (Yu&#729;si) appears twice on the plate &mdash; as husband in
+        the upper half and as a son of {_p(58)}+{_p(59)} in the lower half. Here he is
+        drawn once, in the lower half, with a cross-reference standing in for the
+        repeated sibling group.</li>
+    <li id="note-misprint">The &lsquo;+&rsquo; line under {_p(76)} is numbered
+        <strong>68</strong> on the plate but names Shuwai&#700;&#7590;ri, Turkey &mdash;
+        {_p(67, "person 67")}. The chart prints <strong>68</strong>, as the plate does,
+        and links it to 67; the misprint is recorded on union U23. Person 67&rsquo;s own
+        cross-reference &mdash; &ldquo;For second wife and offspring see below,
+        76, 90-3&rdquo; &mdash; is what identifies him.</li>
 """,
     },
     "iv": {
@@ -65,21 +83,22 @@ TABLES = {
         "module": "transcription_iv",
         "roots": [1, 59],          # the founding women, in plate order
         "slug": "genealogy-iv",
-        "couples": "1+2 and 59+60",
-        "notes": """
-    <li>Persons 3 and 4 appear twice on the plate. Person 4 links the two families:
-        husband of 3 in the upper half, son of 59+60 in the lower. They are drawn once,
-        with &ldquo;For descendants, see above&rdquo; standing in for the repeat, as the
-        plate has it.</li>
-    <li>Two sibling groups are printed collectively &mdash; &ldquo;36-43. 8 children
-        deceased&rdquo; and &ldquo;50-53. 4 children deceased&rdquo;. The plate assigns
+        "couples": f"{_p(1)}+{_p(2)} and {_p(59)}+{_p(60)}",
+        "notes": f"""
+    <li>Persons {_p(3)} and {_p(4)} appear twice on the plate. Person {_p(4)} links the
+        two families: husband of {_p(3)} in the upper half, son of {_p(59)}+{_p(60)} in
+        the lower. They are drawn once, with &ldquo;For descendants, see above&rdquo;
+        standing in for the repeat, as the plate has it.</li>
+    <li>Two sibling groups are printed collectively &mdash;
+        &ldquo;{_p(36, "36-43")}. 8 children deceased&rdquo; and
+        &ldquo;{_p(50, "50-53")}. 4 children deceased&rdquo;. The plate assigns
         each of them a number, so each is drawn, with the collective setting recorded
         in the data.</li>
     <li>The English names in parentheses &mdash; Hugh, Frank, Paul and Joe Johnson,
         and Mana &mdash; are printed on the plate. They are part of the transcription,
         not additions to it.</li>
-    <li>Persons 19 and 20 are printed with no sex, and person 73 with no father: the
-        plate records neither, so neither is supplied.</li>
+    <li>Persons {_p(19)} and {_p(20)} are printed with no sex, and person {_p(73)} with
+        no father: the plate records neither, so neither is supplied.</li>
 """,
     },
 }
@@ -317,6 +336,10 @@ def load_baseline(spec):
     # UNIONS rows are 6-tuples, or 7 with a trailing drawn_under -- the id of
     # the block the plate prints this marriage inside, when that is not either
     # partner's own block. Table 1 uses none, so it is read as absent there.
+    # A table may declare PLATE_NUMBER_MISPRINTS: the number the plate prints on
+    # a '+' line where it is not the number of the person that line names. Read
+    # with getattr so a table without one needs no entry -- Table 4 has none.
+    misprints = getattr(T, "PLATE_NUMBER_MISPRINTS", {})
     unions = []
     for row in T.UNIONS:
         uid, wife, husband, _wo, _ho, note = row[:6]
@@ -326,6 +349,7 @@ def load_baseline(spec):
             "husband": husband or 0,
             "note": note or "",
             "drawn_under": (row[6] if len(row) > 6 else 0) or 0,
+            "printed_number": misprints.get(uid, 0),
         })
 
     kids_by_union, kids_by_mother = {}, {}
@@ -373,6 +397,7 @@ def load():
             "husband": int(r["husband_id"] or 0),
             "note": r.get("note") or "",
             "drawn_under": 0,
+            "printed_number": 0,
         }
         for r in rows("UNIONS")
     ]
@@ -462,14 +487,30 @@ def wrap_line(inner, lead=False, anchor=None):
     return f'<div class="line"{aid}>{inner}</div>'
 
 
-def person_line(p, is_spouse, english_seen):
-    """The spans of one printed line: '7. F. Dziwaiʼᶦdyitsʼa. d. 1908. Sun'"""
+def person_line(p, is_spouse, english_seen, printed_number=0):
+    """
+    The spans of one printed line: '7. F. Dziwaiʼᶦdyitsʼa. d. 1908. Sun'
+
+    `printed_number` is the number the PLATE prints, on the one kind of line
+    where that is not the person's own number: a misprint. The plate's number
+    is what is shown -- this edition reproduces the plate and annotates it, it
+    does not silently correct it -- while the link still resolves to the person
+    the line actually names, and a marker points at the note that explains the
+    discrepancy. Getting this backwards prints a corrected chart that disagrees
+    with the scan beside it.
+    """
     bits = []
     if is_spouse:
         bits.append('<span class="plus">+</span>')
     # The number is the plate's own citation apparatus, so it is a link: #p13
     # is the stable address of person 13's first printed line.
-    bits.append(f'<a class="num" href="#p{p["id"]}">{p["id"]}.</a>')
+    if printed_number and printed_number != p["id"]:
+        bits.append(f'<a class="num num-sic" href="#p{p["id"]}">{printed_number}.</a>')
+        bits.append('<a class="sic" href="#note-misprint" '
+                    f'title="The plate prints {printed_number} here but names person '
+                    f'{p["id"]} — see the editorial note">misprint</a>')
+    else:
+        bits.append(f'<a class="num" href="#p{p["id"]}">{p["id"]}.</a>')
     bits.append(f'<span class="sex">{esc(p["sex"])}.</span>')
 
     name, alt = p["name_as_printed"], p["alt_name"]
@@ -586,7 +627,8 @@ class Chart:
                 first_sp = other not in self.seen
                 self.seen.add(other)
                 shown.add(other)
-                block.append(("line", person_line(sp, True, self.english_seen),
+                block.append(("line", person_line(sp, True, self.english_seen,
+                                                  u["printed_number"]),
                               f"p{other}" if first_sp else None))
                 row += 1
                 mother_row = row
@@ -742,6 +784,13 @@ CSS = """
      WCAG 2.5.8 minimum with room to spare on a mouse; a coarse pointer gets
      the full 44px below. --bar-h is derived so anchor scroll-margin, which
      is keyed on it, tracks the bar instead of being restated. */
+  /* The real --muted, captured at :root. body.chart redefines --muted to
+     --ink for the table pages, and a var() is substituted with the value the
+     element it is declared on computes -- so anything that must keep the
+     dimmer grey THROUGH that flatten reads --muted-fixed instead. Declared
+     once here: every theme block below only ever restates --muted, and this
+     picks up whichever of those wins. */
+  --muted-fixed:var(--muted);
   --tap:2rem; --bar-h:calc(var(--tap) + var(--s2) * 2);
   /* Type ramp for the CHROME AND PROSE ONLY. Nothing inside the sheet is
      sized from these: the plate's metrics are rem against the fixed 16px
@@ -896,6 +945,18 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
   border-block-start:2px solid var(--ink);border-block-end:1px solid var(--ink)}
 .cite{font-size:var(--t-base);color:var(--muted);line-height:1.65;
   text-wrap:pretty}
+/* The table page's statistics line. --muted-fixed, not --muted: this is the
+   one thing on a table page that keeps the landing page's grey through
+   body.chart's flatten to --ink, so the two pages read as one edition. A step
+   larger than the landing page's .c-stats, which is --t-sm. */
+.imprint{margin-block-start:var(--s3);font-variant:small-caps;
+  letter-spacing:.14em;font-size:var(--t-base);color:var(--muted-fixed);
+  line-height:1.6}
+/* A table page's title block no longer holds the citation, so it no longer
+   needs the 40rem prose measure -- and at --t-base the statistics line does
+   not fit inside one. The landing page keeps --measure, because its citation
+   still has to read as prose. */
+body.chart .titlepage{max-width:var(--measure-wide)}
 
 /* ---- plate bar --------------------------------------------------------- */
 /* Find sits hard left, scale hard right, spanning the bar. The push comes from
@@ -1077,6 +1138,14 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
 a.num{text-decoration:none}
 a.num:hover{color:var(--accent);text-decoration:underline}
 a.num:focus-visible{color:var(--accent);text-decoration:underline}
+/* A number the plate misprints. It is set exactly like every other number --
+   this is what the plate says, and dimming or bracketing it would editorialise
+   inside the transcription. The marker beside it carries the annotation, in
+   the chrome's voice, and jumps to the note that explains the reading. */
+.sic{font:italic var(--t-xs) var(--font-ui);color:var(--muted);
+  text-decoration:underline dotted;text-underline-offset:.15em;
+  vertical-align:.15em;margin-inline-start:.15em}
+.sic:hover,.sic:focus-visible{color:var(--accent)}
 .sex{color:var(--muted)}
 /* + and ——— are text content (spouse marker, unrecorded name), so they hold
    the 4.5:1 text minimum via --muted; --rule is reserved for drawn rules. */
@@ -1154,13 +1223,32 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 /* The apparatus is long-form scholarly prose and was set at 14px, below a
    comfortable reading size. --t-prose also shortens the measure in
    characters at a fixed --measure, which is the other half of the fix. */
-footer{max-width:var(--measure);margin:0 auto;
+/* Two columns, so the apparatus stops being one long scroll and lands on the
+   same left edge as the register above it. --measure-wide, not --measure:
+   each column then measures about 34rem, still inside a comfortable line
+   length at --t-prose, and the font size does not change. Grid of whole
+   sections rather than CSS columns, because multicolumn would happily break a
+   heading away from the list it introduces. */
+footer{max-width:var(--measure-wide);margin:0 auto;
   padding:var(--s6) var(--s5) var(--s7);font-size:var(--t-prose);
   color:var(--muted);line-height:1.7;text-wrap:pretty}
+.app-cols{display:grid;grid-template-columns:1fr;gap:var(--s5) var(--s6);
+  align-items:start}
+@media (min-width:56rem){.app-cols{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.app-sec{break-inside:avoid}
 footer h2{margin:var(--s6) 0 var(--s3)}
-footer h2:first-child{margin-block-start:0}
+footer h2:first-child,.app-sec h2:first-child{margin-block-start:0}
 footer ul{margin:.3rem 0;padding-left:1.2rem}
 footer li{margin:.25rem 0}
+/* An apparatus note that something on the chart links to. Same scroll-margin
+   as .line and .reg so the sticky bar does not sit on top of it, and the same
+   target treatment, so a reader who followed a marker can see which of eight
+   notes they were sent to. */
+footer li[id]{scroll-margin-block:calc(var(--bar-h) + 1.5rem) 1rem}
+footer li:target{background:var(--sel-bg);
+  box-shadow:inset 4px 0 0 var(--accent-strong);
+  outline:2px solid var(--accent-strong);outline-offset:2px}
+
 footer a{color:var(--accent)}
 footer code{font-family:var(--font-ui);font-size:.9em}
 .cite-block{margin:var(--s3) 0;padding:var(--s3) var(--s4);
@@ -1181,6 +1269,7 @@ footer code{font-family:var(--font-ui);font-size:.9em}
   border:1px solid var(--rule);border-radius:3px;
   box-shadow:0 6px 24px var(--shadow);font-size:var(--t-base);line-height:1.55}
 .pcard .reg-rel{padding-inline-start:0;margin-block-start:var(--s1)}
+
 .pcard-actions{display:flex;gap:var(--s3);align-items:center;
   margin:var(--s3) 0 0;font-family:var(--font-ui);font-size:.8125rem}
 .pcard-actions button{font:var(--t-xs) var(--font-ui);color:var(--muted);
@@ -1322,25 +1411,36 @@ THEME_SNIPPET = ('<script>try{var t=localStorage.getItem("lg-theme");'
                  'if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}'
                  'catch(e){}</script>')
 
-# The shared theme module: cycle Auto -> Light -> Dark on #theme, persist, and
-# keep the theme-color metas in step. String-formatted into both scripts below.
+# The shared theme module: toggle Light <-> Dark on #theme, persist, and keep
+# the theme-color metas in step. String-formatted into both scripts below.
+#
+# There is no Auto state in the control. The system preference is still
+# honoured -- it is what a first visit resolves to, and what the CSS does on
+# its own before this script runs -- but once resolved the button always names
+# a real palette rather than a mode whose meaning the reader has to infer.
 _THEME_JS = r"""
-var THEMES=["auto","light","dark"];
+var THEMES=["light","dark"];
+function systemTheme(){
+  return (typeof matchMedia!=="undefined"
+    && matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+}
 function applyTheme(t){
-  if(t==="light"||t==="dark"){root.dataset.theme=t}
-  else{t="auto";delete root.dataset.theme}
+  if(t!=="light"&&t!=="dark"){t=systemTheme()}
+  root.dataset.theme=t;
   doc.querySelectorAll('meta[name="theme-color"]').forEach(function(m){
-    m.content=t==="light"?"#FAF8F4":t==="dark"?"#191713"
-      :(m.media&&m.media.indexOf("dark")>=0?"#191713":"#FAF8F4")});
+    m.content=t==="light"?"#FAF8F4":"#191713"});
   var b=$("#theme");if(b)b.textContent="Theme: "+t.charAt(0).toUpperCase()+t.slice(1);
 }
 function cycleTheme(){
-  var cur=root.dataset.theme||"auto";
+  var cur=root.dataset.theme==="dark"?"dark":"light";
   var next=THEMES[(THEMES.indexOf(cur)+1)%THEMES.length];
-  store("lg-theme",next==="auto"?null:next);applyTheme(next);
+  store("lg-theme",next);applyTheme(next);
 }
 var themeBtn=$("#theme");
-if(themeBtn){themeBtn.hidden=false;applyTheme(read("lg-theme")||"auto")}
+/* No stored choice resolves to the system preference and is NOT written back:
+   a reader who has never touched the control keeps following their OS until
+   they do. */
+if(themeBtn){themeBtn.hidden=false;applyTheme(read("lg-theme"))}
 """
 
 _JS_PRELUDE = r"""
@@ -1950,7 +2050,7 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
 {social}
 {jsonld_chart(spec, description, today)}
 {jsonld_breadcrumb(spec)}"""
-        provenance = f"""
+        provenance = f"""    <section class="app-sec">
   <h2>Provenance</h2>
   <ul>
     <li>This is a transcription of a plate in an existing published source. The
@@ -1964,12 +2064,13 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
     <li>Names are set in a subset of SIL Gentium, embedded in this page under the
         <a href="../fonts/OFL.txt">SIL Open Font License</a>, so the phonetic
         diacritics render the same everywhere.</li>
-  </ul>"""
+  </ul>
+    </section>"""
         mast = masthead_html(tables, spec["slug"], "../", "../")
         canon_attr = f' data-canonical="{canonical}"'
     else:
         head_extra = '<meta name="robots" content="noindex,nofollow">'
-        provenance = """
+        provenance = """    <section class="app-sec">
   <h2>This is the private build</h2>
   <ul>
     <li>Generated from <code>data/parsons_genealogy_I.xlsx</code>, so it may show
@@ -1977,9 +2078,14 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
     <li>Edit the workbook, then re-run <code>python3 scripts/make_chart.py</code>.</li>
     <li>The public page is built separately with <code>--public</code>, from
         <code>scripts/transcription.py</code>, which has no research columns.</li>
-  </ul>"""
+  </ul>
+    </section>"""
         mast = masthead_html(tables, spec["slug"], f"{SITE}/", f"{SITE}/")
         canon_attr = ""
+
+    imprint = (f"{stats['persons']} individuals &middot; {stats['gens']} generations "
+               f"&middot; {stats['unions']} marriages &middot; {stats['links']} "
+               "parent&ndash;child links")
 
     return f"""<!doctype html>
 <html lang="en"{canon_attr}>
@@ -2002,6 +2108,7 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
   <div class="plate-label">{spec['plate']}</div>
   <h1>GENEALOGY {spec['numeral']}</h1>
   <div class="rule-double"></div>
+  <p class="imprint">{imprint}</p>
 </div>
 <main>
 <div class="plate-bar">
@@ -2032,13 +2139,24 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
 </main>
 {register_html(persons, unions, ku, km, drawn)}
 <footer id="apparatus">
-  <h2>The record</h2>
-  <ul>{"".join(status)}</ul>
-  <h2>Navigating this chart</h2>
-  <ul>{navigating_html(spec)}</ul>
-  <h2>Editorial notes</h2>
-  <ul>{READING_COMMON.format(couples=spec["couples"])}{spec["notes"]}{APPARATUS_NOTE}</ul>{provenance}
-  {cite_html(spec, today)}
+  <div class="app-cols">
+    <section class="app-sec">
+      <h2>The record</h2>
+      <ul>{"".join(status)}</ul>
+    </section>
+    <section class="app-sec">
+      <h2>Navigating this chart</h2>
+      <ul>{navigating_html(spec)}</ul>
+    </section>
+    <section class="app-sec">
+      <h2>Editorial notes</h2>
+      <ul>{READING_COMMON.format(couples=spec["couples"])}{spec["notes"]}{APPARATUS_NOTE}</ul>
+    </section>
+{provenance}
+    <section class="app-sec">
+      {cite_html(spec, today)}
+    </section>
+  </div>
   <p class="updated">Last updated
      <time datetime="{today.isoformat()}">{today.strftime("%-d %B %Y")}</time>.
      {f'<span class="print-url">Published at {canonical}</span>' if public else ''}</p>
