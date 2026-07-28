@@ -896,18 +896,18 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
   border-block-start:2px solid var(--ink);border-block-end:1px solid var(--ink)}
 .cite{font-size:var(--t-base);color:var(--muted);line-height:1.65;
   text-wrap:pretty}
-.imprint{margin-block-start:var(--s3);font-variant:small-caps;
-  letter-spacing:.22em;font-size:var(--t-xs);color:var(--muted);
-  line-height:1.6}
 
 /* ---- plate bar --------------------------------------------------------- */
-/* The bar holds only the tools now that the plate caption is gone; flex-end
-   keeps find and scale where they have always sat, hard right. */
+/* Find sits hard left, scale hard right, spanning the bar. The push comes from
+   an auto margin on #scale-mount rather than space-between, because #find is
+   [hidden] until the script unhides it: with space-between a no-JS reader would
+   get the scale buttons stranded on the left. An auto start-margin puts them
+   right whether or not find is in the row. */
 .plate-bar{max-width:var(--measure-wide);margin:0 auto;
-  padding:0 var(--s5) var(--s3);display:flex;justify-content:flex-end;
+  padding:0 var(--s5) var(--s3);display:flex;
   align-items:baseline;gap:var(--s3) var(--s4);flex-wrap:wrap}
 .plate-tools{display:flex;align-items:center;gap:var(--s3);
-  font-family:var(--font-ui);flex-wrap:wrap}
+  font-family:var(--font-ui);flex-wrap:wrap;inline-size:100%}
 /* :not([hidden]) -- an unconditional display would defeat the hidden
    attribute (author display beats the UA's [hidden]{display:none}) and ship
    a dead search form to no-JS readers. */
@@ -921,7 +921,8 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
 #find input:focus-visible{outline:2px solid var(--accent-strong);
   outline-offset:1px}
 .find-note{font:var(--t-xs) var(--font-ui);color:var(--muted)}
-#scale-mount{display:flex;align-items:center;gap:var(--s1)}
+#scale-mount{display:flex;align-items:center;gap:var(--s1);
+  margin-inline-start:auto}
 .scale-l{font:var(--t-xs) var(--font-ui);text-transform:uppercase;
   letter-spacing:.08em;color:var(--muted);margin-inline-end:var(--s1)}
 .scale-btn{font:var(--t-xs) var(--font-ui);color:var(--muted);background:none;
@@ -1980,10 +1981,6 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
         mast = masthead_html(tables, spec["slug"], f"{SITE}/", f"{SITE}/")
         canon_attr = ""
 
-    imprint = (f"{stats['persons']} individuals &middot; {stats['gens']} generations "
-               f"&middot; {stats['unions']} marriages &middot; {stats['links']} "
-               "parent&ndash;child links")
-
     return f"""<!doctype html>
 <html lang="en"{canon_attr}>
 <head>
@@ -2005,10 +2002,6 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
   <div class="plate-label">{spec['plate']}</div>
   <h1>GENEALOGY {spec['numeral']}</h1>
   <div class="rule-double"></div>
-  <div class="cite">
-    {CITE}
-  </div>
-  <p class="imprint">{imprint}</p>
 </div>
 <main>
 <div class="plate-bar">

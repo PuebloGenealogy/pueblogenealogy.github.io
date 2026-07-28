@@ -3,6 +3,32 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — toolbar splits left/right; the table title pages are cut back
+
+- **Find goes hard left, Scale hard right**, spanning the plate bar. The push is
+  an auto start-margin on `#scale-mount`, **not** `justify-content:space-between`
+  — `#find` carries `[hidden]` until the script unhides it, so with
+  space-between a reader without JavaScript would get the scale buttons stranded
+  on the left of an otherwise empty bar. Verified in that state: with `#find`
+  hidden the buttons still measure flush to the bar's right edge. On a phone the
+  row wraps, find above and scale right-aligned below.
+- **The table title pages lose the source citation and the statistics line.**
+  `<div class="cite">` and `<p class="imprint">` are gone from Genealogy I and
+  IV; a table page's title block is now the plate label, the numeral and the
+  double rule. The landing page keeps its citation — the removal was scoped to
+  the table pages.
+- **The doi is untouched by that.** It was never in the title-page citation: it
+  lives in `cite_html()`, the footer's *Citation* block, and in the JSON-LD
+  `identifier`. Both table pages still carry it twice. Checked, because the
+  title-page block and the footer block read alike and cutting the wrong one
+  would have rotted every printed citation.
+- The now-unused `.imprint` CSS and the `imprint` local were deleted rather than
+  left dangling. `CITE` stays — the landing page still renders it.
+- Measured after: column drift **0px at every generation** on both tables, find
+  flush left and scale flush right to the bar's content box on both, build exit
+  0 with 6 JSON-LD blocks valid, no console errors.
+
+
 ## 2026-07-28 — the key comes back off the page; the notation moves to the footer
 
 Same day as the entry below, and it partly reverses it. Read the two together.
