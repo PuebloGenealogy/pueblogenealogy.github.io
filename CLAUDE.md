@@ -145,13 +145,17 @@ One thing that will look like a bug and isn't: below 26rem the word "Genealogy"
 in the table pills is visually hidden but kept in the accessible name, so the
 sticky bar stays two rows on a phone.
 
-The chart key is a `<details>` sitting **outside `.plate-tools`** on purpose —
-the print rule hides that span, so a key inside it would vanish from printed
-sheets. `@media print` forces the disclosure open, overriding both the way older
-engines hide closed `<details>` content and the way current ones do it via
-`::details-content`; in Chrome 148 only the latter fires and the legacy selector
-is inert, so **both must stay**. The key carries the only explanation on the
-page of `+` for spouse, `F.`/`M.` for sex, and the leader rule.
+**There is no on-page chart key, by decision.** One was built as a `<details>`
+above the plate and removed the same day; the notation it explained now lives in
+the footer's *Navigating this chart* list, which is therefore the **only** place
+`+` (spouse), `F.`/`M.` (sex) and the leader rule are decoded. Thinning those
+three lines re-opens a defect that has already been introduced twice. Don't
+rebuild the key without saying what changed — the reason it went is that it is
+decode-once material and the plate is what the reader came for.
+
+`.plate-caption` now carries the pan hint and nothing else, so the **caption**
+is what hides above 1400px and in print; hiding only `.pan-hint` would leave an
+empty figcaption holding its bottom padding open.
 
 ## Facts worth knowing
 
@@ -167,6 +171,17 @@ page of `+` for spouse, `F.`/`M.` for sex, and the leader rule.
 - **`d.`** means the person had already died when Parsons recorded the
   genealogy, during her fieldwork of 1918–19; the year is given where known. A
   number after a name is their age at recording.
+- **Phonetic glyph rendering is settled — don't re-open it.** Coverage was
+  proven from the cmap: all 85 characters in the transcription and all 94
+  rendered on Genealogy I are in both faces, `ᶦ` U+1DA6, `ᵘ` U+1D58, `ᵃ` U+1D43,
+  `ʼ` U+02BC and `˙` U+02D9 included. The faces are base64 data URIs, so nothing
+  is fetched and nothing can 404, and no combining marks are used, so there is
+  no mark positioning to vary by platform. The one thing the cmap could not
+  answer — whether a real browser on **Windows or Android** honours the embedded
+  face — was **checked on device by the user on 2026-07-28: everything rendered
+  correctly on both.** Note macOS substitutes for any font, so no on-screen
+  comparison here can demonstrate the absence of substitution — if this is ever
+  questioned again, read the cmap, don't measure widths.
 - Google's structured-data validator is **stricter than schema.org** — valid
   schema.org has been rejected twice here. `check_structured_data()` guards the
   rules we have been told about, not all of them; a Search Console report
@@ -216,20 +231,6 @@ would title the deposit after the repo.
   change hosts without breaking a doi-adjacent link — which is an argument for
   doing it first or not at all. Drops onto this repo via a `CNAME` file.
 - Tables 2 and 3 await scans.
-- Phonetic glyphs: **font coverage proven, live device rendering still
-  unchecked.** Reading the shipped woff2 binaries with fontTools, every one of
-  the 85 characters in the transcription — and all 94 rendered on Genealogy I —
-  is in the cmap of both faces; `ᶦ` U+1DA6, `ᵘ` U+1D58, `ᵃ` U+1D43, `ʼ` U+02BC
-  and `˙` U+02D9 included. The faces are base64 data URIs, so nothing is
-  fetched and nothing can 404, and no combining marks are used, so there is no
-  mark positioning to vary by platform. Tofu is therefore ruled out by
-  construction. What is still unknown on **Windows and Android**: whether a
-  browser honours the embedded face at all (data-saver, forced-font settings),
-  how the `--font-ui` chrome stack resolves there (Segoe UI / Roboto change
-  metrics, not glyphs, and could move where the masthead wraps), and diacritic
-  quality at small sizes on low-DPI screens. Appearance risks, not corruption.
-  Note macOS substitutes for any font, so no on-screen comparison here can
-  demonstrate the absence of substitution — read the cmap, don't measure widths.
 
 ## Working style
 

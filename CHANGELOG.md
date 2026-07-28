@@ -3,6 +3,43 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — the key comes back off the page; the notation moves to the footer
+
+Same day as the entry below, and it partly reverses it. Read the two together.
+
+- **The on-page chart key was removed again, by decision, and its code deleted.**
+  `key_html()`, the `.key`/`.key-d` CSS and the print overrides are gone rather
+  than left unreferenced — keeping them uncalled last time is exactly what
+  produced the "looks like a bug but isn't" note in `CLAUDE.md` that then had to
+  be corrected twice. Recoverable from git if it is ever wanted back.
+- **The three notations did not go with it.** `+` (spouse), `F.`/`M.` (sex) and
+  the leader rule are now the first three items of the footer's **Navigating
+  this chart** list, which is therefore the only place on the page they are
+  decoded. `navigating_html()` says so in its docstring. This is the third time
+  these three have moved; do not thin them out.
+- **The plate caption lost its provenance sentence.** "Redrawn from the plate as
+  printed; brackets, columns and leader rules reproduce the 1923 layout" is
+  removed — the footer's editorial notes already make that claim. The caption now
+  carries only the pan hint, so **`.plate-caption` is what hides above 1400px and
+  in print**, not `.pan-hint`: hiding only the span left an empty figcaption
+  holding its own bottom padding open. Measured 0px above the breakpoint and 0px
+  under the print rules.
+- **Footer order changed:** *Navigating this chart* moved up to sit directly
+  under *The record*, ahead of *Editorial notes*, *Provenance* and *Citation*.
+  How to read the thing now precedes the scholarly apparatus about it.
+- **Glyph rendering on Windows and Android was verified on device** and is no
+  longer an open question. Recorded under Facts worth knowing, with the cmap
+  reasoning kept as the durable evidence.
+- Measured after the change: column drift **0px at every generation** on both
+  tables, no horizontal overflow at 375px, masthead still two rows, no console
+  errors, build exit 0 with 6 JSON-LD blocks valid.
+- **Audited but not changed** — recorded so the next session does not re-derive
+  it. The page has four left edges at full width: masthead 8px, plate 59px,
+  chrome (toolbar, caption, register) 115px, prose 371px. The plate and the
+  chrome that controls it are 56px apart because the scroller is full-bleed
+  while its chrome is capped at `--measure-wide`. Below ~1400px they converge,
+  which is why it is easy to miss. Left alone deliberately this round.
+
 ## 2026-07-28 — the chart key returns, as a disclosure
 
 - **The key is back and the open design thread is closed.** Since the

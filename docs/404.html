@@ -206,42 +206,6 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
   letter-spacing:.22em;font-size:var(--t-xs);color:var(--muted);
   line-height:1.6}
 
-/* ---- editor's key ------------------------------------------------------ */
-/* A disclosure, not the old always-visible band: the notation is decode-once
-   material and the band cost ~100px above the plate for it. The chrome is
-   .register-d's on purpose -- one disclosure look on this site, not two.
-   <details> because the key has to work with JavaScript off; a popover would
-   not. The default triangle marker is kept rather than the landing page's
-   "+"/"-" marker: "+" is chart notation for a spouse, and the key explains it
-   two lines below. */
-.key-d{inline-size:min(var(--measure-wide) - var(--s5) * 2,100% - var(--s5) * 2);
-  margin:0 auto var(--s3);background:var(--panel);
-  border:1px solid var(--rule-faint);border-radius:2px}
-/* The line-height is pinned so the padding can be solved from --tap: the box
-   then measures exactly --tap at both pointer sizes and the label is centred
-   in it. A bare min-block-size would clear the floor but leave the label
-   sitting high on a coarse pointer; the floor is kept as the guarantee. */
-.key-d>summary{cursor:pointer;min-block-size:var(--tap);
-  padding-block:calc((var(--tap) - 1.4em) / 2);padding-inline:var(--s4);
-  font:var(--t-xs)/1.4 var(--font-ui);color:var(--muted)}
-.key-d>summary:hover{color:var(--ink)}
-.key-d>summary:focus-visible{color:var(--ink);
-  outline:2px solid var(--accent-strong);outline-offset:-1px}
-.key-d[open]>summary{border-block-end:1px solid var(--rule-faint)}
-.key{display:flex;flex-wrap:wrap;padding:var(--s4);
-  gap:var(--s2) var(--s5);
-  font-size:var(--t-xs);line-height:1.55;color:var(--muted)}
-.key .k{white-space:nowrap}
-.key .k-label{font-family:var(--font-ui);font-size:var(--t-xs)}
-.key-bracket,.key-lead{display:inline-block;vertical-align:middle;
-  width:1.1rem;height:.95rem;position:relative}
-.key-bracket{border-inline-start:1px solid var(--rule)}
-.key-bracket::before,.key-bracket::after{content:"";position:absolute;
-  inset-inline:0;border-block-start:1px solid var(--rule)}
-.key-bracket::before{inset-block-start:0}
-.key-bracket::after{inset-block-end:0}
-.key-lead{height:.5rem;border-block-end:1px solid var(--rule)}
-
 /* ---- plate bar --------------------------------------------------------- */
 /* The bar holds only the tools now that the plate caption is gone; flex-end
    keeps find and scale where they have always sat, hard right. */
@@ -445,11 +409,13 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 /* padding must be 0 so the cell is exactly one line tall; otherwise it pushes
    the next sibling group off its mother's row. */
 .xref-cell{padding:0;line-height:var(--lh);white-space:nowrap;max-width:none}
-.plate-caption{max-width:var(--measure-wide);margin:0 auto;
+/* The caption now carries the pan hint and nothing else, so it is the caption
+   that hides above 1400px -- hiding only the span would leave an empty
+   figcaption holding its own bottom padding open. */
+.plate-caption{display:none;max-width:var(--measure-wide);margin:0 auto;
   padding:0 var(--s5) var(--s5);font-size:var(--t-sm);line-height:1.6;
   color:var(--muted);text-wrap:pretty}
-.pan-hint{display:none}
-@media (max-width:1400px){.pan-hint{display:inline}}
+@media (max-width:1400px){.plate-caption{display:block}}
 
 /* ---- register of persons ----------------------------------------------- */
 .apparatus-register{max-width:var(--measure-wide);margin:0 auto;
@@ -575,20 +541,9 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
 @media print{
   :root,:root[data-theme]{color-scheme:light}
   body{background:#fff;color:#000}
-  .masthead,.skip,.plate-tools,.pan-hint,.apparatus-register,[popover],
+  .masthead,.skip,.plate-tools,.plate-caption,.apparatus-register,[popover],
   .ruler-chipslot{display:none}
   .scroll{overflow:visible;padding:0}
-  /* The key prints, open, whatever the reader left it at on screen. Engines
-     disagree on how a closed <details> hides its content -- older ones via the
-     UA stylesheet, current ones via ::details-content -- so both mechanisms
-     are overridden; whichever the browser does not implement is ignored. */
-  .key-d>summary~*{display:block}
-  .key-d::details-content{content-visibility:visible;block-size:auto}
-  .key-d{background:none;border:0;inline-size:auto}
-  .key-d>summary{list-style:none;padding-inline:0;font-weight:600}
-  .key-d>summary::-webkit-details-marker{display:none}
-  .key-d[open]>summary{border:0}
-  .key{padding-inline:0}
   .scroll-shell::before,.scroll-shell::after,.ruler::after{display:none}
   .sheet{border:0;box-shadow:none}
   .plate-zoom{zoom:var(--print-zoom,.7)}

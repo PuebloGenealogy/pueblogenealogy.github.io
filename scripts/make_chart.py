@@ -900,42 +900,6 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
   letter-spacing:.22em;font-size:var(--t-xs);color:var(--muted);
   line-height:1.6}
 
-/* ---- editor's key ------------------------------------------------------ */
-/* A disclosure, not the old always-visible band: the notation is decode-once
-   material and the band cost ~100px above the plate for it. The chrome is
-   .register-d's on purpose -- one disclosure look on this site, not two.
-   <details> because the key has to work with JavaScript off; a popover would
-   not. The default triangle marker is kept rather than the landing page's
-   "+"/"-" marker: "+" is chart notation for a spouse, and the key explains it
-   two lines below. */
-.key-d{inline-size:min(var(--measure-wide) - var(--s5) * 2,100% - var(--s5) * 2);
-  margin:0 auto var(--s3);background:var(--panel);
-  border:1px solid var(--rule-faint);border-radius:2px}
-/* The line-height is pinned so the padding can be solved from --tap: the box
-   then measures exactly --tap at both pointer sizes and the label is centred
-   in it. A bare min-block-size would clear the floor but leave the label
-   sitting high on a coarse pointer; the floor is kept as the guarantee. */
-.key-d>summary{cursor:pointer;min-block-size:var(--tap);
-  padding-block:calc((var(--tap) - 1.4em) / 2);padding-inline:var(--s4);
-  font:var(--t-xs)/1.4 var(--font-ui);color:var(--muted)}
-.key-d>summary:hover{color:var(--ink)}
-.key-d>summary:focus-visible{color:var(--ink);
-  outline:2px solid var(--accent-strong);outline-offset:-1px}
-.key-d[open]>summary{border-block-end:1px solid var(--rule-faint)}
-.key{display:flex;flex-wrap:wrap;padding:var(--s4);
-  gap:var(--s2) var(--s5);
-  font-size:var(--t-xs);line-height:1.55;color:var(--muted)}
-.key .k{white-space:nowrap}
-.key .k-label{font-family:var(--font-ui);font-size:var(--t-xs)}
-.key-bracket,.key-lead{display:inline-block;vertical-align:middle;
-  width:1.1rem;height:.95rem;position:relative}
-.key-bracket{border-inline-start:1px solid var(--rule)}
-.key-bracket::before,.key-bracket::after{content:"";position:absolute;
-  inset-inline:0;border-block-start:1px solid var(--rule)}
-.key-bracket::before{inset-block-start:0}
-.key-bracket::after{inset-block-end:0}
-.key-lead{height:.5rem;border-block-end:1px solid var(--rule)}
-
 /* ---- plate bar --------------------------------------------------------- */
 /* The bar holds only the tools now that the plate caption is gone; flex-end
    keeps find and scale where they have always sat, hard right. */
@@ -1139,11 +1103,13 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 /* padding must be 0 so the cell is exactly one line tall; otherwise it pushes
    the next sibling group off its mother's row. */
 .xref-cell{padding:0;line-height:var(--lh);white-space:nowrap;max-width:none}
-.plate-caption{max-width:var(--measure-wide);margin:0 auto;
+/* The caption now carries the pan hint and nothing else, so it is the caption
+   that hides above 1400px -- hiding only the span would leave an empty
+   figcaption holding its own bottom padding open. */
+.plate-caption{display:none;max-width:var(--measure-wide);margin:0 auto;
   padding:0 var(--s5) var(--s5);font-size:var(--t-sm);line-height:1.6;
   color:var(--muted);text-wrap:pretty}
-.pan-hint{display:none}
-@media (max-width:1400px){.pan-hint{display:inline}}
+@media (max-width:1400px){.plate-caption{display:block}}
 
 /* ---- register of persons ----------------------------------------------- */
 .apparatus-register{max-width:var(--measure-wide);margin:0 auto;
@@ -1269,20 +1235,9 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
 @media print{
   :root,:root[data-theme]{color-scheme:light}
   body{background:#fff;color:#000}
-  .masthead,.skip,.plate-tools,.pan-hint,.apparatus-register,[popover],
+  .masthead,.skip,.plate-tools,.plate-caption,.apparatus-register,[popover],
   .ruler-chipslot{display:none}
   .scroll{overflow:visible;padding:0}
-  /* The key prints, open, whatever the reader left it at on screen. Engines
-     disagree on how a closed <details> hides its content -- older ones via the
-     UA stylesheet, current ones via ::details-content -- so both mechanisms
-     are overridden; whichever the browser does not implement is ignored. */
-  .key-d>summary~*{display:block}
-  .key-d::details-content{content-visibility:visible;block-size:auto}
-  .key-d{background:none;border:0;inline-size:auto}
-  .key-d>summary{list-style:none;padding-inline:0;font-weight:600}
-  .key-d>summary::-webkit-details-marker{display:none}
-  .key-d[open]>summary{border:0}
-  .key{padding-inline:0}
   .scroll-shell::before,.scroll-shell::after,.ruler::after{display:none}
   .sheet{border:0;box-shadow:none}
   .plate-zoom{zoom:var(--print-zoom,.7)}
@@ -1327,16 +1282,24 @@ READING_COMMON = """
 # The redesign's one disclosure: the reading aids are 2026 apparatus, the sheet
 # is 1923. Printed with the editorial notes on every chart page.
 APPARATUS_NOTE = """
-    <li>The key and generation ruler above the chart, the linked person numbers,
-        and the register below the chart are editorial apparatus of this edition,
-        not part of the plate.</li>
+    <li>The generation ruler above the chart, the linked person numbers, and the
+        register below the chart are editorial apparatus of this edition, not
+        part of the plate.</li>
 """
 
 def navigating_html(spec):
-    """The footer's how-to list. The example anchor uses this table's first
-    founding person, so it is correct on every table regardless of size."""
+    """The footer's how-to list, and since the on-page key was removed the only
+    place `+`, `F.`/`M.` and the leader rule are explained. Do not thin those
+    three out: nothing else on the page decodes them. The example anchor uses
+    this table's first founding person, so it is correct on every table
+    regardless of size."""
     r = spec["roots"][0]
     return f"""
+    <li>A <em>+</em> at the start of a line marks a spouse, printed on the line
+        below the person they married.</li>
+    <li><em>F.</em> and <em>M.</em> give the sex of each person as printed.</li>
+    <li>The horizontal leader rule runs from a person to the bracket holding
+        their children; the bracket itself hangs on the mother&rsquo;s line.</li>
     <li>A number after a name is the person&rsquo;s age when the data was collected.
         <em>d.</em> means they had already died when Parsons recorded the genealogy,
         during her fieldwork of 1918&ndash;19; where she knew the year she gives it,
@@ -1664,41 +1627,6 @@ def ruler_html(spec, n_gens):
     return ('<div class="ruler" aria-hidden="true">'
             f'<span class="ruler-chipslot"><span class="ruler-chip">{chip}</span></span>'
             f"{gens}</div>")
-
-
-def key_html():
-    """
-    The editor's key, a closed disclosure between the title page and the plate
-    bar. It carries the only explanation on the page of three notations -- `+`
-    for a spouse, `F.`/`M.` for sex, and the leader rule -- so removing it
-    again silently un-documents them; the rest also survive in the footer.
-
-    It sits OUTSIDE .plate-tools deliberately. The print rule hides that span,
-    and a key parked in the toolbar would vanish from printed sheets; instead
-    @media print forces this disclosure open.
-
-    Specimens reuse the real chart classes so the key can never drift from the
-    chart's styling; explanatory words are new UI text and speak in the UI
-    stack. No specimen may use a glyph outside the font subset, and no key item
-    may carry class="eng" or class="census" -- the leak grep matches those.
-    """
-    items = [
-        ('<span class="num">7.</span>', "person number — a link; select for details"),
-        ('<span class="plus">+</span>', "spouse, on the line below"),
-        ('<span class="sex">F. M.</span>', "sex as printed"),
-        ('<span class="blank">———</span>', "no name recorded"),
-        ('<span class="clan">Sun</span>', "clan — matrilineal"),
-        ('<span class="vital">d. 1908.</span>', "age or vital note, as printed"),
-        ('<span class="key-bracket"></span>', "sibling group, hung on the mother's line"),
-        ('<span class="key-lead"></span>', "descent — the leader rule"),
-    ]
-    spans = "".join(
-        f'<span class="k">{specimen} <span class="k-label">{esc(label)}</span></span>'
-        for specimen, label in items)
-    return ('<details class="key-d">'
-            "<summary>Key to the notation</summary>"
-            f'<div class="key">{spans}</div>'
-            "</details>")
 
 
 def datalist_html(persons, drawn):
@@ -2083,7 +2011,6 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
   <p class="imprint">{imprint}</p>
 </div>
 <main>
-{key_html()}
 <div class="plate-bar">
   <span class="plate-tools">
     <search><form id="find" hidden>
@@ -2106,21 +2033,19 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
       </div>
     </div>
   </div>
-  <figcaption class="plate-caption">Redrawn from the plate as printed; brackets,
-    columns and leader rules reproduce the 1923 layout.<span class="pan-hint">
-    Scroll sideways to follow the later generations &mdash; person numbers are
-    links.</span></figcaption>
+  <figcaption class="plate-caption"><span class="pan-hint">Scroll sideways to
+    follow the later generations &mdash; person numbers are links.</span></figcaption>
 </figure>
 </main>
 {register_html(persons, unions, ku, km, drawn)}
 <footer id="apparatus">
   <h2>The record</h2>
   <ul>{"".join(status)}</ul>
+  <h2>Navigating this chart</h2>
+  <ul>{navigating_html(spec)}</ul>
   <h2>Editorial notes</h2>
   <ul>{READING_COMMON.format(couples=spec["couples"])}{spec["notes"]}{APPARATUS_NOTE}</ul>{provenance}
   {cite_html(spec, today)}
-  <h2>Navigating this chart</h2>
-  <ul>{navigating_html(spec)}</ul>
   <p class="updated">Last updated
      <time datetime="{today.isoformat()}">{today.strftime("%-d %B %Y")}</time>.
      {f'<span class="print-url">Published at {canonical}</span>' if public else ''}</p>

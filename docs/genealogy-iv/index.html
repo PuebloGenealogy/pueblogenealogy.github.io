@@ -225,42 +225,6 @@ h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);font-weight:400;
   letter-spacing:.22em;font-size:var(--t-xs);color:var(--muted);
   line-height:1.6}
 
-/* ---- editor's key ------------------------------------------------------ */
-/* A disclosure, not the old always-visible band: the notation is decode-once
-   material and the band cost ~100px above the plate for it. The chrome is
-   .register-d's on purpose -- one disclosure look on this site, not two.
-   <details> because the key has to work with JavaScript off; a popover would
-   not. The default triangle marker is kept rather than the landing page's
-   "+"/"-" marker: "+" is chart notation for a spouse, and the key explains it
-   two lines below. */
-.key-d{inline-size:min(var(--measure-wide) - var(--s5) * 2,100% - var(--s5) * 2);
-  margin:0 auto var(--s3);background:var(--panel);
-  border:1px solid var(--rule-faint);border-radius:2px}
-/* The line-height is pinned so the padding can be solved from --tap: the box
-   then measures exactly --tap at both pointer sizes and the label is centred
-   in it. A bare min-block-size would clear the floor but leave the label
-   sitting high on a coarse pointer; the floor is kept as the guarantee. */
-.key-d>summary{cursor:pointer;min-block-size:var(--tap);
-  padding-block:calc((var(--tap) - 1.4em) / 2);padding-inline:var(--s4);
-  font:var(--t-xs)/1.4 var(--font-ui);color:var(--muted)}
-.key-d>summary:hover{color:var(--ink)}
-.key-d>summary:focus-visible{color:var(--ink);
-  outline:2px solid var(--accent-strong);outline-offset:-1px}
-.key-d[open]>summary{border-block-end:1px solid var(--rule-faint)}
-.key{display:flex;flex-wrap:wrap;padding:var(--s4);
-  gap:var(--s2) var(--s5);
-  font-size:var(--t-xs);line-height:1.55;color:var(--muted)}
-.key .k{white-space:nowrap}
-.key .k-label{font-family:var(--font-ui);font-size:var(--t-xs)}
-.key-bracket,.key-lead{display:inline-block;vertical-align:middle;
-  width:1.1rem;height:.95rem;position:relative}
-.key-bracket{border-inline-start:1px solid var(--rule)}
-.key-bracket::before,.key-bracket::after{content:"";position:absolute;
-  inset-inline:0;border-block-start:1px solid var(--rule)}
-.key-bracket::before{inset-block-start:0}
-.key-bracket::after{inset-block-end:0}
-.key-lead{height:.5rem;border-block-end:1px solid var(--rule)}
-
 /* ---- plate bar --------------------------------------------------------- */
 /* The bar holds only the tools now that the plate caption is gone; flex-end
    keeps find and scale where they have always sat, hard right. */
@@ -464,11 +428,13 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 /* padding must be 0 so the cell is exactly one line tall; otherwise it pushes
    the next sibling group off its mother's row. */
 .xref-cell{padding:0;line-height:var(--lh);white-space:nowrap;max-width:none}
-.plate-caption{max-width:var(--measure-wide);margin:0 auto;
+/* The caption now carries the pan hint and nothing else, so it is the caption
+   that hides above 1400px -- hiding only the span would leave an empty
+   figcaption holding its own bottom padding open. */
+.plate-caption{display:none;max-width:var(--measure-wide);margin:0 auto;
   padding:0 var(--s5) var(--s5);font-size:var(--t-sm);line-height:1.6;
   color:var(--muted);text-wrap:pretty}
-.pan-hint{display:none}
-@media (max-width:1400px){.pan-hint{display:inline}}
+@media (max-width:1400px){.plate-caption{display:block}}
 
 /* ---- register of persons ----------------------------------------------- */
 .apparatus-register{max-width:var(--measure-wide);margin:0 auto;
@@ -594,20 +560,9 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
 @media print{
   :root,:root[data-theme]{color-scheme:light}
   body{background:#fff;color:#000}
-  .masthead,.skip,.plate-tools,.pan-hint,.apparatus-register,[popover],
+  .masthead,.skip,.plate-tools,.plate-caption,.apparatus-register,[popover],
   .ruler-chipslot{display:none}
   .scroll{overflow:visible;padding:0}
-  /* The key prints, open, whatever the reader left it at on screen. Engines
-     disagree on how a closed <details> hides its content -- older ones via the
-     UA stylesheet, current ones via ::details-content -- so both mechanisms
-     are overridden; whichever the browser does not implement is ignored. */
-  .key-d>summary~*{display:block}
-  .key-d::details-content{content-visibility:visible;block-size:auto}
-  .key-d{background:none;border:0;inline-size:auto}
-  .key-d>summary{list-style:none;padding-inline:0;font-weight:600}
-  .key-d>summary::-webkit-details-marker{display:none}
-  .key-d[open]>summary{border:0}
-  .key{padding-inline:0}
   .scroll-shell::before,.scroll-shell::after,.ruler::after{display:none}
   .sheet{border:0;box-shadow:none}
   .plate-zoom{zoom:var(--print-zoom,.7)}
@@ -647,7 +602,6 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
   <p class="imprint">73 individuals &middot; four generations &middot; 14 marriages &middot; 58 parent&ndash;child links</p>
 </div>
 <main>
-<details class="key-d"><summary>Key to the notation</summary><div class="key"><span class="k"><span class="num">7.</span> <span class="k-label">person number — a link; select for details</span></span><span class="k"><span class="plus">+</span> <span class="k-label">spouse, on the line below</span></span><span class="k"><span class="sex">F. M.</span> <span class="k-label">sex as printed</span></span><span class="k"><span class="blank">———</span> <span class="k-label">no name recorded</span></span><span class="k"><span class="clan">Sun</span> <span class="k-label">clan — matrilineal</span></span><span class="k"><span class="vital">d. 1908.</span> <span class="k-label">age or vital note, as printed</span></span><span class="k"><span class="key-bracket"></span> <span class="k-label">sibling group, hung on the mother&#x27;s line</span></span><span class="k"><span class="key-lead"></span> <span class="k-label">descent — the leader rule</span></span></div></details>
 <div class="plate-bar">
   <span class="plate-tools">
     <search><form id="find" hidden>
@@ -670,10 +624,8 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
       </div>
     </div>
   </div>
-  <figcaption class="plate-caption">Redrawn from the plate as printed; brackets,
-    columns and leader rules reproduce the 1923 layout.<span class="pan-hint">
-    Scroll sideways to follow the later generations &mdash; person numbers are
-    links.</span></figcaption>
+  <figcaption class="plate-caption"><span class="pan-hint">Scroll sideways to
+    follow the later generations &mdash; person numbers are links.</span></figcaption>
 </figure>
 </main>
 <section class="apparatus-register" id="register-sec" aria-labelledby="reg-h">
@@ -688,6 +640,27 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
 <footer id="apparatus">
   <h2>The record</h2>
   <ul><li>73 individuals across 4 generation columns; 14 marriages; 58 parent&ndash;child links.</li><li>Transcribed from the plate and verified against it. Clan descent is matrilineal, which gives every bracket an independent check; all 14 marriages pass it.</li></ul>
+  <h2>Navigating this chart</h2>
+  <ul>
+    <li>A <em>+</em> at the start of a line marks a spouse, printed on the line
+        below the person they married.</li>
+    <li><em>F.</em> and <em>M.</em> give the sex of each person as printed.</li>
+    <li>The horizontal leader rule runs from a person to the bracket holding
+        their children; the bracket itself hangs on the mother&rsquo;s line.</li>
+    <li>A number after a name is the person&rsquo;s age when the data was collected.
+        <em>d.</em> means they had already died when Parsons recorded the genealogy,
+        during her fieldwork of 1918&ndash;19; where she knew the year she gives it,
+        as in <em>d.&nbsp;1913</em>.</li>
+    <li>Every person number is a stable link &mdash; <code>#p1</code> addresses
+        person 1&rsquo;s first printed line, and the address bar keeps it while
+        you read.</li>
+    <li>The chart region can be focused and panned with the arrow keys; on a
+        narrow screen, scroll sideways to follow the later generations.</li>
+    <li>With JavaScript: with the chart focused, press <code>/</code> to find a
+        person by number or name; selecting a person number opens its register
+        card, and Esc closes it. The Theme and Scale controls remember your
+        choice.</li>
+</ul>
   <h2>Editorial notes</h2>
   <ul>
     <li>Clan membership is matrilineal: every sibling group carries its mother's clan.
@@ -710,9 +683,9 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
     <li>Persons 19 and 20 are printed with no sex, and person 73 with no father: the
         plate records neither, so neither is supplied.</li>
 
-    <li>The key and generation ruler above the chart, the linked person numbers,
-        and the register below the chart are editorial apparatus of this edition,
-        not part of the plate.</li>
+    <li>The generation ruler above the chart, the linked person numbers, and the
+        register below the chart are editorial apparatus of this edition, not
+        part of the plate.</li>
 </ul>
   <h2>Provenance</h2>
   <ul>
@@ -740,22 +713,6 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
   </blockquote>
   <p>To cite one person&rsquo;s line, use its number&rsquo;s link:
      <a href="#p1">https://pueblogenealogy.github.io/genealogy-iv/#p1</a> is person 1.<span id="copy-mount"></span></p>
-  <h2>Navigating this chart</h2>
-  <ul>
-    <li>A number after a name is the person&rsquo;s age when the data was collected.
-        <em>d.</em> means they had already died when Parsons recorded the genealogy,
-        during her fieldwork of 1918&ndash;19; where she knew the year she gives it,
-        as in <em>d.&nbsp;1913</em>.</li>
-    <li>Every person number is a stable link &mdash; <code>#p1</code> addresses
-        person 1&rsquo;s first printed line, and the address bar keeps it while
-        you read.</li>
-    <li>The chart region can be focused and panned with the arrow keys; on a
-        narrow screen, scroll sideways to follow the later generations.</li>
-    <li>With JavaScript: with the chart focused, press <code>/</code> to find a
-        person by number or name; selecting a person number opens its register
-        card, and Esc closes it. The Theme and Scale controls remember your
-        choice.</li>
-</ul>
   <p class="updated">Last updated
      <time datetime="2026-07-28">28 July 2026</time>.
      <span class="print-url">Published at https://pueblogenealogy.github.io/genealogy-iv/</span></p>

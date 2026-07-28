@@ -45,62 +45,55 @@ Site live, archived, citable. Nothing is broken and nothing is half-finished:
 - Live: <https://pueblogenealogy.github.io/>
 - DOI (concept): `10.5281/zenodo.21637900` → <https://zenodo.org/records/21637901>
 - Published: Genealogy I and IV. Tables 2 and 3 await scans.
-- The chart key shipped 2026-07-28 as a closed `<details>` above the plate. The
-  page explains its own notation again; nothing on the edition is half-built.
+- **No on-page chart key**, by decision. The notation lives in the footer's
+  *Navigating this chart* list. Nothing on the edition is half-built.
 
 ## The open thread
 
 **There isn't one.** The key redesign — the thread every previous handoff
-named — is done and live, so the next session is choosing rather than
-continuing. Read that as a good state, not a missing note.
+named — is closed, twice over: it was built as a disclosure above the plate and
+then removed from the page on the user's call the same day, with the notation
+moved into the footer's *Navigating this chart* list. The next session is
+choosing rather than continuing. Read that as a good state, not a missing note.
 
 The largest remaining item by a wide margin is **Tables 2 and 3**, and it is
-blocked on scans, not on work. Everything else below is small, optional, or
-needs the user at a browser.
+blocked on scans, not on work. Everything else below is small or optional.
 
-If the key is revisited, the two things that will look wrong and aren't are now
-recorded in `CLAUDE.md` under Design invariants: it sits **outside**
-`.plate-tools` because the print rule hides that span, and `@media print`
-carries **two** overrides for forcing a closed `<details>` open because engines
-disagree — in Chrome 148 only `::details-content` fires and the legacy selector
-is inert. Deleting either as redundant silently drops the key from printed
-sheets on some browser.
+Two things to know before touching the table-page chrome again:
+
+- **`navigating_html()` is load-bearing.** Its first three list items are the
+  only place on the page that `+`, `F.`/`M.` and the leader rule are decoded.
+  They have already been lost once by a change that looked purely cosmetic.
+- **A measured audit exists and is in `CHANGELOG.md`** — the page has four left
+  edges at full width (masthead 8, plate 59, chrome 115, prose 371), and the
+  plate sits 56px left of the toolbar that controls it because the scroller is
+  full-bleed while its chrome is capped at `--measure-wide`. Deliberately left
+  alone. Don't re-measure it; decide.
 
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
-| Glyph check on Windows/Android | 5 min, needs a device | Font coverage already proven; only live rendering is unknown |
 | Wikidata item | ~10 min | Payload ready at `wikidata-quickstatements.txt`, all 18 ids verified live; **not urgent** |
 | Wikipedia external link | Slow | Propose on the *Elsie Clews Parsons* Talk page — a direct edit is a COI and gets reverted |
 | Tables 2 and 3 | Blocked | Needs scans. Worth more than everything else here combined |
-| Delete `prettyph3nom/laguna-genealogy` | 1 min, **needs the user** | Blocked on a token scope — see below |
 
-## Carried over — blocked on the user, not on work
+## Closed this session — do not re-raise
 
-**Delete the empty repo `prettyph3nom/laguna-genealogy`.** Attempted
-2026-07-28 and refused with `HTTP 403 … needs the "delete_repo" scope`. The
-`gh` token holds `gist, read:org, repo, workflow` — GitHub gates repo deletion
-behind a scope that has to be granted explicitly, and granting it is a browser
-OAuth flow no agent can drive.
-
-```bash
-gh auth refresh -h github.com -s delete_repo   # opens a browser; user only
-gh repo delete prettyph3nom/laguna-genealogy --yes
-```
-
-Or repo **Settings → Danger Zone → Delete this repository**.
-
-Safe to delete, verified twice: 0 KB, 0 forks, 0 stars, 0 issues, no branches.
-It is **not** the v1 repo — v1 was `laguna-genealogy-tables`, which 404s under
-both owners and is genuinely gone. This is an unrelated empty repo whose only
-cost is showing up beside the real one in lists like Zenodo's.
-
-**Don't retry the delete before the scope is granted** — it will 403 again.
-Ask, or skip it.
+- **`prettyph3nom/laguna-genealogy` is deleted.** The user granted the
+  `delete_repo` scope and removed it; verified gone (`gh` cannot resolve it,
+  unauthenticated fetch 404s, and it is absent from `gh repo list`). The real
+  repo is untouched. This had been carried in three handoffs.
+- **Glyph rendering on Windows and Android was checked on device** and both
+  render correctly. The cmap reasoning is kept in `CLAUDE.md` as the durable
+  evidence; the open question is closed.
 
 ## Decisions already made — don't re-litigate
 
+- **No on-page chart key.** Built twice, removed twice. It is decode-once
+  material and the plate is what the reader came for; the notation belongs in
+  the footer, where it now is. The code is deleted, not parked — if it is ever
+  wanted back, take it from git rather than leaving a third unreferenced copy.
 - **No custom domain** for now. `pueblogenealogy.github.io` is a GitHub
   subdomain, not an owned domain, and the doi is the durable citable identifier
   — it resolves independently of the host, which removed the strongest argument
