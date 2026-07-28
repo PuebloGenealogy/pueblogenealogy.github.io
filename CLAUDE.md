@@ -15,7 +15,7 @@ parent–child links, 5 generations. **Genealogy IV** (Table 4) — 73 individua
 ## Start here
 
 1. **`docs/` is generated.** All design, copy and markup live in
-   `scripts/make_chart.py` (~2,200 lines). Editing `docs/` is discarded silently
+   `scripts/make_chart.py` (~2,600 lines). Editing `docs/` is discarded silently
    on the next build.
 2. **The edition publishes the 1923 transcription only** — never research
    columns. See below; this is the thing that must not go wrong.
@@ -276,7 +276,9 @@ would title the deposit after the repo.
   link to one's own work is a COI and tends to be reverted — then the AMNH
   Digital Library, which hosts the original and could also supply the handle
   `.zenodo.json` currently omits from `related_identifiers`.
-- **Custom domain** — **decide this before seeding any inbound links.** Every
+- **Custom domain** — **currently decided against**, and the reasoning is in
+  `SESSION-NOTES.md`; listed here because it is not closed, only deferred.
+  **Decide it before seeding any inbound links.** Every
   link and citation placed from now on points permanently at whatever host is
   chosen, and most will never be updated. Note the old framing of this as "the
   strongest SEO upgrade" overstated it: Google treats `github.io` as a public
@@ -289,6 +291,13 @@ would title the deposit after the repo.
 ## Working style
 
 Report what was measured, not what was attempted. Flag uncertain readings
-explicitly rather than burying them. The source scans in `sources/` are usually
+explicitly rather than burying them.
+
+**Check the built file, not only the rendered page.** A DOM read in the browser
+happens after the page's own script has run, so it cannot see what the HTML
+ships. That is how `Theme: Auto` survived a check that reported no "Auto"
+anywhere: `applyTheme()` had already rewritten the label. For anything that
+exists in the markup — labels, attributes, structured data, the leak markers —
+grep `docs/`. The source scans in `sources/` are usually
 the fastest authority — faster than catalog records, which describe publications
 rather than plates.
