@@ -3,6 +3,80 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — the card rebuilt, 83–85 attributed, the leak gate closed
+
+Three things in one push. The third is the one to read first.
+
+### The leak gate had two holes
+
+- **It was blind to prose.** The gate grepped output for `class="eng"` /
+  `class="census"` — a research *field* rendered into the page. Research would
+  not escape that way. It would escape as a **sentence**: a footnote explaining
+  *why* a reading was made. That carries no class, and nothing would have
+  stopped it. This was found by nearly writing one.
+- **It never saw the landing page.** The check lived inside `build_table`, which
+  only handles table pages — so `docs/index.html`, which carries the FAQ and is
+  the only public prose that discusses this vocabulary, was unchecked entirely.
+- Now `leak_report()` checks markup **and** vocabulary (`census`,
+  `familysearch`, `national archives`, `widow…`, `enumerat…`), and
+  `check_published_pages()` sweeps every `.html` in `docs/`. **Fails closed**:
+  three FAQ sentences that state the boundary are allowlisted by exact phrase,
+  so rewording one stops the build until it is allowlisted again. `<style>`
+  blocks are excluded — the stylesheet ships `.census{}` rules and a selector
+  name says nothing about a person; scripts are **not** excluded.
+- Verified against **15 cases**: caught all nine leaks (including the exact
+  sentence this was written for, `Family Search` spaced, "widower", "census
+  roll"), stayed silent on all six legitimate ones. Then end-to-end by injecting
+  a real leak — build aborted, quoted the sentence, deleted the file, exit 1.
+- **The gate protects `docs/` only.** It cannot see a code comment, a changelog
+  entry or a handoff note, and those are all committed and public.
+
+### Editorial attribution — the first of its kind
+
+- The plate brackets {83, 84, 85} under **68** alone. She has two husbands, 69
+  and 70, and the bracket does not say which marriage the children belong to,
+  which is why `transcription.py` records their father as unassigned.
+- On external evidence, 83 and 84 are attributed to 68+69 and 85 to 68+70.
+  **The chart is untouched** — hash-compared across the full 31KB chart region,
+  the only difference was an unrelated `clan-origin` token. It still draws the
+  plate's single bracket. Only the register and the cards split the group.
+- Declared in `TABLES["i"]["paternity"]`, **not** in `transcription.py`: that
+  module is the plate, and the plate does not say this. Every row it produces
+  carries a dagger linking to `#note-paternity`; 70's plate-attested group sits
+  unmarked beside its marked one, so the difference is visible.
+- **The supporting evidence is not published and must not enter the repo.** The
+  note says a reading rests on evidence outside the plate and stops there.
+- `METHOD.md` gains an *Editorial attribution* section with the four rules any
+  future one must meet. Its governing principle was reworded: nothing is
+  supplied **in the chart**, and the word that always mattered is *silent*.
+- **Unresolved:** the evidence pins 85 firmly (born after 69's death). 83 and 84
+  rest on ages that do not cleanly line up — worth confirming before it is cited.
+
+### The card is a card now
+
+- It regroups a *detached copy* of the register entry: header band, then one
+  column per spouse with that spouse's children under them, so the reader no
+  longer pairs `SPOUSES: 66, 76` against `CHILDREN (WITH 66)` themselves.
+- `rel_row` gained `data-rel` / `data-with` so the card can pair a children
+  group with its other parent **without parsing the label**, which is prose.
+  `rel_link` gained `.rel-x` so an undrawn person is still one enumerable
+  element. The register renders identically and is still the no-JS card.
+- Badge carries the plate number (`68.`), so the number and sex mark leave the
+  header *text* — but stay in the dialog's accessible name via
+  `.visually-hidden`, or every card would have been silently renamed.
+- Clan became a `Clan: X` badge, suppressed for the one value that is an origin
+  rather than a clan (101, "of Zuñi", marked `.clan-origin` in `person_line`).
+  The vital note steps back to `--muted-fixed` — metadata, not name — making it
+  the second deliberate user of that token after `.imprint` (5.28:1 light,
+  5.69:1 dark). Every relation button carries its clan; **89** is the only
+  person in either table with none, and it is omitted with no placeholder.
+- Traps worth knowing: chips are `.reg-rel > a`, **direct children only** — a
+  cross-reference row is also a `.reg-rel` and its links sit in running prose.
+  The column divider is scoped to the exactly-two-column case, because columns
+  wrap (68 has three) and a wrapped column would hang a rule off nothing.
+- New tokens: `--t-lg`, `--t-xl`, `.edmark`. Parent buttons → spouse heading
+  measured 0px before, 24px after; column drift 0.00px at all five generations.
+
 ## 2026-07-28 — the clan gets its own colour, the number gets air
 
 - **`--clan` is a third exception to "all text on a table page is `--ink`",**
