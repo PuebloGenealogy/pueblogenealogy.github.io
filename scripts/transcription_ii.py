@@ -262,9 +262,19 @@ PERSONS = [
 # phenomenon, not two unrelated slips: Parsons was working from a numbering of
 # Genealogy I that ran one ahead of the one finally printed.
 #
-# NOTHING IS CORRECTED HERE. cross_ref carries what the plate prints. Whether
-# the apparatus should say so -- on this page, on Table 1's, or both -- is an
-# editorial decision, not a transcription one. Raise it before Gate 5.
+# NOTHING IS CORRECTED HERE. cross_ref carries what the plate prints.
+#
+# DECIDED 2026-07-29 (user): note it on BOTH published pages.
+#   - Table 2 gets a footnote saying its references into Genealogy I are exact
+#     through person 27 and one high from person 66 onward, with the matched
+#     names as the evidence.
+#   - Table 1's existing #note-misprint gains a sentence: the same displacement
+#     appears independently on Table 2, which also calls Shuwaiʼᶦri 68. That
+#     STRENGTHENS the standing decision to print 68 rather than "fix" it to 67
+#     -- the number is Parsons's, not a typesetter's slip.
+# Both are apparatus edits, so both go through _p() at each call site, never a
+# regex over the prose. Editing Table 1's apparatus touches a published, cited
+# page: re-verify that page after building.
 # ---------------------------------------------------------------------------
 
 
@@ -282,9 +292,16 @@ PERSONS = [
 # two distinct people carry one number, so the ids cannot be both unique and
 # equal to what the plate prints.
 #
-# NOT YET DECIDED -- do not resolve this by picking one silently. The edition's
-# rule is that the chart prints what the plate prints, so whatever mechanism is
-# chosen must still show 101 on both rows.
+# DECIDED 2026-07-29 (user): internal id + printed number. The synthetic id
+# below exists only so anchors, links and the register have something unique to
+# address; the CHART, THE REGISTER AND THE CARD ALL PRINT 101, for both people.
+# This is the separation Table 1 already makes between a person's id and the
+# number the plate puts on their row -- carried to the card as data-printed --
+# so extend that path rather than adding a second one. A footer note explains
+# that two people are numbered alike. Do not renumber to 101a/101b: that would
+# print something the plate does not.
+#
+# Read as: {internal id: the number the plate prints}
 # ---------------------------------------------------------------------------
 DUPLICATE_PLATE_NUMBERS = {1010: 101}
 
