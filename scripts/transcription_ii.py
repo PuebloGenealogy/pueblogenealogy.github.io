@@ -214,11 +214,13 @@ PERSONS = [
     (123, 5, "M", "I˙ʼg˙ugăi",       "",       "33", "Sun",    "",   "", "", ""),
     (124, 5, "M", "Dzĭo˙kwid˙yuʼă",  "",       "19", "Water",  "",   "", "", ""),
     (125, 5, "F", "Gowaʼk˙ʼd˙yăiʼ",  "",       "18", "Water",  "",   "", "",
-     "DISCREPANCY -- SEE TODO. Printed twice, and the two readings do not "
-     "agree: 'Gowaʼk˙ʼd˙yăiʼ' in the upper block, 'Gowaʼkʼad˙zăiʼ' in the lower "
-     "(native crop at x 3790, y 9500). The lower reading is the clearer of the "
-     "two. Re-read the upper occurrence before Gate 3. The age 18 and the clan "
-     "Water agree in both"),
+     "DISCREPANCY -- NOT A READING PROBLEM. Printed twice, and THE PLATE SETS "
+     "THE TWO DIFFERENTLY: 'Gowaʼk˙ʼd˙yăiʼ' in the upper block (crop x 5080, "
+     "y 3150) and 'Gowaʼkʼad˙zăiʼ' in the lower (crop x 4160, y 9555). Both "
+     "were re-read at 380 px on 2026-07-29 and both are unambiguous at that "
+     "size, so no tighter crop will settle it. Age 18 and clan Water agree in "
+     "both. One person, one name to print -- an EDITORIAL choice, and one for "
+     "the user, not for the transcriber"),
     (126, 5, "M", "Yo˙ʼkwi",         "",       "23", "Chaparral Cock", "", "", "", ""),
     (127, 5, "F", "Howa˙kʼă",        "",       "",   "Water",  "d. 1919 at 13", "", "", ""),
     (128, 5, "F", "Mary Saiu",       "",       "",   "",       "",   "", "", "no clan printed"),
@@ -630,14 +632,22 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 #   - 84  Ha˙tsʼᵉ         superscript e (U+1D49) -- this one IS confirmed
 #   - 45, 52, 59, 64, 80, 135, 142, 146, 20, 21: trailing or medial marks
 #
-# AND FOUR PEOPLE DRAWN TWICE WHOSE OCCURRENCES DISAGREE. These matter more
-# than the marks above, because each is one person and the edition must print
-# one name. Each record names the clearer occurrence and its coordinates:
-#   - 13   Dzia˙ʼyotsʼa / Tsiaiutsa
-#   - 54   Ma˙ʼrani / Ma˙ʼran˙i
-#   - 125  Gowaʼk˙ʼd˙yăiʼ / Gowaʼkʼad˙zăiʼ
-#   (169's two occurrences agree; it is listed here only so the next reader
-#    does not go looking for a fourth.)
+# AND THREE PEOPLE DRAWN TWICE WHOSE TWO OCCURRENCES DISAGREE. These are a
+# different kind of open item from the marks above, and the difference is the
+# point: THEY ARE NOT READING PROBLEMS. 125's pair was re-read at 380 px on
+# 2026-07-29 and both settings are unambiguous at that size. The plate simply
+# prints one person's name two ways, and the edition must print one. That is
+# an EDITORIAL choice and it belongs to the user:
+#   - 13   Dzia˙ʼyotsʼa / Tsiaiutsa          (upper reading the less certain)
+#   - 54   Ma˙ʼrani / Ma˙ʼran˙i              (one raised dot apart)
+#   - 125  Gowaʼk˙ʼd˙yăiʼ / Gowaʼkʼad˙zăiʼ   (both crops verified legible)
+# Each record carries the coordinates of both occurrences. 169's two
+# occurrences agree; it is named here only so nobody hunts for a fourth.
+#
+# Note this is the same phenomenon that shows up BETWEEN plates, where it is
+# not a problem at all: 191 vs Gen. I 34, 198 vs Gen. I 42, 200 vs Gen. I 44,
+# 202 vs Gen. I 48 all differ in a mark, and there each plate is simply
+# recorded as it prints. Only the within-plate repeats force a choice.
 #
 # ONE MORE WORTH A LOOK: 135 reads "Săp" with a breve in the upper block,
 # while 180 in the lower block clearly reads "Säpʼᵃ" with a diaeresis and a
@@ -717,29 +727,56 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 # STILL UNASSIGNED in the lower block: 172/173, 180-185, 196-228, 237, 240-243,
 # 265-269. Their columns and clans are recorded; their brackets are not traced.
 #
-# *** THE TWO BLOCKS DO NOT SHARE ONE GENERATION FRAME, AND THIS IS THE ONE
-# *** THING GATE 2 MUST SETTLE BEFORE ANYTHING RENDERS.
-# The lower block is numbered within itself: 154+155 are its generation 1. But
-# people drawn in the upper block keep their upper generation when they
-# reappear below, and their children then inherit from it. So column D of the
-# lower block holds BOTH generation 4 (186-228, children of the lower block's
-# generation 3) and generation 5 (244-253, children of 54+234, where 54 is the
-# upper block's generation 4). Two people in one printed column, two different
-# generation numbers.
+# *** THE TWO BLOCKS' GENERATION FRAMES -- RESOLVED 2026-07-29 ***
 #
-# The three anchors, and they do not agree:
-#   - 13 and 14 are upper generation 3 and are children of 154+155.
-#     => lower generation 1 == upper generation 2.
-#   - 126 is upper generation 5 and is a child of 158+160, who are lower
-#     generation 2. => lower generation 2 == upper generation 4, i.e. lower
-#     generation 1 == upper generation 3.
-#   - 54 is upper generation 4 and is the son of 232+233.
-#     => 232+233 sit at upper generation 3, not at lower generation 1.
-# The first and third can be reconciled by moving 232+233 down one; the second
-# cannot, without either 126's upper generation or the 158+160 reading being
-# wrong. RE-READ 126's PLACEMENT IN THE UPPER BLOCK FIRST -- it is the only
-# one of the three that was read at an early stage, and it is a single tile's
-# work. Do not resolve this by renumbering the data to make it fit.
+# The `generation` field in PERSONS above is currently written in TWO frames:
+# the upper block's own, and a lower-block-local one where 154+155 are
+# "generation 1". They differ by exactly one, and the conversion is
+#
+#     upper generation == lower generation + 1
+#
+# so 154+155 sit at upper generation 2 and the plate is six generations deep
+# counted either way. Under that conversion every column of the lower block
+# maps to one upper generation, with no column holding two:
+#
+#     lower col A (154, 155)                  -> upper 2
+#     lower col B (156-165, 232, 233)         -> upper 3
+#     lower col C (166-185, 234-243)          -> upper 4
+#     lower col D (186-228, 244-269)          -> upper 5
+#     lower col E (229-231, 270-274)          -> upper 6
+#
+# HOW THE THIRD ANCHOR DISSOLVED. It looked for a while as though 126 broke
+# this: he is stored at upper generation 5 and he is a child of 158+160, who
+# are lower generation 2, which would force lower 2 == upper 4. The upper
+# block settles it -- crop x 4700, y 3010, 1300 x 340. There, 125 is the CHILD
+# line and "+ 126" is her SPOUSE line; in the lower block the roles swap, 126
+# being the child and "+ 125" the spouse. So 126's stored 5 is his WIFE's
+# generation, taken from the line he is printed beside, and says nothing about
+# his own descent. His own descent puts him at upper 4. Not an anchor at all.
+#
+# The other two agree and are what the table above is built on:
+#   - 13 and 14 are upper generation 3 and are children of 154+155
+#     => 154+155 are upper generation 2.
+#   - 54 is upper generation 4 and is the son of 232+233
+#     => 232+233 are upper generation 3, i.e. lower column B, which is exactly
+#        the indent they are printed at. Their stored "generation 1" is wrong;
+#        "founding couple" means no parents are drawn, not column A.
+#
+# WHAT TO DO ABOUT IT -- and the reason it is NOT done here. `generation` is
+# not a layout input. make_chart.py reads it in exactly one place that matters,
+# `n_gens = max(...)`, to print "N generations" in the page copy; the chart's
+# columns come from walking UNIONS and CHILDREN, not from this field. So the
+# frames being mixed cannot bend the plate. Rather than hand-renumber 120-odd
+# records off their column positions now, DERIVE the field from the traced tree
+# during Gate 2, when every bracket is encoded and the depth falls out for
+# free. Hand-renumbering from columns would put a guess where a derivation
+# belongs.
+#
+# Two records need a decision even so, and neither is arithmetic:
+#   - 126, whose descent is drawn in the lower block (upper 4) but who is
+#     printed beside a wife at upper 5. Take the generation from the descent
+#     the plate actually draws.
+#   - 169, drawn twice inside the lower block, currently 3, column C, so 4.
 #
 # THREE FOUNDING COUPLES ON THIS PLATE, not two: 1+2, 154+155, and 232+233.
 # 232 was the trap -- it is printed at the same indent as 158 and 164, which
