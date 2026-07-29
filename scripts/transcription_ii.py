@@ -263,96 +263,100 @@ PERSONS = [
 
     # =====================================================================
     # LOWER BLOCK -- founding couple 154+155
-    # Generations below are numbered WITHIN this block: 154+155 are its
-    # generation 1. Whether the two blocks share a generation frame is a
-    # question for Gate 2, not a reading -- see the structure notes.
+    # Generations here are in the SAME frame as the upper block's, derived
+    # from the traced tree at Gate 2 (see the generation-frame note below).
+    # 154+155 are generation 2, not 1: their children 13 and 14 are drawn in
+    # the upper block at generation 3. "Founding couple" means the plate
+    # draws no parents for them, not that they sit in the first column.
     # =====================================================================
-    (154, 1, "F", "",                "",       "",   "Parrot", "",   "", "", "name printed as a dash"),
-    (155, 1, "M", "",                "",       "",   "Turkey", "",   "", "", "name printed as a dash"),
+    (154, 2, "F", "",                "",       "",   "Parrot", "",   "", "", "name printed as a dash"),
+    (155, 2, "M", "",                "",       "",   "Turkey", "",   "", "", "name printed as a dash"),
 
-    (156, 2, "M", "Shʼauʼs˙imăiʼ",   "",       "",   "Parrot", "d.", "", "See Gen. I, 10", ""),
-    (157, 2, "F", "Dyaiʼᶦs˙itsʼă",   "",       "",   "Sun",    "d. 1918, at 60", "", "See Gen. I, 9", ""),
-    (158, 2, "M", "Niʼʼy˙ŭyăiʼ",     "",       "",   "Parrot", "",   "", "", ""),
-    (159, 2, "F", "",                "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
-    (160, 2, "F", "Yo˙ʼs˙iro",       "",       "",   "Chaparral Cock", "d. 1914", "",
+    (156, 3, "M", "Shʼauʼs˙imăiʼ",   "",       "",   "Parrot", "d.", "", "See Gen. I, 10", ""),
+    (157, 3, "F", "Dyaiʼᶦs˙itsʼă",   "",       "",   "Sun",    "d. 1918, at 60", "", "See Gen. I, 9", ""),
+    (158, 3, "M", "Niʼʼy˙ŭyăiʼ",     "",       "",   "Parrot", "",   "", "", ""),
+    (159, 3, "F", "",                "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
+    (160, 3, "F", "Yo˙ʼs˙iro",       "",       "",   "Chaparral Cock", "d. 1914", "",
      "For second husband and descendant, see Gen. III, 154, 220 / "
      "For third husband and descendant, see Gen. I, 8, 90",
      "second wife of 158; the year 1914 is set in bold on the plate. This is "
      "Genealogy I's person 73 -- name, clan and death year all agree"),
-    (161, 2, "",  "Gawai˙d˙yirăiʼ",  "",       "",   "Parrot", "d.", "", "",
+    (161, 3, "",  "Gawai˙d˙yirăiʼ",  "",       "",   "Parrot", "d.", "", "",
      "sex printed as 'M.-F.' -- a marking used nowhere else on this plate. "
      "Stored empty rather than guessed; recorded here as printed"),
-    (162, 2, "M", "Da˙ʼyu",          "",       "",   "Parrot", "d.", "", "",
+    (162, 3, "M", "Da˙ʼyu",          "",       "",   "Parrot", "d.", "", "",
      "trailing mark after 'yu' unverified -- SEE TODO"),
-    (163, 2, "F", "Ĭyaˑʼsi",         "",       "",   "Bear",   "",   "",
+    (163, 3, "F", "Ĭyaˑʼsi",         "",       "",   "Bear",   "",   "",
      "For second husband and descendants, see Gen. III, 14, 49-55, 135-141", ""),
-    (164, 2, "F", "Heaʼʼs˙i",        "",       "",   "Parrot", "d.", "", "", ""),
-    (165, 2, "M", "Ha˙ʼpai",         "",       "",   "Oak",    "d.", "", "", ""),
+    (164, 3, "F", "Heaʼʼs˙i",        "",       "",   "Parrot", "d.", "", "", ""),
+    (165, 3, "M", "Ha˙ʼpai",         "",       "",   "Oak",    "d.", "", "", ""),
 
     # =====================================================================
     # THIRD FOUNDING COUPLE -- 232+233
     # No leader rule enters 232 from the left, where 158 and 164 both have
-    # one. Verified at native resolution. Their son is 54, who also appears
-    # in the upper block as 53's husband.
+    # one. Verified at native resolution.
+    # Gate 2 found they have SIX children, not the one the first pass saw:
+    # 54, 235, 237, 238, 240 and 242, on a single bracket running the height
+    # of column C (x 3620, y 10440 and 11890). Every one is Sun, which is
+    # 232's clan and not 233's Turkey.
+    # 54 also appears in the upper block as 53's husband.
     # =====================================================================
-    (232, 1, "F", "Yuwaiʼd˙yaitsʼă", "",       "",   "Sun",    "",   "", "", ""),
-    (233, 1, "M", "Gaʼʼaiʼ",         "",       "",   "Turkey", "",   "", "", ""),
+    (232, 3, "F", "Yuwaiʼd˙yaitsʼă", "",       "",   "Sun",    "",   "", "", ""),
+    (233, 3, "M", "Gaʼʼaiʼ",         "",       "",   "Turkey", "",   "", "", ""),
 
     # ---- lower block, generation 3 --------------------------------------
-    (166, 3, "M", "G˙yiʼmi",         "",       "45", "Sun",    "",   "", "See Gen. I, 16", ""),
-    (167, 3, "F", "Nămăiʼ",          "",       "40", "Oak",    "",   "", "See Gen. I, 17", ""),
-    (168, 3, "M", "Kowăuʼsh˙dyiwă",  "",       "42", "Sun",    "",   "", "See Gen. I, 18", ""),
-    (169, 3, "F", "Haiʼtyʼʼimăiʼ",   "",       "43", "Parrot", "",   "",
+    (166, 4, "M", "G˙yiʼmi",         "",       "45", "Sun",    "",   "", "See Gen. I, 16", ""),
+    (167, 4, "F", "Nămăiʼ",          "",       "40", "Oak",    "",   "", "See Gen. I, 17", ""),
+    (168, 4, "M", "Kowăuʼsh˙dyiwă",  "",       "42", "Sun",    "",   "", "See Gen. I, 18", ""),
+    (169, 4, "F", "Haiʼtyʼʼimăiʼ",   "",       "43", "Parrot", "",   "",
      "See Gen. I, 19 / For first husband and descendants, see below",
      "appears twice within the lower block; drawn once. A heavy ink stroke runs "
      "from this line's clan to its sibling bracket on the scanned copy -- it is "
      "not type, and is recorded as an observation of this copy, not as data"),
-    (170, 3, "M", "Kʼuʼn˙ash",       "",       "",   "Sun",    "",   "", "See Gen. I, 20",
+    (170, 4, "M", "Kʼuʼn˙ash",       "",       "",   "Sun",    "",   "", "See Gen. I, 20",
      "trailing mark after 'ash' unverified -- SEE TODO"),
-    (171, 3, "F", "Shayaʼai",        "",       "",   "Sun",    "",   "", "See Gen. I, 21",
+    (171, 4, "F", "Shayaʼai",        "",       "",   "Sun",    "",   "", "See Gen. I, 21",
      "number printed without a following period"),
-    (172, 3, "M", "Dziraiʼᶦtyʼi",     "",       "",   "Sun",    "",   "", "See Gen. I, 22", ""),
-    (173, 3, "F", "Dziʼs˙dyuwi",      "",       "",   "Bear",   "d.", "", "See Gen. I, 23", ""),
-    (174, 3, "M", "Shta˙ʼyăi",        "",       "",   "",       "",   "", "",
+    (172, 4, "M", "Dziraiʼᶦtyʼi",     "",       "",   "Sun",    "",   "", "See Gen. I, 22", ""),
+    (173, 4, "F", "Dziʼs˙dyuwi",      "",       "",   "Bear",   "d.", "", "See Gen. I, 23", ""),
+    (174, 4, "M", "Shta˙ʼyăi",        "",       "",   "",       "",   "", "",
      "no clan printed; name printed without a following period"),
-    (175, 3, "F", "Kio˙ʼd˙yiăi",      "",       "",   "Bear",   "",   "", "", ""),
-    (176, 3, "F", "Dzaʼwaiʼᶦy˙unăiʼ", "",       "",   "Sun",    "",   "", "", ""),
-    (177, 3, "M", "Maiʼs˙iwă",        "",       "",   "Turkey", "",   "", "",
+    (175, 4, "F", "Kio˙ʼd˙yiăi",      "",       "",   "Bear",   "",   "", "", ""),
+    (176, 4, "F", "Dzaʼwaiʼᶦy˙unăiʼ", "",       "",   "Sun",    "",   "", "", ""),
+    (177, 4, "M", "Maiʼs˙iwă",        "",       "",   "Turkey", "",   "", "",
      "set in noticeably larger type than the lines around it -- an observation "
      "of this copy's setting, not data"),
-    (178, 3, "F", "Shuwăiʼ",          "",       "",   "Chaparral Cock", "", "", "", ""),
-    (179, 3, "M", "",                 "",       "",   "White",  "",   "", "",
+    (178, 4, "F", "Shuwăiʼ",          "",       "",   "Chaparral Cock", "", "", "", ""),
+    (179, 4, "M", "",                 "",       "",   "White",  "",   "", "",
      "name printed as a dash. 'White' stands where every other line prints a "
      "clan. Recorded as printed, not interpreted"),
-    (180, 3, "F", "Säpʼᵃ",            "",       "",   "Bear",   "d.", "", "",
+    (180, 4, "F", "Säpʼᵃ",            "",       "",   "Bear",   "d.", "", "",
      "diaeresis on 'a' (U+00E4) -- a codepoint neither Table 1 nor Table 4 "
      "uses. Confirmed at a 330 px crop"),
-    (181, 3, "M", "Ma˙tsʼăĭ yăiʼ",    "",       "",   "Bear",   "",   "", "",
+    (181, 4, "M", "Ma˙tsʼăĭ yăiʼ",    "",       "",   "Bear",   "",   "", "",
      "the plate sets this name as two words, with a space; confirmed at a "
      "460 px crop"),
-    (182, 3, "F", "Gwiʼtyʼi",         "",       "",   "Sun",    "",   "", "", ""),
-    (183, 3, "M", "",                 "",       "",   "Mexican", "",  "", "",
+    (182, 4, "F", "Gwiʼtyʼi",         "",       "",   "Sun",    "",   "", "", ""),
+    (183, 4, "M", "",                 "",       "",   "Mexican", "",  "", "",
      "name printed as a dash. 'Mexican' stands where every other line prints a "
      "clan, as 'White' does at 179. Recorded as printed, not interpreted. "
      "This is the first husband of 169, whose line here carries 'For second "
      "husband and descendants, see above'"),
-    (184, 3, "M", "Djaiʼd˙ziĕ",       "",       "30", "Parrot", "",   "", "", ""),
-    (185, 3, "F", "Kăauʼd˙yuwi",      "",       "35", "Corn",   "",   "", "", ""),
+    (184, 4, "M", "Djaiʼd˙ziĕ",       "",       "30", "Parrot", "",   "", "", ""),
+    (185, 4, "F", "Kăauʼd˙yuwi",      "",       "35", "Corn",   "",   "", "", ""),
     (234, 4, "F", "Go˙ʼyăiʼ",         "",       "",   "Eagle",  "",   "", "",
-     "second wife of 54, printed as a second '+' line under him below 53. "
-     "Generation follows her husband's upper-block value, not her column in "
-     "the lower block -- see the block-frame question at Gate 2"),
-    (235, 3, "M", "Charley Kai",      "",       "",   "Sun",    "",   "", "",
+     "second wife of 54, printed as a second '+' line under him below 53"),
+    (235, 4, "M", "Charley Kai",      "",       "",   "Sun",    "",   "", "",
      "English name printed as the name itself, as at 116-118, 128 and 134"),
-    (236, 3, "F", "Kaweishdyiŭr",     "",       "",   "Water",  "",   "", "", ""),
-    (237, 3, "F", "Tsʼid˙yuwiʼ",      "",       "",   "Sun",    "d.", "", "", ""),
-    (238, 3, "M", "Yo˙rimăiʼ",        "Fred Kai", "", "Sun",    "",   "", "",
+    (236, 4, "F", "Kaweishdyiŭr",     "",       "",   "Water",  "",   "", "", ""),
+    (237, 4, "F", "Tsʼid˙yuwiʼ",      "",       "",   "Sun",    "d.", "", "", ""),
+    (238, 4, "M", "Yo˙rimăiʼ",        "Fred Kai", "", "Sun",    "",   "", "",
      "English name printed in parentheses on the plate"),
-    (239, 3, "F", "Dziwiʼs˙dy˙uwi",   "",       "",   "Chaparral Cock", "", "", "", ""),
-    (240, 3, "F", "Dzi˙d˙jaʼai",      "",       "",   "Sun",    "d.", "", "", ""),
-    (241, 3, "M", "Tsiyusiĕ",         "",       "",   "Parrot", "",   "", "", ""),
-    (242, 3, "M", "Shaaiʼshdyiăi",    "",       "",   "Sun",    "",   "", "", ""),
-    (243, 3, "F", "",                 "",       "",   "Mohave", "",   "", "",
+    (239, 4, "F", "Dziwiʼs˙dy˙uwi",   "",       "",   "Chaparral Cock", "", "", "", ""),
+    (240, 4, "F", "Dzi˙d˙jaʼai",      "",       "",   "Sun",    "d.", "", "", ""),
+    (241, 4, "M", "Tsiyusiĕ",         "",       "",   "Parrot", "",   "", "", ""),
+    (242, 4, "M", "Shaaiʼshdyiăi",    "",       "",   "Sun",    "",   "", "", ""),
+    (243, 4, "F", "",                 "",       "",   "Mohave", "",   "", "",
      "name printed as a dash. 'Mohave' stands where every other line prints a "
      "clan, as 'White' does at 179 and 'Mexican' at 183. Recorded as printed, "
      "not interpreted"),
@@ -362,83 +366,83 @@ PERSONS = [
     # 186 and 188-195 sit at one indent: they are siblings, not mother and
     # children -- 186 is 23 and 188 is 22. Their Oak clan and their "See Gen.
     # I" numbers both point at 167 (Nămăiʼ, Oak, 40) as the mother.
-    (186, 4, "F", "Shăaityʼid˙yuweʼ", "",       "23", "Oak",    "",   "", "", ""),
-    (187, 4, "M", "Ramona of Sant Ana", "",     "50", "Turkey", "",   "", "",
+    (186, 5, "F", "Shăaityʼid˙yuweʼ", "",       "23", "Oak",    "",   "", "", ""),
+    (187, 5, "M", "Ramona of Sant Ana", "",     "50", "Turkey", "",   "", "",
      "the plate prints the name with a place, spelled 'Sant Ana'. Recorded as "
      "printed, not normalised"),
-    (188, 4, "F", "Kiwaʼd˙yuwi",      "",       "22", "Oak",    "",   "", "See Gen. I, 33",
+    (188, 5, "F", "Kiwaʼd˙yuwi",      "",       "22", "Oak",    "",   "", "See Gen. I, 33",
      "Gen. I 33 is this same woman by name and clan but prints her age as 18. "
      "Both are recorded as each plate prints them"),
-    (189, 4, "F", "Ko˙ri",            "",       "21", "Oak",    "",   "", "See Gen. I, 31", ""),
-    (190, 4, "M", "Tsᶦgaiʼs˙iwăʼ",    "",       "20", "Oak",    "",   "", "See Gen. I, 32",
+    (189, 5, "F", "Ko˙ri",            "",       "21", "Oak",    "",   "", "See Gen. I, 31", ""),
+    (190, 5, "M", "Tsᶦgaiʼs˙iwăʼ",    "",       "20", "Oak",    "",   "", "See Gen. I, 32",
      "this line crosses a fold crease and the medial 's˙i' reads ambiguously "
      "as 's˙i' or 'sʼï' at any crop. Gen. I 32 is the same man and prints "
      "'Tsᶦgaiʼs˙iwăʼ' on a far better-resolved plate; that settles it"),
-    (191, 4, "M", "Tsiʼd˙yimĕ",       "",       "17", "Oak",    "",   "", "See Gen. I, 34",
+    (191, 5, "M", "Tsiʼd˙yimĕ",       "",       "17", "Oak",    "",   "", "See Gen. I, 34",
      "no trailing apostrophe here, where Gen. I 34 prints 'Tsiʼd˙yimĕʼ'. "
      "Confirmed at a 620 px crop; each plate is recorded as it prints"),
-    (192, 4, "F", "Sha˙tyʼi",         "",       "14", "Oak",    "",   "", "See Gen. I, 35", ""),
-    (193, 4, "M", "Aiʼwanăi",         "",       "8",  "Oak",    "",   "", "See Gen. I, 36", ""),
-    (194, 4, "M", "Dyăiʼtsdyămŭr",    "",       "6",  "Oak",    "",   "", "See Gen. I, 37", ""),
-    (195, 4, "M", "Iyăiʼs˙dyiwă",     "",       "5",  "Oak",    "",   "", "See Gen. I, 38", ""),
-    (196, 4, "F", "Kăauʼshurtsʼa",    "",       "9",  "Parrot", "",   "", "See Gen. I, 40", ""),
-    (197, 4, "M", "Onăiʼ",            "",       "8",  "Parrot", "",   "", "See Gen. I, 41", ""),
-    (198, 4, "F", "Wamais",           "",       "7",  "Parrot", "",   "", "See Gen. I, 42",
+    (192, 5, "F", "Sha˙tyʼi",         "",       "14", "Oak",    "",   "", "See Gen. I, 35", ""),
+    (193, 5, "M", "Aiʼwanăi",         "",       "8",  "Oak",    "",   "", "See Gen. I, 36", ""),
+    (194, 5, "M", "Dyăiʼtsdyămŭr",    "",       "6",  "Oak",    "",   "", "See Gen. I, 37", ""),
+    (195, 5, "M", "Iyăiʼs˙dyiwă",     "",       "5",  "Oak",    "",   "", "See Gen. I, 38", ""),
+    (196, 5, "F", "Kăauʼshurtsʼa",    "",       "9",  "Parrot", "",   "", "See Gen. I, 40", ""),
+    (197, 5, "M", "Onăiʼ",            "",       "8",  "Parrot", "",   "", "See Gen. I, 41", ""),
+    (198, 5, "F", "Wamais",           "",       "7",  "Parrot", "",   "", "See Gen. I, 42",
      "no trailing marks here, where Gen. I 42 prints 'Wamais˙ʼ'"),
-    (199, 4, "M", "Gaishpidjaʼtyᵃ˙",  "",       "6",  "Parrot", "",   "", "See Gen. I, 43 (?)",
+    (199, 5, "M", "Gaishpidjaʼtyᵃ˙",  "",       "6",  "Parrot", "",   "", "See Gen. I, 43 (?)",
      "THE QUESTION MARK IS PARSONS'S OWN, printed on the plate after the "
      "reference. It is the only cross-reference on this plate that carries one, "
      "and it is warranted: Gen. I 43 is 'Yoʼd˙yidyăiʼ', a different name. Copy "
      "the '(?)' through to the page -- it is her doubt, not ours. Trailing "
      "superscript a then raised dot, confirmed at a 260 px crop"),
-    (200, 4, "M", "Hea˙ʼshdyĭwă",     "",       "",   "Parrot", "d. 1917, at 2", "", "See Gen. I, 44",
+    (200, 5, "M", "Hea˙ʼshdyĭwă",     "",       "",   "Parrot", "d. 1917, at 2", "", "See Gen. I, 44",
      "Gen. I 44 prints 'Hea˙ʼsh˙dyĭwă' and 'd. 1917, aged 2'. Each plate is "
      "recorded as it prints"),
-    (201, 4, "M", "Dziwaiʼi˙siro",    "",       "",   "Sun",    "",   "", "See Gen. I, 45",
+    (201, 5, "M", "Dziwaiʼi˙siro",    "",       "",   "Sun",    "",   "", "See Gen. I, 45",
      "raised dot after the medial 'i', which Gen. I 45 does not print"),
-    (202, 4, "F", "Kuyăiʼd˙yid˙uweʼ", "",       "",   "Sun",    "",   "", "See Gen. I, 48",
+    (202, 5, "F", "Kuyăiʼd˙yid˙uweʼ", "",       "",   "Sun",    "",   "", "See Gen. I, 48",
      "no 'y' before 'uweʼ', where Gen. I 48 prints 'Kuyăiʼd˙yid˙yuweʼ'. "
      "Confirmed at a 480 px crop"),
-    (203, 4, "F", "Edna",             "",       "",   "Sun",    "",   "", "",
+    (203, 5, "F", "Edna",             "",       "",   "Sun",    "",   "", "",
      "English name printed as the name itself; no cross-reference on this line"),
-    (204, 4, "F", "Yăaiʼdyid˙yuwi",   "",       "",   "Sun",    "",   "", "See Gen. I, 49", ""),
-    (205, 4, "M", "Owi˙ʼd˙zĭraiʼ",    "",       "",   "Sun",    "",   "", "See Gen. I, 47", ""),
-    (206, 4, "F", "",                 "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
-    (207, 4, "M", "",                 "",       "",   "Bear",   "",   "", "", "name printed as a dash"),
-    (208, 4, "F", "Gaaish",           "",       "",   "Bear",   "",   "", "See Gen. I, 53",
+    (204, 5, "F", "Yăaiʼdyid˙yuwi",   "",       "",   "Sun",    "",   "", "See Gen. I, 49", ""),
+    (205, 5, "M", "Owi˙ʼd˙zĭraiʼ",    "",       "",   "Sun",    "",   "", "See Gen. I, 47", ""),
+    (206, 5, "F", "",                 "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
+    (207, 5, "M", "",                 "",       "",   "Bear",   "",   "", "", "name printed as a dash"),
+    (208, 5, "F", "Gaaish",           "",       "",   "Bear",   "",   "", "See Gen. I, 53",
      "Gen. I 53 is 'Gaaiʼd˙yuitsʼa', F, Bear, aged 3 -- the same girl under a "
      "shorter form of the name. Each plate is recorded as it prints"),
-    (209, 4, "F", "Onăiʼ",            "",       "10", "Bear",   "",   "", "", ""),
-    (210, 4, "M", "Niăiʼ",            "",       "4",  "Bear",   "",   "", "", ""),
-    (211, 4, "M", "Shʼauwiăiʼ",       "",       "3",  "Bear",   "",   "", "", ""),
+    (209, 5, "F", "Onăiʼ",            "",       "10", "Bear",   "",   "", "", ""),
+    (210, 5, "M", "Niăiʼ",            "",       "4",  "Bear",   "",   "", "", ""),
+    (211, 5, "M", "Shʼauwiăiʼ",       "",       "3",  "Bear",   "",   "", "", ""),
     # 212-219 print no sex letter: number, dash, clan only -- the same setting
     # as 85-100 and 106-115 in the upper block. Stored empty, not guessed.
-    (212, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
-    (213, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
-    (214, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
-    (215, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
-    (216, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
-    (217, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
-    (218, 4, "",  "",                 "",       "",   "Chaparral Cock", "", "", "", "no sex printed; name printed as a dash"),
-    (219, 4, "",  "",                 "",       "",   "Chaparral Cock", "", "", "", "no sex printed; name printed as a dash"),
-    (220, 4, "F", "Shauʼkʼămă",       "",       "15", "Sun",    "",   "", "", ""),
-    (221, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
-    (222, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
-    (223, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
-    (224, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
-    (225, 4, "",  "Shauʼd˙yidĕ",      "",       "15", "Parrot", "",   "", "",
+    (212, 5, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (213, 5, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (214, 5, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (215, 5, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (216, 5, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (217, 5, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (218, 5, "",  "",                 "",       "",   "Chaparral Cock", "", "", "", "no sex printed; name printed as a dash"),
+    (219, 5, "",  "",                 "",       "",   "Chaparral Cock", "", "", "", "no sex printed; name printed as a dash"),
+    (220, 5, "F", "Shauʼkʼămă",       "",       "15", "Sun",    "",   "", "", ""),
+    (221, 5, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (222, 5, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (223, 5, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (224, 5, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (225, 5, "",  "Shauʼd˙yidĕ",      "",       "15", "Parrot", "",   "", "",
      "no sex printed, although this line does carry a name and an age. Every "
      "other sexless line on the plate prints a dash for the name as well; this "
      "is the only one that does not. Confirmed at an 800 px crop"),
-    (226, 4, "",  "",                 "",       "",   "Parrot", "d.", "", "", "no sex printed; name printed as a dash"),
-    (227, 4, "M", "",                 "",       "",   "Corn",   "d.", "", "", "name printed as a dash"),
-    (228, 4, "F", "",                 "",       "",   "Corn",   "d.", "", "", "name printed as a dash"),
+    (226, 5, "",  "",                 "",       "",   "Parrot", "d.", "", "", "no sex printed; name printed as a dash"),
+    (227, 5, "M", "",                 "",       "",   "Corn",   "d.", "", "", "name printed as a dash"),
+    (228, 5, "F", "",                 "",       "",   "Corn",   "d.", "", "", "name printed as a dash"),
 
     # ---- lower block, generation 5 (column E) ---------------------------
     # 229-231 are the children of 186+187. All Oak, as 186 is.
-    (229, 5, "F", "Shawityi",         "",       "6",  "Oak",    "",   "", "", ""),
-    (230, 5, "M", "Awie˙",            "",       "4",  "Oak",    "",   "", "", ""),
-    (231, 5, "M", "Yoreni",           "",       "1",  "Oak",    "",   "", "", ""),
+    (229, 6, "F", "Shawityi",         "",       "6",  "Oak",    "",   "", "", ""),
+    (230, 6, "M", "Awie˙",            "",       "4",  "Oak",    "",   "", "", ""),
+    (231, 6, "M", "Yoreni",           "",       "1",  "Oak",    "",   "", "", ""),
 
     # ---- the 232+233 branch's grandchildren -----------------------------
     # 244-253 hang off 234's line, and every one of them is Eagle, which is
@@ -465,46 +469,46 @@ PERSONS = [
 
     # ---- lower block, generation 4 resumes (column D) -------------------
     # 254-260 are Water, which is 236's clan, so they hang off 235+236.
-    (254, 4, "F", "Lina",             "",       "",   "Water",  "",   "", "",
+    (254, 5, "F", "Lina",             "",       "",   "Water",  "",   "", "",
      "English name printed as the name itself"),
-    (255, 4, "M", "Kaauʼstyiăiʼ",     "",       "",   "Eagle",  "",   "", "",
+    (255, 5, "M", "Kaauʼstyiăiʼ",     "",       "",   "Eagle",  "",   "", "",
      "this '+' line also carries a leader rule entering from the left, which "
      "no other '+' line on the plate does. Noted for Gate 2, not interpreted"),
-    (256, 4, "F", "Gʼawaidyuwi",      "",       "",   "Water",  "",   "", "", ""),
-    (257, 4, "M", "John Perry",       "",       "",   "Eagle",  "",   "", "",
+    (256, 5, "F", "Gʼawaidyuwi",      "",       "",   "Water",  "",   "", "", ""),
+    (257, 5, "M", "John Perry",       "",       "",   "Eagle",  "",   "", "",
      "English name printed as the name itself"),
-    (258, 4, "M", "Oʼkʼaiyă",         "",       "",   "Water",  "",   "", "", ""),
-    (259, 4, "F", "Kʼataiʼd˙yuwĕʼ",   "",       "",   "Water",  "",   "", "",
+    (258, 5, "M", "Oʼkʼaiyă",         "",       "",   "Water",  "",   "", "", ""),
+    (259, 5, "F", "Kʼataiʼd˙yuwĕʼ",   "",       "",   "Water",  "",   "", "",
      "number printed without a following period, as at 19 and 171"),
-    (260, 4, "M", "Willi",            "",       "",   "Water",  "",   "", "",
+    (260, 5, "M", "Willi",            "",       "",   "Water",  "",   "", "",
      "English name printed as the name itself"),
     # 261-264 are Chaparral Cock, which is 239's clan, so they hang off
     # 238+239. 265-269 are Sun, and 268-269 print no clan at all.
-    (261, 4, "F", "",                 "",       "",   "Chaparral Cock", "", "", "", "name printed as a dash"),
-    (262, 4, "M", "John",             "",       "",   "Chaparral Cock", "", "", "",
+    (261, 5, "F", "",                 "",       "",   "Chaparral Cock", "", "", "", "name printed as a dash"),
+    (262, 5, "M", "John",             "",       "",   "Chaparral Cock", "", "", "",
      "English name printed as the name itself"),
-    (263, 4, "M", "Dyumaiʼ",          "",       "",   "Chaparral Cock", "", "", "", ""),
-    (264, 4, "F", "",                 "",       "",   "Chaparral Cock", "", "", "",
+    (263, 5, "M", "Dyumaiʼ",          "",       "",   "Chaparral Cock", "", "", "", ""),
+    (264, 5, "F", "",                 "",       "",   "Chaparral Cock", "", "", "",
      "name printed as a dash, followed by a period -- the only dashed name on "
      "the plate that carries one"),
-    (265, 4, "M", "Naisiyĕ",          "",       "",   "Sun",    "",   "", "", ""),
-    (266, 4, "M", "",                 "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
-    (267, 4, "F", "",                 "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
-    (268, 4, "",  "",                 "",       "",   "",       "",   "", "",
+    (265, 5, "M", "Naisiyĕ",          "",       "",   "Sun",    "",   "", "", ""),
+    (266, 5, "M", "",                 "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
+    (267, 5, "F", "",                 "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
+    (268, 5, "",  "",                 "",       "",   "",       "",   "", "",
      "no sex printed; name and clan both printed as dashes"),
-    (269, 4, "",  "",                 "",       "",   "",       "",   "", "",
+    (269, 5, "",  "",                 "",       "",   "",       "",   "", "",
      "no sex printed; name and clan both printed as dashes"),
     # Column D of the lower block ends here, at 269.
 
     # ---- lower block, generation 5 (column E) ---------------------------
     # 270-274 are all Water. 254's rule carries 270-272 and 256's carries
     # 273-274; both women are Water.
-    (270, 5, "M", "Kʼauʼwină",        "",       "",   "Water",  "",   "", "", ""),
-    (271, 5, "F", "Dziaid˙yuwe",      "",       "",   "Water",  "",   "", "", ""),
-    (272, 5, "F", "Josephine",        "",       "",   "Water",  "",   "", "",
+    (270, 6, "M", "Kʼauʼwină",        "",       "",   "Water",  "",   "", "", ""),
+    (271, 6, "F", "Dziaid˙yuwe",      "",       "",   "Water",  "",   "", "", ""),
+    (272, 6, "F", "Josephine",        "",       "",   "Water",  "",   "", "",
      "English name printed as the name itself"),
-    (273, 5, "F", "Dziᶦʼyăiʼ",        "",       "",   "Water",  "",   "", "", ""),
-    (274, 5, "F", "Naiyaisiroʼ",      "",       "",   "Water",  "",   "", "", ""),
+    (273, 6, "F", "Dziᶦʼyăiʼ",        "",       "",   "Water",  "",   "", "", ""),
+    (274, 6, "F", "Naiyaisiroʼ",      "",       "",   "Water",  "",   "", "", ""),
     # THE PLATE'S NUMBERING ENDS AT 274.
 ]
 
@@ -608,14 +612,21 @@ PERSONS = [
 DUPLICATE_PLATE_NUMBERS = {1010: 101}
 
 # ---------------------------------------------------------------------------
-# STATE -- every plate number is read; the structure is not encoded
+# STATE -- read and encoded; self_check() passes; NOT yet registered
 #
-# DONE:  plate numbers 1-274, every one of them, plus the second 101. 275
-#        records, no gaps, no id collisions. The numbering ends at 274 --
-#        verified by sweeping the plate's right margin, which is blank past
-#        column E in both halves of the lower block.
-# TO DO: UNIONS and CHILDREN, for the whole plate, including the part read in
-#        the earlier session. Then the SEE TODO readings, then Gate 3.
+# DONE:  Gate 1, plate numbers 1-274 plus the second 101 -- 275 records, no
+#        gaps, no id collisions, and the numbering verified to end at 274 by
+#        sweeping the plate's right margin.
+#        Gate 2, 61 unions and 214 child links, every bracket traced from the
+#        rules. self_check() passes: 0 clan mismatches on 214 links, nobody a
+#        child twice, nobody neither child nor spouse, and the arithmetic
+#        closes at 214 children + 61 spouse-only = 275.
+# TO DO: the SEE TODO readings, and the three repeat-person name choices that
+#        need the user (13, 54, 125). Then Gate 4 -- subset_font.py, register
+#        in TABLES, render, and MEASURE: column drift 0 px at every one of the
+#        SIX generations, which nothing in this layout has been tested at.
+#        Then the two apparatus footnotes: this plate's cross-reference
+#        displacement, and the sentence it adds to Table 1's #note-misprint.
 #
 # WHERE EACH COLUMN WAS READ, in native pixel coordinates of
 # sources/parsons-1923-table-2.jpg. Columns are ~1300-1500 px wide and text
@@ -765,21 +776,31 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 #        the indent they are printed at. Their stored "generation 1" is wrong;
 #        "founding couple" means no parents are drawn, not column A.
 #
-# WHAT TO DO ABOUT IT -- and the reason it is NOT done here. `generation` is
-# not a layout input. make_chart.py reads it in exactly one place that matters,
-# `n_gens = max(...)`, to print "N generations" in the page copy; the chart's
-# columns come from walking UNIONS and CHILDREN, not from this field. So the
-# frames being mixed cannot bend the plate. Rather than hand-renumber 120-odd
-# records off their column positions now, DERIVE the field from the traced tree
-# during Gate 2, when every bracket is encoded and the depth falls out for
-# free. Hand-renumbering from columns would put a guess where a derivation
-# belongs.
+# APPLIED 2026-07-29, once the brackets were encoded. The field was NOT
+# hand-renumbered off column positions; it was DERIVED from the traced tree
+# and then written back. The rule set is three lines:
+#     generation(child)  = generation(mother) + 1
+#     generation(mother) = generation(child)  - 1
+#     generation(spouse) = generation(partner)
+# seeded with person 1 = 1 and run to a fixed point over UNIONS and CHILDREN.
 #
-# Two records need a decision even so, and neither is arithmetic:
-#   - 126, whose descent is drawn in the lower block (upper 4) but who is
-#     printed beside a wife at upper 5. Take the generation from the descent
-#     the plate actually draws.
-#   - 169, drawn twice inside the lower block, currently 3, column C, so 4.
+# That determines 272 of the 275 records and CONTRADICTS NONE of the upper
+# block's 165 -- every upper value the tree derives is the value already
+# stored, which is a real check on both the tracing and the earlier reading.
+# The 110 it changes are all in the lower block and all by exactly +1, which
+# is the conversion above falling out of the data rather than being asserted:
+# 154+155 land at 2 and 232+233 at 3, the column each is printed in.
+#
+# THE THREE IT CANNOT REACH are 31, 32 and 97. 31 and 32 are the married-in
+# couple whose parents the plate does not draw, so no path connects them to
+# person 1, and their child 97 hangs off them. Their generation is the one
+# thing here that IS read off the plate's column -- upper 4 and 4, and 5 for
+# 97, exactly as the first reading recorded them. Left as they were.
+#
+# The maximum is 6, so the "six generations" in the page copy is correct.
+# Note this field is not a layout input either way: make_chart.py reads it
+# only for `n_gens = max(...)`, and the chart's columns come from walking
+# UNIONS and CHILDREN.
 #
 # THREE FOUNDING COUPLES ON THIS PLATE, not two: 1+2, 154+155, and 232+233.
 # 232 was the trap -- it is printed at the same indent as 158 and 164, which
@@ -883,6 +904,46 @@ UNIONS = [
     ("U33", 122, 123, 1, 1, ""),
     ("U34", 125, 126, 1, 1, "126 is drawn again in the lower block as a child of "
                             "158+160; there he is the primary and 125 the '+' line"),
+
+    # ---- lower block ----------------------------------------------------
+    ("U35", 154, 155, 1, 1, ""),
+    ("U36", 157, 156, 1, 1, ""),
+    ("U37", 159, 158, 1, 1, "158 has two wives drawn, 159 and 160, and the plate "
+                            "splits his children between their two lines"),
+    ("U38", 160, 158, 1, 2, "158's second wife"),
+    ("U39", 163, 162, 1, 1, ""),
+    ("U40", 164, 165, 1, 1, ""),
+    ("U41", 232, 233, 1, 1, "no leader rule enters 232 -- her parents are not drawn"),
+    ("U42", 167, 166, 1, 1, ""),
+    ("U43", 169, 168, 2, 1, "169's second husband. Her line here carries 'For "
+                            "first husband and descendants, see below'"),
+    ("U44", 169, 183, 1, 1, "169's first husband. Her line there carries 'For "
+                            "second husband and descendants, see above'. Each of "
+                            "her two marriages has its own bracket in its own "
+                            "place, so paternity IS assigned for both groups"),
+    ("U45", 171, 170, 1, 1, ""),
+    ("U46", 173, 172, 1, 1, ""),
+    ("U47", 175, 174, 1, 1, ""),
+    ("U48", 176, 177, 1, 1, ""),
+    ("U49", 178, 179, 1, 1, ""),
+    ("U50", 182, 181, 1, 1, ""),
+    ("U51", 185, 184, 1, 1, ""),
+    ("U52", 234,  54, 1, 2, "54's second wife. He is drawn in the upper block as "
+                            "53's husband and here as the son of 232+233"),
+    ("U53", 236, 235, 1, 1, ""),
+    ("U54", 239, 238, 1, 1, ""),
+    ("U55", 240, 241, 1, 1, ""),
+    ("U56", 243, 242, 1, 1, ""),
+    ("U57", 186, 187, 1, 1, ""),
+    ("U58", 244, 245, 1, 1, "no children drawn for this marriage"),
+    ("U59", 246, 247, 1, 1, "no children drawn for this marriage"),
+    ("U60", 254, 255, 1, 1,
+     "the plate draws a short rule from 235+236's sibling bracket to this '+' "
+     "line, which it does for no other '+' line on the plate. It cannot mean "
+     "255 is their child: every one of their children is Water, 236's clan, "
+     "and 255 is Eagle. Recorded as 254's husband; the rule is an observation "
+     "of the plate, not descent. Verified at x 4700, y 11520"),
+    ("U61", 256, 257, 1, 1, ""),
 ]
 
 # ---------------------------------------------------------------------------
@@ -925,6 +986,33 @@ _GROUPS = [
     ("U32", 119, 120, [144, 145, 146]),
     ("U33", 122, 123, [147, 148, 149, 150, 151]),
     ("U34", 125, 126, [152, 153]),
+
+    # ---- lower block ----------------------------------------------------
+    ("U35", 154, 155, [14, 156, 158, 161, 162, 164]),
+    ("U36", 157, 156, [166, 168, 170, 172]),
+    ("U37", 159, 158, [174, 176]),
+    ("U38", 160, 158, [126, 178]),
+    ("U39", 163, 162, [180, 181]),
+    ("U40", 164, 165, [169, 184]),
+    ("U41", 232, 233, [54, 235, 237, 238, 240, 242]),
+    ("U42", 167, 166, [186, 188, 189, 190, 191, 192, 193, 194, 195]),
+    ("U43", 169, 168, [196, 197, 198, 199, 200]),
+    ("U44", 169, 183, [225, 226]),
+    ("U45", 171, 170, [201, 202, 203, 204, 205, 206]),
+    ("U46", 173, 172, [207, 208]),
+    ("U47", 175, 174, [209, 210, 211]),
+    ("U48", 176, 177, [212, 213, 214, 215, 216, 217]),
+    ("U49", 178, 179, [218, 219]),
+    ("U50", 182, 181, [220, 221, 222, 223, 224]),
+    ("U51", 185, 184, [227, 228]),
+    ("U52", 234,  54, [244, 246, 248, 249, 250, 251, 252, 253]),
+    ("U53", 236, 235, [254, 256, 258, 259, 260]),
+    ("U54", 239, 238, [261, 262, 263, 264]),
+    ("U55", 240, 241, [265, 266, 267]),
+    ("U56", 243, 242, [268, 269]),
+    ("U57", 186, 187, [229, 230, 231]),
+    ("U60", 254, 255, [270, 271, 272]),
+    ("U61", 256, 257, [273, 274]),
 ]
 
 _CHILD_NOTES = {
@@ -948,3 +1036,135 @@ CHILDREN = [
     for union_id, mother, father, kids in _GROUPS
     for child in kids
 ]
+
+# ---------------------------------------------------------------------------
+# Notes printed on the plate that are not tied to a single person.
+#
+# Each of these occupies a sibling slot -- a leader rule runs to it from a
+# bracket exactly as it would to a person -- and stands in place of a group
+# the plate draws elsewhere. They are not persons and carry no number.
+# ---------------------------------------------------------------------------
+PLATE_NOTES = [
+    ("lower block, col. C", "For descendants, see above",
+     "printed on 13's line, in place of the bracket to 45, 47, 50, 51, 53, "
+     "which the upper block draws"),
+    ("lower block, col. D", "For descendants, see above",
+     "printed on 125's line, in place of the bracket to 152, 153, which the "
+     "upper block draws"),
+    ("lower block, col. D", "For descendants see 122, 147-151",
+     "printed on 53's line under 54. The only cross-reference on the plate "
+     "that points at this plate's own numbers, and it names both her child "
+     "and that child's children"),
+    ("lower block, col. C", "For first husband and descendants, see below",
+     "printed under 169 where she is 168's wife"),
+    ("lower block, col. C", "For second husband and descendants, see above",
+     "printed under 169 where she is 183's wife"),
+]
+
+CLANS = ["Sun", "Lizard", "Oak", "Water", "Parrot", "Bear", "Badger", "Eagle",
+         "Turkey", "Chaparral Cock", "Corn", "Turquoise", "Locust"]
+
+# Three further words stand in the clan position on this plate and are NOT
+# clans: "White" (179), "Mexican" (183) and "Mohave" (243). They are recorded
+# as printed and deliberately left out of CLANS -- see the note above UNIONS.
+# None of the three is a mother, so no child's clan is tested against one.
+NON_CLAN_IN_CLAN_POSITION = ["White", "Mexican", "Mohave"]
+
+ORTHOGRAPHY = [
+    ("ʼ", "U+02BC", "modifier letter apostrophe", "glottal stop / raised apostrophe as printed"),
+    ("˙", "U+02D9", "dot above", "raised dot: aspiration or length"),
+    ("˚", "U+02DA", "ring above", "raised ring, at 244 only -- new to this plate"),
+    ("ˑ", "U+02D1", "half triangular colon", "at 142 and 163"),
+    ("ä", "U+00E4", "a with diaeresis", "at 180 only -- new to this plate"),
+    ("ă", "U+0103", "a with breve", ""),
+    ("ĕ", "U+0115", "e with breve", ""),
+    ("ĭ", "U+012D", "i with breve", ""),
+    ("Ĭ", "U+012C", "I with breve", "at 163"),
+    ("ŏ", "U+014F", "o with breve", "at 14's second name"),
+    ("ŭ", "U+016D", "u with breve", ""),
+    ("ᶦ", "U+1DA6", "superscript i", ""),
+    ("ᵃ", "U+1D43", "superscript a", ""),
+    ("ᵉ", "U+1D49", "superscript e", "at 84 only"),
+]
+
+# ---------------------------------------------------------------------------
+# ASCII folding, for matching against other spellings
+# ---------------------------------------------------------------------------
+_FOLD = {
+    "ʼ": "", "˙": "", "˚": "", "ˑ": "",
+    "ă": "a", "ĕ": "e", "ĭ": "i", "Ĭ": "I", "ŏ": "o", "ŭ": "u", "ä": "a",
+    "ᶦ": "i", "ᵃ": "a", "ᵉ": "e",
+}
+
+
+def fold(name: str) -> str:
+    """Diacritic-free lowercase key for fuzzy matching."""
+    out = name
+    for src, dst in _FOLD.items():
+        out = out.replace(src, dst)
+    return "".join(c for c in out if c.isalnum()).lower()
+
+
+def self_check() -> list[str]:
+    """Structural checks that must hold for the transcription to be sound."""
+    problems = []
+
+    ids = [p[0] for p in PERSONS]
+    if len(ids) != len(set(ids)):
+        problems.append("PERSONS ids are not unique")
+
+    # This plate's numbering is NOT a unique key -- Parsons numbers two people
+    # 101 -- so the ids are the plate's numbers plus one synthetic id per
+    # duplicate. The check is therefore "every plate number 1..274 is present
+    # exactly once, plus exactly the synthetic ids DUPLICATE_PLATE_NUMBERS
+    # declares", not Table 1's "ids == range(1, N+1)".
+    synthetic = set(DUPLICATE_PLATE_NUMBERS)
+    plate_numbers = sorted(set(ids) - synthetic)
+    if plate_numbers != list(range(1, 275)):
+        missing = [n for n in range(1, 275) if n not in set(plate_numbers)]
+        extra = [n for n in plate_numbers if n > 274]
+        problems.append(f"plate numbers are not exactly 1..274 (missing {missing}, extra {extra})")
+    for sid, printed in DUPLICATE_PLATE_NUMBERS.items():
+        if sid not in set(ids):
+            problems.append(f"synthetic id {sid} is declared but not in PERSONS")
+        if printed not in set(ids):
+            problems.append(f"{sid} claims to print {printed}, which is not a person")
+
+    clan = {p[0]: p[6] for p in PERSONS}
+    # Laguna clan membership is matrilineal: a child's clan is its mother's.
+    for union_id, mother, father, child, _ in CHILDREN:
+        if clan[child] and clan[mother] and clan[child] != clan[mother]:
+            problems.append(
+                f"clan mismatch: child {child} ({clan[child]}) "
+                f"vs mother {mother} ({clan[mother]})"
+            )
+
+    kids = [c[3] for c in CHILDREN]
+    if len(kids) != len(set(kids)):
+        problems.append("a person appears as a child more than once")
+
+    union_ids = [u[0] for u in UNIONS]
+    if len(union_ids) != len(set(union_ids)):
+        problems.append("UNIONS ids are not unique")
+    known = set(union_ids)
+    for union_id, mother, father, child, _ in CHILDREN:
+        if union_id and union_id not in known:
+            problems.append(f"child {child} cites union {union_id}, which does not exist")
+
+    spouses = {i for u in UNIONS for i in (u[1], u[2]) if i}
+    unplaced = set(ids) - set(kids) - spouses
+    if unplaced:
+        problems.append(f"persons neither child nor spouse: {sorted(unplaced)}")
+
+    return problems
+
+
+if __name__ == "__main__":
+    issues = self_check()
+    print(f"{len(PERSONS)} persons, {len(UNIONS)} unions, {len(CHILDREN)} child links")
+    if issues:
+        print("PROBLEMS:")
+        for i in issues:
+            print("  -", i)
+    else:
+        print("all structural checks pass")
