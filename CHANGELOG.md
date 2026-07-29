@@ -3,6 +3,20 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-28 — a build timestamp, built and reverted
+
+- **Reverted at the user's request; recorded so it is not proposed again.** The
+  footer's "Last updated" line was given a clock time and zone — `28 July 2026,
+  12:04 MST` — from a single offset-aware `BUILD_TIME` captured per run, local
+  rather than UTC so the date could not print as tomorrow's all evening.
+  JSON-LD `dateModified` and the sitemap's `lastmod` were deliberately left
+  date-only.
+- **The cost is the reason it went.** `docs/` would then differ on every
+  rebuild, down to the minute, which kills the sync check this project relies
+  on: *"rebuild produces no diff"* is currently valid within a day, and would
+  have become valid never. The only way to keep both is to print the time only
+  when the date changed, which is self-defeating.
+
 ## 2026-07-28 — the card rebuilt, 83–85 attributed, the leak gate closed
 
 Three things in one push. The third is the one to read first.

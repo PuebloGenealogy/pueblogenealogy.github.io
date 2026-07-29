@@ -164,6 +164,21 @@ One thing that will look like a bug and isn't: below 26rem the word "Genealogy"
 in the table pills is visually hidden but kept in the accessible name, so the
 sticky bar stays two rows on a phone.
 
+**The person card is a regrouped copy of the register entry, and every
+card-specific rule must stay scoped to it.** The card clones `#r{n}` — one
+source of truth, and the register is also the no-JS person card — then rebuilds
+it in `openCard`. So a CSS rule written without a `.pcard` prefix, or a DOM edit
+made anywhere but the detached copy, silently reformats the 104-entry register
+below the plate. After any card change, verify the register: its relation links
+must still compute `display:inline` and its entry titles 16px. Two traps that
+have already been hit: chips are `.reg-rel > a`, **direct children only** (a
+cross-reference row is also a `.reg-rel`, and its links sit inside an `<em>` of
+running prose); and the column divider is scoped to the exactly-two-column case,
+because columns wrap and a wrapped column would hang a rule off nothing. The
+card pairs children to a spouse from `data-rel` / `data-with`, **never** by
+reading the label — `"Children (with 66)"` is prose, and digging a number out of
+prose is the mistake `_p()` exists to prevent.
+
 **There is no on-page chart key, by decision.** One was built as a `<details>`
 above the plate and removed the same day; the notation it explained now lives in
 the footer's *Navigating this chart* list, which is therefore the **only** place
@@ -187,11 +202,13 @@ the **statistics line** — no citation. The landing page keeps its citation.
 `--muted-fixed` is the real `--muted`, captured at `:root`. Invariant 3 flattens
 `--muted` to `--ink` on `body.chart`; a `var()` is substituted with the value the
 element it is *declared on* computes, so anything that must keep the dimmer grey
-through the flatten reads `--muted-fixed`. Only `.imprint` does, deliberately —
-so the statistics line matches the landing page's `.c-stats` grey while
-everything else on a table page stays `--ink`. Adding more users of it is
-re-opening the colour decision; measure the contrast if you do (`.imprint` is
-6.15:1 light, 6.73:1 dark).
+through the flatten reads `--muted-fixed`. **Two things do**, each
+deliberately: `.imprint`, so the statistics line matches the landing page's
+`.c-stats` grey (6.15:1 light, 6.73:1 dark); and the person card's vital note
+`.pcard .pc-title .vital`, so a death or birth note reads as metadata rather
+than as part of the name (5.28:1 light, 5.69:1 dark, added 2026-07-28).
+Everything else on a table page stays `--ink`. Adding a third is re-opening the
+colour decision; measure the contrast if you do.
 
 **The theme control has no Auto state.** It toggles Light ↔ Dark and the button
 always names a real palette. The system preference is still honoured: it is what
@@ -330,7 +347,12 @@ would title the deposit after the repo.
   real argument is citation permanence and portability — a domain you own can
   change hosts without breaking a doi-adjacent link — which is an argument for
   doing it first or not at all. Drops onto this repo via a `CNAME` file.
-- Tables 2 and 3 await scans.
+- Tables 2 and 3 await scans — **and are deliberately held back** until the
+  design settles (user's decision, 2026-07-28): the point is to make design
+  changes against two tables rather than four. Note the premise is only half
+  right, and say so if it comes up: the design lives in one renderer, so edits
+  do not scale with table count. What doubles is the built output to re-verify
+  and the diff to read.
 
 ## Working style
 
