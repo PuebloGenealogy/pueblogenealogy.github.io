@@ -344,6 +344,38 @@ PERSONS = [
     (238, 3, "M", "Yo˙rimăiʼ",        "Fred Kai", "", "Sun",    "",   "", "",
      "English name printed in parentheses on the plate"),
     (239, 3, "F", "Dziwiʼs˙dy˙uwi",   "",       "",   "Chaparral Cock", "", "", "", ""),
+    (240, 3, "F", "Dzi˙d˙jaʼai",      "",       "",   "Sun",    "d.", "", "", ""),
+    (241, 3, "M", "Tsiyusiĕ",         "",       "",   "Parrot", "",   "", "", ""),
+    (242, 3, "M", "Shaaiʼshdyiăi",    "",       "",   "Sun",    "",   "", "", ""),
+    (243, 3, "F", "",                 "",       "",   "Mohave", "",   "", "",
+     "name printed as a dash. 'Mohave' stands where every other line prints a "
+     "clan, as 'White' does at 179 and 'Mexican' at 183. Recorded as printed, "
+     "not interpreted"),
+    # Column C of the lower block ends here, at 243.
+
+    # ---- lower block, generation 4 (column D) ---------------------------
+    # 186 and 188-195 sit at one indent: they are siblings, not mother and
+    # children -- 186 is 23 and 188 is 22. Their Oak clan and their "See Gen.
+    # I" numbers both point at 167 (Nămăiʼ, Oak, 40) as the mother.
+    (186, 4, "F", "Shăaityʼid˙yuweʼ", "",       "23", "Oak",    "",   "", "", ""),
+    (187, 4, "M", "Ramona of Sant Ana", "",     "50", "Turkey", "",   "", "",
+     "the plate prints the name with a place, spelled 'Sant Ana'. Recorded as "
+     "printed, not normalised"),
+    (188, 4, "F", "Kiwaʼd˙yuwi",      "",       "22", "Oak",    "",   "", "See Gen. I, 33",
+     "Gen. I 33 is this same woman by name and clan but prints her age as 18. "
+     "Both are recorded as each plate prints them"),
+    (189, 4, "F", "Ko˙ri",            "",       "21", "Oak",    "",   "", "See Gen. I, 31", ""),
+    (190, 4, "M", "Tsᶦgaiʼs˙iwăʼ",    "",       "20", "Oak",    "",   "", "See Gen. I, 32",
+     "this line crosses a fold crease and the medial 's˙i' reads ambiguously "
+     "as 's˙i' or 'sʼï' at any crop. Gen. I 32 is the same man and prints "
+     "'Tsᶦgaiʼs˙iwăʼ' on a far better-resolved plate; that settles it"),
+    (191, 4, "M", "Tsiʼd˙yimĕ",       "",       "17", "Oak",    "",   "", "See Gen. I, 34",
+     "no trailing apostrophe here, where Gen. I 34 prints 'Tsiʼd˙yimĕʼ'. "
+     "Confirmed at a 620 px crop; each plate is recorded as it prints"),
+    (192, 4, "F", "Sha˙tyʼi",         "",       "14", "Oak",    "",   "", "See Gen. I, 35", ""),
+    (193, 4, "M", "Aiʼwanăi",         "",       "8",  "Oak",    "",   "", "See Gen. I, 36", ""),
+    (194, 4, "M", "Dyăiʼtsdyămŭr",    "",       "6",  "Oak",    "",   "", "See Gen. I, 37", ""),
+    (195, 4, "M", "Iyăiʼs˙dyiwă",     "",       "5",  "Oak",    "",   "", "See Gen. I, 38", ""),
 ]
 
 # ---------------------------------------------------------------------------
@@ -353,6 +385,18 @@ PERSONS = [
 # by name, sex and clan. The references fall into two groups:
 #
 #   EXACT      -- 20 -> Gen. I 11; 67 -> 24; 68 -> 25; 72 -> 26; 73 -> 27
+#                 and, added 2026-07-29 from the lower block's column D, eight
+#                 more, every one an exact name-and-clan match:
+#                   188 -> Gen. I 33 (Kiwaʼd˙yuwi, F, Oak)
+#                   189 -> Gen. I 31 (Ko˙ri, F, Oak)
+#                   190 -> Gen. I 32 (Tsᶦgaiʼs˙iwăʼ, M, Oak)
+#                   191 -> Gen. I 34 (Tsiʼd˙yimĕʼ, M, Oak)
+#                   192 -> Gen. I 35 (Sha˙tyʼi, F, Oak)
+#                   193 -> Gen. I 36 (Aiʼwanăi, M, Oak)
+#                   194 -> Gen. I 37 (Dyăiʼtsdyămŭr, M, Oak)
+#                   195 -> Gen. I 38 (Iyăiʼs˙dyiwă, M, Oak)
+#                 So the exact range runs to at least Genealogy I's person 38,
+#                 not merely its 27. The footnote copy must say 38.
 #   ONE HIGH   -- 61 prints 67, names Gen. I 66 (Tsikʼayăaiʼtsʼa, F, Eagle, d.)
 #                 60 prints 68, names Gen. I 67 (Shuwaiʼᶦri, M, Turkey)
 #                 62 prints 77, names Gen. I 76 (Dziwiʼd˙yăi, F, 33, Badger --
