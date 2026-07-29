@@ -250,8 +250,15 @@ body.chart .titlepage{max-width:var(--measure-wide)}
    [hidden] until the script unhides it: with space-between a no-JS reader would
    get the scale buttons stranded on the left. An auto start-margin puts them
    right whether or not find is in the row. */
-.plate-bar{max-width:var(--measure-wide);margin:0 auto;
-  padding:0 var(--s5) var(--s3);display:flex;
+/* The bar rides the PLATE's rail, not the prose column: no max-width, and the
+   same var(--s5) inline padding .scroll carries, so Find lands exactly on the
+   sheet's left edge and Scale on its right. It was centred at --measure-wide
+   before, which matched the title block's BOX but nothing the reader can see --
+   the statistics line inside that box is centred text and sits ~270px further
+   in, so the bar's ends lined up with thin air. Controls belong to the thing
+   they control; if this ever moves back to a measure, it has to move with
+   .scroll's padding or the two rails part again. */
+.plate-bar{padding:0 var(--s5) var(--s3);display:flex;
   align-items:baseline;gap:var(--s3) var(--s4);flex-wrap:wrap}
 .plate-tools{display:flex;align-items:center;gap:var(--s3);
   font-family:var(--font-ui);flex-wrap:wrap;inline-size:100%}
@@ -307,8 +314,14 @@ body.chart .titlepage{max-width:var(--measure-wide)}
    alignment is exact by construction and the 0px-drift check covers it.
    It pans with the plate; viewport-pinned identity is the masthead's job
    (position:sticky cannot pin vertically inside a horizontal scroller). */
+/* Two bands, not one: the identity chip rides at the block-start, the labels
+   sit at flex-end. The height is what separates them, and it is the fix for a
+   real collision -- the chip is pinned to the inline start, so whichever label
+   the reader has panned to that edge sat directly underneath it, and the chip's
+   opaque fill ate the first half of the word ("GENERA|TION 2"). Nothing here
+   touches .gen widths, so the ruler still measures the same column grid. */
 .ruler{display:flex;align-items:flex-end;width:max-content;min-width:100%;
-  height:2rem;margin-block-end:var(--s2);
+  height:3.4rem;margin-block-end:var(--s2);
   padding-inline-start:calc(var(--sheet-pad) + 1px);
   font:600 var(--t-xs)/1.9 var(--font-ui);text-transform:uppercase;
   letter-spacing:.08em;color:var(--muted);
@@ -322,10 +335,12 @@ body.chart .titlepage{max-width:var(--measure-wide)}
 /* min-width:0 defeats the flex item's min-width:auto -- without it the slot
    takes the chip's content width and displaces every label by that much. */
 .ruler-chipslot{flex:0 0 0px;min-width:0;overflow:visible;position:sticky;
-  inset-inline-start:var(--s3);z-index:1;align-self:center}
+  inset-inline-start:var(--s3);z-index:1;align-self:flex-start}
+/* 1.5 rather than the labels' 1.9: the chip is a lozenge, so its line-height
+   is its height, and every 0.1 here is 1.3px the ruler has to reserve. */
 .ruler-chip{display:inline-block;white-space:nowrap;padding:.05rem .55rem;
   border:1px solid var(--rule-faint);border-radius:999px;background:var(--paper);
-  color:var(--ink);font:400 var(--t-xs)/1.9 var(--font-plate);text-transform:none;
+  color:var(--ink);font:400 var(--t-xs)/1.5 var(--font-plate);text-transform:none;
   letter-spacing:.02em;opacity:0}
 /* Progress hairline under the ruler: inks left-to-right as the plate pans. */
 .ruler::after{content:"";position:absolute;inset-inline:0;inset-block-end:-1px;
@@ -367,10 +382,18 @@ body.chart .titlepage{max-width:var(--measure-wide)}
 .line{line-height:var(--lh);
   scroll-margin-block:calc(var(--bar-h) + 1.5rem) 1rem;
   scroll-margin-inline:var(--stub)}
-/* Selected row -- reached by a #p anchor (:target) or by opening the person's
-   card (.is-selected, set in openCard). Background, box-shadow and outline
-   only: a padding or border change here would move the row and break the
-   bracket's mother_row alignment.
+/* Selected row. There is exactly ONE selected row, and which mechanism draws
+   it depends on whether the card script is running:
+     - card script live (html[data-card], set in the popoverOK block):
+       .is-selected only. markSelected() is then the single owner of the
+       highlight, so it can be cleared. :target CANNOT be cleared -- the hash
+       survives every click -- so leaving it live left a second row lit after
+       the reader followed a relation link out of a card and clicked away,
+       until they left the page and came back.
+     - no card script: :target, exactly as before. A #p anchor is then the only
+       way a row is ever selected, and it must still light up.
+   Background, box-shadow and outline only: a padding or border change here
+   would move the row and break the bracket's mother_row alignment.
    The signal is carried by the leading rule and the ring, both
    --accent-strong at ~8.5:1 against the page, because the BACKGROUND has
    almost no room to move -- see --sel-bg.
@@ -379,7 +402,7 @@ body.chart .titlepage{max-width:var(--measure-wide)}
    leading rule is a shadow offset -.3rem with no spread, the halo a .3rem
    spread behind it, the ring an outline at a matching offset. Nothing here
    changes layout, so the row still cannot move off its mother_row. */
-.line:target,.line.is-selected{background:var(--sel-bg);
+.line.is-selected,html:not([data-card]) .line:target{background:var(--sel-bg);
   box-shadow:-.3rem 0 0 0 var(--accent-strong),0 0 0 .3rem var(--sel-bg);
   outline:2px solid var(--accent-strong);outline-offset:.3rem}
 /* The whole row is the click target for the card (see rowClick). Hover is
@@ -640,10 +663,15 @@ footer code{font-family:var(--font-ui);font-size:.9em}
 .pc-h::before,.pc-h::after{content:"";flex:1;height:1px;
   background:var(--rule-faint)}
 .pc-col > .pc-h:first-child,.pc-sec > .pc-h:first-child{margin-block-start:0}
+/* A relative's row is set at --t-base, the size the register entry and the
+   plate line give a person -- not --t-sm. The row IS a person line: number,
+   name, clan. Setting it smaller than the name in the header made the card's
+   whole point -- who this person's family are -- the smallest text on it. The
+   clan stays proportional at .92em, so one declaration moves both. */
 .pc-row{display:flex;align-items:center;gap:var(--s2);
   padding:.35rem .55rem;margin-block-start:.3rem;
   border:1px solid var(--rule-faint);border-radius:5px;background:var(--paper);
-  color:var(--ink);text-decoration:none;font-size:var(--t-sm);
+  color:var(--ink);text-decoration:none;font-size:var(--t-base);
   min-height:var(--tap)}
 .pc-row:first-of-type{margin-block-start:0}
 a.pc-row:hover,a.pc-row:focus-visible{border-color:var(--rule);
@@ -697,7 +725,11 @@ a.pc-row:hover .pc-chev,a.pc-row:focus-visible .pc-chev{color:var(--ink)}
     max-height:75vh;max-height:75dvh;overflow-y:auto;
     border-radius:8px 8px 0 0;position-area:none}
   .pc-head{border-radius:8px 8px 0 0;position:sticky;top:0;z-index:2}
-  .pc-col + .pc-col{border-inline-start:0;padding-inline-start:0}
+  /* Columns are stacked here, so the divider has nothing to its left. It must
+     out-specify .pc-cols--pair > .pc-col + .pc-col, which is (0,3,0) -- a bare
+     .pc-col + .pc-col is (0,2,0) and lost, leaving the second column indented
+     16px with a rule hanging down its left edge on a phone. */
+  .pc-cols > .pc-col + .pc-col{border-inline-start:0;padding-inline-start:0}
   .pc-cols,.pc-cols--single,.pc-parents{grid-template-columns:1fr}
 }
 
@@ -738,7 +770,9 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
   .scroll-shell::before,.scroll-shell::after,.ruler::after{display:none}
   .sheet{border:0;box-shadow:none}
   .plate-zoom{zoom:var(--print-zoom,.7)}
-  .ruler{border-block-end-color:#000}
+  /* The chip is hidden in print, so the band reserved above the labels for it
+     is dead space on the sheet. Back to one band. */
+  .ruler{border-block-end-color:#000;height:2rem}
   .tree{break-inside:avoid-page}
   footer{break-before:page}
   footer a[href^="http"]::after,.prose a[href^="http"]::after{

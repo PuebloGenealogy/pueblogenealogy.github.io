@@ -1028,8 +1028,15 @@ body.chart .titlepage{max-width:var(--measure-wide)}
    [hidden] until the script unhides it: with space-between a no-JS reader would
    get the scale buttons stranded on the left. An auto start-margin puts them
    right whether or not find is in the row. */
-.plate-bar{max-width:var(--measure-wide);margin:0 auto;
-  padding:0 var(--s5) var(--s3);display:flex;
+/* The bar rides the PLATE's rail, not the prose column: no max-width, and the
+   same var(--s5) inline padding .scroll carries, so Find lands exactly on the
+   sheet's left edge and Scale on its right. It was centred at --measure-wide
+   before, which matched the title block's BOX but nothing the reader can see --
+   the statistics line inside that box is centred text and sits ~270px further
+   in, so the bar's ends lined up with thin air. Controls belong to the thing
+   they control; if this ever moves back to a measure, it has to move with
+   .scroll's padding or the two rails part again. */
+.plate-bar{padding:0 var(--s5) var(--s3);display:flex;
   align-items:baseline;gap:var(--s3) var(--s4);flex-wrap:wrap}
 .plate-tools{display:flex;align-items:center;gap:var(--s3);
   font-family:var(--font-ui);flex-wrap:wrap;inline-size:100%}
@@ -1085,8 +1092,14 @@ body.chart .titlepage{max-width:var(--measure-wide)}
    alignment is exact by construction and the 0px-drift check covers it.
    It pans with the plate; viewport-pinned identity is the masthead's job
    (position:sticky cannot pin vertically inside a horizontal scroller). */
+/* Two bands, not one: the identity chip rides at the block-start, the labels
+   sit at flex-end. The height is what separates them, and it is the fix for a
+   real collision -- the chip is pinned to the inline start, so whichever label
+   the reader has panned to that edge sat directly underneath it, and the chip's
+   opaque fill ate the first half of the word ("GENERA|TION 2"). Nothing here
+   touches .gen widths, so the ruler still measures the same column grid. */
 .ruler{display:flex;align-items:flex-end;width:max-content;min-width:100%;
-  height:2rem;margin-block-end:var(--s2);
+  height:3.4rem;margin-block-end:var(--s2);
   padding-inline-start:calc(var(--sheet-pad) + 1px);
   font:600 var(--t-xs)/1.9 var(--font-ui);text-transform:uppercase;
   letter-spacing:.08em;color:var(--muted);
@@ -1100,10 +1113,12 @@ body.chart .titlepage{max-width:var(--measure-wide)}
 /* min-width:0 defeats the flex item's min-width:auto -- without it the slot
    takes the chip's content width and displaces every label by that much. */
 .ruler-chipslot{flex:0 0 0px;min-width:0;overflow:visible;position:sticky;
-  inset-inline-start:var(--s3);z-index:1;align-self:center}
+  inset-inline-start:var(--s3);z-index:1;align-self:flex-start}
+/* 1.5 rather than the labels' 1.9: the chip is a lozenge, so its line-height
+   is its height, and every 0.1 here is 1.3px the ruler has to reserve. */
 .ruler-chip{display:inline-block;white-space:nowrap;padding:.05rem .55rem;
   border:1px solid var(--rule-faint);border-radius:999px;background:var(--paper);
-  color:var(--ink);font:400 var(--t-xs)/1.9 var(--font-plate);text-transform:none;
+  color:var(--ink);font:400 var(--t-xs)/1.5 var(--font-plate);text-transform:none;
   letter-spacing:.02em;opacity:0}
 /* Progress hairline under the ruler: inks left-to-right as the plate pans. */
 .ruler::after{content:"";position:absolute;inset-inline:0;inset-block-end:-1px;
@@ -1145,10 +1160,18 @@ body.chart .titlepage{max-width:var(--measure-wide)}
 .line{line-height:var(--lh);
   scroll-margin-block:calc(var(--bar-h) + 1.5rem) 1rem;
   scroll-margin-inline:var(--stub)}
-/* Selected row -- reached by a #p anchor (:target) or by opening the person's
-   card (.is-selected, set in openCard). Background, box-shadow and outline
-   only: a padding or border change here would move the row and break the
-   bracket's mother_row alignment.
+/* Selected row. There is exactly ONE selected row, and which mechanism draws
+   it depends on whether the card script is running:
+     - card script live (html[data-card], set in the popoverOK block):
+       .is-selected only. markSelected() is then the single owner of the
+       highlight, so it can be cleared. :target CANNOT be cleared -- the hash
+       survives every click -- so leaving it live left a second row lit after
+       the reader followed a relation link out of a card and clicked away,
+       until they left the page and came back.
+     - no card script: :target, exactly as before. A #p anchor is then the only
+       way a row is ever selected, and it must still light up.
+   Background, box-shadow and outline only: a padding or border change here
+   would move the row and break the bracket's mother_row alignment.
    The signal is carried by the leading rule and the ring, both
    --accent-strong at ~8.5:1 against the page, because the BACKGROUND has
    almost no room to move -- see --sel-bg.
@@ -1157,7 +1180,7 @@ body.chart .titlepage{max-width:var(--measure-wide)}
    leading rule is a shadow offset -.3rem with no spread, the halo a .3rem
    spread behind it, the ring an outline at a matching offset. Nothing here
    changes layout, so the row still cannot move off its mother_row. */
-.line:target,.line.is-selected{background:var(--sel-bg);
+.line.is-selected,html:not([data-card]) .line:target{background:var(--sel-bg);
   box-shadow:-.3rem 0 0 0 var(--accent-strong),0 0 0 .3rem var(--sel-bg);
   outline:2px solid var(--accent-strong);outline-offset:.3rem}
 /* The whole row is the click target for the card (see rowClick). Hover is
@@ -1418,10 +1441,15 @@ footer code{font-family:var(--font-ui);font-size:.9em}
 .pc-h::before,.pc-h::after{content:"";flex:1;height:1px;
   background:var(--rule-faint)}
 .pc-col > .pc-h:first-child,.pc-sec > .pc-h:first-child{margin-block-start:0}
+/* A relative's row is set at --t-base, the size the register entry and the
+   plate line give a person -- not --t-sm. The row IS a person line: number,
+   name, clan. Setting it smaller than the name in the header made the card's
+   whole point -- who this person's family are -- the smallest text on it. The
+   clan stays proportional at .92em, so one declaration moves both. */
 .pc-row{display:flex;align-items:center;gap:var(--s2);
   padding:.35rem .55rem;margin-block-start:.3rem;
   border:1px solid var(--rule-faint);border-radius:5px;background:var(--paper);
-  color:var(--ink);text-decoration:none;font-size:var(--t-sm);
+  color:var(--ink);text-decoration:none;font-size:var(--t-base);
   min-height:var(--tap)}
 .pc-row:first-of-type{margin-block-start:0}
 a.pc-row:hover,a.pc-row:focus-visible{border-color:var(--rule);
@@ -1475,7 +1503,11 @@ a.pc-row:hover .pc-chev,a.pc-row:focus-visible .pc-chev{color:var(--ink)}
     max-height:75vh;max-height:75dvh;overflow-y:auto;
     border-radius:8px 8px 0 0;position-area:none}
   .pc-head{border-radius:8px 8px 0 0;position:sticky;top:0;z-index:2}
-  .pc-col + .pc-col{border-inline-start:0;padding-inline-start:0}
+  /* Columns are stacked here, so the divider has nothing to its left. It must
+     out-specify .pc-cols--pair > .pc-col + .pc-col, which is (0,3,0) -- a bare
+     .pc-col + .pc-col is (0,2,0) and lost, leaving the second column indented
+     16px with a rule hanging down its left edge on a phone. */
+  .pc-cols > .pc-col + .pc-col{border-inline-start:0;padding-inline-start:0}
   .pc-cols,.pc-cols--single,.pc-parents{grid-template-columns:1fr}
 }
 
@@ -1516,7 +1548,9 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
   .scroll-shell::before,.scroll-shell::after,.ruler::after{display:none}
   .sheet{border:0;box-shadow:none}
   .plate-zoom{zoom:var(--print-zoom,.7)}
-  .ruler{border-block-end-color:#000}
+  /* The chip is hidden in print, so the band reserved above the labels for it
+     is dead space on the sheet. Back to one band. */
+  .ruler{border-block-end-color:#000;height:2rem}
   .tree{break-inside:avoid-page}
   footer{break-before:page}
   footer a[href^="http"]::after,.prose a[href^="http"]::after{
@@ -1698,6 +1732,9 @@ if(form&&input&&datalist){
     if(!el){note.textContent="No person “"+q+"” in this table.";return}
     note.textContent="";
     if(location.hash!=="#p"+id)location.hash="#p"+id;
+    /* Unconditional: finding the person already named by the hash fires no
+       hashchange, and the row may have been deselected by a click since. */
+    syncSelection();
     el.scrollIntoView({inline:"start",block:"center",
       behavior:matchMedia("(prefers-reduced-motion:no-preference)").matches
         ?"smooth":"auto"});
@@ -1727,7 +1764,7 @@ function openDetailsFor(hash){
 }
 addEventListener("hashchange",function(){
   openDetailsFor(location.hash);
-  if(popoverOK){try{card.hidePopover()}catch(e){}}
+  if(popoverOK){try{card.hidePopover()}catch(e){}syncSelection()}
   if(navFromCard){
     navFromCard=false;
     var el=doc.getElementById(location.hash.slice(1));
@@ -1751,23 +1788,46 @@ var card=$("#pcard"),CANON=root.getAttribute("data-canonical")||"",
     popoverOK=!!card&&("showPopover" in HTMLElement.prototype),
     anchorsOK=typeof CSS!=="undefined"&&CSS.supports&&
       CSS.supports("anchor-name","--pc");
-/* The row whose card is open. Opening by click set no visible state at all
-   before -- only #p anchors lit a row up -- so the reader could lose track of
-   which person the card belonged to. */
-var selRow=null;
+/* The selected row. Opening by click set no visible state at all before --
+   only #p anchors lit a row up -- so the reader could lose track of which
+   person the card belonged to. Once the card script is live this is the ONLY
+   thing that lights a row: the stylesheet drops .line:target under
+   html[data-card]. See the CSS for why.
+   cardRow is the row the open card belongs to, kept so closing the card can
+   clear the highlight it set WITHOUT clearing one that hash navigation has
+   already moved elsewhere -- the popover's toggle event and hashchange both
+   arrive as tasks and their order is not guaranteed. */
+var selRow=null,cardRow=null;
 function markSelected(el){
   if(selRow)selRow.classList.remove("is-selected");
   selRow=el||null;
   if(selRow)selRow.classList.add("is-selected");
 }
+/* The row a fragment names, or null -- for #r{n}, #note-{x} and every other
+   hash, which select no row. Deliberately not "the element's closest .line":
+   a hash that lands inside the register must leave the plate unselected. */
+function lineFor(hash){
+  var el=hash&&hash.charAt(0)==="#"&&hash.length>1
+    ? doc.getElementById(hash.slice(1)) : null;
+  return el&&el.classList&&el.classList.contains("line") ? el : null;
+}
+function syncSelection(){markSelected(lineFor(location.hash))}
 if(popoverOK){
   card.hidden=false;
+  /* The stylesheet's switch. Set here rather than in <head> because it must
+     mean "the card script is running", not merely "JavaScript is enabled":
+     where the popover is unsupported the numbers stay plain anchors and
+     :target is still the only thing that can select a row. */
+  root.dataset.card="1";
   card.addEventListener("toggle",function(e){
     /* preventScroll: closing via a relation link must not yank the plate
        back to the invoker -- the reader is on their way somewhere else. */
     if(e.newState==="closed"){
-      markSelected(null);
+      if(selRow===cardRow)markSelected(null);
+      cardRow=null;
       if(lastInvoker){lastInvoker.focus({preventScroll:true});lastInvoker=null}}});
+  /* A shared #p link still arrives selected, now by class rather than :target. */
+  syncSelection();
 }
 function openCard(a){
   var id=(a.getAttribute("href")||"").slice(2);
@@ -1957,7 +2017,7 @@ function openCard(a){
   act.innerHTML=inner;card.appendChild(act);
   if(anchoredEl)anchoredEl.style.removeProperty("anchor-name");
   anchoredEl=a;lastInvoker=a;
-  markSelected(a.closest(".line"));
+  cardRow=a.closest(".line");markSelected(cardRow);
   if(anchorsOK)a.style.setProperty("anchor-name","--pc");
   card.style.cssText="";
   card.showPopover();
@@ -1989,12 +2049,15 @@ function rowClick(e){
   var el=e.target;
   if(!el||!el.closest)return;
   if(el.closest("a,button,input,summary,[popover]"))return;
-  var line=el.closest(".line");
-  if(!line||!line.closest(".sheet"))return;
   var sel=doc.getSelection&&doc.getSelection();
   if(sel&&!sel.isCollapsed&&String(sel).trim())return;
-  var a=line.querySelector("a.num");
-  if(a&&openCard(a))e.preventDefault();
+  var line=el.closest(".line");
+  var a=line&&line.closest(".sheet")?line.querySelector("a.num"):null;
+  if(a){if(openCard(a))e.preventDefault();return}
+  /* A click on bare plate deselects. Without this the row a relation link
+     selected stayed lit with nothing to clear it: its card closed on the way
+     out, so no close event is coming, and the hash does not change again. */
+  markSelected(null);
 }
 
 /* one delegated click listener for every control */
@@ -2025,6 +2088,10 @@ doc.addEventListener("click",function(e){
         var same=doc.getElementById(h.slice(1));
         if(same){same.scrollIntoView({inline:"start",block:"center"});
           var na=same.querySelector("a.num");if(na)na.focus({preventScroll:true})}
+        /* No hashchange will fire, so the selection has to be moved here --
+           and after cardRow is dropped, or the close handler reads them as
+           equal and clears the row we just selected. */
+        cardRow=null;syncSelection();
         e.preventDefault();
       }
     }
