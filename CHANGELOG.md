@@ -3,6 +3,91 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-29 — Genealogy II: scans in, upper block read, three findings
+
+Nothing published and nothing registered. `docs/` is byte-identical to what it
+was: a rebuild produced no diff, and `--public` still reports 104 and 73 persons
+across 4 pages. A half-read plate must not render.
+
+Work is on branch `table-ii-transcription`, commits `c1aa97f` and `de42460`.
+
+### The scans
+
+Both arrived. **Table 2 is 7770 × 12681, portrait** — the published plates are
+landscape — sha256 `d7d050f5…39f7a6`. Legibility was tested before committing to
+the read and is good: the raised dot (U+02D9) and the modifier apostrophe
+(U+02BC) are cleanly separable at native resolution, which is the distinction
+Table 1 got wrong once.
+
+**Table 3 is 3770 × 5503 — about a ninth of Table 1's pixel count.** Untouched
+so far. Expect it to be materially harder and budget accordingly.
+
+### Scale, measured rather than assumed
+
+Table 2 runs past **269 persons** against Table 1's 104, in two blocks joined at
+the couple 154+155, and reaches **six generations** where Table 1 reaches five.
+On that evidence the session was split at the plate's own block boundary: plate
+numbers 1–153 read and encoded now, 154–269 next. The reason is not tidiness —
+reading ~269 persons in one context would force a summarization mid-read, and a
+reading that only ever lived in the conversation is one that can go missing.
+
+### The clan rule decided three brackets
+
+Matrilineal descent is not just a check here; it resolved geometry that row
+alignment alone would have got wrong.
+
+- **64** sits on 17's row but is Turkey, and 17's wife 18 is Corn. It belongs to
+  15+16, whose other four children are all Turkey.
+- **47's** line carries two `+` spouses, 48 (F, Parrot) and 49 (M, Turquoise).
+  49 cannot be 47's spouse; he is 48's second husband, and children 116–118 are
+  Parrot, so the group hangs off 48's line.
+- **51+52** — children 119–121 are Lizard, which is 52's clan, not 51's Water.
+
+Also corrected against the low-resolution overview: there is **one founding
+couple, not three**. A single vertical rule off person 1's row carries 3, 5 and
+7, all Water as their mother is. The overview appeared to show three separate
+couples in the left column; at native resolution 5 and 7 sit in the same column
+as 3. *Judge structure at native resolution, not from a downscale.*
+
+### Three findings, recorded and not acted on
+
+- **The plate numbers two different people 101** — `101. F. Naauʼg˙ŭyăiʼ. Water`
+  and, on the next line, `101. M. ———. d. Water`, then 102 normally. Confirmed
+  at magnification; not a broken 100 and not a scan artefact. `PLATE_NUMBER_MISPRINTS`
+  does **not** model this — it maps one union to one wrongly-printed number,
+  where here two people share one.
+- **Parsons's cross-references into Genealogy I run one high from its person 66
+  onward**, and are exact through its 27. Six independent matches on name, sex
+  and clan, two of them on age as well. This bears on Table 1, which is
+  published and cited: its own misprint prints **68** for person **67**
+  (Shuwaiʼᶦri), and Table 2 independently calls that same man 68. **One
+  phenomenon, not two unrelated slips** — Parsons worked from a numbering of
+  Genealogy I that ran one ahead of the one finally printed. That strengthens
+  the standing decision to reproduce 68 rather than "fix" it.
+- **Person 43 prints `+ Locust`** where a clan alone belongs, the `+` identical
+  in form to the spouse mark. Recorded, not interpreted.
+
+### Font coverage — answered from the cmap, not by eye
+
+Three codepoints appear that neither published table uses: `ŏ` U+014F, `ˑ`
+U+02D1, `ᵉ` U+1D49 (the last confirmed, in 84 `Ha˙tsʼᵉ`). All three are already
+in **both** master Gentium faces, checked directly against
+`vendor/gentium/Gentium-{Regular,Italic}.ttf`. So Gate 4 is a `subset_font.py`
+re-run and nothing needs sourcing. macOS substitutes silently, so this could not
+have been settled by looking at rendered text.
+
+### Decisions taken
+
+- **Duplicate 101 → internal id for addressing, printed number for display.**
+  Both rows print 101, as the plate does. This extends the id/`data-printed`
+  separation Table 1 already makes rather than adding a second mechanism.
+  *101a/101b was rejected*: it would print something the plate does not, which
+  is the one thing the edition exists not to do.
+- **The offset is noted on both published pages** — a footnote on Table 2, and a
+  sentence added to Table 1's existing `#note-misprint` recording the
+  corroboration. Editing a published, cited page means re-verifying it after
+  the build.
+
 ## 2026-07-29 — four presentation fixes: card, selection, ruler chip, plate bar
 
 Nothing in the transcription changed. Four things a reader touches did.

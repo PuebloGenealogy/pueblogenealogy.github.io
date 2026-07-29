@@ -10,7 +10,8 @@ Natural History*, vol. 19, pt. 5 (1923), pp. 133–292.
 
 Published: **Genealogy I** (Table 1) — 104 individuals, 27 marriages, 80
 parent–child links, 5 generations. **Genealogy IV** (Table 4) — 73 individuals,
-14 marriages, 58 parent–child links, 4 generations. Tables 2 and 3 await scans.
+14 marriages, 58 parent–child links, 4 generations. Genealogy II is half
+transcribed and unpublished; Genealogy III is scanned and untouched.
 
 ## Start here
 
@@ -376,12 +377,14 @@ would title the deposit after the repo.
   real argument is citation permanence and portability — a domain you own can
   change hosts without breaking a doi-adjacent link — which is an argument for
   doing it first or not at all. Drops onto this repo via a `CNAME` file.
-- Tables 2 and 3 await scans — **and are deliberately held back** until the
-  design settles (user's decision, 2026-07-28): the point is to make design
-  changes against two tables rather than four. Note the premise is only half
-  right, and say so if it comes up: the design lives in one renderer, so edits
-  do not scale with table count. What doubles is the built output to re-verify
-  and the diff to read.
+- **Genealogy II is half transcribed**, on branch `table-ii-transcription`.
+  Both remaining scans arrived 2026-07-29, so the earlier "await scans" blocker
+  and the decision to hold the tables back until the design settled are both
+  closed. Plate numbers 1–153 are read; 154–269 and all of `UNIONS` /
+  `CHILDREN` are not. `SESSION-NOTES.md` has the order of work.
+  Two things about this plate that the published two do not prepare you for:
+  it runs to **six generations** and past **269 people**, and **its numbering is
+  not a unique key** — Parsons numbers two different people 101.
 
 ## Working style
 
@@ -396,3 +399,15 @@ exists in the markup — labels, attributes, structured data, the leak markers �
 grep `docs/`. The source scans in `sources/` are usually
 the fastest authority — faster than catalog records, which describe publications
 rather than plates.
+
+**Never read structure off a downscaled plate.** A whole-plate overview is for
+orientation and tile planning only. Genealogy II's overview appeared to show
+three founding couples in its left column; at native resolution there is one,
+and 5 and 7 sit in the same column as 3, all carried by a single rule off
+person 1's row. A downscale loses exactly the thin rules that carry the
+genealogy, so it will misplace people while looking perfectly legible.
+
+**A half-read plate is never registered in `TABLES`.** The renderer builds every
+registered table on every `--public` run, so registering early is how a partial
+genealogy reaches `docs/`. Register at Gate 5, after `self_check()` passes —
+never before, as a way of previewing progress.
