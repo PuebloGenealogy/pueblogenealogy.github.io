@@ -55,40 +55,61 @@ live site is exactly as it was.
 Branch `table-ii-transcription`, two commits: `c1aa97f` (the read and the
 findings), `de42460` (the decisions).
 
-What exists: `scripts/transcription_ii.py` with **plate numbers 1–153** — 154
-records, six generations, no gaps and no id collisions. `PERSONS` only.
+What exists: `scripts/transcription_ii.py` with **plate numbers 1–171 and
+232–233** — 174 records, no gaps in what it claims, no id collisions.
+`PERSONS` only.
 
-What does not: `UNIONS` and `CHILDREN` are **empty stubs for the whole plate**,
-including the part already read. The bracket structure for generations 1–4 is
-recorded as a comment block in that file and needs encoding, not re-deriving.
+What does not: **101 plate numbers are unread** — 172–231 and 234–274. And
+`UNIONS` / `CHILDREN` are **empty stubs for the whole plate**, including the
+part already read. The bracket structure traced so far is a comment block in
+that file and needs encoding, not re-deriving.
+
+**The numbering runs to 274, not 269.** The first orientation pass missed
+270–274 at the far right of the lower block.
 
 ## The open thread
 
 **Finish Genealogy II.** In this order:
 
-1. **Read the lower block, plate numbers 154 to ~269.** Tile at native
-   resolution, ~1300 × 1200 px, following the column groups rather than a blind
-   grid. Write each tile's rows into the module *before* reading the next one.
-2. **Encode `UNIONS` and `CHILDREN`** for both blocks. Generations 1–4 are
-   already traced — see the `STRUCTURE CONFIRMED SO FAR` block in the module.
-   Generations 4→5, 5→6 and the whole lower block still need tracing.
+1. **Read the remaining 101.** The module's `STATE` block lists the native
+   pixel coordinates to resume from, column by column. Tile ~1450 × 1200 at
+   native resolution — that reads cleanly with no downscaling. Write each
+   tile's rows into the module *before* reading the next one, and commit every
+   few tiles; this plate is too big to hold a read in conversation safely.
+2. **Encode `UNIONS` and `CHILDREN`** for the whole plate. Upper-block
+   generations 1–4 and part of the lower block are already traced — see
+   `STRUCTURE CONFIRMED SO FAR`. Generations 4→5, 5→6 and most of the lower
+   block still need it.
 3. **Resolve the readings marked `SEE TODO`** — about a dozen, each a tighter
-   crop's work. None blocks the lower block.
+   crop's work.
 4. **Gate 3**, then font subset, then register in `TABLES` and render.
 
 Constraints that will surface late if you don't know them:
 
+- **The two blocks are one genealogy.** 13, 14, 53, 54, 125 and 126 are drawn
+  in the upper block and reappear in the lower with "see above"; 169 repeats
+  inside the lower block. **Store each once** — the ids already exist, so a
+  second record is a duplicate, not a new person.
+- **Three founding couples**, not two: 1+2, 154+155, 232+233. The third is
+  printed at a child's indent and is only distinguishable by the absence of a
+  leader rule, plus its clan.
 - **The plate's own numbering is not a unique key.** Two people are numbered
   101. The decision is taken (internal id, printed number, both rows show 101);
-  it is not yet implemented, and `self_check()`'s `ids == range(1, N+1)` test
-  has to accommodate it.
+  it is not implemented, and `self_check()`'s `ids == range(1, N+1)` test has to
+  accommodate it.
+- **Genealogy III is referenced but not transcribed.** Persons 160 and 163 both
+  point into it. A link must not promise content — `#pending-3` exists for this,
+  and nothing may link to Genealogy III until it ships.
 - **Editing Table 1's apparatus is part of this job.** The cross-reference
-  finding is to be noted on Table 1's `#note-misprint` as well as on Table 2.
-  That page is published and cited — re-verify it after building, and route
-  every person reference through `_p()`, never a regex over the prose.
+  finding goes on Table 1's `#note-misprint` as well as Table 2's. That page is
+  published and cited — re-verify after building, and route every person
+  reference through `_p()`, never a regex over the prose.
 - **Table 2 is six generations.** Table 1 is five. `NUMBER_WORDS` covers 3–7 so
   the copy is fine, but nothing in the layout has been measured at six columns.
   Column drift must still be **0 px at every generation**.
+- **One unresolved discrepancy**: person 13 reads `Dzia˙ʼyotsʼa` in the upper
+  block and `Tsiaiutsa` in the lower. Both tiles were legible. Re-read both
+  before Gate 3.
 
 ## Other things that could be picked up
 

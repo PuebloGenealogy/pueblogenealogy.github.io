@@ -369,10 +369,26 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 # ---------------------------------------------------------------------------
 # STATE -- upper block read, lower block not started
 #
-# DONE:  plate numbers 1-153, six generations, 154 records (the extra is the
-#        second person numbered 101). No gaps, no id collisions.
-# TO DO: persons 154 to roughly 269 -- the entire lower block, joined to this
-#        one at the couple 154+155 -- then UNIONS and CHILDREN for both.
+# DONE:  plate numbers 1-153 (the whole upper block), plus 154-171 and
+#        232-233 of the lower one. 174 records, no gaps in what is claimed,
+#        no id collisions.
+# TO DO: 101 plate numbers -- 172-231 and 234-274 -- then UNIONS and CHILDREN
+#        for the whole plate. THE NUMBERING RUNS TO 274, not 269: the far
+#        right of the lower block carries 270-274 (Water), which the first
+#        orientation pass missed.
+#
+# WHERE TO RESUME, in native pixel coordinates of
+# sources/parsons-1923-table-2.jpg. Columns are ~1300-1500 px wide and text
+# lines are ~65 px, so tiles of about 1450 x 1200 read cleanly without any
+# downscaling by the image reader:
+#   lower col C  x 3780, next band y 8550   -> 172-185
+#   lower col D  x 4870, y 6150 onward      -> 186-231
+#   lower col B  x 2540, y 10850 onward     -> 234-243
+#   lower col C  x 3780, y 11000 onward     -> 244-253
+#   lower col D  x 4870, y 11300 onward     -> 254-269
+#   lower col E  x 5930, y 11500 onward     -> 270-274
+# These are planning coordinates taken from an orientation crop. Confirm each
+# tile's content when you read it; do not treat the ranges as readings.
 #
 # GLYPH READINGS STILL UNVERIFIED (grep "SEE TODO"). Each is a tighter crop's
 # work; none blocks reading the lower block. Two are worth doing first because
