@@ -56,17 +56,25 @@ PERSONS = [
     (12, 3, "M", "Gʼausire",         "",       "",   "Oak",    "d. 1915", "", "", ""),
     (13, 3, "F", "Dzia˙ʼyotsʼa",     "",       "",   "Water",  "d.", "",
      "For descendants, see above",
-     "DISCREPANCY -- SEE TODO. The plate prints this person twice, and the two "
-     "readings do not agree: 'Dzia˙ʼyotsʼa' in the upper block, 'Tsiaiutsa' in "
-     "the lower. Both tiles were legible. Re-read both before Gate 3; the "
-     "upper reading is the less certain of the two"),
-    (14, 3, "M", "S˙ʼĭʼrowaisiwa",   "Kʼaiʼsh˙dŏwăʼ", "", "Parrot", "d. 1918", "",
+     "DISCREPANCY, and now a VERIFIED one. The plate prints this person twice "
+     "and the two readings do not agree: 'Dzia˙ʼyotsʼa' in the upper block, "
+     "'Tsiaiutsa' in the lower. BOTH were re-read at high magnification on "
+     "2026-07-29 -- upper at x 2650 y 1740, lower at x 2820 y 6180 -- and "
+     "both are unambiguous. The lower carries no diacritics at all. So the "
+     "earlier note's 'the upper reading is the less certain' is withdrawn: "
+     "neither is uncertain, and these are not variant readings of one setting "
+     "but two different settings of one name. EDITORIAL CHOICE, pending the "
+     "user -- see the STATE block, and 54 and 125 alongside it"),
+    (14, 3, "M", "S˙ʼiʼrowaisiwa",   "Kʼaiʼsh˙dŏwăʼ", "", "Parrot", "d. 1918", "",
      "For descendants, see above",
      "braced: the plate joins two names with a '{' for this one person -- "
-     "'S˙ʼĭʼrowaisiwa' over 'Kʼaiʼsh˙dŏwăʼ'. Second name carried in alt_name. "
-     "The breve over 'o' (U+014F) in the second name is confirmed at the lower "
-     "block's larger setting. Drawn once; the repeat carries 'For descendants, "
-     "see above'"),
+     "'S˙ʼiʼrowaisiwa' over 'Kʼaiʼsh˙dŏwăʼ'. Second name carried in alt_name. "
+     "BOTH re-read 2026-07-29 at x 2780 y 6070, and the first name is "
+     "CORRECTED: the letter between the two apostrophes is a plain dotted i, "
+     "not 'ĭ'. The two breves in the second name sit in the same crop and are "
+     "unmistakable cups, which is what makes the plain i certain rather than "
+     "merely likely. The breve over 'o' (U+014F) is confirmed with them. "
+     "Drawn once; the repeat carries 'For descendants, see above'"),
     (15, 3, "M", "Dzăʼyu",           "",       "",   "Water",  "",   "", "", ""),
     (16, 3, "F", "Sho˙tyʼi",         "",       "",   "Turkey", "d.", "", "", ""),
     (17, 3, "M", "Tyi˙kʼamăi",       "",       "",   "Water",  "",   "", "", ""),
@@ -74,9 +82,14 @@ PERSONS = [
     (19, 3, "F", "Dzaiʼᶦtyʼi",       "",       "50", "Water",  "",   "", "",
      "name printed without a following period"),
     (20, 3, "M", "Kyʼĭauʼd˙yăĭăi",   "",       "",   "Sun",    "d.", "", "See Gen. I, 11",
-     "medial vowels unverified -- SEE TODO"),
-    (21, 3, "M", "Dziwaikch",        "",       "35", "Water",  "",   "", "",
-     "trailing marks after 'ch' unverified -- SEE TODO. An earlier note here "
+     "medial vowels VERIFIED 2026-07-29 at a 640 px crop, x 2760 y 4700: the "
+     "sequence after 'd˙y' is a-breve, i-breve, a-breve, i, exactly as read"),
+    (21, 3, "M", "Dziwaikch˙ʼ",      "",       "35", "Water",  "",   "",  "",
+     "trailing marks VERIFIED 2026-07-29 at x 2960 y 4805: a raised dot then "
+     "an apostrophe, the same '˙ʼ' pair 22 carries mid-name -- compared "
+     "side by side at that magnification, where a round dot and a raised "
+     "comma are plainly different shapes. The period after them is "
+     "punctuation, not orthography. An earlier note here "
      "called him '19's third husband'; the plate prints no such words, only a "
      "second '+' line under her (verified at x 2450, y 4620). He is recorded "
      "as her second drawn husband and nothing more"),
@@ -109,7 +122,9 @@ PERSONS = [
      "a '+' identical in form to the spouse mark standing between the name and the "
      "clan. Verified at native resolution. Recorded, not interpreted"),
     (44, 4, "F", "Dzĭwiʼ",           "",       "20", "Water",  "",   "", "", ""),
-    (45, 4, "M", "Ka˙chănĭsh",       "",       "60", "Water",  "",   "", "", "trailing mark after 'sh' unverified -- SEE TODO"),
+    (45, 4, "M", "Ka˙chănĭshʼ",      "",       "60", "Water",  "",   "", "",
+     "trailing mark VERIFIED 2026-07-29 at x 3820 y 1795: an apostrophe, not "
+     "a dot. The lower dot on that line is the sentence period"),
     (46, 4, "F", "Dzaaiʼy˙ăi",       "",       "",   "Bear",   "",   "", "", ""),
     (47, 4, "M", "Kaauʼs˙iyăiʼ",     "",       "",   "Water",  "d.", "", "", ""),
     (48, 4, "F", "Nati",             "",       "",   "Parrot", "",   "", "", ""),
@@ -117,30 +132,42 @@ PERSONS = [
      "two superscript i (U+1DA6), verified at native resolution; second husband of 48"),
     (50, 4, "M", "",                 "",       "",   "Water",  "d. in childhood.", "", "", "name printed as a dash"),
     (51, 4, "M", "Haiʼyuwăi˙siwăʼ",  "",       "",   "Water",  "",   "", "", ""),
-    (52, 4, "F", "Gauʼs˙inăiʼ",      "",       "",   "Lizard", "d.", "", "", "mark before 'ăi' unverified -- SEE TODO"),
+    (52, 4, "F", "Gauʼs˙in˙ăiʼ",     "",       "",   "Lizard", "d.", "", "",
+     "VERIFIED 2026-07-29 at x 3880 y 2690: there IS a raised dot between "
+     "'n' and 'ă'. The earlier reading dropped it"),
     (53, 4, "F", "Kawiʼtsʼirăiʼ",    "",       "50", "Water",  "",   "", "", ""),
     (54, 4, "M", "Ma˙ʼrani",         "",       "",   "Sun",    "",   "", "",
-     "DISCREPANCY -- SEE TODO. Printed twice. The lower-block occurrence "
-     "(native crop at x 3760, y 10780) reads 'Ma˙ʼran˙i', with a raised dot "
-     "before the final 'i' that the upper-block reading above does not carry. "
-     "The lower reading is the clearer. Re-read the upper occurrence before "
-     "Gate 3"),
+     "DISCREPANCY, and now a VERIFIED one -- both occurrences were re-read at "
+     "high magnification on 2026-07-29 and both are unambiguous. Upper block "
+     "(x 3880, y 2910) reads 'Ma˙ʼrani'; lower block (x 3760, y 10780) reads "
+     "'Ma˙ʼran˙i', with a raised dot before the final 'i'. So this is not a "
+     "reading problem: the plate sets one man's name two ways, and the "
+     "edition must print one. EDITORIAL CHOICE, pending the user -- see the "
+     "STATE block, and 13 and 125 alongside it"),
     (55, 4, "M", "Go˙tyʼiăiʼ",       "",       "65", "Corn",   "",   "", "", "second husband of 53"),
     (56, 4, "M", "Dzawi˙răi",        "",       "",   "Turkey", "",   "", "", ""),
     (57, 4, "F", "",                 "",       "",   "",       "",   "", "", "name printed as a dash; no clan printed"),
     (58, 4, "F", "Kʼoyo˙ʼs˙ăi",      "",       "45", "Turkey", "",   "", "", ""),
     (59, 4, "M", "Yăʼwĭĭʼyăiʼ",      "",       "",   "Turquoise", "", "",
      "Presumedly brother of Gen. IV, 64",
-     "medial vowels unverified -- SEE TODO"),
+     "medial vowels VERIFIED 2026-07-29 at x 3920 y 3470: both medial i's "
+     "carry breves, as read. The parenthetical is printed on its own line"),
     (60, 4, "M", "Shuwaiʼᶦri",       "",       "",   "Turkey", "",   "",
      "See Gen. I, 68",
-     "cross-reference printed as 'See Gen. I, 68' -- SEE TODO, appears to name Gen. I 67"),
+     "cross-reference VERIFIED 2026-07-29 at x 3700 y 3350: the plate prints "
+     "'See Gen. I, 68' on its own line under this name. It is not a doubtful "
+     "reading -- it is the displacement CROSS_REF_OFFSET records, and it is "
+     "the independent corroboration that Table 1's own '68' is Parsons's "
+     "number. Recorded as printed"),
     (61, 4, "F", "Tsikʼaʼyăaitsʼa",  "",       "",   "Eagle",  "d.", "",
      "See Gen. I, 67",
-     "cross-reference printed as 'See Gen. I, 67' -- SEE TODO, appears to name Gen. I 68"),
+     "cross-reference VERIFIED 2026-07-29 at x 3700 y 3350: printed as "
+     "'See Gen. I, 67'. Same displacement as 60 above; recorded as printed"),
     (62, 4, "F", "Dziwiʼd˙yăi",      "",       "33", "Badger", "",   "", "See Gen. I, 77", "second wife of 60"),
     (63, 4, "M", "Dyaiʼtsʼdyĭwă",    "",       "",   "Turkey", "d.", "", "", ""),
-    (64, 4, "M", "Kʼaisĭyăiʼ",       "",       "",   "Turkey", "",   "", "", "mark before 'ĭ' unverified -- SEE TODO"),
+    (64, 4, "M", "Kʼais˙ĭyăiʼ",      "",       "",   "Turkey", "",   "", "",
+     "VERIFIED 2026-07-29 at x 3760 y 4480: a raised dot stands between 's' "
+     "and 'ĭ'. The earlier reading dropped it"),
     (65, 4, "M", "",                 "",       "",   "Corn",   "d.", "", "", "name printed as a dash"),
     (66, 4, "M", "",                 "",       "",   "Corn",   "d.", "", "", "name printed as a dash"),
     (67, 4, "M", "Dzauwaiʼd˙yăi",    "",       "24", "Water",  "",   "", "See Gen. I, 24", ""),
@@ -156,7 +183,10 @@ PERSONS = [
     (77, 4, "M", "Koiʼchinăʼ",       "",       "",   "Lizard", "",   "", "", ""),
     (78, 4, "F", "",                 "",       "",   "Lizard", "",   "", "", "name printed as a dash"),
     (79, 4, "M", "",                 "",       "",   "Lizard", "",   "", "", "name printed as a dash"),
-    (80, 4, "F", "Gauʼs˙iro",        "",       "",   "Bear",   "",   "", "", "mark over 'i' unverified -- SEE TODO"),
+    (80, 4, "F", "Gauʼs˙ĭro",        "",       "",   "Bear",   "",   "", "",
+     "VERIFIED 2026-07-29 at x 3950 y 5600: the letter after the raised dot "
+     "is a dotless i under a breve, not a plain i. Compare 52, which has the "
+     "same 'Gauʼs˙' opening and a plain 'i' after it"),
     (81, 4, "F", "",                 "",       "",   "Bear",   "",   "", "", "name printed as a dash"),
     (82, 4, "F", "",                 "",       "",   "Bear",   "",   "", "", "name printed as a dash"),
 
@@ -233,8 +263,12 @@ PERSONS = [
     (132, 5, "M", "Djo˙s˙iyăi",      "",       "",   "Turkey", "",   "", "", ""),
     (133, 5, "M", "Yaʼod˙yidyăis˙iwăʼ", "",    "",   "Turkey", "",   "", "", ""),
     (134, 5, "F", "Juanina",         "",       "",   "Turkey", "",   "", "", ""),
-    (135, 5, "F", "Săp",             "",       "",   "Turkey", "",   "", "",
-     "trailing mark after 'p' unverified -- SEE TODO"),
+    (135, 5, "F", "Säpʼ",            "",       "",   "Turkey", "",   "", "",
+     "RE-READ 2026-07-29 at x 5050 y 3655, and the earlier reading was wrong "
+     "twice over: the 'a' carries a DIAERESIS (U+00E4), not a breve -- two "
+     "clear separate dots -- and there is a trailing apostrophe. So this is "
+     "'Säpʼ', one superscript 'a' short of 180's 'Säpʼᵃ'. They remain "
+     "different people: 135 is Turkey, 180 is Bear"),
     (136, 5, "F", "Dzid˙zaiʼd˙yuwi", "",       "",   "Turkey", "",   "", "", ""),
     # 137-143 each carry a "See Gen. I, n" that is one HIGHER than the
     # Genealogy I person whose name, sex and clan match. See CROSS_REF_OFFSET.
@@ -244,15 +278,20 @@ PERSONS = [
     (140, 5, "F", "Heʼsa",           "Hazel",  "",   "Badger", "",   "", "See Gen. I, 91",
      "English name printed in parentheses on the plate"),
     (141, 5, "F", "Dzaĭyăiʼ",        "",       "",   "Badger", "",   "", "See Gen. I, 92", ""),
-    (142, 5, "F", "Kăaiˑʼyunăiʼ",    "",       "",   "Badger", "",   "", "See Gen. I, 93",
-     "medial marks unverified -- SEE TODO"),
+    (142, 5, "F", "Kăaiʼʼyunăiʼ",    "",       "",   "Badger", "",   "", "See Gen. I, 93",
+     "VERIFIED 2026-07-29 at x 5090 y 4395: the two medial marks are TWO "
+     "IDENTICAL APOSTROPHES, both slanting the same way with the bulb at the "
+     "top. The earlier 'ˑ' (U+02D1) reading is withdrawn -- see 163, which "
+     "was read the same wrong way and is a '˙ʼ' pair"),
     (143, 5, "M", "Dziw˙aiʼs˙iwă",   "",       "",   "Badger", "",   "", "See Gen. I, 94", ""),
 
     # ---- generation 6 ---------------------------------------------------
     (144, 6, "F", "Dzaaiʼd˙yid˙yuweʼ", "",     "6",  "Lizard", "",   "", "", ""),
     (145, 6, "F", "Kʼo˙ty˙imaiʼ",    "",       "4",  "Lizard", "",   "", "", ""),
-    (146, 6, "M", "Aiʼs˙iyĕ",        "",       "9 mos.", "Lizard", "", "", "",
-     "trailing mark after 'ĕ' unverified -- SEE TODO"),
+    (146, 6, "M", "Aiʼs˙iyĕʼᵉ",      "",       "9 mos.", "Lizard", "", "", "",
+     "VERIFIED 2026-07-29 at x 6360 y 2755: TWO marks follow the 'ĕ' -- an "
+     "apostrophe, then a superscript e (U+1D49). Same 'ʼ + superscript "
+     "vowel' pattern as 84's 'Ha˙tsʼᵉ' and 180's 'Säpʼᵃ'"),
     (147, 6, "M", "Mid˙yăiʼsĭw˙ă",   "",       "10", "Water",  "",   "", "", ""),
     (148, 6, "F", "Kwid˙yaid˙yui",   "",       "7",  "Water",  "",   "", "", ""),
     (149, 6, "M", "Shaatse",         "",       "",   "Water",  "d. 1913, at 3 days", "", "", ""),
@@ -284,10 +323,14 @@ PERSONS = [
     (161, 3, "",  "Gawai˙d˙yirăiʼ",  "",       "",   "Parrot", "d.", "", "",
      "sex printed as 'M.-F.' -- a marking used nowhere else on this plate. "
      "Stored empty rather than guessed; recorded here as printed"),
-    (162, 3, "M", "Da˙ʼyu",          "",       "",   "Parrot", "d.", "", "",
-     "trailing mark after 'yu' unverified -- SEE TODO"),
-    (163, 3, "F", "Ĭyaˑʼsi",         "",       "",   "Bear",   "",   "",
-     "For second husband and descendants, see Gen. III, 14, 49-55, 135-141", ""),
+    (162, 3, "M", "Da˙ʼyuʼ",         "",       "",   "Parrot", "d.", "", "",
+     "trailing mark VERIFIED 2026-07-29 at x 2860 y 9810: an apostrophe"),
+    (163, 3, "F", "Ĭya˙ʼsi",         "",       "",   "Bear",   "",   "",
+     "For second husband and descendants, see Gen. III, 14, 49-55, 135-141",
+     "RE-READ 2026-07-29 at x 2860 y 9865: the pair after 'Ĭya' is a raised "
+     "dot then an apostrophe, '˙ʼ'. The earlier 'ˑ' (U+02D1) reading is "
+     "withdrawn here as at 142, and with both gone U+02D1 is no longer used "
+     "anywhere on this plate"),
     (164, 3, "F", "Heaʼʼs˙i",        "",       "",   "Parrot", "d.", "", "", ""),
     (165, 3, "M", "Ha˙ʼpai",         "",       "",   "Oak",    "d.", "", "", ""),
 
@@ -313,8 +356,13 @@ PERSONS = [
      "appears twice within the lower block; drawn once. A heavy ink stroke runs "
      "from this line's clan to its sibling bracket on the scanned copy -- it is "
      "not type, and is recorded as an observation of this copy, not as data"),
-    (170, 4, "M", "Kʼuʼn˙ash",       "",       "",   "Sun",    "",   "", "See Gen. I, 20",
-     "trailing mark after 'ash' unverified -- SEE TODO"),
+    (170, 4, "M", "Kʼuʼn˙ash˘",      "",       "",   "Sun",    "",   "", "See Gen. I, 20",
+     "trailing mark VERIFIED 2026-07-29 at x 4150 y 7995, and it is a "
+     "SPACING BREVE (U+02D8) -- a cup opening upward with thickened "
+     "terminals, standing after 'sh' and over no letter. This is the only "
+     "spacing breve on the plate and the only place the codepoint is needed. "
+     "Recorded where the plate sets it; whether the compositor meant it over "
+     "the 'a' is an interpretation this edition does not make"),
     (171, 4, "F", "Shayaʼai",        "",       "",   "Sun",    "",   "", "See Gen. I, 21",
      "number printed without a following period"),
     (172, 4, "M", "Dziraiʼᶦtyʼi",     "",       "",   "Sun",    "",   "", "See Gen. I, 22", ""),
@@ -621,10 +669,12 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 #        rules. self_check() passes: 0 clan mismatches on 214 links, nobody a
 #        child twice, nobody neither child nor spouse, and the arithmetic
 #        closes at 214 children + 61 spouse-only = 275.
-# TO DO: the SEE TODO readings, and the three repeat-person name choices that
-#        need the user (13, 54, 125). Then Gate 4 -- subset_font.py, register
-#        in TABLES, render, and MEASURE: column drift 0 px at every one of the
-#        SIX generations, which nothing in this layout has been tested at.
+#        Gate 1b, every unverified glyph reading re-read at high
+#        magnification on 2026-07-29. Nothing is marked SEE TODO any more.
+# TO DO: the three repeat-person name choices that need the user (13, 54,
+#        125). Then Gate 4 -- subset_font.py, register in TABLES, render, and
+#        MEASURE: column drift 0 px at every one of the SIX generations, which
+#        nothing in this layout has been tested at.
 #        Then the two apparatus footnotes: this plate's cross-reference
 #        displacement, and the sentence it adds to Table 1's #note-misprint.
 #
@@ -640,11 +690,43 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 # A tile helper that takes (left, top, width, height) is three lines of sips:
 #   sips -c <height> <width> --cropOffset <top> <left> <scan> --out tile.jpg
 #
-# GLYPH READINGS STILL UNVERIFIED (grep "SEE TODO"). Each is a tighter crop's
-# work. Two are worth doing first because they would add a codepoint:
-#   - 14  Kʼaiʼsh˙dŏwăʼ   breve over 'o' (U+014F)
-#   - 84  Ha˙tsʼᵉ         superscript e (U+1D49) -- this one IS confirmed
-#   - 45, 52, 59, 64, 80, 135, 142, 146, 20, 21: trailing or medial marks
+# GLYPH READINGS: ALL VERIFIED 2026-07-29. There is no "SEE TODO" left in
+# this file. Twelve marks were re-read at 6-25x native magnification; each
+# record carries the pixel coordinates it was verified at, so any of these is
+# one command to re-check. TWO CONFIRMED the earlier reading (20, 59) and TEN
+# CORRECTED IT:
+#   21   Dziwaikch      -> Dziwaikch˙ʼ     trailing '˙ʼ' pair was dropped
+#   45   Ka˙chănĭsh     -> Ka˙chănĭshʼ     trailing ʼ was dropped
+#   52   Gauʼs˙inăiʼ    -> Gauʼs˙in˙ăiʼ    medial ˙ was dropped
+#   64   Kʼaisĭyăiʼ     -> Kʼais˙ĭyăiʼ     medial ˙ was dropped
+#   80   Gauʼs˙iro      -> Gauʼs˙ĭro       plain i was really ĭ
+#   135  Săp            -> Säpʼ            breve was really a DIAERESIS, and
+#                                          a trailing ʼ was dropped
+#   142  Kăaiˑʼyunăiʼ   -> Kăaiʼʼyunăiʼ    'ˑ' was really a second ʼ
+#   146  Aiʼs˙iyĕ       -> Aiʼs˙iyĕʼᵉ      two trailing marks were dropped
+#   162  Da˙ʼyu         -> Da˙ʼyuʼ         trailing ʼ was dropped
+#   170  Kʼuʼn˙ash      -> Kʼuʼn˙ash˘      trailing SPACING BREVE was dropped
+# And one that carried no TODO at all, found because 142 was wrong the same
+# way:
+#   163  Ĭyaˑʼsi        -> Ĭya˙ʼsi         'ˑ' was really a '˙ʼ' pair
+#   14   S˙ʼĭʼrowaisiwa -> S˙ʼiʼrowaisiwa  'ĭ' was really a plain dotted i
+#
+# THE PATTERN IN THOSE TEN IS WORTH KEEPING. Nine of the ten dropped a mark
+# rather than misidentifying one, and every one of them sits at the END of a
+# name, where a 1450 px column tile renders the mark 4-6 px wide and the
+# sentence period sits right beside it. A column tile is enough to read a
+# NAME and never enough to read its final mark. Two shape confusions are the
+# ones to watch for, and both need a same-magnification comparison rather
+# than a judgement in isolation:
+#   - '˙' (round, no tail) vs 'ʼ' (bulb at top, tail down-left). Person 22's
+#     'Shaiyo˙ʼsi˙ĕ' prints the pair adjacent and is the reference specimen.
+#   - a raised mark vs the same mark repeated. 142 and 163 both read as the
+#     exotic 'ˑ' when they were an ordinary pair.
+#
+# CODEPOINT CONSEQUENCES, both checked against the cmap of BOTH master faces:
+#   - U+02D1 'ˑ' IS NO LONGER USED. Its only two sites were 142 and 163.
+#   - U+02D8 '˘' IS NEW, at 170 only, and is present in both faces.
+#   - 14's 'ŏ' (U+014F) and 84's 'ᵉ' (U+1D49) were already confirmed.
 #
 # AND THREE PEOPLE DRAWN TWICE WHOSE TWO OCCURRENCES DISAGREE. These are a
 # different kind of open item from the marks above, and the difference is the
@@ -652,8 +734,12 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 # 2026-07-29 and both settings are unambiguous at that size. The plate simply
 # prints one person's name two ways, and the edition must print one. That is
 # an EDITORIAL choice and it belongs to the user:
-#   - 13   Dzia˙ʼyotsʼa / Tsiaiutsa          (upper reading the less certain)
-#   - 54   Ma˙ʼrani / Ma˙ʼran˙i              (one raised dot apart)
+#   - 13   Dzia˙ʼyotsʼa / Tsiaiutsa          (BOTH re-read 2026-07-29 and both
+#          unambiguous; the lower carries no diacritics at all. The earlier
+#          "upper reading is the less certain" is withdrawn)
+#   - 54   Ma˙ʼrani / Ma˙ʼran˙i              (one raised dot apart; BOTH
+#          occurrences re-read at high magnification on 2026-07-29 and both
+#          are unambiguous, so the difference is the plate's, not ours)
 #   - 125  Gowaʼk˙ʼd˙yăiʼ / Gowaʼkʼad˙zăiʼ   (both crops verified legible)
 # Each record carries the coordinates of both occurrences. 169's two
 # occurrences agree; it is named here only so nobody hunts for a fourth.
@@ -663,19 +749,22 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 # 202 vs Gen. I 48 all differ in a mark, and there each plate is simply
 # recorded as it prints. Only the within-plate repeats force a choice.
 #
-# ONE MORE WORTH A LOOK: 135 reads "Săp" with a breve in the upper block,
-# while 180 in the lower block clearly reads "Säpʼᵃ" with a diaeresis and a
-# superscript a. They are different people -- 135 is Turkey, 180 is Bear -- so
-# this is not a repeat-person discrepancy, but 180's crop is the better one
-# and it is worth re-reading 135 against it.
+# SETTLED 2026-07-29: 135 was read as "Săp" with a breve and 180 as "Säpʼᵃ"
+# with a diaeresis, and the suspicion was that 135 had been misread against
+# 180's better crop. It had. 135 is "Säpʼ" -- same diaeresis, same trailing
+# apostrophe, no superscript a. They are still different people (135 Turkey,
+# 180 Bear), so nothing about the structure changes; what changes is that the
+# two names now differ by exactly the one glyph the plate actually prints
+# differently, instead of by three.
 #
 # FONT COVERAGE IS NOT A PROBLEM. The cmap of both master faces
 # (vendor/gentium/Gentium-{Regular,Italic}.ttf) was checked directly and
-# carries U+014F, U+02D1, U+1D49 and -- checked 2026-07-29 for the two
-# codepoints the lower block added -- U+00E4 and U+02DA, as well as the marks
-# already in use. So Gate 4 is a re-run of scripts/subset_font.py once the
-# readings are final; there is nothing to source. Do not judge this by looking
-# at rendered text: macOS substitutes silently for any missing face.
+# carries U+014F, U+1D49 and -- checked 2026-07-29 for the codepoints the
+# lower block and the Gate 1b re-read added -- U+00E4, U+02DA and U+02D8, as
+# well as the marks already in use. THE READINGS ARE NOW FINAL, so Gate 4's
+# font step is exactly one command: re-run scripts/subset_font.py. There is
+# nothing to source. Do not judge this by looking at rendered text: macOS
+# substitutes silently for any missing face.
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
@@ -1074,7 +1163,7 @@ ORTHOGRAPHY = [
     ("ʼ", "U+02BC", "modifier letter apostrophe", "glottal stop / raised apostrophe as printed"),
     ("˙", "U+02D9", "dot above", "raised dot: aspiration or length"),
     ("˚", "U+02DA", "ring above", "raised ring, at 244 only -- new to this plate"),
-    ("ˑ", "U+02D1", "half triangular colon", "at 142 and 163"),
+    ("˘", "U+02D8", "breve", "at 170 only -- a SPACING breve, over no letter"),
     ("ä", "U+00E4", "a with diaeresis", "at 180 only -- new to this plate"),
     ("ă", "U+0103", "a with breve", ""),
     ("ĕ", "U+0115", "e with breve", ""),
@@ -1091,7 +1180,7 @@ ORTHOGRAPHY = [
 # ASCII folding, for matching against other spellings
 # ---------------------------------------------------------------------------
 _FOLD = {
-    "ʼ": "", "˙": "", "˚": "", "ˑ": "",
+    "ʼ": "", "˙": "", "˚": "", "˘": "",
     "ă": "a", "ĕ": "e", "ĭ": "i", "Ĭ": "I", "ŏ": "o", "ŭ": "u", "ä": "a",
     "ᶦ": "i", "ᵃ": "a", "ᵉ": "e",
 }
