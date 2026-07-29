@@ -71,6 +71,12 @@ TABLES = {
         "roots": [1, 54],          # the founding women, in plate order
         "slug": "genealogy-i",
         "couples": f"{_p(1)}+{_p(2)} and {_p(54)}+{_p(55)}",
+        # child -> father, where the PLATE leaves paternity unassigned and this
+        # edition supplies a reading. Deliberately not in transcription.py: that
+        # module is the plate, and the plate does not say this. Applied to the
+        # apparatus only -- the chart still draws the single bracket the plate
+        # draws -- and every row it produces is marked and linked to its note.
+        "paternity": {83: 69, 84: 69, 85: 70},
         "notes": f"""
     <li>{_p(8, "Person 8")} (Yu&#729;si) appears twice on the plate &mdash; as husband in
         the upper half and as a son of {_p(58)}+{_p(59)} in the lower half. Here he is
@@ -82,6 +88,16 @@ TABLES = {
         and links it to 67; the misprint is recorded on union U23. Person 67&rsquo;s own
         cross-reference &mdash; &ldquo;For second wife and offspring see below,
         76, 90-3&rdquo; &mdash; is what identifies him.</li>
+    <li id="note-paternity">The plate brackets {_p(83)}, {_p(84)} and {_p(85)} under
+        {_p(68)} alone. She has two husbands on the plate, {_p(69)} and {_p(70)}, and
+        the bracket does not say which marriage the children belong to &mdash; which
+        is why the transcription records their father as unassigned. <strong>The
+        chart draws them as the plate does</strong>, in one group under 68. In the
+        register and the person cards this edition attributes 83 and 84 to 68&rsquo;s
+        marriage with 69, and 85 to her marriage with 70, marked &dagger;. That
+        attribution is an editorial reading resting on documentary evidence from
+        outside the plate. The plate does not state it, and the supporting
+        records are not reproduced in this edition.</li>
 """,
     },
     "iv": {
@@ -548,14 +564,21 @@ def person_line(p, is_spouse, english_seen, printed_number=0):
     if p["vital_note"]:
         bits.append(f'<span class="vital">{dotted(p["vital_note"])}</span>')
 
+    clan_cls = "clan"
     if p["clan"]:
         clan = esc(p["clan"]) + (f' ({esc(p["origin"])})' if p["origin"] else "")
     elif p["origin"]:
         clan = f'of {esc(p["origin"])}'
+        # NOT a clan: the plate names only where this person came from ("of
+        # Zuñi", person 101 on Table 1 -- the single case in either table). The
+        # card labels its badge "Clan: X", and that label must not be printed
+        # over a value that is not one. Marked here, where the distinction is
+        # still in the data, rather than sniffed out of the rendered string.
+        clan_cls = "clan clan-origin"
     else:
         clan = ""
     if clan:
-        bits.append(f'<span class="clan">{clan}</span>')
+        bits.append(f'<span class="{clan_cls}">{clan}</span>')
 
     census = " ".join(x for x in (p["census_name"], p["census_year"]) if x)
     if census:
@@ -835,7 +858,7 @@ CSS = """
      is as small as the uppercase, letterspaced labels are allowed to get.
      --t-prose is the only fluid step; it grows on wide screens where the
      measure can afford it. */
-  --t-xs:.8125rem; --t-sm:.875rem; --t-base:1rem; --t-md:1.0625rem; --t-lg:1.125rem;
+  --t-xs:.8125rem; --t-sm:.875rem; --t-base:1rem; --t-md:1.0625rem; --t-lg:1.125rem; --t-xl:1.375rem;
   --t-prose:clamp(1rem,.95rem + .28vw,1.125rem);
   --measure:40rem; --measure-wide:72rem;
   --s1:.25rem; --s2:.5rem; --s3:.75rem; --s4:1rem; --s5:1.5rem; --s6:2.5rem; --s7:4rem;
@@ -1322,46 +1345,121 @@ footer code{font-family:var(--font-ui);font-size:.9em}
 .print-url{display:none;font-size:var(--t-xs)}
 
 /* ---- person card (popover; JS-filled from the register) ----------------- */
-.pcard{position:fixed;margin:var(--s2);padding:var(--s4);
-  width:min(26rem,90vw);background:var(--panel);color:var(--ink);
-  border:1px solid var(--rule);border-radius:3px;
+.pcard{position:fixed;margin:var(--s2);padding:0;
+  width:min(38rem,92vw);background:var(--panel);color:var(--ink);
+  border:1px solid var(--rule);border-radius:8px;
   box-shadow:0 6px 24px var(--shadow);font-size:var(--t-base);line-height:1.55}
-/* The card reads as a card, not as one row lifted out of the register, so it
-   sets its own format. EVERY rule here is scoped to .pcard: the register below
-   the plate is the same markup -- the card clones it -- and must keep its dense
-   list format, where 104 entries are meant to be scanned, not read one at a
-   time. */
-/* The person's printed line is the card's title (it carries id="pcard-t", the
-   aria-labelledby target), so it takes the step above the body text and an
-   underline. The offset clears the phonetic marks that sit below the baseline
-   in the transcription; the default would cut through them. */
-.pcard .reg-line{font-size:var(--t-lg);line-height:1.45;
-  text-decoration:underline;text-decoration-thickness:1px;
-  text-underline-offset:.22em}
-/* Indented under that title. The register already indents these 1.4rem and the
-   card used to zero it out; it now keeps it, so the label hangs off the name. */
-.pcard .reg-rel{margin-block-start:var(--s2)}
-/* Each person is a chip. Direct children only: a cross-reference row is also a
-   .reg-rel, and its links sit inside an <em> of running prose that must never
-   become buttons mid-sentence. openCard drops those rows from the card
-   outright, so nothing should reach this rule -- the `>` is what keeps that
-   true if they ever come back. The border is the affordance here, so the
-   register's dotted underline is dropped rather than drawn on top of a box;
-   hover moves the border and the fill, as the rest of the chrome does. */
-.pcard .reg-rel > a{display:inline-block;text-decoration:none;
-  padding:.2rem .5rem;margin:.15rem .2rem .15rem 0;
-  border:1px solid var(--rule-faint);border-radius:4px;
-  line-height:1.3;white-space:nowrap;min-height:24px}
-.pcard .reg-rel > a:hover,.pcard .reg-rel > a:focus-visible{
-  text-decoration:none;border-color:var(--rule);background:var(--sel-bg)}
+/* ---- card header: the printed line, set as a title -------------------- */
+/* The clan is lifted out of the line into a chip beside the name. It can be:
+   person_line emits it as its own trailing <span class="clan">, with the
+   sentence point living inside .name, so removing it leaves no orphan
+   punctuation behind. Nothing else about the line is rearranged -- the number,
+   sex mark and name keep the plate's order and the plate's wording. */
+.pc-head{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;
+  padding:var(--s3) var(--s4);background:var(--wash);
+  border-block-end:1px solid var(--rule-faint);border-radius:7px 7px 0 0;
+  position:relative;z-index:1;box-shadow:0 3px 6px -2px var(--shadow)}
+/* The badge carries the plate number, which is why the header text no longer
+   does. Tabular figures so 8, 68 and 104 all sit centred in the same circle. */
+.pc-mark{flex:none;display:grid;place-items:center;width:2.25rem;height:2.25rem;
+  border-radius:50%;background:var(--accent);color:var(--paper);
+  font:600 var(--t-sm)/1 var(--font-ui);font-variant-numeric:tabular-nums}
+/* Name, age and vital note are separate fields, so they are separate layout
+   elements and the space between them is a gap -- not a typed space, which
+   would tie their separation to the font's word width. Each field keeps its
+   own trailing point (person_line puts it inside the span), so punctuation
+   travels with the field it belongs to. The whitespace text nodes between
+   them survive only so the header still copies out as readable text; a
+   whitespace-only node is not rendered as a flex item, so it contributes
+   nothing to layout. */
+.pc-title{display:flex;flex-wrap:wrap;align-items:baseline;
+  column-gap:.5rem;row-gap:.1rem;
+  margin:0;font:var(--t-xl)/1.25 var(--font-plate);font-weight:400;
+  color:var(--ink);letter-spacing:0}
+/* The clan keeps --clan inside the chip; the chip's border is --rule-faint so
+   the colour is doing the work, not a second border weight. */
+.pc-clan{margin-inline-start:auto;margin-inline-end:0;
+  display:inline-flex;align-items:baseline;
+  gap:.3rem;padding:.25rem .7rem;border:1px solid var(--rule-faint);
+  border-radius:4px;background:var(--panel);font-size:var(--t-sm)}
+.pc-clan-l{font:var(--t-xs) var(--font-ui);color:var(--muted)}
+/* The vital note is metadata, not part of the name, so it steps back from it.
+   --muted-fixed rather than --muted because body.chart flattens --muted to
+   --ink; this is the second deliberate user of it after .imprint. Measured on
+   the header band, both themes, below. */
+.pcard .pc-title .vital{color:var(--muted-fixed);font-style:italic}
+/* ---- card body: a column per spouse ------------------------------------ */
+.pc-main{padding:var(--s3) var(--s4) var(--s4)}
+.pc-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));
+  column-gap:var(--s4);row-gap:var(--s5)}
+/* The parents block owns the space beneath it. Without this the next
+   section's heading box began exactly at the last parent button's bottom edge
+   -- 0px clearance -- and its decorative rule, which paints centred in that
+   box, landed 8px above the button. Margin here rather than a top margin on
+   the heading, because .pc-h's top margin is zeroed so the two family columns
+   start level with each other. */
+.pc-sec{margin-block-end:var(--s5)}
+/* A single spouse is centred at a readable width rather than stretched. */
+.pc-cols--single{grid-template-columns:minmax(0,22rem);justify-content:center}
+.pc-parents{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));
+  gap:var(--s2)}
+.pc-parents > .pc-row{margin-block-start:0}
+/* The divider is drawn only when there are exactly two columns. Columns wrap
+   when there are more -- person 68 has two spouses plus a group whose father
+   the plate does not record -- and a wrapped column is first on its own row
+   while still matching `.pc-col + .pc-col`, which would hang a rule off its
+   left edge with nothing to its left. Beyond two, the gap separates them. */
+.pc-cols--pair > .pc-col + .pc-col{border-inline-start:1px solid var(--rule-faint);
+  padding-inline-start:var(--s4)}
+/* A section rule that reads as a rule, not as an underline on the words. */
+.pc-h{display:flex;align-items:center;gap:var(--s2);margin:var(--s3) 0 var(--s2);
+  font:var(--t-xs) var(--font-ui);text-transform:uppercase;letter-spacing:.08em;
+  color:var(--muted)}
+.pc-h::before,.pc-h::after{content:"";flex:1;height:1px;
+  background:var(--rule-faint)}
+.pc-col > .pc-h:first-child,.pc-sec > .pc-h:first-child{margin-block-start:0}
+.pc-row{display:flex;align-items:center;gap:var(--s2);
+  padding:.35rem .55rem;margin-block-start:.3rem;
+  border:1px solid var(--rule-faint);border-radius:5px;background:var(--paper);
+  color:var(--ink);text-decoration:none;font-size:var(--t-sm);
+  min-height:var(--tap)}
+.pc-row:first-of-type{margin-block-start:0}
+a.pc-row:hover,a.pc-row:focus-visible{border-color:var(--rule);
+  background:var(--sel-bg);text-decoration:none}
+/* The parent's clan sits after the name and before the chevron, which keeps
+   its auto start-margin and so stays hard right. Slightly smaller than the
+   name: it is the same secondary weight the chart line gives it. */
+.pc-row-clan{font-size:.92em}
+/* The editorial-attribution mark. Deliberately quiet: it flags a reading, it
+   does not warn about an error, so it is not --sic. It sits in the heading and
+   in the register label, and always links to #note-paternity. */
+.edmark{margin-inline-start:.35em;text-decoration:none;color:var(--accent);
+  font-size:1.1em;line-height:1}
+.edmark:hover,.edmark:focus-visible{text-decoration:underline}
+.pc-h .edmark{flex:none}
+.pc-chev{margin-inline-start:auto;color:var(--accent);font-size:1.1em;
+  line-height:1}
+a.pc-row:hover .pc-chev,a.pc-row:focus-visible .pc-chev{color:var(--ink)}
+/* ---- card actions ------------------------------------------------------ */
 .pcard-actions{display:flex;gap:var(--s3);align-items:center;
-  margin:var(--s3) 0 0;font-family:var(--font-ui);font-size:.8125rem}
+  justify-content:space-between;margin:0;
+  padding:var(--s3) var(--s4);border-block-start:1px solid var(--rule-faint);
+  font-family:var(--font-ui);font-size:.8125rem}
 .pcard-actions button{font:var(--t-xs) var(--font-ui);color:var(--muted);
-  background:none;border:1px solid var(--rule-faint);border-radius:2px;
-  padding:.3rem .6rem;cursor:pointer;min-height:24px}
-.pcard-actions button:hover{color:var(--ink);border-color:var(--rule)}
-.pcard-actions button:focus-visible{color:var(--ink);border-color:var(--rule)}
+  background:none;border:0;padding:.3rem 0;cursor:pointer;
+  min-height:var(--tap);text-decoration:underline;text-underline-offset:.15em}
+.pcard-actions button:hover{color:var(--ink)}
+.pcard-actions button:focus-visible{color:var(--ink)}
 .pcard-actions a{color:var(--accent)}
+/* The one filled control on the card. Its background is the affordance, which
+   is why it is exempt from body.chart's link flatten below -- it needs no
+   underline and --paper on --accent is the same measured pair as the clan
+   gold, read the other way round: 5.86:1 light, 9.53:1 dark. */
+.pcard-actions a.pc-btn{display:inline-flex;align-items:center;
+  padding:.4rem .85rem;border-radius:5px;background:var(--accent);
+  color:var(--paper);text-decoration:none;min-height:var(--tap)}
+.pcard-actions a.pc-btn:hover,.pcard-actions a.pc-btn:focus-visible{
+  background:var(--accent-strong);text-decoration:none}
 @supports (anchor-name:--pc){
   .pcard{inset:auto;position-anchor:--pc;
     position-area:block-end span-inline-end;
@@ -1374,8 +1472,11 @@ footer code{font-family:var(--font-ui);font-size:.9em}
 }
 @media (max-width:640px){
   .pcard{inset:auto 0 0 0;width:100%;max-width:none;margin:0;
-    max-height:60vh;max-height:60dvh;overflow-y:auto;
+    max-height:75vh;max-height:75dvh;overflow-y:auto;
     border-radius:8px 8px 0 0;position-area:none}
+  .pc-head{border-radius:8px 8px 0 0;position:sticky;top:0;z-index:2}
+  .pc-col + .pc-col{border-inline-start:0;padding-inline-start:0}
+  .pc-cols,.pc-cols--single,.pc-parents{grid-template-columns:1fr}
 }
 
 /* ---- flat text colour, chart pages -------------------------------------- */
@@ -1390,7 +1491,7 @@ body.chart{--muted:var(--ink)}
 /* Colour was the only thing marking these as links, so they take an explicit
    underline in its place -- dropping both would leave no affordance at all
    (WCAG 1.4.1). The xref and register links already carry a dotted underline. */
-body.chart footer a,body.chart .pcard-actions a{
+body.chart footer a,body.chart .pcard-actions a:not(.pc-btn){
   color:var(--ink);text-decoration:underline;text-underline-offset:.15em}
 /* Hover and focus still change, but by weight of underline rather than by
    introducing a second colour. */
@@ -1673,54 +1774,184 @@ function openCard(a){
   var reg=doc.getElementById("r"+id);
   if(!reg)return false;
   card.innerHTML="";
+  /* The register entry is still the single source of truth and still the no-JS
+     person card; the popover REGROUPS a detached copy of it rather than
+     rendering it. src is never inserted into the document. */
+  var src=doc.createElement("div");
+  src.innerHTML=reg.innerHTML;
   var body=doc.createElement("div");
   body.className="pcard-body";
-  body.innerHTML=reg.innerHTML;
-  var line=body.querySelector(".reg-line");if(line)line.id="pcard-t";
-  /* Three edits to the clone, none of them touching rel_row -- the register
-     renders the same markup and keeps its own format.
-       - The label gains a colon. Written as real text rather than a CSS
-         ::after so it survives a copy out of the card.
-       - Each number gains the point it is printed with everywhere else: the
-         plate writes "56.", and the card's own title line already does, so a
-         chip reading "56" was the odd one out.
-       - The middot between relations goes. In the card each relation is a
-         chip, so the gap between the boxes already separates them and the
-         middot is left floating in it. Collapsed to a space rather than
-         deleted: the space is what keeps the text readable when copied, and
-         deleting the node would also close the gap after the label.
-     A row with no .rel-l is a cross-reference -- the plate's own "For second
-     wife and offspring see below, 76, 90-3". Those are dropped from the card
-     for the reason the misprint note was: the chart prints the cross-reference
-     directly under the person's line, so the card was repeating what the
-     reader had just clicked. It stays in the register entry, one click away on
-     this card, and on the chart. Persons 12, 67 and 73 carry one on Table 1;
-     Table 4 has none. Everything left inside a labelled row is rel_link
-     output, so every .num in one is a relation. */
-  body.querySelectorAll(".reg-rel").forEach(function(r){
-    var l=r.querySelector(".rel-l");
-    if(!l){r.remove();return;}
-    if(l.textContent.slice(-1)!==":")l.textContent+=":";
-    r.querySelectorAll(".num").forEach(function(n){
-      if(n.textContent.slice(-1)!==".")n.textContent+=".";
-    });
-    r.childNodes.forEach(function(c){
-      if(c.nodeType===3&&c.textContent.indexOf("·")>=0)c.textContent=" ";
-    });
-  });
-  /* Opened from a line the plate misnumbers: the card names the number the
-     reader is looking at, not the register's. The register itself keeps the
-     true number, so the printed one has to be carried on the link.
-     The card carries the number only, not the annotation -- the chart row the
-     reader opened it from already sits under its own '(misprint)' row, and the
-     footer note is one click from there. */
+
+  /* ---- header: badge, name, clan ---------------------------------------- */
+  var line=src.querySelector(".reg-line");
+  var clan=line?line.querySelector(".clan"):null;
+  var numEl=line?line.querySelector(".num"):null;
+  /* Opened from a line the plate misnumbers: the badge shows the number the
+     reader is looking at, not the register's. The register keeps the true one,
+     so the printed one has to be carried on the link. The number only, never
+     the annotation -- the chart row the reader opened it from already sits
+     under its own '(misprint)' row. */
   var printed=a.dataset?a.dataset.printed:null;
-  if(printed&&line){
-    var n=line.querySelector(".num");if(n)n.textContent=printed+".";
+  var plateNo=printed||(numEl?numEl.textContent.replace(/\.$/,""):id);
+
+  var head=doc.createElement("header");head.className="pc-head";
+  var mark=doc.createElement("span");
+  mark.className="pc-mark";mark.setAttribute("aria-hidden","true");
+  mark.textContent=plateNo+".";
+  head.appendChild(mark);
+
+  var title=doc.createElement("h2");
+  title.className="pc-title";title.id="pcard-t";
+  /* The number and sex mark leave the header TEXT -- the badge carries the
+     number now -- but they stay in the dialog's accessible NAME, which is this
+     element. Removing them outright would silently rename every card.
+     Rebuilt from the element children rather than moved wholesale, so exactly
+     one space lands between the name and the vital note: "Tsaʼtsiʼ. d. in
+     1905." can never come out closed up, whatever the source spacing was. */
+  var vh=doc.createElement("span");
+  vh.className="visually-hidden";
+  vh.textContent=plateNo+". "+(line&&line.querySelector(".sex")
+    ? line.querySelector(".sex").textContent+" " : "");
+  title.appendChild(vh);
+  var DROP=/(^| )(num|sex|clan|plus|sic-ring)( |$)/;
+  var kept=[];
+  if(line)[].slice.call(line.children).forEach(function(el){
+    if(!DROP.test(" "+el.className+" "))kept.push(el);
+  });
+  kept.forEach(function(el,i){
+    if(i)title.appendChild(doc.createTextNode(" "));
+    title.appendChild(el);
+  });
+  head.appendChild(title);
+
+  if(clan){
+    var chip=doc.createElement("span");chip.className="pc-clan";
+    /* "Clan: Water". Suppressed for the one value that is an origin rather
+       than a clan -- person 101's "of Zuñi" -- which person_line marks with
+       .clan-origin so this never has to read the string to find out. */
+    if(!/(^| )clan-origin( |$)/.test(" "+clan.className+" ")){
+      var lbl=doc.createElement("span");
+      lbl.className="pc-clan-l";lbl.textContent="Clan:";
+      chip.appendChild(lbl);chip.appendChild(doc.createTextNode(" "));
+    }
+    chip.appendChild(clan);head.appendChild(chip);
   }
+  body.appendChild(head);
+
+  /* ---- body: one column per spouse ------------------------------------ */
+  /* Read off data-rel / data-with, never off the label: "Children (with 66)"
+     is prose, and digging a person number out of prose is the mistake _p()
+     exists to prevent. A row with no data-rel is a cross-reference, which the
+     card does not carry -- the chart prints it under the line already. */
+  function heading(text,editorial){
+    var h=doc.createElement("h3");h.className="pc-h";h.textContent=text;
+    /* Same dagger, same target as the register's: the grouping under this
+       heading is the edition's reading, not the plate's bracket. */
+    if(editorial){
+      var m=doc.createElement("a");
+      m.className="edmark";m.href="#note-paternity";
+      m.title="editorial attribution";m.textContent="†";
+      h.appendChild(m);
+    }
+    return h;
+  }
+  /* Every related person's clan, read from that person's OWN register entry
+     rather than added to rel_link -- which would also rewrite the register.
+     Omitted entirely when the plate records neither clan nor origin (person 89
+     is the only such case in either table); no placeholder stands in for it.
+     The span keeps its .clan class, so it keeps --clan. */
+  function withClan(el){
+    var m=/^#p(\d+)$/.exec(el.getAttribute("href")||"");
+    if(!m)return el;
+    var e=doc.getElementById("r"+m[1]);
+    var c=e?e.querySelector(".reg-line .clan"):null;
+    if(!c)return el;
+    var s=c.cloneNode(true);
+    s.className+=" pc-row-clan";
+    var chev=el.querySelector(".pc-chev");
+    /* A real space, not just the flex gap: a whitespace-only text node is not
+       rendered as a flex item, so this costs nothing on screen, but without it
+       the row copies out as "NayowʼăitsaSun". */
+    el.insertBefore(doc.createTextNode(" "),chev);
+    el.insertBefore(s,chev);
+    return el;
+  }
+  function row(el){
+    el.className="pc-row"+(el.tagName==="A"?"":" pc-row-flat");
+    var n=el.querySelector(".num");
+    if(n&&n.textContent.slice(-1)!==".")n.textContent+=".";
+    if(el.tagName==="A"){
+      var c=doc.createElement("span");
+      c.className="pc-chev";c.setAttribute("aria-hidden","true");
+      c.textContent="›";el.appendChild(c);
+    }
+    return withClan(el);
+  }
+  var parents=null,spouses=[],kids={},kidsEd={},order=[];
+  src.querySelectorAll(".reg-rel").forEach(function(r){
+    var kind=r.getAttribute("data-rel");
+    if(!kind)return;
+    var items=[].slice.call(r.children).filter(function(c){
+      return c.className&&(" "+c.className+" ").indexOf(" rel-x ")>=0;
+    });
+    if(!items.length)return;
+    if(kind==="parents")parents=items;
+    else if(kind==="spouses")spouses=items;
+    else if(kind==="children"){
+      var w=r.getAttribute("data-with")||"0";
+      kids[w]=items;kidsEd[w]=r.getAttribute("data-editorial")==="1";
+      if(order.indexOf(w)<0)order.push(w);
+    }
+  });
+
+  var main=doc.createElement("div");main.className="pc-main";
+  if(parents){
+    var ps=doc.createElement("section");ps.className="pc-sec";
+    ps.appendChild(heading("Parents"));
+    /* Mother and father side by side in equal columns, stacking themselves
+       when the card is too narrow -- auto-fit does both, so there is no
+       breakpoint here to keep in step with the one on .pc-cols. */
+    var pg=doc.createElement("div");pg.className="pc-parents";
+    parents.forEach(function(x){pg.appendChild(row(x));});
+    ps.appendChild(pg);
+    main.appendChild(ps);
+  }
+  var cols=doc.createElement("div");cols.className="pc-cols";
+  var used={};
+  spouses.forEach(function(sp){
+    var sid=(sp.getAttribute("href")||"").slice(2);
+    var col=doc.createElement("section");col.className="pc-col";
+    col.appendChild(heading("Spouse"));
+    col.appendChild(row(sp));
+    if(sid&&kids[sid]){
+      col.appendChild(heading("Children",kidsEd[sid]));
+      kids[sid].forEach(function(k){col.appendChild(row(k));});
+      used[sid]=1;
+    }
+    cols.appendChild(col);
+  });
+  /* A group whose other parent the plate does not give -- data-with="0" -- and
+     any group whose partner is not among the spouses. Its own column, headed
+     only "Children", so nothing is silently dropped. */
+  order.forEach(function(w){
+    if(used[w])return;
+    var col=doc.createElement("section");col.className="pc-col";
+    col.appendChild(heading("Children",kidsEd[w]));
+    kids[w].forEach(function(k){col.appendChild(row(k));});
+    cols.appendChild(col);
+  });
+  /* One column -- a single spouse, or a lone group whose other parent the
+     plate does not give -- is centred at a readable width instead of being
+     stretched across a card sized for two. Decided from what was actually
+     built, so "one spouse" and "no spouse, one group" behave alike. */
+  if(cols.children.length===1)cols.className+=" pc-cols--single";
+  else if(cols.children.length===2)cols.className+=" pc-cols--pair";
+  if(cols.children.length)main.appendChild(cols);
+  if(main.children.length)body.appendChild(main);
   card.appendChild(body);
+
   var act=doc.createElement("p");act.className="pcard-actions";
-  var inner='<a href="#r'+id+'">Open register entry</a>';
+  var inner='<a class="pc-btn" href="#r'+id+'">Open register entry</a>';
   if(navigator.clipboard&&CANON)
     inner='<button data-action="copylink" data-id="'+id+'" aria-live="polite">Copy link</button> '+inner;
   act.innerHTML=inner;card.appendChild(act);
@@ -1879,7 +2110,7 @@ def datalist_html(persons, drawn):
     return '<datalist id="persons-list">' + "".join(opts) + "</datalist>"
 
 
-def register_html(persons, unions, ku, km, drawn):
+def register_html(persons, unions, ku, km, drawn, paternity=None):
     """
     The Register of persons: a generated index, one entry per person in plate
     order, with parents, spouses and children as #p{n} links. It is the no-JS
@@ -1900,20 +2131,42 @@ def register_html(persons, unions, ku, km, drawn):
         for k in kids:
             parents[k] = (m, 0)
 
+    # The apparatus's own view of the children. `paternity` moves a child out
+    # of its mother-only group into the union of that mother with the named
+    # father. ku/km themselves are untouched, so the CHART is unaffected: it
+    # keeps drawing the one bracket the plate draws. Only this copy is regrouped.
+    pat = paternity or {}
+    union_of = {(u["wife"], u["husband"]): u["union_id"]
+                for u in unions if u["wife"] and u["husband"]}
+    ku_a = {k: list(v) for k, v in ku.items()}
+    km_a, editorial_unions = {}, set()
+    for m, kids in km.items():
+        rest = []
+        for k in kids:
+            uid = union_of.get((m, pat.get(k, 0)))
+            if uid:
+                ku_a.setdefault(uid, []).append(k)
+                editorial_unions.add(uid)
+            else:
+                rest.append(k)
+        if rest:
+            km_a[m] = rest
+
     spouses, children = {}, {}
     for u in unions:
         w, h = u["wife"], u["husband"]
         if w and h:
             spouses.setdefault(w, []).append(h)
             spouses.setdefault(h, []).append(w)
-        kids = ku.get(u["union_id"], [])
+        kids = sorted(ku_a.get(u["union_id"], []))
         if kids:
+            ed = u["union_id"] in editorial_unions
             if w:
-                children.setdefault(w, []).append((h, kids))
+                children.setdefault(w, []).append((h, kids, ed))
             if h:
-                children.setdefault(h, []).append((w, kids))
-    for m, kids in km.items():
-        children.setdefault(m, []).append((0, kids))
+                children.setdefault(h, []).append((w, kids, ed))
+    for m, kids in km_a.items():
+        children.setdefault(m, []).append((0, kids, False))
 
     def rel_link(pid):
         p = persons[pid]
@@ -1921,12 +2174,36 @@ def register_html(persons, unions, ku, km, drawn):
             nm = f'<span class="name" lang="kjq">{esc(p["name_as_printed"])}</span>'
         else:
             nm = '<span class="blank">———</span>'
+        # One element per person either way. A person the chart did not draw has
+        # no #p target, so it cannot be a link -- but the person card enumerates
+        # these as rows, and loose sibling spans cannot be enumerated. Both
+        # forms therefore carry .rel-x, and the card checks the tag, not the
+        # class, to decide whether a row is navigable.
         if pid not in drawn:
-            return f'<span class="num">{pid}</span> {nm}'
-        return f'<a href="#p{pid}"><span class="num">{pid}</span> {nm}</a>'
+            return f'<span class="rel-x"><span class="num">{pid}</span> {nm}</span>'
+        return (f'<a class="rel-x" href="#p{pid}">'
+                f'<span class="num">{pid}</span> {nm}</a>')
 
-    def rel_row(label, links):
-        return (f'<div class="reg-rel"><span class="rel-l">{label}</span> '
+    def rel_row(label, links, kind, with_id=None, editorial=False):
+        """
+        One labelled relation row.
+
+        `kind` and `with_id` are written for the person card, which regroups
+        these rows into a column per spouse: they let it pair a group of
+        children with the other parent WITHOUT reading the label. The label is
+        prose -- "Children (with 66)" -- and digging a person number out of
+        prose is exactly the mistake `_p()` exists to prevent. Both attributes
+        are invisible; the register renders as it always has.
+        """
+        w = "" if with_id is None else f' data-with="{with_id}"'
+        # The dagger says "this grouping is ours, not the plate's" and links to
+        # the note that says so. data-editorial carries the same fact to the
+        # person card, which builds its own headings.
+        ed_a = ('<a class="edmark" href="#note-paternity"'
+                ' title="editorial attribution">&dagger;</a>') if editorial else ""
+        ed_d = ' data-editorial="1"' if editorial else ""
+        return (f'<div class="reg-rel" data-rel="{kind}"{w}{ed_d}>'
+                f'<span class="rel-l">{label}</span>{ed_a} '
                 + " &middot; ".join(links) + "</div>")
 
     items = []
@@ -1937,19 +2214,21 @@ def register_html(persons, unions, ku, km, drawn):
         pm, pf = parents.get(pid, (0, 0))
         par = [rel_link(x) for x in (pm, pf) if x]
         if par:
-            rows.append(rel_row("Parents", par))
+            rows.append(rel_row("Parents", par, "parents"))
         sp = [rel_link(x) for x in spouses.get(pid, [])]
         if sp:
-            rows.append(rel_row("Spouse" if len(sp) == 1 else "Spouses", sp))
+            rows.append(rel_row("Spouse" if len(sp) == 1 else "Spouses",
+                                sp, "spouses"))
         groups = children.get(pid, [])
-        for other, kids in groups:
+        for other, kids, ed in groups:
             if not other:
                 label = "Children (father not recorded)"
             elif len(groups) > 1:
                 label = f"Children (with {other})"
             else:
                 label = "Children"
-            rows.append(rel_row(label, [rel_link(k) for k in kids]))
+            rows.append(rel_row(label, [rel_link(k) for k in kids],
+                                "children", other, ed))
         xr = persons[pid]["cross_ref"]
         if xr:
             for part in xr.split("|"):
@@ -2269,7 +2548,7 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
     follow the later generations &mdash; person numbers are links.</span></figcaption>
 </figure>
 </main>
-{register_html(persons, unions, ku, km, drawn)}
+{register_html(persons, unions, ku, km, drawn, spec.get("paternity"))}
 <footer id="apparatus">
   <div class="app-cols">
     <section class="app-sec">
@@ -2531,6 +2810,85 @@ def write_site(today, built):
           ".nojekyll, og-cover.jpg, fonts/OFL.txt")
 
 
+# ---------------------------------------------------------------------------
+# THE LEAK GATE.
+#
+# Two things must never reach docs/, and until 2026-07-28 only the first was
+# checked:
+#
+#   1. A research FIELD rendered into the page. It carries a class, so it is
+#      grepped for exactly.
+#   2. The same information written as a SENTENCE. This is the realistic way
+#      research escapes -- an apparatus note explaining *why* a reading was
+#      made -- and it carries no class at all, so the marker check is blind to
+#      it. A note reading "the 1914 census lists her as widowed with two
+#      daughters" would have published cleanly.
+#
+# ALLOWED holds the phrases the edition legitimately publishes: they state the
+# privacy boundary rather than crossing it. The gate fails CLOSED -- reword the
+# FAQ and the build stops until the new phrasing is allowlisted here. That is
+# the right direction for a rule whose breach cannot be undone: a stopped build
+# costs a minute, a published census match cannot be recalled.
+# ---------------------------------------------------------------------------
+LEAK_MARKERS = ('class="eng"', 'class="census"')
+
+RESEARCH_PROSE = re.compile(
+    r"census|famil\w*\s*search|ancestry|findagrave|national\s*archives|"
+    r"\bwidow(?:ed|er|s)?\b|\benumerat\w*", re.I)
+
+RESEARCH_PROSE_ALLOWED = (
+    "census matches or identifications of living people",
+    "hard to match to census records",
+    "spellings used by census takers",
+)
+
+
+def leak_report(html):
+    """The first thing in `html` that must not be published, or None."""
+    for marker in LEAK_MARKERS:
+        if marker in html:
+            return f"research chip {marker}"
+    # CSS is not prose. The stylesheet ships `.eng` and `.census` rules to every
+    # page -- unused in public output, which is why the marker check above looks
+    # for class="census" and not for the selector -- and a selector name says
+    # nothing about a person. Scripts stay in scope: a string in the card
+    # builder could carry real text. Style blocks are dropped, nothing else.
+    scrubbed = re.sub(r"<style\b[^>]*>.*?</style>", "", html, flags=re.S | re.I)
+    for ok in RESEARCH_PROSE_ALLOWED:
+        scrubbed = scrubbed.replace(ok, "")
+    m = RESEARCH_PROSE.search(scrubbed)
+    if not m:
+        return None
+    lo = max(0, m.start() - 70)
+    quote = " ".join(scrubbed[lo:m.end() + 70].split())
+    return f"research vocabulary {m.group(0)!r} in: ...{quote}..."
+
+
+def check_published_pages():
+    """
+    Every HTML file in docs/, not just the table pages.
+
+    The per-table check runs inside build_table and never saw the landing page
+    or 404.html -- which is where the FAQ lives, i.e. the only public prose that
+    discusses this vocabulary at all. Anything that fails is deleted rather than
+    left on disk for a later `git add -A` to sweep up.
+    """
+    leaked = []
+    pages = sorted(DOCS.rglob("*.html"))
+    for f in pages:
+        hit = leak_report(f.read_text(encoding="utf-8"))
+        if hit:
+            f.unlink()
+            leaked.append(f"{f.relative_to(DOCS)} -- {hit}")
+    if leaked:
+        print("ABORTED: research data in published output; offending files deleted:")
+        for line in leaked:
+            print(f"  {line}")
+        return False
+    print(f"  no research chips or vocabulary in {len(pages)} published pages")
+    return True
+
+
 def build_table(spec, public, today):
     """Build one table. Returns (doc, stats) so the caller can assemble the site."""
     if public:
@@ -2602,10 +2960,11 @@ def build_table(spec, public, today):
         # A published build that leaked a research chip would be the one failure
         # that cannot be walked back, so check the bytes rather than trusting the
         # data path that produced them.
-        for marker in ('class="eng"', 'class="census"'):
-            if marker in doc:
-                out.unlink()
-                raise SystemExit(f"ABORTED: {marker} found in {out.name}; output deleted")
+        hit = leak_report(doc)
+        if hit:
+            out.unlink()
+            where = out.relative_to(ROOT) if out.is_relative_to(ROOT) else out
+            raise SystemExit(f"ABORTED: {hit} in {where}; output deleted")
         print("  no english/census chips in output")
 
     return doc, stats
@@ -2633,6 +2992,10 @@ def main():
         _, stats = build_table(spec, public=True, today=today)
         built.append((spec, stats))
     write_site(today=today, built=built)
+
+    # Sweep every published page before anything else passes judgement on it.
+    if not check_published_pages():
+        return 1
 
     pages = [DOCS / "index.html"] + [
         DOCS / spec["slug"] / "index.html" for spec, _ in built]

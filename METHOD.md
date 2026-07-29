@@ -6,8 +6,14 @@ first.
 
 The governing principle: **this edition reproduces the plate, it does not
 improve it.** Where Parsons printed an error, the error is reproduced and
-annotated. Where she recorded nothing, nothing is supplied. A reader who
-compares this edition against the scan should find no silent differences.
+annotated. A reader who compares this edition against the scan should find no
+silent differences.
+
+Where she recorded nothing, nothing is supplied **in the chart**. The chart is
+the transcription and carries only what the plate carries. The apparatus
+alongside it may go further — see *Editorial attribution* below — but only
+where the addition is marked on the page, explained in a footnote, and absent
+from the chart. The word that matters in the principle is *silent*.
 
 ## The source
 
@@ -71,7 +77,39 @@ Conventions:
 - A person appearing twice on the plate is stored once; the repetition becomes a
   cross-reference, as the plate itself does
 - Where paternity is not assignable, the sibling group hangs off the mother's
-  line alone, with no father recorded
+  line alone, with no father recorded. That is what the transcription stores
+  and what the chart draws; where the apparatus goes further, see below
+
+## Editorial attribution
+
+The transcription records what the plate shows. Once, so far, the plate leaves a
+question open that evidence outside it can answer, and this edition answers it —
+in the apparatus only, never in the chart.
+
+That case is the sibling group 83–85 on Table 1. Person 68 has two husbands on
+the plate, 69 and 70, and the bracket does not say which marriage the children
+belong to; the transcription therefore records no father, and **the chart draws
+the single bracket the plate draws**. In the register and the person cards the
+edition attributes 83 and 84 to 68's marriage with 69, and 85 to her marriage
+with 70.
+
+Four rules govern this, and a future attribution must meet all four:
+
+1. **The chart never carries it.** The chart is the transcription. An
+   attribution that changed a bracket would make the page disagree with the
+   scan, which is the one thing the edition exists not to do.
+2. **It is declared as data, outside the transcription module.** The map lives
+   in `make_chart.py`'s `TABLES` entry, beside the table's other editorial
+   material. `scripts/transcription*.py` holds the plate and only the plate.
+3. **Every row it produces is marked** with a dagger linking to a footnote that
+   says the attribution is editorial and that the plate does not state it.
+   Plate-attested groups sit unmarked beside marked ones, so the difference is
+   visible rather than asserted.
+4. **The supporting records are not published.** The evidence for the Table 1
+   attribution is external documentary research, which falls under *What is
+   published* below: it stays in the git-ignored workbook. The footnote says
+   that a reading rests on evidence outside the plate; it does not reproduce
+   the evidence, and the build now refuses output that would.
 
 ## Verification
 
@@ -122,8 +160,19 @@ git-ignored workbook and never reach the website.
 
 This is enforced structurally rather than by discipline. The public build reads
 the transcription module, which has no research columns to read, so no code path
-connects the two. As a backstop the build inspects its own output and refuses to
-write a file containing research markup.
+connects the two. As a backstop the build inspects its own output and deletes
+any page that carries research, checking two different things:
+
+- **Research markup** — the classes a rendered English name or census match
+  would carry.
+- **Research prose** — the vocabulary that research is written *in*. This is
+  the way it would realistically escape: not a stray field, but a footnote
+  explaining *why* a reading was made. Such a sentence carries no markup at
+  all, and until 2026-07-28 nothing would have stopped it. The sweep now covers
+  every page in `docs/`, not only the table pages, and fails closed: the
+  handful of sentences that legitimately discuss the boundary are allowlisted
+  by exact phrase, so rewording them stops the build until the new wording is
+  allowlisted too.
 
 The reason for the care: the repository is public, git history is permanent, and
 some of the people who might be identified through this research have living

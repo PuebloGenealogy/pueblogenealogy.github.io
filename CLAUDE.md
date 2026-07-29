@@ -37,8 +37,24 @@ Enforced structurally, and must stay that way:
 - Research columns live in `data/parsons_genealogy_I.xlsx`, which is git-ignored
 - The public build reads `scripts/transcription*.py`, which have no research
   columns to read — there is no code path from workbook to `docs/`
-- `make_chart.py --public` greps its own output for `class="eng"` /
-  `class="census"` and **deletes the file** rather than write one
+- `make_chart.py --public` inspects its own output and **deletes the file**
+  rather than write one. It checks two things — see `leak_report()`:
+  - **markup**: `class="eng"` / `class="census"`
+  - **prose**: the vocabulary research is written in (`census`, `familysearch`,
+    `national archives`, `widow…`, `enumerat…`, …). Added 2026-07-28, because
+    the markup grep was blind to the way research would actually escape — a
+    footnote explaining *why* a reading was made carries no class at all.
+    `<style>` blocks are excluded (the stylesheet ships `.census{}` rules);
+    scripts are not. Three FAQ sentences that state the privacy boundary are
+    allowlisted by exact phrase, so it **fails closed**: reword the FAQ and the
+    build stops until the new wording is allowlisted
+- `check_published_pages()` sweeps **every** `.html` in `docs/`. The per-table
+  check only ever saw table pages, so the landing page — the one carrying the
+  FAQ — went unchecked entirely until 2026-07-28
+
+The gate protects `docs/` only. It cannot see a code comment, a changelog entry
+or a handoff note, and all of those are committed and public. Research evidence
+goes in the git-ignored workbook and nowhere else in the repo.
 
 Before committing new material, confirm `git status` lists no `.xlsx` and
 nothing under `build/` or `data/`. `/publish` runs this gate.
@@ -234,6 +250,18 @@ to catch "58+59" links those too.
   the card on `data-printed`; a table without one needs no entry. Do not "fix"
   this to 67: printing 67 makes the chart disagree with the scan, which is the
   one thing the edition exists not to do.
+- **Editorial attribution exists, and 83–85 is the only case** (added
+  2026-07-28). Person 68 has two husbands, 69 and 70; the plate's bracket does
+  not say which marriage her children belong to, so `transcription.py` records
+  no father and **the chart draws the plate's single bracket**. The *apparatus*
+  splits them — 83, 84 to 69; 85 to 70 — from `TABLES["i"]["paternity"]`,
+  marked with a dagger linking to `#note-paternity`. Read METHOD.md's
+  *Editorial attribution* before adding another: four rules govern it, and the
+  first is that the chart never carries it. The supporting evidence is external
+  documentary research and **must not enter the repo** — the footnote says a
+  reading rests on evidence outside the plate and stops there. Note this is the
+  first time the edition asserts anything the plate does not; it is not a
+  precedent for "improving" the chart.
 - **English names in parentheses are plate data**, not research additions —
   person 90 "Heʼsa (Hazel)" on Table 1, and the Johnsons and Mana on Table 4.
 - **`d.`** means the person had already died when Parsons recorded the
