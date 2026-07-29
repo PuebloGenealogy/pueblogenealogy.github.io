@@ -4,39 +4,38 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-07-28**, after a session spent entirely on the **person
-card** and the **printed line**.
+Last updated **2026-07-28**, after a session that rebuilt the **person card**,
+made the edition's **first editorial attribution**, and **closed a hole in the
+privacy gate**.
 
 ---
 
 ## Start here in a new chat
 
-You may already have this file in context — a `SessionStart` hook
-(`.claude/hooks/session-start.sh`) loads it automatically and prefixes a
-`STALE:` or `UNCOMMITTED WORK:` line when either applies. If those warnings are
-present, believe them over anything written below.
+A `SessionStart` hook (`.claude/hooks/session-start.sh`) loads this file and
+prefixes `STALE:` or `UNCOMMITTED WORK:` when either applies. Believe those
+warnings over anything written here.
 
-1. Read `CLAUDE.md` — especially **Design invariants** and **The one thing to
-   get right**. Both encode failures that already happened.
-2. Read the top entries of `CHANGELOG.md`, newest first. 2026-07-28 is long;
-   stop when the entries stop mattering.
-3. Bring the preview up: `preview_start`, config name `site`, serves `docs/` on
+1. Read `CLAUDE.md` — **The one thing to get right** and **Design invariants**.
+   Both encode failures that already happened.
+2. Read the top of `CHANGELOG.md`, newest first. 2026-07-28 is long; stop when
+   the entries stop mattering.
+3. Preview: `preview_start`, config name `site`, serves `docs/` on
    `http://localhost:4173`.
 4. Loop: edit `scripts/make_chart.py` → `python3 scripts/make_chart.py --public`
-   → reload. **Never hand-edit `docs/`** — it is regenerated and your change is
+   → reload. **Never hand-edit `docs/`**; it is regenerated and your change is
    discarded silently.
 
-**A rebuild on a new day dirties `docs/` even with no code change**, because
-`dateModified`, the visible "Last updated" line and the sitemap's `lastmod` all
-carry today's date. So "rebuild produces no diff" is only a valid sync check
-*within* a day. If the diff is dates and nothing else, discard it rather than
-committing — bumping `lastmod` tells crawlers the pages changed when they did
-not.
+**A rebuild on a new day dirties `docs/` with dates alone** — `dateModified`,
+the "Last updated" line, the sitemap's `lastmod`. So "rebuild produces no diff"
+is a valid sync check only *within* a day. If the diff is dates and nothing
+else, `git checkout -- docs/` rather than committing: bumping `lastmod` tells
+crawlers the pages changed when they did not.
 
 **Three habits this project keeps re-learning:**
 
-- **Measure, don't look.** Column drift, contrast, row heights, bracket
-  alignment — all of it has a number, and eyes have been wrong here before.
+- **Measure, don't look.** Drift, contrast, row heights, bracket alignment —
+  all of it has a number, and eyes have been wrong here before.
 - **Grep the built file, not the rendered DOM.** A browser read happens after
   the page's script has run. That is how `Theme: Auto` survived a check that
   reported no "Auto" anywhere.
@@ -46,83 +45,88 @@ not.
 
 ## State
 
-Site live, archived, citable, and **fully published**. `main` is clean, no open
-PRs, `docs/` in sync with the renderer, every live page verified SHA-256-
-identical to its committed version.
+**Nothing is half-finished.** `main` is clean, no open PRs, `docs/` in sync with
+the renderer, every live page verified SHA-256-identical to its committed
+version. Published seven times on 2026-07-28.
 
 - Live: <https://pueblogenealogy.github.io/>
 - DOI (concept): `10.5281/zenodo.21637900` → <https://zenodo.org/records/21637901>
-- Published: Genealogy I and IV. Tables 2 and 3 await scans.
+- Published: Genealogy I and IV.
 
-**Five changes shipped on 2026-07-28**, all to how a person reads:
+Two things changed character this session and a cold start should know before
+touching anything:
 
-1. The person card no longer repeats the **misprint note** — the chart row it
-   was opened from already carries it.
-2. The card **sets its own format** instead of inheriting the register's:
-   title at `--t-lg` underlined, indented `PARENTS:` / `SPOUSES:` /
-   `CHILDREN:` rows, each person a rounded chip.
-3. Chips carry the plate's **point after the number** — `56. Weʼdyumă`.
-4. The card no longer repeats the **cross-reference** row either.
-5. The **clan has its own colour** (`--clan`), and the number's point gained
-   `.2em` of air on every printed line.
+- **The edition now asserts one thing the plate does not** — the paternity of
+  83–85. It is marked, footnoted, and kept out of the chart. See
+  `METHOD.md` → *Editorial attribution* for the four rules before adding another.
+- **The privacy gate now reads prose, not just markup**, and sweeps every page
+  in `docs/`. It **fails closed**. If a build stops complaining about
+  vocabulary, that is the gate working — read the message, do not loosen it.
 
 ## The open thread
 
-**There isn't one.** Nothing is half-finished. The next session is *choosing*.
+**Design work on other sections of the site**, deferred by the user to a later
+session. The person card is done; the rest of the page has not been looked at
+with the same eye.
 
-The largest remaining item by a wide margin is **Tables 2 and 3**, blocked on
-scans, not on work.
+Before touching the card again, read `CLAUDE.md`'s card paragraph in **Design
+invariants**. Short version: the card is a *regrouped detached copy* of the
+register entry, so any rule not scoped to `.pcard` silently reformats the
+104-entry register. Verify after any card change — the register's relation links
+must still compute `display:inline`, its entry titles 16px.
 
-Two things to know before touching the card or the printed line again:
+**Tables 2 and 3 are the largest item by far and are held back on purpose**
+until the design settles, so that changes are made against two tables rather
+than four. Worth saying if it comes up: that premise is only half right. The
+design lives in one renderer, so edits do not scale with table count; what
+doubles is the built output to re-verify and the diff to read. The decision is
+the user's and it is not unreasonable — just not for the stated reason.
 
-- **Everything card-specific is scoped to `.pcard` or done on the clone in
-  `openCard`.** The card clones the register entry — one source of truth — so a
-  rule written without that scope silently reformats the 104-entry register
-  below the plate. Verify after any change: the register's relation links must
-  still compute `display:inline` and its entry titles `16px`.
-- **Chips are `.reg-rel > a`, direct children only.** A cross-reference row is
-  *also* a `.reg-rel`, and its links sit inside an `<em>` of running prose. A
-  descendant selector turns those into buttons mid-sentence. `openCard` now
-  drops those rows from the card outright, so nothing should reach the rule —
-  the `>` is what keeps it true if they ever come back.
-
-## Pick up next — small, and genuinely open
+## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
-| **Register's relation lists lack the point** | ~1 line | They read `56 Weʼdyumă` while the register's own *entry titles* read `56.`. The cards lost that inconsistency on 2026-07-28; the register still has it. One line in `rel_link` — but it changes the apparatus, not just the card, which is why it was left for a decision |
-| Wikidata item | ~10 min, **needs the user** | Payload ready at `wikidata-quickstatements.txt`, all 18 ids verified live; creating the item needs a logged-in account. **Not urgent** |
-| Wikipedia external link | Slow, **needs the user** | Propose on the *Elsie Clews Parsons* Talk page — a direct edit is a COI and gets reverted |
-| Tables 2 and 3 | Blocked on scans | Worth more than everything else here combined |
+| **Confirm the 83 / 84 attribution** | Needs the user + the records | 85 is firmly pinned — born after 69's death. 83 and 84 rest on ages that do not cleanly reconcile with the external evidence. It is **published and citable now**, so this is the one open item with a correctness edge |
+| **Register's relation lists lack the point** | ~1 line | They read `56 Weʼdyumă` while the register's own entry titles read `56.`. The cards lost that inconsistency; the register kept it. One line in `rel_link` — but it changes the apparatus, not just the card, which is why it was left |
+| Wikidata item | ~10 min, **needs the user** | Payload ready at `wikidata-quickstatements.txt`, 18 ids verified. **Not urgent** |
+| AMNH Digital Library | Slow, **needs the user** | Pays three ways: likely source of the missing plates, a strong inbound link, and the handle for `.zenodo.json`, whose `related_identifiers` is **absent entirely** |
+| Tables 2 and 3 | Blocked on scans **and** on the design decision above | Worth more than everything else here combined |
+
+**Do not cut a GitHub release** to mark a checkpoint: Zenodo's webhook mints a
+new version doi from it. Everything since v1.0.0 is presentational plus one
+apparatus attribution; no transcription data changed. Save the version doi for
+when Table 2 or 3 lands.
 
 ## Decisions already made — don't re-litigate
 
-- **No per-clan colours, and no colour-coding of sex.** Both built and reverted;
-  measurements in `CHANGELOG.md`. The sex pair measured 1.05:1, and a 13-clan
-  palette collapsed to about one just-noticeable difference under deuteranopia.
-  **`--clan` is not this decision re-opened** — it gives the *field* one colour,
-  so two colours must be told apart rather than thirteen, and they differ in
-  lightness as well as hue. **Three** colours on a table page are now not
-  `--ink`: `--sic`, `--muted-fixed`, `--clan`. A fourth needs the same evidence.
 - **The person card carries the number, never the annotation.** Both the
-  misprint note and the cross-reference were removed for one reason: the chart
-  row the reader opened the card *from* already prints them. Note the one
-  consequence, in case it is ever revisited — `xref_printed` prints a
-  cross-reference only at a person's **first** occurrence, so opening 67's card
-  from the misnumbered 68 line no longer surfaces it outside the register.
+  misprint note and the cross-reference were removed from it: the chart row the
+  reader opened the card *from* already prints them. One consequence, in case
+  it is revisited — `xref_printed` prints a cross-reference only at a person's
+  **first** occurrence, so 67's card opened from the misnumbered 68 line does
+  not surface it outside the register.
 - **A person-level misprint variant was built and rejected.** `Chart.sic` →
-  `data-sic` on the register entry → the note on *every* card of that person. It
-  worked and was measured; the user judged it multiplied the redundancy. Take it
-  from git (`c38d313^`) rather than rebuilding it.
+  `data-sic` → the note on every card of that person. It worked and was
+  measured; it multiplied the redundancy. Take it from git (`c38d313^`).
+- **A build timestamp was built and reverted.** A clock time on the "Last
+  updated" line would make `docs/` differ on every rebuild, down to the minute,
+  killing the within-a-day sync check. See `CHANGELOG.md`.
+- **No per-clan colours, and no colour-coding of sex.** Both built and reverted;
+  the sex pair measured 1.05:1, and a 13-clan palette collapsed to about one
+  just-noticeable difference under deuteranopia. **`--clan` is not that decision
+  re-opened** — one colour for the *field*, so two colours must be told apart
+  rather than thirteen. Three colours on a table page are now not `--ink`:
+  `--sic`, `--muted-fixed`, `--clan`. A fourth needs the same evidence.
 - **No on-page chart key.** Built twice, removed twice. The notation lives in
   the footer's *Navigating this chart* list, whose first three items are the
   only place `+`, `F.`/`M.` and the leader rule are decoded.
 - **The plate's misprint is reproduced, not corrected.** Table 1 prints **68**,
-  as the plate has it, ringed in `--sic`, linked to 67. If someone "fixes" it
-  back to 67, that is the bug.
+  ringed in `--sic`, linked to 67. If someone "fixes" it to 67, that is the bug.
+- **Research evidence never enters the repo** — not a code comment, not a
+  changelog entry, not this file. The gate protects `docs/` only. The
+  git-ignored workbook is the place.
 - **No custom domain** for now. The doi is the durable citable identifier and
-  resolves independently of the host. If revisited, decide it *before* seeding
-  inbound links.
+  resolves independently of the host.
 - **Publishing goes through `/publish`.** Its last gate is *record it in
   `CHANGELOG.md`*, and skipping the skill is how the changelog once fell behind.
 
@@ -132,5 +136,5 @@ Two things to know before touching the card or the printed line again:
 - **Glyph rendering on Windows and Android was checked on device**; both render
   correctly. The cmap reasoning is in `CLAUDE.md` as the durable evidence.
 - **The GitHub Pages build API misreports the deployed commit.** Verify deploys
-  by comparing the live page's SHA-256 against the committed `docs/` file, not
-  by reading the build API. This session did exactly that, five times.
+  by comparing the live page's SHA-256 against the committed `docs/` file, never
+  by reading the build API. This session did exactly that, seven times.
