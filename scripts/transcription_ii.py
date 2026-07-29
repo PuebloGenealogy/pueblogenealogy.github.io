@@ -398,6 +398,36 @@ PERSONS = [
      "English name printed as the name itself; no cross-reference on this line"),
     (204, 4, "F", "Yăaiʼdyid˙yuwi",   "",       "",   "Sun",    "",   "", "See Gen. I, 49", ""),
     (205, 4, "M", "Owi˙ʼd˙zĭraiʼ",    "",       "",   "Sun",    "",   "", "See Gen. I, 47", ""),
+    (206, 4, "F", "",                 "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
+    (207, 4, "M", "",                 "",       "",   "Bear",   "",   "", "", "name printed as a dash"),
+    (208, 4, "F", "Gaaish",           "",       "",   "Bear",   "",   "", "See Gen. I, 53",
+     "Gen. I 53 is 'Gaaiʼd˙yuitsʼa', F, Bear, aged 3 -- the same girl under a "
+     "shorter form of the name. Each plate is recorded as it prints"),
+    (209, 4, "F", "Onăiʼ",            "",       "10", "Bear",   "",   "", "", ""),
+    (210, 4, "M", "Niăiʼ",            "",       "4",  "Bear",   "",   "", "", ""),
+    (211, 4, "M", "Shʼauwiăiʼ",       "",       "3",  "Bear",   "",   "", "", ""),
+    # 212-219 print no sex letter: number, dash, clan only -- the same setting
+    # as 85-100 and 106-115 in the upper block. Stored empty, not guessed.
+    (212, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (213, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (214, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (215, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (216, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (217, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (218, 4, "",  "",                 "",       "",   "Chaparral Cock", "", "", "", "no sex printed; name printed as a dash"),
+    (219, 4, "",  "",                 "",       "",   "Chaparral Cock", "", "", "", "no sex printed; name printed as a dash"),
+    (220, 4, "F", "Shauʼkʼămă",       "",       "15", "Sun",    "",   "", "", ""),
+    (221, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (222, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (223, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (224, 4, "",  "",                 "",       "",   "Sun",    "",   "", "", "no sex printed; name printed as a dash"),
+    (225, 4, "",  "Shauʼd˙yidĕ",      "",       "15", "Parrot", "",   "", "",
+     "no sex printed, although this line does carry a name and an age. Every "
+     "other sexless line on the plate prints a dash for the name as well; this "
+     "is the only one that does not. Confirmed at an 800 px crop"),
+    (226, 4, "",  "",                 "",       "",   "Parrot", "d.", "", "", "no sex printed; name printed as a dash"),
+    (227, 4, "M", "",                 "",       "",   "Corn",   "d.", "", "", "name printed as a dash"),
+    (228, 4, "F", "",                 "",       "",   "Corn",   "d.", "", "", "name printed as a dash"),
 ]
 
 # ---------------------------------------------------------------------------
