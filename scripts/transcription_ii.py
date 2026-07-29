@@ -54,7 +54,7 @@ PERSONS = [
     (10, 3, "M", "Kʼaikyie",         "",       "",   "Lizard", "",   "", "", ""),
     (11, 3, "F", "Goyaiʼd˙yuwĕʼ",    "",       "70", "Water",  "",   "", "", ""),
     (12, 3, "M", "Gʼausire",         "",       "",   "Oak",    "d. 1915", "", "", ""),
-    (13, 3, "F", "Dzia˙ʼyotsʼa",     "",       "",   "Water",  "d.", "",
+    (13, 3, "F", "Dzia˙ʼyotsʼa",     "Tsiaiutsa", "", "Water", "d.", "",
      "For descendants, see above",
      "DISCREPANCY, and now a VERIFIED one. The plate prints this person twice "
      "and the two readings do not agree: 'Dzia˙ʼyotsʼa' in the upper block, "
@@ -63,8 +63,10 @@ PERSONS = [
      "both are unambiguous. The lower carries no diacritics at all. So the "
      "earlier note's 'the upper reading is the less certain' is withdrawn: "
      "neither is uncertain, and these are not variant readings of one setting "
-     "but two different settings of one name. EDITORIAL CHOICE, pending the "
-     "user -- see the STATE block, and 54 and 125 alongside it"),
+     "but two different settings of one name. DECIDED 2026-07-29 (user): "
+     "carry BOTH, upper first, lower in alt_name -- see REPEAT_PERSON_NAMES. "
+     "These two are the furthest apart of the three: not a spelling variant "
+     "but a different name"),
     (14, 3, "M", "S˙ʼiʼrowaisiwa",   "Kʼaiʼsh˙dŏwăʼ", "", "Parrot", "d. 1918", "",
      "For descendants, see above",
      "braced: the plate joins two names with a '{' for this one person -- "
@@ -136,14 +138,16 @@ PERSONS = [
      "VERIFIED 2026-07-29 at x 3880 y 2690: there IS a raised dot between "
      "'n' and 'ă'. The earlier reading dropped it"),
     (53, 4, "F", "Kawiʼtsʼirăiʼ",    "",       "50", "Water",  "",   "", "", ""),
-    (54, 4, "M", "Ma˙ʼrani",         "",       "",   "Sun",    "",   "", "",
+    (54, 4, "M", "Ma˙ʼrani",         "Ma˙ʼran˙i", "", "Sun",   "",   "", "",
      "DISCREPANCY, and now a VERIFIED one -- both occurrences were re-read at "
      "high magnification on 2026-07-29 and both are unambiguous. Upper block "
      "(x 3880, y 2910) reads 'Ma˙ʼrani'; lower block (x 3760, y 10780) reads "
      "'Ma˙ʼran˙i', with a raised dot before the final 'i'. So this is not a "
-     "reading problem: the plate sets one man's name two ways, and the "
-     "edition must print one. EDITORIAL CHOICE, pending the user -- see the "
-     "STATE block, and 13 and 125 alongside it"),
+     "reading problem: the plate sets one man's name two ways. DECIDED "
+     "2026-07-29 (user): carry BOTH, upper first, lower in alt_name -- see "
+     "REPEAT_PERSON_NAMES. These two differ by a single raised dot, which is "
+     "the narrowest of the three and the one where a reader most needs to be "
+     "told the difference is the plate's and not a typo of ours"),
     (55, 4, "M", "Go˙tyʼiăiʼ",       "",       "65", "Corn",   "",   "", "", "second husband of 53"),
     (56, 4, "M", "Dzawi˙răi",        "",       "",   "Turkey", "",   "", "", ""),
     (57, 4, "F", "",                 "",       "",   "",       "",   "", "", "name printed as a dash; no clan printed"),
@@ -246,14 +250,14 @@ PERSONS = [
     (122, 5, "F", "Dzaid˙yuwiʼ",     "",       "30", "Water",  "",   "", "", ""),
     (123, 5, "M", "I˙ʼg˙ugăi",       "",       "33", "Sun",    "",   "", "", ""),
     (124, 5, "M", "Dzĭo˙kwid˙yuʼă",  "",       "19", "Water",  "",   "", "", ""),
-    (125, 5, "F", "Gowaʼk˙ʼd˙yăiʼ",  "",       "18", "Water",  "",   "", "",
+    (125, 5, "F", "Gowaʼk˙ʼd˙yăiʼ",  "Gowaʼkʼad˙zăiʼ", "18", "Water", "", "", "",
      "DISCREPANCY -- NOT A READING PROBLEM. Printed twice, and THE PLATE SETS "
      "THE TWO DIFFERENTLY: 'Gowaʼk˙ʼd˙yăiʼ' in the upper block (crop x 5080, "
      "y 3150) and 'Gowaʼkʼad˙zăiʼ' in the lower (crop x 4160, y 9555). Both "
      "were re-read at 380 px on 2026-07-29 and both are unambiguous at that "
      "size, so no tighter crop will settle it. Age 18 and clan Water agree in "
-     "both. One person, one name to print -- an EDITORIAL choice, and one for "
-     "the user, not for the transcriber"),
+     "both. DECIDED 2026-07-29 (user): carry BOTH, upper first, lower in "
+     "alt_name -- see REPEAT_PERSON_NAMES"),
     (126, 5, "M", "Yo˙ʼkwi",         "",       "23", "Chaparral Cock", "", "", "", ""),
     (127, 5, "F", "Howa˙kʼă",        "",       "",   "Water",  "d. 1919 at 13", "", "", ""),
     (128, 5, "F", "Mary Saiu",       "",       "",   "",       "",   "", "", "no clan printed"),
@@ -660,6 +664,47 @@ PERSONS = [
 DUPLICATE_PLATE_NUMBERS = {1010: 101}
 
 # ---------------------------------------------------------------------------
+# REPEAT_PERSON_NAMES
+#
+# Three people are drawn twice on this plate and THE PLATE SETS THE NAME
+# DIFFERENTLY IN THE TWO PLACES. All six settings were re-read at high
+# magnification (13 and 54 on 2026-07-29, 125 on the same day at 380 px) and
+# every one is unambiguous, so this is not a reading problem to be cropped
+# away: the plate genuinely prints one person's name two ways.
+#
+# DECIDED 2026-07-29 (user): CARRY BOTH. The first occurrence in reading
+# order -- the upper block, in all three cases -- goes in name_as_printed;
+# the second goes in alt_name, which the renderer prints as " (second)".
+# Suppressing either would hide something the plate says.
+#
+# Read as: {id: (as printed at the first occurrence, at the second)}
+REPEAT_PERSON_NAMES = {
+    13:  ("Dzia˙ʼyotsʼa",   "Tsiaiutsa"),       # a different name, not a variant
+    54:  ("Ma˙ʼrani",       "Ma˙ʼran˙i"),       # one raised dot apart
+    125: ("Gowaʼk˙ʼd˙yăiʼ", "Gowaʼkʼad˙zăiʼ"),  # age 18 and Water in both
+}
+
+# ONE THING THIS DECISION OWES GATE 4, and it is not optional. alt_name now
+# carries THREE different meanings on this plate, and the renderer cannot
+# tell them apart -- it prints " (alt)" for all of them:
+#
+#   1. an ENGLISH NAME the plate itself prints in parentheses (27, 42, 43,
+#      140). Genuinely parenthetical on the page.
+#   2. the second half of a BRACED PAIR, where the plate joins two names with
+#      a '{' for one person (14). Not parenthetical on the page.
+#   3. the second SETTING of a repeat person's name (13, 54, 125, here).
+#      Not parenthetical on the page either.
+#
+# Only the first is what the plate looks like. So the three at (3) will
+# render in a form the plate never sets, exactly as (2) already does -- the
+# cost the user accepted in choosing to carry both. What must NOT happen is
+# a reader taking "Ma˙ʼrani (Ma˙ʼran˙i)" for an English name or an editorial
+# gloss. The apparatus therefore has to say, once, that a parenthesis after
+# a name on THIS table means one of those three things, and name which
+# people are which. Route every person reference through _p().
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
 # STATE -- read and encoded; self_check() passes; NOT yet registered
 #
 # DONE:  Gate 1, plate numbers 1-274 plus the second 101 -- 275 records, no
@@ -671,12 +716,17 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 #        closes at 214 children + 61 spouse-only = 275.
 #        Gate 1b, every unverified glyph reading re-read at high
 #        magnification on 2026-07-29. Nothing is marked SEE TODO any more.
-# TO DO: the three repeat-person name choices that need the user (13, 54,
-#        125). Then Gate 4 -- subset_font.py, register in TABLES, render, and
-#        MEASURE: column drift 0 px at every one of the SIX generations, which
-#        nothing in this layout has been tested at.
-#        Then the two apparatus footnotes: this plate's cross-reference
-#        displacement, and the sentence it adds to Table 1's #note-misprint.
+#        The three repeat-person name choices, decided by the user the same
+#        day: carry both settings. See REPEAT_PERSON_NAMES, which self_check()
+#        now holds against the records.
+# TO DO: NOTHING IS WAITING ON A DECISION. Gate 4 next -- subset_font.py,
+#        register in TABLES, render, and MEASURE: column drift 0 px at every
+#        one of the SIX generations, which nothing in this layout has been
+#        tested at.
+#        Then THREE apparatus items, not two: this plate's cross-reference
+#        displacement; the sentence it adds to Table 1's #note-misprint; and
+#        the note REPEAT_PERSON_NAMES owes, saying what a parenthesis after a
+#        name means on this table, since alt_name now carries three meanings.
 #
 # WHERE EACH COLUMN WAS READ, in native pixel coordinates of
 # sources/parsons-1923-table-2.jpg. Columns are ~1300-1500 px wide and text
@@ -728,12 +778,14 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 #   - U+02D8 '˘' IS NEW, at 170 only, and is present in both faces.
 #   - 14's 'ŏ' (U+014F) and 84's 'ᵉ' (U+1D49) were already confirmed.
 #
-# AND THREE PEOPLE DRAWN TWICE WHOSE TWO OCCURRENCES DISAGREE. These are a
-# different kind of open item from the marks above, and the difference is the
-# point: THEY ARE NOT READING PROBLEMS. 125's pair was re-read at 380 px on
-# 2026-07-29 and both settings are unambiguous at that size. The plate simply
-# prints one person's name two ways, and the edition must print one. That is
-# an EDITORIAL choice and it belongs to the user:
+# AND THREE PEOPLE DRAWN TWICE WHOSE TWO OCCURRENCES DISAGREE -- SETTLED
+# 2026-07-29, and no longer an open item. The point about them was that THEY
+# ARE NOT READING PROBLEMS: all six settings were re-read at high
+# magnification and every one is unambiguous, so the plate genuinely prints
+# one person's name two ways. The user's decision is to CARRY BOTH, first
+# occurrence in name_as_printed and second in alt_name; the pairs are
+# declared in REPEAT_PERSON_NAMES and held against the records by
+# self_check(). Listed here for the reader who arrives at one of them:
 #   - 13   Dzia˙ʼyotsʼa / Tsiaiutsa          (BOTH re-read 2026-07-29 and both
 #          unambiguous; the lower carries no diacritics at all. The earlier
 #          "upper reading is the less certain" is withdrawn)
@@ -1218,6 +1270,23 @@ def self_check() -> list[str]:
             problems.append(f"synthetic id {sid} is declared but not in PERSONS")
         if printed not in set(ids):
             problems.append(f"{sid} claims to print {printed}, which is not a person")
+
+    # The three repeat people must actually carry both of the plate's settings.
+    # This is here because the pair lives in two places -- the tuple and
+    # REPEAT_PERSON_NAMES -- and a later edit to one is otherwise silent.
+    by_id = {p[0]: p for p in PERSONS}
+    for pid, (first, second) in REPEAT_PERSON_NAMES.items():
+        if pid not in by_id:
+            problems.append(f"REPEAT_PERSON_NAMES names {pid}, which is not a person")
+            continue
+        got = (by_id[pid][3], by_id[pid][4])
+        if got != (first, second):
+            problems.append(
+                f"{pid}: record has {got!r} but REPEAT_PERSON_NAMES declares "
+                f"{(first, second)!r}"
+            )
+        if first == second:
+            problems.append(f"{pid} is listed as a repeat but both settings are identical")
 
     clan = {p[0]: p[6] for p in PERSONS}
     # Laguna clan membership is matrilineal: a child's clan is its mother's.
