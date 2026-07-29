@@ -116,7 +116,12 @@ PERSONS = [
     (51, 4, "M", "Haiʼyuwăi˙siwăʼ",  "",       "",   "Water",  "",   "", "", ""),
     (52, 4, "F", "Gauʼs˙inăiʼ",      "",       "",   "Lizard", "d.", "", "", "mark before 'ăi' unverified -- SEE TODO"),
     (53, 4, "F", "Kawiʼtsʼirăiʼ",    "",       "50", "Water",  "",   "", "", ""),
-    (54, 4, "M", "Ma˙ʼrani",         "",       "",   "Sun",    "",   "", "", ""),
+    (54, 4, "M", "Ma˙ʼrani",         "",       "",   "Sun",    "",   "", "",
+     "DISCREPANCY -- SEE TODO. Printed twice. The lower-block occurrence "
+     "(native crop at x 3760, y 10780) reads 'Ma˙ʼran˙i', with a raised dot "
+     "before the final 'i' that the upper-block reading above does not carry. "
+     "The lower reading is the clearer. Re-read the upper occurrence before "
+     "Gate 3"),
     (55, 4, "M", "Go˙tyʼiăiʼ",       "",       "65", "Corn",   "",   "", "", "second husband of 53"),
     (56, 4, "M", "Dzawi˙răi",        "",       "",   "Turkey", "",   "", "", ""),
     (57, 4, "F", "",                 "",       "",   "",       "",   "", "", "name printed as a dash; no clan printed"),
@@ -208,7 +213,12 @@ PERSONS = [
     (122, 5, "F", "Dzaid˙yuwiʼ",     "",       "30", "Water",  "",   "", "", ""),
     (123, 5, "M", "I˙ʼg˙ugăi",       "",       "33", "Sun",    "",   "", "", ""),
     (124, 5, "M", "Dzĭo˙kwid˙yuʼă",  "",       "19", "Water",  "",   "", "", ""),
-    (125, 5, "F", "Gowaʼk˙ʼd˙yăiʼ",  "",       "18", "Water",  "",   "", "", ""),
+    (125, 5, "F", "Gowaʼk˙ʼd˙yăiʼ",  "",       "18", "Water",  "",   "", "",
+     "DISCREPANCY -- SEE TODO. Printed twice, and the two readings do not "
+     "agree: 'Gowaʼk˙ʼd˙yăiʼ' in the upper block, 'Gowaʼkʼad˙zăiʼ' in the lower "
+     "(native crop at x 3790, y 9500). The lower reading is the clearer of the "
+     "two. Re-read the upper occurrence before Gate 3. The age 18 and the clan "
+     "Water agree in both"),
     (126, 5, "M", "Yo˙ʼkwi",         "",       "23", "Chaparral Cock", "", "", "", ""),
     (127, 5, "F", "Howa˙kʼă",        "",       "",   "Water",  "d. 1919 at 13", "", "", ""),
     (128, 5, "F", "Mary Saiu",       "",       "",   "",       "",   "", "", "no clan printed"),
@@ -296,6 +306,44 @@ PERSONS = [
      "trailing mark after 'ash' unverified -- SEE TODO"),
     (171, 3, "F", "Shayaʼai",        "",       "",   "Sun",    "",   "", "See Gen. I, 21",
      "number printed without a following period"),
+    (172, 3, "M", "Dziraiʼᶦtyʼi",     "",       "",   "Sun",    "",   "", "See Gen. I, 22", ""),
+    (173, 3, "F", "Dziʼs˙dyuwi",      "",       "",   "Bear",   "d.", "", "See Gen. I, 23", ""),
+    (174, 3, "M", "Shta˙ʼyăi",        "",       "",   "",       "",   "", "",
+     "no clan printed; name printed without a following period"),
+    (175, 3, "F", "Kio˙ʼd˙yiăi",      "",       "",   "Bear",   "",   "", "", ""),
+    (176, 3, "F", "Dzaʼwaiʼᶦy˙unăiʼ", "",       "",   "Sun",    "",   "", "", ""),
+    (177, 3, "M", "Maiʼs˙iwă",        "",       "",   "Turkey", "",   "", "",
+     "set in noticeably larger type than the lines around it -- an observation "
+     "of this copy's setting, not data"),
+    (178, 3, "F", "Shuwăiʼ",          "",       "",   "Chaparral Cock", "", "", "", ""),
+    (179, 3, "M", "",                 "",       "",   "White",  "",   "", "",
+     "name printed as a dash. 'White' stands where every other line prints a "
+     "clan. Recorded as printed, not interpreted"),
+    (180, 3, "F", "Säpʼᵃ",            "",       "",   "Bear",   "d.", "", "",
+     "diaeresis on 'a' (U+00E4) -- a codepoint neither Table 1 nor Table 4 "
+     "uses. Confirmed at a 330 px crop"),
+    (181, 3, "M", "Ma˙tsʼăĭ yăiʼ",    "",       "",   "Bear",   "",   "", "",
+     "the plate sets this name as two words, with a space; confirmed at a "
+     "460 px crop"),
+    (182, 3, "F", "Gwiʼtyʼi",         "",       "",   "Sun",    "",   "", "", ""),
+    (183, 3, "M", "",                 "",       "",   "Mexican", "",  "", "",
+     "name printed as a dash. 'Mexican' stands where every other line prints a "
+     "clan, as 'White' does at 179. Recorded as printed, not interpreted. "
+     "This is the first husband of 169, whose line here carries 'For second "
+     "husband and descendants, see above'"),
+    (184, 3, "M", "Djaiʼd˙ziĕ",       "",       "30", "Parrot", "",   "", "", ""),
+    (185, 3, "F", "Kăauʼd˙yuwi",      "",       "35", "Corn",   "",   "", "", ""),
+    (234, 4, "F", "Go˙ʼyăiʼ",         "",       "",   "Eagle",  "",   "", "",
+     "second wife of 54, printed as a second '+' line under him below 53. "
+     "Generation follows her husband's upper-block value, not her column in "
+     "the lower block -- see the block-frame question at Gate 2"),
+    (235, 3, "M", "Charley Kai",      "",       "",   "Sun",    "",   "", "",
+     "English name printed as the name itself, as at 116-118, 128 and 134"),
+    (236, 3, "F", "Kaweishdyiŭr",     "",       "",   "Water",  "",   "", "", ""),
+    (237, 3, "F", "Tsʼid˙yuwiʼ",      "",       "",   "Sun",    "d.", "", "", ""),
+    (238, 3, "M", "Yo˙rimăiʼ",        "Fred Kai", "", "Sun",    "",   "", "",
+     "English name printed in parentheses on the plate"),
+    (239, 3, "F", "Dziwiʼs˙dy˙uwi",   "",       "",   "Chaparral Cock", "", "", "", ""),
 ]
 
 # ---------------------------------------------------------------------------
