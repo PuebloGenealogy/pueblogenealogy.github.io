@@ -76,7 +76,10 @@ PERSONS = [
     (20, 3, "M", "Kyʼĭauʼd˙yăĭăi",   "",       "",   "Sun",    "d.", "", "See Gen. I, 11",
      "medial vowels unverified -- SEE TODO"),
     (21, 3, "M", "Dziwaikch",        "",       "35", "Water",  "",   "", "",
-     "trailing marks after 'ch' unverified -- SEE TODO; third husband of 19"),
+     "trailing marks after 'ch' unverified -- SEE TODO. An earlier note here "
+     "called him '19's third husband'; the plate prints no such words, only a "
+     "second '+' line under her (verified at x 2450, y 4620). He is recorded "
+     "as her second drawn husband and nothing more"),
     (22, 3, "M", "Shaiyo˙ʼsi˙ĕ",     "",       "48", "Water",  "",   "", "", ""),
     (23, 3, "F", "Go˙wʼăiʼ",         "",       "",   "Lizard", "",   "", "", ""),
     (24, 3, "M", "Hĕʼnadyi",         "",       "",   "Water",  "",   "", "", ""),
@@ -815,10 +818,133 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 # whether these belong in `clan` at all -- not before.
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# UNIONS  (each '+' line on the plate is a marriage)
+# union_id, wife_id, husband_id, wife_marriage_order, husband_marriage_order, note
+#   order = 1 unless the plate draws that person with more than one spouse
+#   0 in an id field = spouse not shown on the plate
+#
+# HOW THESE WERE TRACED (2026-07-29). Not from the text and not from the clan:
+# from the RULES. For each generation boundary a narrow strip of the bracket
+# column was cut at native resolution -- about 260 px wide, so the vertical
+# rule and every leader rule entering it are the only things in the frame --
+# and then a 1550 px strip spanning both columns, which shows each mother's
+# horizontal rule running from her line to her children's bracket. The clan
+# was used afterwards, as the independent check the method intends, never as
+# the evidence.
+#
+# That method caught one thing reading by row alignment would have got wrong:
+# 31 sits INSIDE the vertical extent of 9+10's bracket, at the children's
+# indent, between 29 and 33 -- and has no leader rule. The rule passes his row
+# with nothing attached (verified at x 3580, y 120, 260 x 1500). He is not
+# 9+10's son; he is a husband whose own parents the plate does not draw, the
+# same pattern as 232+233 in the lower block. His clan is Water like theirs,
+# so the clan check could not have found this.
+# ---------------------------------------------------------------------------
 UNIONS = [
-    # (union_id, wife_id, husband_id, wife_order, husband_order, note)
+    # ---- upper block ----------------------------------------------------
+    ("U01",   1,   2, 1, 1, ""),
+    ("U02",   3,   4, 1, 1, ""),
+    ("U03",   5,   6, 1, 1, ""),
+    ("U04",   7,   8, 1, 1, ""),
+    ("U05",   9,  10, 1, 1, ""),
+    ("U06",  11,  12, 1, 1, ""),
+    ("U07",  13,  14, 1, 1, "both are drawn again in the lower block as children of 154+155"),
+    ("U08",  16,  15, 1, 1, ""),
+    ("U09",  18,  17, 1, 1, ""),
+    ("U10",  19,  20, 1, 1, "19 has two husbands drawn, 20 and 21"),
+    ("U11",  19,  21, 2, 1, "19 has two husbands drawn, 20 and 21"),
+    ("U12",  23,  22, 1, 1, ""),
+    ("U13",  25,  24, 1, 1, ""),
+    ("U14",  27,  26, 1, 1, "26 has two wives drawn, 27 and 28, and the plate "
+                            "splits his children between their two lines"),
+    ("U15",  28,  26, 1, 2, "26's second wife"),
+    ("U16",  29,  30, 1, 1, ""),
+    ("U17",  32,  31, 1, 1, "31 has no leader rule -- his parents are not drawn"),
+    ("U18",  33,  34, 1, 1, ""),
+    ("U19",  37,  36, 1, 1, ""),
+    ("U20",  39,  38, 1, 1, "no children drawn for this marriage"),
+    ("U21",  42,  43, 1, 1, ""),
+    ("U22",  46,  45, 1, 1, ""),
+    ("U23",  48,  47, 1, 1, "48 has two husbands drawn, 47 and 49; 49's '+' line "
+                            "sits under 47, who is himself male, so 49 cannot be "
+                            "47's spouse"),
+    ("U24",  48,  49, 2, 1, "48's second husband"),
+    ("U25",  52,  51, 1, 1, ""),
+    ("U26",  53,  54, 1, 1, "53 has two husbands drawn, 54 and 55. 54 is drawn "
+                            "again in the lower block as the son of 232+233"),
+    ("U27",  53,  55, 2, 1, "53's second husband"),
+    ("U28",  57,  56, 1, 1, ""),
+    ("U29",  58,  59, 1, 1, ""),
+    ("U30",  61,  60, 1, 1, "60 has two wives drawn, 61 and 62, and the plate "
+                            "splits his children between their two lines"),
+    ("U31",  62,  60, 1, 2, "60's second wife"),
+    ("U32", 119, 120, 1, 1, ""),
+    ("U33", 122, 123, 1, 1, ""),
+    ("U34", 125, 126, 1, 1, "126 is drawn again in the lower block as a child of "
+                            "158+160; there he is the primary and 125 the '+' line"),
 ]
 
+# ---------------------------------------------------------------------------
+# CHILDREN  (each bracketed sibling group on the plate)
+# union_id, mother_id, father_id, child_id, note
+#   father_id = 0, union_id = "" when the plate does not let paternity be
+#   assigned -- which here means the mother has two husbands drawn and only
+#   one bracket, so the group hangs off her line alone. Table 1 treats its
+#   68 -> 83, 84, 85 exactly this way.
+# ---------------------------------------------------------------------------
+_GROUPS = [
+    # ---- upper block ----------------------------------------------------
+    ("U01",   1,   2, [3, 5, 7]),
+    ("U02",   3,   4, [9, 11]),
+    ("U03",   5,   6, [13]),
+    ("U04",   7,   8, [15, 17, 19, 22, 24]),
+    ("U05",   9,  10, [26, 29, 33]),
+    ("U06",  11,  12, [35, 36, 38, 40, 41, 42, 44]),
+    ("U07",  13,  14, [45, 47, 50, 51, 53]),
+    ("U08",  16,  15, [56, 58, 60, 63, 64]),
+    ("U09",  18,  17, [65, 66]),
+    ("",     19,   0, [67, 68, 69, 70, 71, 72, 73, 74]),
+    ("U12",  23,  22, [75, 76, 77, 78, 79]),
+    ("U13",  25,  24, [80, 81, 82]),
+    ("U14",  27,  26, [83, 84]),
+    ("U15",  28,  26, [85, 86, 87, 88, 89, 90]),
+    ("U16",  29,  30, [91, 92, 93, 94, 95, 96]),
+    ("U17",  32,  31, [97]),
+    ("U18",  33,  34, [98, 99]),
+    ("U19",  37,  36, [100]),
+    ("U21",  42,  43, [101, 1010, 102, 103, 104, 105]),
+    ("U22",  46,  45, [106, 107, 108, 109, 110, 111, 112, 113, 114, 115]),
+    ("",     48,   0, [116, 117, 118]),
+    ("U25",  52,  51, [119, 121]),
+    ("",     53,   0, [122, 124, 125, 127]),
+    ("U28",  57,  56, [128, 129]),
+    ("U29",  58,  59, [130, 131, 132, 133, 134, 135, 136]),
+    ("U30",  61,  60, [137, 138, 139]),
+    ("U31",  62,  60, [140, 141, 142, 143]),
+    ("U32", 119, 120, [144, 145, 146]),
+    ("U33", 122, 123, [147, 148, 149, 150, 151]),
+    ("U34", 125, 126, [152, 153]),
+]
+
+_CHILD_NOTES = {
+    13:  "drawn again in the lower block as a child of 154+155, carrying "
+         "'For descendants, see above'",
+    67:  "19 has two husbands drawn, 20 and 21, and the plate gives this group "
+         "one bracket off her line; paternity is not assigned",
+    116: "48 has two husbands drawn, 47 and 49; the plate gives this group one "
+         "bracket off her line, so paternity is not assigned",
+    122: "53 has two husbands drawn, 54 and 55, so paternity is not assigned. "
+         "The lower block prints 'For descendants see 122, 147-151' on 53's "
+         "line under 54, which independently confirms the group AND its "
+         "grandchildren -- but it is printed on her line, where descendants "
+         "always go, so it says nothing about which husband",
+    125: "drawn again in the lower block, where 126 is the primary and 125 the "
+         "'+' line",
+}
+
 CHILDREN = [
-    # (union_id, mother_id, father_id, child_id, note)
+    (union_id, mother, father, child, _CHILD_NOTES.get(child, ""))
+    for union_id, mother, father, kids in _GROUPS
+    for child in kids
 ]
