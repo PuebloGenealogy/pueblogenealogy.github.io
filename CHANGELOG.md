@@ -61,6 +61,29 @@ Nothing in the transcription changed. Four things a reader touches did.
   `.pc-cols--pair > .pc-col + .pc-col` (0,3,0) — one specificity point short, so
   a stacked second column kept a 16px indent and a rule hanging off nothing.
 
+### Considered and not done
+
+- **Aligning the plate bar to the statistics line itself** was the other reading
+  of the request, and was offered with its cost. There is no robust CSS for it:
+  the line is centred text whose width changes per table and wraps on a narrow
+  screen, so the bar would have to match a sibling's *content* width. That needs
+  either CSS anchor positioning (Chrome-only, and it would make the bar
+  absolutely positioned) or moving the statistics line out of the title block —
+  which `CLAUDE.md` pins as one of the four things that block *is*. The user
+  chose the plate's rail. Don't re-open it without a mechanism that survives
+  Safari.
+- **`.imprint` was not touched.** Spreading its words to the container's edges
+  would have "aligned" it by making a centred imprint line into a justified row,
+  and the landing page's `.c-stats` would have had to follow.
+
+### One thing left unverified
+
+`Enter` in the Find field could not be exercised through the browser automation
+— character keys reach the input but the synthetic `Enter` never submits the
+form, and `Escape` likewise never reaches the popover. The submit handler itself
+was verified directly (`requestSubmit()`), and implicit submission is unchanged
+by anything here, but nobody has watched a real keypress do it in this session.
+
 ## 2026-07-28 — a build timestamp, built and reverted
 
 - **Reverted at the user's request; recorded so it is not proposed again.** The

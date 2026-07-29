@@ -4,9 +4,8 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-07-28**, after a session that rebuilt the **person card**,
-made the edition's **first editorial attribution**, and **closed a hole in the
-privacy gate**.
+Last updated **2026-07-29**, after a session of **presentation fixes to the
+plate's chrome and the person card** — four of them, all published.
 
 ---
 
@@ -18,21 +17,22 @@ warnings over anything written here.
 
 1. Read `CLAUDE.md` — **The one thing to get right** and **Design invariants**.
    Both encode failures that already happened.
-2. Read the top of `CHANGELOG.md`, newest first. 2026-07-28 is long; stop when
-   the entries stop mattering.
+2. Read the top of `CHANGELOG.md`, newest first. Stop when the entries stop
+   mattering.
 3. Preview: `preview_start`, config name `site`, serves `docs/` on
    `http://localhost:4173`.
 4. Loop: edit `scripts/make_chart.py` → `python3 scripts/make_chart.py --public`
    → reload. **Never hand-edit `docs/`**; it is regenerated and your change is
    discarded silently.
 
-**A rebuild on a new day dirties `docs/` with dates alone** — `dateModified`,
+**A rebuild on a later day dirties `docs/` with dates alone** — `dateModified`,
 the "Last updated" line, the sitemap's `lastmod`. So "rebuild produces no diff"
-is a valid sync check only *within* a day. If the diff is dates and nothing
-else, `git checkout -- docs/` rather than committing: bumping `lastmod` tells
-crawlers the pages changed when they did not.
+is a valid sync check only *within* a day. `docs/` was last built and committed
+on **2026-07-29**; on any later date the first rebuild will show a date-only
+diff. If that is all it is, `git checkout -- docs/` rather than committing —
+bumping `lastmod` tells crawlers the pages changed when they did not.
 
-**Three habits this project keeps re-learning:**
+**Four habits this project keeps re-learning:**
 
 - **Measure, don't look.** Drift, contrast, row heights, bracket alignment —
   all of it has a number, and eyes have been wrong here before.
@@ -42,49 +42,55 @@ crawlers the pages changed when they did not.
 - **Read the staged diff before committing.** `/publish` Gate 4 caught a comment
   reading *"Clan is not colour-coded"* directly above the rule that had just
   colour-coded it. The build was green; only the diff showed it.
+- **Ask what *clears* a state, not only what sets it.** Two of 2026-07-29's four
+  fixes were of this shape: a highlight that could be lit and never put out, and
+  a chip that was correct until another element shared its band.
 
 ## State
 
 **Nothing is half-finished.** `main` is clean, no open PRs, `docs/` in sync with
-the renderer, every live page verified SHA-256-identical to its committed
-version. Published seven times on 2026-07-28, once on 2026-07-29.
+the renderer (a rebuild on 2026-07-29 produced no diff), every live page
+verified SHA-256-identical to its committed version.
 
 - Live: <https://pueblogenealogy.github.io/>
 - DOI (concept): `10.5281/zenodo.21637900` → <https://zenodo.org/records/21637901>
-- Published: Genealogy I and IV.
+- Published: Genealogy I and IV. Seven publishes on 2026-07-28, one on
+  2026-07-29.
 
-Two things changed character this session and a cold start should know before
-touching anything:
-
-- **The edition now asserts one thing the plate does not** — the paternity of
-  83–85. It is marked, footnoted, and kept out of the chart. See
-  `METHOD.md` → *Editorial attribution* for the four rules before adding another.
-- **The privacy gate now reads prose, not just markup**, and sweeps every page
-  in `docs/`. It **fails closed**. If a build stops complaining about
-  vocabulary, that is the gate working — read the message, do not loosen it.
+One thing is verified less than everything around it, and a cold start should
+not assume otherwise: **`Enter` in the Find field has not been watched working
+by a human this session.** The browser automation's synthetic `Enter` never
+submits the form and its `Escape` never reaches the popover, though ordinary
+character keys land. The submit handler was exercised directly instead. Nothing
+in the recent work touches implicit form submission — but if you are in there
+anyway, press the key yourself.
 
 ## The open thread
 
-**Design work on other sections of the site.** Started on 2026-07-29 and still
-open. Done so far: the card's relative rows enlarged to `--t-base`, the row
-highlight made clearable, the ruler's identity chip given its own band, and the
-plate bar moved onto the plate's rail. Not yet looked at with the same eye: the
-register below the plate, the footer apparatus, the landing page.
+**Design work on the rest of the site.** Started 2026-07-29 and still open.
 
-Two things that session proved worth doing on any element the reader touches —
-both defects were found by checking, not by looking:
+Done so far, all on the plate's chrome and the card:
 
-- **Ask what clears it, not just what sets it.** The row highlight and the
-  ruler chip were both "correct" until something else was on screen at the same
-  time.
-- **Check the phone.** Two of the four fixes were mobile-only or mobile-first
-  (the card's stacked divider, the bar's wrapped second row).
+- the card's relative rows enlarged to `--t-base` — a relative is a person line,
+  not a caption;
+- the chart-row highlight made clearable (`.is-selected` is now the only
+  mechanism wherever the card script runs);
+- the generation ruler split into two bands so its identity chip stops eating
+  the label it sits over;
+- the plate bar moved onto the plate's own rail, so Find is flush with the
+  sheet's left edge and Scale with its right.
 
-Before touching the card again, read `CLAUDE.md`'s card paragraph in **Design
-invariants**. Short version: the card is a *regrouped detached copy* of the
-register entry, so any rule not scoped to `.pcard` silently reformats the
-104-entry register. Verify after any card change — the register's relation links
-must still compute `display:inline`, its entry titles 16px.
+**Not yet looked at with the same eye:** the register below the plate, the
+footer apparatus, and the landing page.
+
+Two constraints that will surface late if you don't know them:
+
+- **The card is a regrouped detached copy of the register entry**, so any CSS
+  rule not scoped to `.pcard` silently reformats the 104-entry register. After
+  any card change, verify the register: relation links must still compute
+  `display:inline`, entry titles 16px. Read `CLAUDE.md`'s card paragraph first.
+- **Check the phone.** Two of the four fixes were mobile-only or mobile-first,
+  and one of them was a specificity bug that only a stacked layout exposed.
 
 **Tables 2 and 3 are the largest item by far and are held back on purpose**
 until the design settles, so that changes are made against two tables rather
@@ -116,10 +122,13 @@ when Table 2 or 3 lands.
   hash outlives every click, so the row it lit could never be turned off and a
   second row lit beside it. See `CLAUDE.md` invariant 2.
 - **The plate bar has no max-width, on purpose** — it aligns to the plate, not
-  to the title block, whose box aligns with nothing visible. The user chose this
-  over matching the centred statistics line, which would have needed anchor
-  positioning or moving the stats line out of the title block.
-
+  to the title block, whose box aligns with nothing a reader can see. The user
+  chose this over matching the centred statistics line, which would have needed
+  Chrome-only anchor positioning or moving the statistics line out of the title
+  block. See `CHANGELOG.md`, *Considered and not done*.
+- **The ruler's height is load-bearing.** It is the only thing holding the
+  identity chip off the generation labels. Shrinking it restores a collision
+  that cut a label in half.
 - **The person card carries the number, never the annotation.** Both the
   misprint note and the cross-reference were removed from it: the chart row the
   reader opened the card *from* already prints them. One consequence, in case
@@ -143,9 +152,14 @@ when Table 2 or 3 lands.
   only place `+`, `F.`/`M.` and the leader rule are decoded.
 - **The plate's misprint is reproduced, not corrected.** Table 1 prints **68**,
   ringed in `--sic`, linked to 67. If someone "fixes" it to 67, that is the bug.
+- **The edition asserts one thing the plate does not** — the paternity of 83–85.
+  It is marked, footnoted, and kept out of the chart. Read `METHOD.md` →
+  *Editorial attribution* for the four rules before adding another.
 - **Research evidence never enters the repo** — not a code comment, not a
-  changelog entry, not this file. The gate protects `docs/` only. The
-  git-ignored workbook is the place.
+  changelog entry, not this file. The gate protects `docs/` only, reads prose as
+  well as markup, sweeps every page, and **fails closed**. If a build starts
+  complaining about vocabulary, that is the gate working: read the message, do
+  not loosen it. The git-ignored workbook is the place.
 - **No custom domain** for now. The doi is the durable citable identifier and
   resolves independently of the host.
 - **Publishing goes through `/publish`.** Its last gate is *record it in
@@ -158,4 +172,4 @@ when Table 2 or 3 lands.
   correctly. The cmap reasoning is in `CLAUDE.md` as the durable evidence.
 - **The GitHub Pages build API misreports the deployed commit.** Verify deploys
   by comparing the live page's SHA-256 against the committed `docs/` file, never
-  by reading the build API. This session did exactly that, seven times.
+  by reading the build API. Every publish since has done exactly that.
