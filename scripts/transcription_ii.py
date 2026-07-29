@@ -520,8 +520,23 @@ PERSONS = [
 #                   193 -> Gen. I 36 (Aiʼwanăi, M, Oak)
 #                   194 -> Gen. I 37 (Dyăiʼtsdyămŭr, M, Oak)
 #                   195 -> Gen. I 38 (Iyăiʼs˙dyiwă, M, Oak)
-#                 So the exact range runs to at least Genealogy I's person 38,
-#                 not merely its 27. The footnote copy must say 38.
+#                 and nine more from the same column:
+#                   196 -> Gen. I 40 (Kăauʼshurtsʼa, F, Parrot)
+#                   197 -> Gen. I 41 (Onăiʼ, M, Parrot)
+#                   198 -> Gen. I 42 (Wamais˙ʼ, F, Parrot)
+#                   200 -> Gen. I 44 (Hea˙ʼsh˙dyĭwă, M, Parrot, d. 1917)
+#                   201 -> Gen. I 45 (Dziwaiʼisiro, M, Sun)
+#                   202 -> Gen. I 48 (Kuyăiʼd˙yid˙yuweʼ, F, Sun)
+#                   204 -> Gen. I 49 (Yăaiʼdyid˙yuwi, F, Sun)
+#                   205 -> Gen. I 47 (Owi˙ʼd˙zĭraiʼ, M, Sun)
+#                   208 -> Gen. I 53 (Gaaiʼd˙yuitsʼa, F, Bear)
+#                 So the exact range runs to at least Genealogy I's person 53,
+#                 not merely its 27. THE FOOTNOTE COPY MUST SAY 53.
+#
+#   PARSONS'S OWN DOUBT -- 199 prints "See Gen. I, 43 (?)". It is the only
+#                 reference on the plate with a question mark, and the only one
+#                 in the exact range that does not match: Gen. I 43 is
+#                 Yoʼd˙yidyăiʼ, not Gaishpidjaʼtyᵃ˙. Carry the "(?)" through.
 #   ONE HIGH   -- 61 prints 67, names Gen. I 66 (Tsikʼayăaiʼtsʼa, F, Eagle, d.)
 #                 60 prints 68, names Gen. I 67 (Shuwaiʼᶦri, M, Turkey)
 #                 62 prints 77, names Gen. I 76 (Dziwiʼd˙yăi, F, 33, Badger --
@@ -531,8 +546,12 @@ PERSONS = [
 #                 140 prints 91, names Gen. I 90 (Heʼsa (Hazel), F, Badger)
 #                 141 prints 92, names Gen. I 91 (Dzăiyăiʼ, F, Badger)
 #
-# So the references are exact through Genealogy I's person 27 and one too high
-# from at least its person 66 onward. Six independent name matches, all +1.
+# So the references are exact through Genealogy I's person 53 and one too high
+# from at least its person 66 onward. Twenty-two independent name matches in
+# the exact range, seven in the displaced one, all +1. Nothing between 54 and
+# 65 is referenced from this plate, so where the displacement begins is not
+# determinable from these two plates alone -- say "from person 66 onward",
+# not "from person 54".
 #
 # THIS BEARS ON TABLE 1, WHICH IS ALREADY PUBLISHED. Table 1's own misprint
 # (PLATE_NUMBER_MISPRINTS = {"U23": 68}) prints 68 for person 67 -- Shuwaiʼᶦri
@@ -584,42 +603,55 @@ PERSONS = [
 DUPLICATE_PLATE_NUMBERS = {1010: 101}
 
 # ---------------------------------------------------------------------------
-# STATE -- upper block read, lower block not started
+# STATE -- every plate number is read; the structure is not encoded
 #
-# DONE:  plate numbers 1-153 (the whole upper block), plus 154-171 and
-#        232-233 of the lower one. 174 records, no gaps in what is claimed,
-#        no id collisions.
-# TO DO: 101 plate numbers -- 172-231 and 234-274 -- then UNIONS and CHILDREN
-#        for the whole plate. THE NUMBERING RUNS TO 274, not 269: the far
-#        right of the lower block carries 270-274 (Water), which the first
-#        orientation pass missed.
+# DONE:  plate numbers 1-274, every one of them, plus the second 101. 275
+#        records, no gaps, no id collisions. The numbering ends at 274 --
+#        verified by sweeping the plate's right margin, which is blank past
+#        column E in both halves of the lower block.
+# TO DO: UNIONS and CHILDREN, for the whole plate, including the part read in
+#        the earlier session. Then the SEE TODO readings, then Gate 3.
 #
-# WHERE TO RESUME, in native pixel coordinates of
+# WHERE EACH COLUMN WAS READ, in native pixel coordinates of
 # sources/parsons-1923-table-2.jpg. Columns are ~1300-1500 px wide and text
-# lines are ~65 px, so tiles of about 1450 x 1200 read cleanly without any
-# downscaling by the image reader:
-#   lower col C  x 3780, next band y 8550   -> 172-185
-#   lower col D  x 4870, y 6150 onward      -> 186-231
-#   lower col B  x 2540, y 10850 onward     -> 234-243
-#   lower col C  x 3780, y 11000 onward     -> 244-253
-#   lower col D  x 4870, y 11300 onward     -> 254-269
-#   lower col E  x 5930, y 11500 onward     -> 270-274
-# These are planning coordinates taken from an orientation crop. Confirm each
-# tile's content when you read it; do not treat the ranges as readings.
+# lines are ~65 px; tiles of about 1450-1600 x 1250 read cleanly with no
+# downscaling by the image reader. Keep these -- re-reading a line during
+# Gate 2 is a one-command job with them:
+#   lower col C  x 3760, y 8550-12680   -> 172-185, 125/126, 53/54/234, 235-243
+#   lower col D  x 4870, y 6150-12680   -> 186-228, 244-269
+#   lower col E  x 6000, y 6330         -> 229-231
+#   lower col E  x 6050, y 11500        -> 270-274
+# A tile helper that takes (left, top, width, height) is three lines of sips:
+#   sips -c <height> <width> --cropOffset <top> <left> <scan> --out tile.jpg
 #
 # GLYPH READINGS STILL UNVERIFIED (grep "SEE TODO"). Each is a tighter crop's
-# work; none blocks reading the lower block. Two are worth doing first because
-# they would add a codepoint to the edition:
+# work. Two are worth doing first because they would add a codepoint:
 #   - 14  Kʼaiʼsh˙dŏwăʼ   breve over 'o' (U+014F)
 #   - 84  Ha˙tsʼᵉ         superscript e (U+1D49) -- this one IS confirmed
 #   - 45, 52, 59, 64, 80, 135, 142, 146, 20, 21: trailing or medial marks
 #
+# AND FOUR PEOPLE DRAWN TWICE WHOSE OCCURRENCES DISAGREE. These matter more
+# than the marks above, because each is one person and the edition must print
+# one name. Each record names the clearer occurrence and its coordinates:
+#   - 13   Dzia˙ʼyotsʼa / Tsiaiutsa
+#   - 54   Ma˙ʼrani / Ma˙ʼran˙i
+#   - 125  Gowaʼk˙ʼd˙yăiʼ / Gowaʼkʼad˙zăiʼ
+#   (169's two occurrences agree; it is listed here only so the next reader
+#    does not go looking for a fourth.)
+#
+# ONE MORE WORTH A LOOK: 135 reads "Săp" with a breve in the upper block,
+# while 180 in the lower block clearly reads "Säpʼᵃ" with a diaeresis and a
+# superscript a. They are different people -- 135 is Turkey, 180 is Bear -- so
+# this is not a repeat-person discrepancy, but 180's crop is the better one
+# and it is worth re-reading 135 against it.
+#
 # FONT COVERAGE IS NOT A PROBLEM. The cmap of both master faces
 # (vendor/gentium/Gentium-{Regular,Italic}.ttf) was checked directly and
-# carries U+014F, U+02D1 and U+1D49 as well as the marks already in use. So
-# Gate 4 is a re-run of scripts/subset_font.py once the readings are final --
-# there is nothing to source. Do not judge this by looking at rendered text:
-# macOS substitutes silently for any missing face.
+# carries U+014F, U+02D1, U+1D49 and -- checked 2026-07-29 for the two
+# codepoints the lower block added -- U+00E4 and U+02DA, as well as the marks
+# already in use. So Gate 4 is a re-run of scripts/subset_font.py once the
+# readings are final; there is nothing to source. Do not judge this by looking
+# at rendered text: macOS substitutes silently for any missing face.
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
@@ -661,6 +693,54 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 #   158+160 -> 126, 178                      Chaparral Cock (160 is C. Cock)
 #   232+233 -> 54                            Sun    (232 is Sun)
 #
+# ADDED 2026-07-29, from the columns read this session. Each was read off the
+# brackets AND passes the clan check; where the bracket alone was ambiguous,
+# the clan is what decided it, and that is said explicitly:
+#   166+167 -> 186, 188-195                  Oak    (167 is Oak; the eight
+#              "See Gen. I" numbers land on Genealogy I's own sibling group
+#              31-38, whose mother there is its person 17 -- and 167 carries
+#              "See Gen. I, 17". Two independent confirmations.)
+#   186+187 -> 229, 230, 231                 Oak    (186 is Oak, 187 Turkey)
+#   53+54   -> 122, 147-151                  Water  (53 is Water. The plate
+#              does not draw them here: the slot in column D carries the line
+#              "For descendants see 122, 147-151" instead. That text is an
+#              INTERNAL cross-reference, the only one on the plate that points
+#              at this plate's own numbers, and it is not a person record.)
+#   54+234  -> 244-253                       Eagle  (234 is Eagle, 54 is Sun.
+#              The clan is the whole argument: ten children in a row, every
+#              one Eagle, hanging off 234's rule and not 53's.)
+#   235+236 -> 254, 256, 258, 259, 260       Water  (236 is Water, 235 Sun)
+#   238+239 -> 261-264                       Chaparral Cock (239 is C. Cock)
+#   254+255 -> 270, 271, 272                 Water  (254 is Water, 255 Eagle)
+#   256+257 -> 273, 274                      Water  (256 is Water, 257 Eagle)
+#
+# STILL UNASSIGNED in the lower block: 172/173, 180-185, 196-228, 237, 240-243,
+# 265-269. Their columns and clans are recorded; their brackets are not traced.
+#
+# *** THE TWO BLOCKS DO NOT SHARE ONE GENERATION FRAME, AND THIS IS THE ONE
+# *** THING GATE 2 MUST SETTLE BEFORE ANYTHING RENDERS.
+# The lower block is numbered within itself: 154+155 are its generation 1. But
+# people drawn in the upper block keep their upper generation when they
+# reappear below, and their children then inherit from it. So column D of the
+# lower block holds BOTH generation 4 (186-228, children of the lower block's
+# generation 3) and generation 5 (244-253, children of 54+234, where 54 is the
+# upper block's generation 4). Two people in one printed column, two different
+# generation numbers.
+#
+# The three anchors, and they do not agree:
+#   - 13 and 14 are upper generation 3 and are children of 154+155.
+#     => lower generation 1 == upper generation 2.
+#   - 126 is upper generation 5 and is a child of 158+160, who are lower
+#     generation 2. => lower generation 2 == upper generation 4, i.e. lower
+#     generation 1 == upper generation 3.
+#   - 54 is upper generation 4 and is the son of 232+233.
+#     => 232+233 sit at upper generation 3, not at lower generation 1.
+# The first and third can be reconciled by moving 232+233 down one; the second
+# cannot, without either 126's upper generation or the 158+160 reading being
+# wrong. RE-READ 126's PLACEMENT IN THE UPPER BLOCK FIRST -- it is the only
+# one of the three that was read at an early stage, and it is a single tile's
+# work. Do not resolve this by renumbering the data to make it fit.
+#
 # THREE FOUNDING COUPLES ON THIS PLATE, not two: 1+2, 154+155, and 232+233.
 # 232 was the trap -- it is printed at the same indent as 158 and 164, which
 # are children, but no leader rule enters it from the left. Checked at native
@@ -686,6 +766,16 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 # Genealogy III (NOT transcribed -- 160 and 163 both point into it). A link
 # must not promise content: the landing page's `#pending-3` anchor exists for
 # exactly this, and nothing may link to Genealogy III until it ships.
+#
+# FOUR LINES PRINT SOMETHING OTHER THAN A CLAN where every other line prints
+# one: 179 "White", 183 "Mexican", 243 "Mohave", and -- as part of the name
+# rather than the clan field -- 187 "Ramona of Sant Ana" and 247 "Joe Mantoya
+# of Jemez", both of whom have no clan printed at all. They are recorded as
+# printed and NOT interpreted, and the clan field carries the word verbatim.
+# Note what this does to the clan check at Gate 3: none of the five is a
+# mother, so no child's clan is tested against one of these words. If a later
+# reading ever makes one of them a mother, that is the moment to decide
+# whether these belong in `clan` at all -- not before.
 # ---------------------------------------------------------------------------
 
 UNIONS = [
