@@ -282,6 +282,20 @@ PERSONS = [
     # =====================================================================
     (232, 1, "F", "Yuwaiʼd˙yaitsʼă", "",       "",   "Sun",    "",   "", "", ""),
     (233, 1, "M", "Gaʼʼaiʼ",         "",       "",   "Turkey", "",   "", "", ""),
+
+    # ---- lower block, generation 3 --------------------------------------
+    (166, 3, "M", "G˙yiʼmi",         "",       "45", "Sun",    "",   "", "See Gen. I, 16", ""),
+    (167, 3, "F", "Nămăiʼ",          "",       "40", "Oak",    "",   "", "See Gen. I, 17", ""),
+    (168, 3, "M", "Kowăuʼsh˙dyiwă",  "",       "42", "Sun",    "",   "", "See Gen. I, 18", ""),
+    (169, 3, "F", "Haiʼtyʼʼimăiʼ",   "",       "43", "Parrot", "",   "",
+     "See Gen. I, 19 / For first husband and descendants, see below",
+     "appears twice within the lower block; drawn once. A heavy ink stroke runs "
+     "from this line's clan to its sibling bracket on the scanned copy -- it is "
+     "not type, and is recorded as an observation of this copy, not as data"),
+    (170, 3, "M", "Kʼuʼn˙ash",       "",       "",   "Sun",    "",   "", "See Gen. I, 20",
+     "trailing mark after 'ash' unverified -- SEE TODO"),
+    (171, 3, "F", "Shayaʼai",        "",       "",   "Sun",    "",   "", "See Gen. I, 21",
+     "number printed without a following period"),
 ]
 
 # ---------------------------------------------------------------------------
