@@ -54,9 +54,19 @@ PERSONS = [
     (10, 3, "M", "Kʼaikyie",         "",       "",   "Lizard", "",   "", "", ""),
     (11, 3, "F", "Goyaiʼd˙yuwĕʼ",    "",       "70", "Water",  "",   "", "", ""),
     (12, 3, "M", "Gʼausire",         "",       "",   "Oak",    "d. 1915", "", "", ""),
-    (13, 3, "F", "Dzia˙ʼyotsʼa",     "",       "",   "Water",  "d.", "", "", ""),
-    (14, 3, "M", "Kʼaiʼsh˙dŏwăʼ",    "",       "",   "Parrot", "d. 1918", "", "",
-     "breve over 'o' (U+014F) unverified -- SEE TODO, would be a codepoint new to this edition"),
+    (13, 3, "F", "Dzia˙ʼyotsʼa",     "",       "",   "Water",  "d.", "",
+     "For descendants, see above",
+     "DISCREPANCY -- SEE TODO. The plate prints this person twice, and the two "
+     "readings do not agree: 'Dzia˙ʼyotsʼa' in the upper block, 'Tsiaiutsa' in "
+     "the lower. Both tiles were legible. Re-read both before Gate 3; the "
+     "upper reading is the less certain of the two"),
+    (14, 3, "M", "S˙ʼĭʼrowaisiwa",   "Kʼaiʼsh˙dŏwăʼ", "", "Parrot", "d. 1918", "",
+     "For descendants, see above",
+     "braced: the plate joins two names with a '{' for this one person -- "
+     "'S˙ʼĭʼrowaisiwa' over 'Kʼaiʼsh˙dŏwăʼ'. Second name carried in alt_name. "
+     "The breve over 'o' (U+014F) in the second name is confirmed at the lower "
+     "block's larger setting. Drawn once; the repeat carries 'For descendants, "
+     "see above'"),
     (15, 3, "M", "Dzăʼyu",           "",       "",   "Water",  "",   "", "", ""),
     (16, 3, "F", "Sho˙tyʼi",         "",       "",   "Turkey", "d.", "", "", ""),
     (17, 3, "M", "Tyi˙kʼamăi",       "",       "",   "Water",  "",   "", "", ""),
@@ -235,6 +245,43 @@ PERSONS = [
     (151, 6, "M", "Yaiʼyaăi",        "",       "2",  "Water",  "",   "", "", ""),
     (152, 6, "M", "Tsiᶦshdyĭʼwă",    "",       "3",  "Water",  "",   "", "", ""),
     (153, 6, "F", "Gaiʼtsdyui",      "",       "5 mos.", "Water", "", "", "", ""),
+
+    # =====================================================================
+    # LOWER BLOCK -- founding couple 154+155
+    # Generations below are numbered WITHIN this block: 154+155 are its
+    # generation 1. Whether the two blocks share a generation frame is a
+    # question for Gate 2, not a reading -- see the structure notes.
+    # =====================================================================
+    (154, 1, "F", "",                "",       "",   "Parrot", "",   "", "", "name printed as a dash"),
+    (155, 1, "M", "",                "",       "",   "Turkey", "",   "", "", "name printed as a dash"),
+
+    (156, 2, "M", "Shʼauʼs˙imăiʼ",   "",       "",   "Parrot", "d.", "", "See Gen. I, 10", ""),
+    (157, 2, "F", "Dyaiʼᶦs˙itsʼă",   "",       "",   "Sun",    "d. 1918, at 60", "", "See Gen. I, 9", ""),
+    (158, 2, "M", "Niʼʼy˙ŭyăiʼ",     "",       "",   "Parrot", "",   "", "", ""),
+    (159, 2, "F", "",                "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
+    (160, 2, "F", "Yo˙ʼs˙iro",       "",       "",   "Chaparral Cock", "d. 1914", "",
+     "For second husband and descendant, see Gen. III, 154, 220 / "
+     "For third husband and descendant, see Gen. I, 8, 90",
+     "second wife of 158; the year 1914 is set in bold on the plate. This is "
+     "Genealogy I's person 73 -- name, clan and death year all agree"),
+    (161, 2, "",  "Gawai˙d˙yirăiʼ",  "",       "",   "Parrot", "d.", "", "",
+     "sex printed as 'M.-F.' -- a marking used nowhere else on this plate. "
+     "Stored empty rather than guessed; recorded here as printed"),
+    (162, 2, "M", "Da˙ʼyu",          "",       "",   "Parrot", "d.", "", "",
+     "trailing mark after 'yu' unverified -- SEE TODO"),
+    (163, 2, "F", "Ĭyaˑʼsi",         "",       "",   "Bear",   "",   "",
+     "For second husband and descendants, see Gen. III, 14, 49-55, 135-141", ""),
+    (164, 2, "F", "Heaʼʼs˙i",        "",       "",   "Parrot", "d.", "", "", ""),
+    (165, 2, "M", "Ha˙ʼpai",         "",       "",   "Oak",    "d.", "", "", ""),
+
+    # =====================================================================
+    # THIRD FOUNDING COUPLE -- 232+233
+    # No leader rule enters 232 from the left, where 158 and 164 both have
+    # one. Verified at native resolution. Their son is 54, who also appears
+    # in the upper block as 53's husband.
+    # =====================================================================
+    (232, 1, "F", "Yuwaiʼd˙yaitsʼă", "",       "",   "Sun",    "",   "", "", ""),
+    (233, 1, "M", "Gaʼʼaiʼ",         "",       "",   "Turkey", "",   "", "", ""),
 ]
 
 # ---------------------------------------------------------------------------
@@ -358,7 +405,40 @@ DUPLICATE_PLATE_NUMBERS = {1010: 101}
 #   - 51+52: children 119-121 are Lizard, which is 52's clan, not 51's Water.
 #
 # STILL TO TRACE: the generation 4 -> 5 brackets (26-82 -> 83-143) and
-# 5 -> 6 (119-123 -> 144-153), then the whole lower block.
+# 5 -> 6 (119-123 -> 144-153), then the rest of the lower block.
+#
+# LOWER BLOCK, traced so far:
+#   154+155 -> 14, 156, 158, 161, 162, 164   Parrot (154 is Parrot)
+#   156+157 -> 166, ...                      Sun    (157 is Sun)
+#   158+159 -> 174, 176                      Sun    (159 is Sun)
+#   158+160 -> 126, 178                      Chaparral Cock (160 is C. Cock)
+#   232+233 -> 54                            Sun    (232 is Sun)
+#
+# THREE FOUNDING COUPLES ON THIS PLATE, not two: 1+2, 154+155, and 232+233.
+# 232 was the trap -- it is printed at the same indent as 158 and 164, which
+# are children, but no leader rule enters it from the left. Checked at native
+# resolution. Its clan settles it independently: 232 is Sun and 154 is Parrot,
+# so 232 cannot be 154's daughter.
+#
+# *** THE TWO BLOCKS ARE ONE GENEALOGY, NOT TWO. ***
+# People drawn in the upper block reappear in the lower one, exactly as
+# Table 1's person 8 and Table 4's 3 and 4 do:
+#   13, 14   drawn in the upper block; the lower repeat carries
+#            "For descendants, see above"
+#   125, 126 drawn in the upper block as a couple; 126 reappears as a child
+#            of 158+160, whose Chaparral Cock clan he carries
+#   53, 54   drawn in the upper block as a couple; 54 reappears as the son of
+#            232+233, whose Sun clan he carries
+#   169      appears twice inside the lower block itself, once with
+#            "For first husband and descendants, see below" and once with
+#            "For second husband and descendants, see above"
+# Each such person is stored ONCE. The repeat becomes a cross-reference. Do
+# not create a second record for any of them -- the ids above already exist.
+#
+# CROSS-REFERENCES OUT OF THIS PLATE go to Genealogy I (published) and
+# Genealogy III (NOT transcribed -- 160 and 163 both point into it). A link
+# must not promise content: the landing page's `#pending-3` anchor exists for
+# exactly this, and nothing may link to Genealogy III until it ships.
 # ---------------------------------------------------------------------------
 
 UNIONS = [
