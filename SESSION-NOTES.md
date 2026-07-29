@@ -47,7 +47,7 @@ crawlers the pages changed when they did not.
 
 **Nothing is half-finished.** `main` is clean, no open PRs, `docs/` in sync with
 the renderer, every live page verified SHA-256-identical to its committed
-version. Published seven times on 2026-07-28.
+version. Published seven times on 2026-07-28, once on 2026-07-29.
 
 - Live: <https://pueblogenealogy.github.io/>
 - DOI (concept): `10.5281/zenodo.21637900` → <https://zenodo.org/records/21637901>
@@ -65,9 +65,20 @@ touching anything:
 
 ## The open thread
 
-**Design work on other sections of the site**, deferred by the user to a later
-session. The person card is done; the rest of the page has not been looked at
-with the same eye.
+**Design work on other sections of the site.** Started on 2026-07-29 and still
+open. Done so far: the card's relative rows enlarged to `--t-base`, the row
+highlight made clearable, the ruler's identity chip given its own band, and the
+plate bar moved onto the plate's rail. Not yet looked at with the same eye: the
+register below the plate, the footer apparatus, the landing page.
+
+Two things that session proved worth doing on any element the reader touches —
+both defects were found by checking, not by looking:
+
+- **Ask what clears it, not just what sets it.** The row highlight and the
+  ruler chip were both "correct" until something else was on screen at the same
+  time.
+- **Check the phone.** Two of the four fixes were mobile-only or mobile-first
+  (the card's stacked divider, the bar's wrapped second row).
 
 Before touching the card again, read `CLAUDE.md`'s card paragraph in **Design
 invariants**. Short version: the card is a *regrouped detached copy* of the
@@ -98,6 +109,16 @@ apparatus attribution; no transcription data changed. Save the version doi for
 when Table 2 or 3 lands.
 
 ## Decisions already made — don't re-litigate
+
+- **A chart row's highlight is class-driven wherever the card script runs.**
+  `.line:target` is dropped under `html[data-card]` and kept as the no-JS path.
+  Re-enabling `:target` alongside `.is-selected` re-opens the bug it fixed: a
+  hash outlives every click, so the row it lit could never be turned off and a
+  second row lit beside it. See `CLAUDE.md` invariant 2.
+- **The plate bar has no max-width, on purpose** — it aligns to the plate, not
+  to the title block, whose box aligns with nothing visible. The user chose this
+  over matching the centred statistics line, which would have needed anchor
+  positioning or moving the stats line out of the title block.
 
 - **The person card carries the number, never the annotation.** Both the
   misprint note and the cross-reference were removed from it: the chart row the

@@ -154,6 +154,15 @@ Four rules that look like styling preferences and are not:
    highlights — chart row, register entry, targeted footer note — draw
    **outside** the border box for a second reason: an `inset` shadow paints its
    bar over the first glyphs, and a hugging outline sits on the text.
+   **Which mechanism lights a chart row depends on `html[data-card]`** (set in
+   the `popoverOK` block, so it means *the card script is running*, not *JS is
+   on*): with it, `.is-selected` only, and `markSelected()` is the sole owner;
+   without it, `:target`, which is all a no-JS reader has. Both can never be
+   live at once, because **`:target` cannot be cleared** — the hash outlives
+   every click — and two rows lit at once is the bug that came from trying
+   (2026-07-29). Anything that selects a row goes through `syncSelection()`;
+   note the popover's `toggle` and `hashchange` arrive as tasks in **no
+   guaranteed order**, which is what `cardRow` is for.
 3. **`--rule` is not text.** `body.chart` flattens all text to `--ink` by
    redefining `--muted`; the brackets and leader rules are deliberately excluded,
    because they carry the genealogy's structure.
@@ -174,7 +183,11 @@ must still compute `display:inline` and its entry titles 16px. Two traps that
 have already been hit: chips are `.reg-rel > a`, **direct children only** (a
 cross-reference row is also a `.reg-rel`, and its links sit inside an `<em>` of
 running prose); and the column divider is scoped to the exactly-two-column case,
-because columns wrap and a wrapped column would hang a rule off nothing. The
+because columns wrap and a wrapped column would hang a rule off nothing — the
+phone reset of that divider must **out-specify** it, which it failed to do until
+2026-07-29 (`.pc-col + .pc-col` is (0,2,0) against the pair rule's (0,3,0)). A
+relative's row is `--t-base`, the size a person gets in the register and on the
+plate — it is a person line, not a caption. The
 card pairs children to a spouse from `data-rel` / `data-with`, **never** by
 reading the label — `"Children (with 66)"` is prose, and digging a number out of
 prose is the mistake `_p()` exists to prevent.
@@ -194,7 +207,23 @@ empty figcaption holding its bottom padding open.
 In the plate bar, Find sits left and Scale right, and the split is an **auto
 start-margin on `#scale-mount`, never `justify-content:space-between`**. `#find`
 carries `[hidden]` until the script unhides it, so space-between would strand
-the scale buttons on the left for a reader without JavaScript.
+the scale buttons on the left for a reader without JavaScript. The bar has **no
+max-width**: it rides the plate's rail, sharing `.scroll`'s `--s5` inline
+padding, so Find lands on the sheet's left edge and Scale on its right (0px,
+measured). It was centred at `--measure-wide` until 2026-07-29, which matched
+the title block's *box* and therefore aligned with nothing a reader can see —
+the statistics line inside that box is centred text, inset ~270px each side. Put
+it back on a measure and it has to move with `.scroll`'s padding, or the rails
+part again.
+
+**The generation ruler is two bands, not one.** Its identity chip
+(`.ruler-chipslot`) is a zero-width slot pinned to the inline start, so it
+floats over whatever has been panned to that edge; sharing one band with the
+labels meant the chip's opaque fill ate the first half of a label
+(`GENERA|TION 2`). The chip sits at `flex-start`, the labels stay at
+`flex-end`, and **`.ruler`'s height is the only thing separating them** — print
+returns it to `2rem` because the chip is hidden there. Shrink that height and
+the collision is back.
 
 A table page's title block is the plate label, the numeral, the double rule and
 the **statistics line** — no citation. The landing page keeps its citation.

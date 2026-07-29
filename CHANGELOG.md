@@ -3,6 +3,64 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-29 — four presentation fixes: card, selection, ruler chip, plate bar
+
+Nothing in the transcription changed. Four things a reader touches did.
+
+### The row highlight could not be cleared
+
+- **The defect.** A chart row lights up two ways: `.line:target` from a `#p`
+  anchor and `.line.is-selected` from `openCard`. A hash survives every
+  subsequent click, and `markSelected` could only ever clear its own class — so
+  following a relation link out of a card (which navigates to `#p{n}`) left the
+  row lit with nothing able to turn it off, and opening another card lit a
+  **second** row beside it. Only leaving the page and returning cleared it.
+- **The fix.** Where the card script runs, the class is the *only* mechanism:
+  `.line.is-selected,html:not([data-card]) .line:target`. `data-card` is set
+  inside the `popoverOK` block, so it means "the card script is live", not
+  "JavaScript is enabled" — where the popover is unsupported the numbers are
+  plain anchors and `:target` is untouched.
+- `syncSelection()` / `lineFor()` move the class on load, on `hashchange`, in
+  the same-hash branch (no `hashchange` fires there), and after a Find submit
+  (searching the person already named by the hash fires none either).
+- `cardRow` exists because the popover's `toggle` and `hashchange` both arrive
+  as tasks in an order that is **not guaranteed**: the close handler clears only
+  the highlight it set (`selRow===cardRow`), so it cannot wipe one that hash
+  navigation already moved. Correct in either order.
+- `rowClick` deselects on a click on bare plate — after a relation link the card
+  has already closed, so no close event is coming and the hash never changes
+  again. That click is the only thing left that can clear it.
+- Verified by counting rows whose computed `outline-style` is `solid`: exactly
+  one at every step of card → relative → click-away → other card → register
+  link, plus a cold load at `#p5`, and `:target` still lights the row with
+  `data-card` removed.
+
+### Everything else
+
+- **Card relatives at `--t-base`, not `--t-sm`.** The row *is* a person line —
+  number, name, clan — so it is set at the size the register entry and the plate
+  line give a person. The clan is `.92em`, so one declaration moved both. The
+  register was re-verified after: relation links `display:inline`, titles 16px.
+- **The ruler's identity chip had its own collision.** It is pinned to the
+  plate's inline start and shared one 2rem band with the generation labels, so
+  whichever label had been panned to that edge sat under it and the chip's
+  opaque fill ate the first half of the word (`GENERA|TION 2`). The ruler is now
+  3.4rem with the chip at `flex-start` and the labels still at `flex-end`; the
+  chip's line-height dropped 1.9 → 1.5 to keep the reserved band small. Print
+  returns it to 2rem, where the chip is hidden anyway. Column drift re-measured
+  at **0px across all five generations**, and the labels still sit on their
+  columns.
+- **The plate bar rides the plate's rail.** Find now lands on the sheet's left
+  edge and Scale on its right — 0px at both ends, at 1724px and at 375px, both
+  tables. It was centred at `--measure-wide`, which matched the title block's
+  *box* exactly and therefore aligned with nothing visible: the statistics line
+  inside that box is centred text, inset ~270px each side. If it ever moves back
+  to a measure it has to move with `.scroll`'s padding or the rails part again.
+- **A phone-only card bug, found while verifying the first item.** The mobile
+  divider reset was `.pc-col + .pc-col` (0,2,0) against
+  `.pc-cols--pair > .pc-col + .pc-col` (0,3,0) — one specificity point short, so
+  a stacked second column kept a 16px indent and a rule hanging off nothing.
+
 ## 2026-07-28 — a build timestamp, built and reverted
 
 - **Reverted at the user's request; recorded so it is not proposed again.** The
