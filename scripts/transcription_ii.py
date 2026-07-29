@@ -376,6 +376,28 @@ PERSONS = [
     (193, 4, "M", "Aiʼwanăi",         "",       "8",  "Oak",    "",   "", "See Gen. I, 36", ""),
     (194, 4, "M", "Dyăiʼtsdyămŭr",    "",       "6",  "Oak",    "",   "", "See Gen. I, 37", ""),
     (195, 4, "M", "Iyăiʼs˙dyiwă",     "",       "5",  "Oak",    "",   "", "See Gen. I, 38", ""),
+    (196, 4, "F", "Kăauʼshurtsʼa",    "",       "9",  "Parrot", "",   "", "See Gen. I, 40", ""),
+    (197, 4, "M", "Onăiʼ",            "",       "8",  "Parrot", "",   "", "See Gen. I, 41", ""),
+    (198, 4, "F", "Wamais",           "",       "7",  "Parrot", "",   "", "See Gen. I, 42",
+     "no trailing marks here, where Gen. I 42 prints 'Wamais˙ʼ'"),
+    (199, 4, "M", "Gaishpidjaʼtyᵃ˙",  "",       "6",  "Parrot", "",   "", "See Gen. I, 43 (?)",
+     "THE QUESTION MARK IS PARSONS'S OWN, printed on the plate after the "
+     "reference. It is the only cross-reference on this plate that carries one, "
+     "and it is warranted: Gen. I 43 is 'Yoʼd˙yidyăiʼ', a different name. Copy "
+     "the '(?)' through to the page -- it is her doubt, not ours. Trailing "
+     "superscript a then raised dot, confirmed at a 260 px crop"),
+    (200, 4, "M", "Hea˙ʼshdyĭwă",     "",       "",   "Parrot", "d. 1917, at 2", "", "See Gen. I, 44",
+     "Gen. I 44 prints 'Hea˙ʼsh˙dyĭwă' and 'd. 1917, aged 2'. Each plate is "
+     "recorded as it prints"),
+    (201, 4, "M", "Dziwaiʼi˙siro",    "",       "",   "Sun",    "",   "", "See Gen. I, 45",
+     "raised dot after the medial 'i', which Gen. I 45 does not print"),
+    (202, 4, "F", "Kuyăiʼd˙yid˙uweʼ", "",       "",   "Sun",    "",   "", "See Gen. I, 48",
+     "no 'y' before 'uweʼ', where Gen. I 48 prints 'Kuyăiʼd˙yid˙yuweʼ'. "
+     "Confirmed at a 480 px crop"),
+    (203, 4, "F", "Edna",             "",       "",   "Sun",    "",   "", "",
+     "English name printed as the name itself; no cross-reference on this line"),
+    (204, 4, "F", "Yăaiʼdyid˙yuwi",   "",       "",   "Sun",    "",   "", "See Gen. I, 49", ""),
+    (205, 4, "M", "Owi˙ʼd˙zĭraiʼ",    "",       "",   "Sun",    "",   "", "See Gen. I, 47", ""),
 ]
 
 # ---------------------------------------------------------------------------
