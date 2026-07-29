@@ -88,6 +88,46 @@ have been settled by looking at rendered text.
   corroboration. Editing a published, cited page means re-verifying it after
   the build.
 
+### The lower block, opened: 154–171 and 232–233
+
+174 records now. **101 plate numbers remain** — 172–231 and 234–274.
+
+**The numbering runs to 274, not 269.** The first orientation pass missed
+270–274 at the far right, so the earlier count was low. Treat any figure taken
+from an orientation crop as provisional until the tiles confirm it.
+
+- **Three founding couples, not two** — 1+2, 154+155 and **232+233**. The third
+  is printed at exactly a child's indent; the only visible difference is that no
+  leader rule enters it from the left. Its clan settles it independently: 232 is
+  Sun, 154 is Parrot, so 232 cannot be 154's daughter. This is the **second**
+  time on this plate that indentation alone would have asserted false descent.
+- **The two blocks are one genealogy.** 13, 14, 53, 54, 125 and 126 are drawn in
+  the upper block and reappear below carrying "For descendants, see above"; 169
+  repeats inside the lower block. Each is stored **once**, as Table 1's person 8
+  and Table 4's 3 and 4 are. This is the likeliest route to a duplicate person
+  in this file — the ids already exist.
+- **Genealogy III is referenced but not transcribed.** Persons 160 and 163 point
+  into it. Nothing may link there until Table 3 ships; `#pending-3` is what
+  those references resolve to.
+- **Person 160 is Genealogy I's person 73** — name, clan and death year (1914)
+  all agree.
+
+Two upper-block readings corrected from the lower block's larger setting:
+**person 14 carries a braced pair of names**, `{ S˙ʼĭʼrowaisiwa /
+Kʼaiʼsh˙dŏwăʼ }`, which is the `{ }` convention the renderer already knows about
+at `make_chart.py:544`; and that settled the `ŏ` U+014F reading flagged as
+uncertain above.
+
+**One discrepancy left open.** Person 13 reads `Dzia˙ʼyotsʼa` in the upper block
+and `Tsiaiutsa` in the lower — one numbered person, two names, both tiles
+legible. Both readings are recorded, the upper marked the less certain. Not
+resolved by picking one.
+
+Two markings recorded as printed rather than interpreted: **161's sex is
+`M.-F.`**, used nowhere else on the plate, stored empty rather than guessed; and
+a **heavy ink stroke across 169's row**, which is not type and is noted as an
+observation of *this copy*, not as plate data.
+
 ## 2026-07-29 — four presentation fixes: card, selection, ruler chip, plate bar
 
 Nothing in the transcription changed. Four things a reader touches did.
