@@ -428,6 +428,79 @@ PERSONS = [
     (226, 4, "",  "",                 "",       "",   "Parrot", "d.", "", "", "no sex printed; name printed as a dash"),
     (227, 4, "M", "",                 "",       "",   "Corn",   "d.", "", "", "name printed as a dash"),
     (228, 4, "F", "",                 "",       "",   "Corn",   "d.", "", "", "name printed as a dash"),
+
+    # ---- lower block, generation 5 (column E) ---------------------------
+    # 229-231 are the children of 186+187. All Oak, as 186 is.
+    (229, 5, "F", "Shawityi",         "",       "6",  "Oak",    "",   "", "", ""),
+    (230, 5, "M", "Awie˙",            "",       "4",  "Oak",    "",   "", "", ""),
+    (231, 5, "M", "Yoreni",           "",       "1",  "Oak",    "",   "", "", ""),
+
+    # ---- the 232+233 branch's grandchildren -----------------------------
+    # 244-253 hang off 234's line, and every one of them is Eagle, which is
+    # 234's clan and not 54's Sun. So they are the children of 54+234.
+    # Their generation therefore follows 54's upper-block value + 1 = 5, even
+    # though they are printed in the same column D as the lower block's
+    # generation 4. See the GENERATION FRAME note below: this is the same
+    # unresolved question, showing up in the data.
+    (244, 5, "F", "Dyaiyo˚wăiʼ",      "",       "",   "Eagle",  "",   "", "",
+     "ring above (U+02DA) between 'yo' and 'wăiʼ' -- a codepoint neither "
+     "Table 1 nor Table 4 uses. Confirmed at a 240 px crop; present in both "
+     "master Gentium faces"),
+    (245, 5, "M", "Kaiyaiʼ",          "",       "",   "Corn",   "",   "", "", ""),
+    (246, 5, "F", "Shatsʼăiʼ",        "",       "",   "Eagle",  "",   "", "", ""),
+    (247, 5, "M", "Joe Mantoya of Jemez", "",   "",   "",       "",   "", "",
+     "no clan printed. The plate prints the name with a place, spelled "
+     "'Mantoya' and 'Jemez'. Recorded as printed, not normalised"),
+    (248, 5, "M", "Oyo˙ʼyʼăi",        "",       "",   "Eagle",  "",   "", "", ""),
+    (249, 5, "M", "Dzi˙ʼyaid˙yiʼwă",  "",       "",   "Eagle",  "",   "", "", ""),
+    (250, 5, "F", "Ga˙ʼwiaitsʼă",     "",       "",   "Eagle",  "",   "", "", ""),
+    (251, 5, "M", "Rioʼ",             "",       "",   "Eagle",  "",   "", "", ""),
+    (252, 5, "F", "Ganaiʼ",           "",       "",   "Eagle",  "",   "", "", ""),
+    (253, 5, "F", "Tsʼa˙ʼshdjdyuweʼ", "",       "",   "Eagle",  "",   "", "", ""),
+
+    # ---- lower block, generation 4 resumes (column D) -------------------
+    # 254-260 are Water, which is 236's clan, so they hang off 235+236.
+    (254, 4, "F", "Lina",             "",       "",   "Water",  "",   "", "",
+     "English name printed as the name itself"),
+    (255, 4, "M", "Kaauʼstyiăiʼ",     "",       "",   "Eagle",  "",   "", "",
+     "this '+' line also carries a leader rule entering from the left, which "
+     "no other '+' line on the plate does. Noted for Gate 2, not interpreted"),
+    (256, 4, "F", "Gʼawaidyuwi",      "",       "",   "Water",  "",   "", "", ""),
+    (257, 4, "M", "John Perry",       "",       "",   "Eagle",  "",   "", "",
+     "English name printed as the name itself"),
+    (258, 4, "M", "Oʼkʼaiyă",         "",       "",   "Water",  "",   "", "", ""),
+    (259, 4, "F", "Kʼataiʼd˙yuwĕʼ",   "",       "",   "Water",  "",   "", "",
+     "number printed without a following period, as at 19 and 171"),
+    (260, 4, "M", "Willi",            "",       "",   "Water",  "",   "", "",
+     "English name printed as the name itself"),
+    # 261-264 are Chaparral Cock, which is 239's clan, so they hang off
+    # 238+239. 265-269 are Sun, and 268-269 print no clan at all.
+    (261, 4, "F", "",                 "",       "",   "Chaparral Cock", "", "", "", "name printed as a dash"),
+    (262, 4, "M", "John",             "",       "",   "Chaparral Cock", "", "", "",
+     "English name printed as the name itself"),
+    (263, 4, "M", "Dyumaiʼ",          "",       "",   "Chaparral Cock", "", "", "", ""),
+    (264, 4, "F", "",                 "",       "",   "Chaparral Cock", "", "", "",
+     "name printed as a dash, followed by a period -- the only dashed name on "
+     "the plate that carries one"),
+    (265, 4, "M", "Naisiyĕ",          "",       "",   "Sun",    "",   "", "", ""),
+    (266, 4, "M", "",                 "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
+    (267, 4, "F", "",                 "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
+    (268, 4, "",  "",                 "",       "",   "",       "",   "", "",
+     "no sex printed; name and clan both printed as dashes"),
+    (269, 4, "",  "",                 "",       "",   "",       "",   "", "",
+     "no sex printed; name and clan both printed as dashes"),
+    # Column D of the lower block ends here, at 269.
+
+    # ---- lower block, generation 5 (column E) ---------------------------
+    # 270-274 are all Water. 254's rule carries 270-272 and 256's carries
+    # 273-274; both women are Water.
+    (270, 5, "M", "Kʼauʼwină",        "",       "",   "Water",  "",   "", "", ""),
+    (271, 5, "F", "Dziaid˙yuwe",      "",       "",   "Water",  "",   "", "", ""),
+    (272, 5, "F", "Josephine",        "",       "",   "Water",  "",   "", "",
+     "English name printed as the name itself"),
+    (273, 5, "F", "Dziᶦʼyăiʼ",        "",       "",   "Water",  "",   "", "", ""),
+    (274, 5, "F", "Naiyaisiroʼ",      "",       "",   "Water",  "",   "", "", ""),
+    # THE PLATE'S NUMBERING ENDS AT 274.
 ]
 
 # ---------------------------------------------------------------------------
