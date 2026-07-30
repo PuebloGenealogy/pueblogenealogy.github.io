@@ -16,6 +16,35 @@ three descent blocks. **Genealogy IV** (Table 4) — 73 individuals, 14 marriage
 58 parent–child links, 4 generations. `--public` builds **5 pages** and the live
 site serves all of them. Genealogy III is scanned and untouched.
 
+## When the user says "resume"
+
+**"resume" is a standing command in this project.** It means: read
+`SESSION-NOTES.md`, check the repo, and **answer with the up-next list** — not a
+prose summary, and not a question about what they want to do.
+
+Reply with exactly these four parts, in this order:
+
+1. **Where we are** — one or two lines. Branch, clean or dirty, anything
+   unmerged, and whether the site is deployed and verified.
+2. **Up next** — a **bullet list**, one line per item, **most likely first**.
+   Take them from `SESSION-NOTES.md`'s *open thread* and *Other things that
+   could be picked up*. Mark each with its effort and, where it applies,
+   **needs the user** — several items cannot be done without them and saying so
+   up front saves a wasted turn.
+3. **Before you start** — only the constraints that would otherwise surface
+   late on the *first* item, not every warning in the handoff.
+4. **Don't re-open** — a short line naming what is settled, so they can see at a
+   glance that it is not on the list by choice.
+
+Then stop and let them choose. **Do not begin work on the first item**;
+"resume" asks for the list, not for the work.
+
+Keep it scannable — this is a menu, not a briefing. Detail lives in
+`SESSION-NOTES.md`, and they can ask.
+
+If the `SessionStart` hook reported `STALE:` or `UNCOMMITTED WORK:`, that goes
+in part 1 and outranks anything the handoff claims.
+
 ## Start here
 
 1. **`docs/` is generated.** All design, copy and markup live in
