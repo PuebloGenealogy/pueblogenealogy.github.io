@@ -500,15 +500,10 @@ reliably sequential from v1.0.0's.
   real argument is citation permanence and portability — a domain you own can
   change hosts without breaking a doi-adjacent link — which is an argument for
   doing it first or not at all. Drops onto this repo via a `CNAME` file.
-- **PR #15 is open and the live FAQ is wrong until it lands.** Branch
-  `fix-faq-three-tables`. Two landing-page answers, in the visible copy *and*
-  the `FAQPage` JSON-LD: one still says Tables 2 and 3 are "not yet
-  transcribed", the other still claims the clan check "independently verifies
-  each bracket reading". Not merged because that is a second live deployment
-  and only PR #14 was authorised — **ask, then merge and re-verify by
-  SHA-256.**
 - **The v1.1.0 release has not been cut.** Metadata is ready; see the Zenodo
-  paragraph above for the date and version-doi traps.
+  paragraph above for the date and version-doi traps. This is the only thing
+  outstanding on the edition itself — PR #14 and PR #15 are both merged and
+  the live site is correct.
 - **Genealogy II is published and its reading is closed.** The user re-checked
   their full list on 2026-07-30 and reported **no remaining placement errors**.
   Everything they had flagged is resolved: **31, 32 and 97** via
