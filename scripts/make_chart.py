@@ -356,16 +356,18 @@ FAQ = [
      "Each plate charts several generations of related families at Laguna Pueblo, "
      "New Mexico, recording each person's number, sex, Keresan name and clan."),
     ("Which plates are transcribed here?",
-     "Table 1 (Genealogy I) and Table 4 (Genealogy IV) are transcribed in full and "
-     "published on this site. Tables 2 and 3, Genealogies II and III, are referenced "
-     "by cross-references in Genealogy I but are not yet transcribed."),
+     "Table 1 (Genealogy I), Table 2 (Genealogy II) and Table 4 (Genealogy IV) are "
+     "transcribed in full and published on this site. Table 3, Genealogy III, is "
+     "referenced by cross-references in the other plates but is not yet transcribed."),
     ("How accurate is the transcription?",
      "The plates are transcribed character by character, including the Americanist "
      "phonetic diacritics, and nothing is corrected, normalised or filled in. Where "
      "the plate contains a misprint it is reproduced and annotated rather than "
      "silently fixed, and where Parsons recorded no name the entry is left blank. "
      "Because clan descent at Laguna is matrilineal, every child's clan must match "
-     "its mother's, which independently verifies each bracket reading."),
+     "its mother's, which checks the bracket readings wherever the possible mothers "
+     "belong to different clans; where they do not, the evidence is the geometry of "
+     "the plate's own brackets, read at full resolution."),
     ("Can I use this for family history research?",
      "Yes. The edition is a finding aid for the printed 1923 record and is released "
      "under CC BY 4.0. Note that it publishes the 1923 transcription only: no modern "
