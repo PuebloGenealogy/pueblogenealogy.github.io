@@ -628,8 +628,11 @@ PERSONS = [
 #
 # DECIDED 2026-07-29 (user): note it on BOTH published pages.
 #   - Table 2 gets a footnote saying its references into Genealogy I are exact
-#     through person 27 and one high from person 66 onward, with the matched
-#     names as the evidence.
+#     through person 53 and one high from person 66 onward, with the matched
+#     names as the evidence. (This line said 27 until 2026-07-29, contradicting
+#     the evidence listed above it in this same block -- the exact range was
+#     extended to 53 by the lower block's column D and the summary was not
+#     updated with it. Both footnotes are written and both say 53.)
 #   - Table 1's existing #note-misprint gains a sentence: the same displacement
 #     appears independently on Table 2, which also calls Shuwaiʼᶦri 68. That
 #     STRENGTHENS the standing decision to print 68 rather than "fix" it to 67
