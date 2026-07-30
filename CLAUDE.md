@@ -18,32 +18,49 @@ site serves all of them. Genealogy III is scanned and untouched.
 
 ## When the user says "resume"
 
-**"resume" is a standing command in this project.** It means: read
-`SESSION-NOTES.md`, check the repo, and **answer with the up-next list** — not a
-prose summary, and not a question about what they want to do.
+**Standing command. Answer with the up-next list — cheaply.** `resume` is the
+first turn of a fresh session, so every token spent here is taken from the work
+itself. Treat this as a budget, not a summary.
 
-Reply with exactly these four parts, in this order:
+### Spend almost nothing getting the answer
 
-1. **Where we are** — one or two lines. Branch, clean or dirty, anything
-   unmerged, and whether the site is deployed and verified.
-2. **Up next** — a **bullet list**, one line per item, **most likely first**.
-   Take them from `SESSION-NOTES.md`'s *open thread* and *Other things that
-   could be picked up*. Mark each with its effort and, where it applies,
-   **needs the user** — several items cannot be done without them and saying so
-   up front saves a wasted turn.
-3. **Before you start** — only the constraints that would otherwise surface
-   late on the *first* item, not every warning in the handoff.
-4. **Don't re-open** — a short line naming what is settled, so they can see at a
-   glance that it is not on the list by choice.
+**The `SessionStart` hook has already put the whole of `SESSION-NOTES.md` in
+context.** It is there before you act.
 
-Then stop and let them choose. **Do not begin work on the first item**;
-"resume" asks for the list, not for the work.
+- **Do not re-read `SESSION-NOTES.md`.** Reading it back is the single most
+  expensive mistake available on this turn, and it buys nothing.
+- **Do not read** `CHANGELOG.md`, `METHOD.md`, `README.md`, or any
+  `scripts/*.py`. None is needed to list what is next.
+- **Do not run the build, the self-checks, or `curl`.** The handoff already
+  records the last verified state, and nothing has changed since.
+- **One tool call, at most**, and only if the hook printed no warning:
+  `git status --porcelain && git branch --show-current`. Combine, never split.
+- If the hook printed `STALE:` or `UNCOMMITTED WORK:`, **that is your answer**
+  for part 1 — it outranks anything the handoff claims. Investigate only if the
+  user asks.
 
-Keep it scannable — this is a menu, not a briefing. Detail lives in
-`SESSION-NOTES.md`, and they can ask.
+### Reply — four parts, hard caps
 
-If the `SessionStart` hook reported `STALE:` or `UNCOMMITTED WORK:`, that goes
-in part 1 and outranks anything the handoff claims.
+1. **Where we are** — **one line.** Branch, clean/dirty, anything unmerged.
+2. **Up next** — a **bullet list, one line each, most likely first**, from the
+   handoff's *open thread* and *Other things that could be picked up*. Effort in
+   two or three words; add **needs you** where it applies, since that saves a
+   wasted turn. **Never more than one line per item.**
+3. **Before you start** — **at most three bullets**, and only for the **first**
+   item. Not every warning in the handoff.
+4. **Don't re-open** — **one line** naming what is settled, so its absence from
+   the list reads as a choice.
+
+### Then stop
+
+**Do not begin work on the first item.** `resume` asks for the list, not the
+work. Do not restate decisions, do not explain the project, do not offer to do
+several things at once, and **do not ask a clarifying question** — the list is
+the question.
+
+No preamble, no closing summary, no table where bullets will do. The detail
+already lives in `SESSION-NOTES.md`; the user can ask for any of it, and asking
+is cheaper than pre-loading it.
 
 ## Start here
 
