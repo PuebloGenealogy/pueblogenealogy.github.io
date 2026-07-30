@@ -369,6 +369,25 @@ to catch "58+59" links those too.
   evidence is the plate — the narrow bracket-column strip, stubs counted.
 - **Person 8 (Yu˙si) appears twice** on Table 1; drawn once, with a
   cross-reference standing in for the repeat.
+- **A person who appears twice can carry a different marriage each time, and
+  the renderer must not merge them.** There are now two shapes and they need
+  different mechanisms. Table 1's person 8 has **two different wives**, 7 and
+  73, both printed under him: two groups, two `mother_row`s, nothing collides,
+  and the already-drawn one is replaced by a child-column note —
+  `SECOND_VISIT_NOTE`. Genealogy II's **169 has two husbands and is the mother
+  of both groups**, so `u["wife"] == pid` gives both `mother_row = 0`, and two
+  brackets cannot begin on one line: the push logic moved her own line down to
+  meet the second group and stranded the first, one `--lh` out. Parsons has no
+  such problem because she prints 169 **twice, one marriage each** — under
+  156+157 as 168's wife bracketing 196–200, and under 164+165 as her parents'
+  daughter bracketing 225, 226 — and the second occurrence prints **no `+ 168`
+  line at all**. So the collision was self-inflicted: the renderer printed a
+  marriage in a block where the plate prints none. `SECOND_VISIT_OMITTED` is
+  the mechanism — it suppresses the `+` line, the bracket and the note, and
+  prints the plate's own cross-reference row in their place, held back until
+  the block's other union lines are down because that is where the plate sets
+  it. **Don't reach for it when the two groups have different mothers**; that
+  is `SECOND_VISIT_NOTE`'s case and it already works.
 - **An id addresses a person; `plate_number` is what prints.** There are now two
   reasons they differ, and they are not the same reason. A **misprint** (Table 1)
   shows the plate's wrong number, ringed in `--sic` with an annotation row,
@@ -480,19 +499,27 @@ publishes Genealogy II, not after.
   real argument is citation permanence and portability — a domain you own can
   change hosts without breaking a doi-adjacent link — which is an argument for
   doing it first or not at all. Drops onto this repo via a `CNAME` file.
-- **Genealogy II builds but its reading is not settled** — draft PR #14 on branch
+- **Genealogy II's reading is settled; it is unmerged** — draft PR #14 on branch
   `table-ii-transcription`. Read, encoded, rendered and measured; `self_check()`
-  passes and 275 of 275 persons are drawn. **The user has reported errors in
-  where entries are placed** and asked to be questioned about the full list.
-  **Ask before merging or publishing** — `self_check()` cannot see placement, so
-  its passing is not evidence against them. Settled so far (2026-07-30): **31,
-  32 and 97** are placed correctly as data but were *drawn* in the wrong column,
-  now fixed via `UNATTACHED_BLOCKS`; **49 under 47** confirmed correct;
-  **116–118's father is 49** per Parsons's prose, still to be added as an
-  editorial attribution. Deferred by the user, and still open: the rest of the
-  list, **232+233**, **U52 (234+54)** and **U60 (254+255)**. After that comes
-  the release decision, and `.zenodo.json` and `CITATION.cff` still describe a
-  **two-table** edition while the tagged commit is what Zenodo reads.
+  passes and 275 of 275 persons are drawn. The user's placement review **closed
+  on 2026-07-30: they re-checked and reported no remaining placement errors.**
+  Everything they had flagged is resolved — **31, 32 and 97** were placed
+  correctly as data but *drawn* in the wrong column, fixed via
+  `UNATTACHED_BLOCKS`; **49 under 47** confirmed; **154+155 and 232+233** were
+  drawn at the left margin and now sit at the columns the plate prints them in,
+  via `root_columns`; **U52 (234+54)** and **U60 (254+255)** confirmed against
+  the plate, and **254's descent from 235+236** re-verified on the bracket strip
+  at the user's request. **169's two brackets** are fixed via
+  `SECOND_VISIT_OMITTED`. What remains before merging is the release decision:
+  `.zenodo.json` and `CITATION.cff` still describe a **two-table** edition while
+  the tagged commit is what Zenodo reads.
+  **116–118's paternity is NOT encoded, by decision (2026-07-30).** It was
+  going to be a second editorial attribution naming 49 as the father, but
+  METHOD.md requires every such row to be daggered to a footnote, no source for
+  it was identified in Parsons's text, and the user asked for no footnote and no
+  editorial note. So the chart draws the plate's own fatherless bracket under 48
+  and asserts nothing. Do not re-open this as an oversight; and note the general
+  rule it illustrates — **an attribution that cannot be footnoted is not made.**
   Two things about this plate the published two do not prepare you for:
   it runs to **six generations** and **274 numbers for 275 people**, and **its
   numbering is not a unique key** — Parsons numbers two different people 101.
@@ -555,11 +582,28 @@ line, the child column it is printed in and the child it is printed after, and
 the renderer splices the block into that column and **withholds only the leader
 stub** (`.kids > .node.unattached::before`). The vertical still passes the row,
 as it does on the plate. Reach for it whenever the plate *prints* a couple
-somewhere it does not *descend* them; reach for `roots` only when the plate
-starts a genuinely separate block at the left margin. An entry is validated by
+somewhere it does not *descend* them. An entry is validated by
 `self_check()`, which also forbids splicing after a column's **last** child —
 the bracket's bottom terminus is drawn from DOM position, so the rule would then
 run past its own last child.
+
+**A root is not automatically at the left margin, and that is a third case
+again.** `roots` draws a block at generation 1. That is right for a block the
+plate starts at the sheet's left edge and wrong for one it merely *indents*,
+which is what Genealogy II does twice: measured on the scan 2026-07-30, person 1
+sits at x 225 and person 3 — generation 2 — at x 1425, while the lower block's
+154 sits at x 1340 and 232 at x 2690, the same column as 164, who is 154+155's
+own child. `spec["root_columns"]` in `TABLES` sets the starting column
+(`{154: 2, 232: 3}`), applied as a `margin-inline-start` on the `.tree` stated
+in `--col`/`--stub`, so generation *d* still lands at *d* × (`--col` + `--stub`)
+and drift stays 0 — verified at 425.59px step, spread ≤ 0.008px across all six.
+**Do not reach for `UNATTACHED_BLOCKS` here**: the lower block is not descended
+from the upper one, so splicing would assert a containment the plate does not,
+and it would hit the last-child rule anyway, because the plate's vertical ends
+*on* 164 with nothing beside 232 at all (bracket-column strip x 2480, y 9900).
+The independent check that these two columns are right is that the `generation`
+field — derived by walking the tree, never read off the plate — already stored
+2 and 3 for them.
 
 **A half-read plate is never registered in `TABLES`.** The renderer builds every
 registered table on every `--public` run, so registering early is how a partial

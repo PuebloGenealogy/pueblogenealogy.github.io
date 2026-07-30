@@ -361,7 +361,16 @@ PERSONS = [
     (168, 4, "M", "Kowăuʼsh˙dyiwă",  "",       "42", "Sun",    "",   "", "See Gen. I, 18", ""),
     (169, 4, "F", "Haiʼtyʼʼimăiʼ",   "",       "43", "Parrot", "",   "",
      "See Gen. I, 19 | For first husband and descendants, see below",
-     "appears twice within the lower block; drawn once. A heavy ink stroke runs "
+     "appears twice within the lower block, and the plate gives each occurrence "
+     "exactly ONE marriage and one bracket -- under 156+157 as 168's wife, "
+     "bracketing 196-200, with 'For first husband and descendants, see below'; "
+     "and under 164+165 as their daughter, bracketing 225, 226, with 'For "
+     "second husband and descendants, see above'. The second occurrence prints "
+     "no '+ 168' line at all. Read 2026-07-30 at x 3650 y 7500 and x 3650 "
+     "y 9700, 1500 px wide. This is why she needs make_chart.py's "
+     "SECOND_VISIT_OMITTED: she is the mother of both groups, so the renderer "
+     "gave both mother_row = 0 and could not put two brackets on one line. "
+     "A heavy ink stroke runs "
      "from this line's clan to its sibling bracket on the scanned copy -- it is "
      "not type, and is recorded as an observation of this copy, not as data"),
     (170, 4, "M", "Kʼuʼn˙ash˘",      "",       "",   "Sun",    "",   "", "See Gen. I, 20",
@@ -526,10 +535,18 @@ PERSONS = [
     # ---- lower block, generation 4 resumes (column D) -------------------
     # 254-260 are Water, which is 236's clan, so they hang off 235+236.
     (254, 5, "F", "Lina",             "",       "",   "Water",  "",   "", "",
-     "English name printed as the name itself"),
+     "English name printed as the name itself. HER DESCENT FROM 235+236 WAS "
+     "RE-VERIFIED 2026-07-30 at the user's request, on the bracket-column strip "
+     "x 4720, y 11400, 300 x 900: 236's leader rule meets the vertical at the "
+     "TOP corner, which is 254's own row, and a stub enters 254 there. The "
+     "vertical then runs to 260 and terminates. Stubs enter 254, 255, 256, 258, "
+     "259 and 260; 257 takes none. Her Water clan is 236's, which agrees"),
     (255, 5, "M", "Kaauʼstyiăiʼ",     "",       "",   "Eagle",  "",   "", "",
      "this '+' line also carries a leader rule entering from the left, which "
-     "no other '+' line on the plate does. Noted for Gate 2, not interpreted"),
+     "no other '+' line on the plate does -- 257, the other '+' line in the "
+     "same group, takes no stub. Confirmed on the strip above. It is NOT "
+     "descent: 255 is Eagle and every child of this bracket is Water. See "
+     "U60 in UNIONS, which is where the reading is stated"),
     (256, 5, "F", "Gʼawaidyuwi",      "",       "",   "Water",  "",   "", "", ""),
     (257, 5, "M", "John Perry",       "",       "",   "Eagle",  "",   "", "",
      "English name printed as the name itself"),
@@ -944,6 +961,16 @@ REPEAT_PERSON_NAMES = {
 #     => 232+233 are upper generation 3, i.e. lower column B, which is exactly
 #        the indent they are printed at. Their stored "generation 1" is wrong;
 #        "founding couple" means no parents are drawn, not column A.
+#
+# THE CHART NOW DRAWS THEM THERE TOO (2026-07-30). Until then all three roots
+# rendered at generation 1, so 154+155 sat one column left of where the plate
+# sets them and 232+233 two columns left -- the same "the block is right and its
+# position is not" defect that 31 had, and the reason the user flagged 232+233.
+# make_chart.py's TABLES entry now carries root_columns {154: 2, 232: 3}, which
+# indents the .tree in the grid's own tokens. Note this field is STILL not a
+# layout input: root_columns was set from the plate's measured indents (person 1
+# at x 225, person 3 at x 1425, 154 at x 1340, 232 at x 2690) and the agreement
+# with the generations derived here is a check, not a dependency.
 #
 # APPLIED 2026-07-29, once the brackets were encoded. The field was NOT
 # hand-renumbered off column positions; it was DERIVED from the traced tree

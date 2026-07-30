@@ -132,6 +132,27 @@ TABLES = {
         # transcription_ii.py, which withholds the stub, so the page says what
         # the plate says: printed here, descent not drawn.
         "roots": [1, 154, 232],
+        # A root is drawn at generation 1 unless it says otherwise, and on this
+        # plate two of the three say otherwise. Parsons does not set the lower
+        # block at the sheet's left margin: measured on the scan 2026-07-30,
+        # person 1 sits at x 225 and person 3 -- generation 2 -- at x 1425,
+        # while the lower block's 154 sits at x 1340 (person 3's column) and
+        # 232 at x 2690, the same column as 164, who is 154+155's child. So the
+        # plate prints 154+155 one column in and 232+233 two columns in, and
+        # the generation field already stored for them, 2 and 3, is that same
+        # reading arrived at independently by walking the tree.
+        #
+        # This is an INDENT, not a splice. UNATTACHED_BLOCKS puts a couple
+        # inside somebody's child column, which is right for 31 -- the plate
+        # prints him among 9+10's children with the vertical passing his row.
+        # It is wrong here: the lower block is not descended from the upper
+        # one, it is a separate block that simply starts further in, and the
+        # bracket-column strip at x 2480, y 9900 shows 154+155's vertical
+        # ending on 164 with nothing beside 232 at all. Splicing would also run
+        # into self_check()'s last-child rule for exactly that reason.
+        # Expressed in the same GEOM tokens as the grid, so generation d still
+        # lands at d x (--col + --stub) and column drift stays 0.
+        "root_columns": {154: 2, 232: 3},
         "slug": "genealogy-ii",
         "couples": (f"{_p(1)}+{_p(2)}, {_p(154)}+{_p(155)} "
                     f"and {_p(232)}+{_p(233)}"),
@@ -429,6 +450,31 @@ def describe(spec, n_persons, n_gens):
 SECOND_VISIT_NOTE = {
     "U04": "For descendants, see above, 13-15, 28-30",   # Table 1, under 8
     "V02": "For descendants, see above",                 # Table 4, under 4
+}
+
+# Where the plate does not repeat the marriage AT ALL on the second visit --
+# no '+' line, no bracket, no child-column note, only a prose cross-reference
+# printed in the block. This is NOT SECOND_VISIT_NOTE: there the plate does
+# print the '+' line and replaces only the sibling bracket, which is why the
+# note sits in the child column on that spouse's row.
+#
+# The distinction is structural, not cosmetic. Table 1's person 8 has two
+# DIFFERENT wives, 7 and 73, so his two groups hang off two different rows and
+# nothing collides. Genealogy II's 169 has two husbands and is the mother of
+# both groups, so `u["wife"] == pid` gives both `mother_row = 0` -- and two
+# brackets cannot begin on one line. The push logic then moves 169's own line
+# down to meet the second group and strands the first, one --lh out. Parsons
+# has no such problem because she prints 169 TWICE, one marriage each: under
+# 156+157 as 168's wife with the bracket to 196-200, and under 164+165 as her
+# parents' daughter with the bracket to 225, 226. Verified on the scan at
+# x 3650 y 7500 and x 3650 y 9700, 1500 px wide, 2026-07-30.
+#
+# So the collision was self-inflicted -- the renderer printed a marriage in a
+# block where the plate prints none -- and suppressing it is what makes the
+# page agree with the scan. Keyed by union id; the value is the plate's own
+# line, verbatim.
+SECOND_VISIT_OMITTED = {
+    "U43": "For second husband and descendants, see above",  # Table 2, under 164+165
 }
 
 RESEARCH_KEYS = ("english_name", "census_name", "census_year", "match_confidence", "notes")
@@ -787,8 +833,19 @@ class Chart:
         # Pass 1: lay out this block's own lines and decide where each sibling
         # group belongs. No recursion here, so union bookkeeping resolves in the
         # same order it did before descendants are drawn.
+        deferred_xref = []     # plate lines that stand in for an omitted union
         for u in self.unions_of(pid):
             drawn_before = u["union_id"] in self.rendered_unions
+            # The plate prints no second occurrence of this marriage -- see
+            # SECOND_VISIT_OMITTED. Print nothing for it here except the
+            # cross-reference the plate puts in its place, held back until the
+            # block's other union lines are down, because that is where the
+            # plate sets it: under 183, not between 169 and him.
+            if drawn_before and u["union_id"] in SECOND_VISIT_OMITTED:
+                kids = self.KU.get(u["union_id"], [])
+                deferred_xref.append((SECOND_VISIT_OMITTED[u["union_id"]],
+                                      kids[0] if kids else None))
+                continue
             self.rendered_unions.add(u["union_id"])
             if pid in (u["wife"], u["husband"]):
                 other = u["husband"] if u["wife"] == pid else u["wife"]
@@ -855,6 +912,13 @@ class Chart:
                     # alone, so there is no column for an unattached block to
                     # be spliced into.
                     groups.append((mother_row, "kids", spouse_kids, ""))
+
+        # The omitted marriages' cross-references, now that every '+' line this
+        # block does print is down. Counted like any other xref row so the rows
+        # below stay on the --lh grid; no group hangs off one.
+        for text, tgt in deferred_xref:
+            block.append(("xref", linkify_xref(esc(text), self.P, tgt), None))
+            row += 1
 
         orphans = [k for k in self.KM.get(pid, []) if k not in self.placed]
         if orphans:
@@ -3203,7 +3267,18 @@ def build_table(spec, public, today):
         out = OUT
 
     chart = Chart(persons, unions, ku, km, ub)
-    trees = "".join(f'<div class="tree">{chart.render(r)[0]}</div>' for r in spec["roots"])
+    # A root starts at generation 1 unless spec["root_columns"] sets it further
+    # in -- see the Genealogy II entry in TABLES for why this is an indent and
+    # not an UNATTACHED_BLOCKS splice. The offset is stated in the grid's own
+    # tokens, so it is the same step the nesting produces and drift stays 0.
+    rc = spec.get("root_columns", {})
+    def _tree(r):
+        col = rc.get(r, 1)
+        style = ("" if col <= 1 else
+                 ' style="margin-inline-start:calc((var(--col) + var(--stub))'
+                 f' * {col - 1})"')
+        return f'<div class="tree"{style}>{chart.render(r)[0]}</div>'
+    trees = "".join(_tree(r) for r in spec["roots"])
 
     missing = sorted(set(persons) - chart.seen)
     links = sum(len(v) for v in ku.values()) + sum(len(v) for v in km.values())
