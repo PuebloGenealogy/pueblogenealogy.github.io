@@ -8,15 +8,13 @@ Natural History*, vol. 19, pt. 5 (1923), pp. 133–292.
 `PuebloGenealogy/pueblogenealogy.github.io` (public) · Pages from `main` /
 `/docs`, HTTPS enforced.
 
-Published: **Genealogy I** (Table 1) — 104 individuals, 27 marriages, 80
-parent–child links, 5 generations. **Genealogy IV** (Table 4) — 73 individuals,
-14 marriages, 58 parent–child links, 4 generations.
-
-**Genealogy II** (Table 2) is **complete, rendered and awaiting merge** on
-branch `table-ii-transcription`, draft PR #14 — 275 individuals for the plate's
-274 numbers, 61 marriages, 214 parent–child links, **6 generations**, three
-descent blocks. It is registered in `TABLES`, so `--public` builds **5 pages**;
-the live site still serves two. Genealogy III is scanned and untouched.
+Published, **three plates, 452 individuals** (PR #14 merged 2026-07-30):
+**Genealogy I** (Table 1) — 104 individuals, 27 marriages, 80 parent–child
+links, 5 generations. **Genealogy II** (Table 2) — 275 individuals for the
+plate's 274 numbers, 61 marriages, 214 parent–child links, **6 generations**,
+three descent blocks. **Genealogy IV** (Table 4) — 73 individuals, 14 marriages,
+58 parent–child links, 4 generations. `--public` builds **5 pages** and the live
+site serves all of them. Genealogy III is scanned and untouched.
 
 ## Start here
 
@@ -473,10 +471,13 @@ citation was removed on 2026-07-28 and never carried the doi), and as
 the entity the deposit actually corresponds to. Archiving is automatic from now
 on: Zenodo's webhook is on the repo, so **cutting a GitHub release mints a new
 version doi**. `.zenodo.json` controls the record's metadata; without it Zenodo
-would title the deposit after the repo. **`.zenodo.json` and `CITATION.cff` both
-still describe a two-table edition**, and Zenodo reads them from the *tagged
-commit* — so they have to be brought up to three tables before the release that
-publishes Genealogy II, not after.
+would title the deposit after the repo. **`.zenodo.json` and `CITATION.cff` were
+brought up to three tables on 2026-07-30**, ahead of the release, because Zenodo
+reads them from the *tagged commit* and not from `main`'s tip. `CITATION.cff`
+now says `v1.1.0` / `2026-07-30` — **correct that date before tagging if the
+release slips to another day**, and add v1.1.0's version doi to `identifiers`
+*after* the webhook mints it. **Never guess a version doi**; the suffix is not
+reliably sequential from v1.0.0's.
 
 **Outstanding:**
 - **Inbound links** — a fresh `*.github.io` has no authority, and no on-page
@@ -499,20 +500,22 @@ publishes Genealogy II, not after.
   real argument is citation permanence and portability — a domain you own can
   change hosts without breaking a doi-adjacent link — which is an argument for
   doing it first or not at all. Drops onto this repo via a `CNAME` file.
-- **Genealogy II's reading is settled; it is unmerged** — draft PR #14 on branch
-  `table-ii-transcription`. Read, encoded, rendered and measured; `self_check()`
-  passes and 275 of 275 persons are drawn. The user's placement review **closed
-  on 2026-07-30: they re-checked and reported no remaining placement errors.**
-  Everything they had flagged is resolved — **31, 32 and 97** were placed
-  correctly as data but *drawn* in the wrong column, fixed via
-  `UNATTACHED_BLOCKS`; **49 under 47** confirmed; **154+155 and 232+233** were
-  drawn at the left margin and now sit at the columns the plate prints them in,
-  via `root_columns`; **U52 (234+54)** and **U60 (254+255)** confirmed against
-  the plate, and **254's descent from 235+236** re-verified on the bracket strip
-  at the user's request. **169's two brackets** are fixed via
-  `SECOND_VISIT_OMITTED`. What remains before merging is the release decision:
-  `.zenodo.json` and `CITATION.cff` still describe a **two-table** edition while
-  the tagged commit is what Zenodo reads.
+- **PR #15 is open and the live FAQ is wrong until it lands.** Branch
+  `fix-faq-three-tables`. Two landing-page answers, in the visible copy *and*
+  the `FAQPage` JSON-LD: one still says Tables 2 and 3 are "not yet
+  transcribed", the other still claims the clan check "independently verifies
+  each bracket reading". Not merged because that is a second live deployment
+  and only PR #14 was authorised — **ask, then merge and re-verify by
+  SHA-256.**
+- **The v1.1.0 release has not been cut.** Metadata is ready; see the Zenodo
+  paragraph above for the date and version-doi traps.
+- **Genealogy II is published and its reading is closed.** The user re-checked
+  their full list on 2026-07-30 and reported **no remaining placement errors**.
+  Everything they had flagged is resolved: **31, 32 and 97** via
+  `UNATTACHED_BLOCKS`; **49 under 47** confirmed; **154+155 and 232+233** moved
+  to their printed columns via `root_columns`; **169's two brackets** via
+  `SECOND_VISIT_OMITTED`; **U52**, **U60** and **254's descent from 235+236**
+  verified against the plate. Do not re-open any of these.
   **116–118's paternity is NOT encoded, by decision (2026-07-30).** It was
   going to be a second editorial attribution naming 49 as the father, but
   METHOD.md requires every such row to be daggered to a footnote, no source for
@@ -520,11 +523,9 @@ publishes Genealogy II, not after.
   editorial note. So the chart draws the plate's own fatherless bracket under 48
   and asserts nothing. Do not re-open this as an oversight; and note the general
   rule it illustrates — **an attribution that cannot be footnoted is not made.**
-  Two things about this plate the published two do not prepare you for:
+  Two things about this plate the other two do not prepare you for:
   it runs to **six generations** and **274 numbers for 275 people**, and **its
   numbering is not a unique key** — Parsons numbers two different people 101.
-  Note also that merging it publishes two changes to **Table 1**, which is
-  cited: a longer `#note-misprint`, and cross-reference rows 3.7px taller.
 
 ## Working style
 

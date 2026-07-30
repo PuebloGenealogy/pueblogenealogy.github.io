@@ -3,6 +3,130 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-30 (later) — Genealogy II published: reading settled, PR #14 merged, live
+
+**The edition now serves three plates.** The user re-checked their placement
+list and reported **no remaining placement errors**, which closed the thread the
+previous two sessions were blocked on. PR #14 merged as `04ded51` and deployed.
+
+### Claims in the entry below that this session falsified
+
+- **"Person 169's bracket is a full `--lh` out. Still open" → fixed**, and the
+  cause was ours, not a layout bug. See below.
+- **"`roots` is for a genuinely separate block at the left margin"** — too
+  strong. A root can be a separate block that the plate merely *indents*, which
+  is what Genealogy II does twice. `root_columns` is the new mechanism.
+- **"Clan descent … independently checks every bracket reading"** was still live
+  in **three** places outside `CLAUDE.md`, which had already corrected it:
+  `.zenodo.json`, `CITATION.cff`, and the landing-page FAQ. All three now say
+  what the check actually does — it discriminates only where the possible
+  mothers belong to different clans. This is the third session to find a copy of
+  this sentence; if another turns up, that is why.
+
+### 169's two brackets — the renderer was drawing a marriage the plate does not
+
+Her bracket was one `--lh` out because she has two husbands **and is the mother
+of both groups**, so `u["wife"] == pid` gave both `mother_row = 0`. Two brackets
+cannot begin on one line, so `line_pad` pushed her own line down to meet the
+second group and stranded the first.
+
+Parsons has no such problem, because she prints 169 **twice, one marriage
+each** — under 156+157 as 168's wife bracketing 196–200, and under 164+165 as
+her parents' daughter bracketing 225, 226 — and **the second occurrence prints
+no `+ 168` line at all**. Read at x 3650 y 7500 and x 3650 y 9700, 1500px wide.
+So the collision was self-inflicted: the renderer printed a marriage in a block
+where the plate prints none.
+
+`SECOND_VISIT_OMITTED` in `make_chart.py` suppresses the `+` line, the bracket
+and the child-column note, and prints the plate's own cross-reference row
+instead, held back until the block's other union lines are down because that is
+where the plate sets it. **Both occurrences now measure 0px.**
+
+**This is not Table 1's person 8** and must not be merged with him: he has two
+*different* wives, 7 and 73, two distinct `mother_row`s, and nothing collides.
+That is `SECOND_VISIT_NOTE`, and it is untouched.
+
+### The roots were at the left margin; the plate only indents them
+
+Measured on the scan: person 1 at x 225, person 3 — generation 2 — at x 1425,
+while the lower block's **154 sits at x 1340** (person 3's column) and **232 at
+x 2690**, the same column as 164, who is 154+155's own child. All three roots
+were being drawn at generation 1.
+
+`spec["root_columns"] = {154: 2, 232: 3}` indents the `.tree` in the grid's own
+`--col`/`--stub` tokens. **Deliberately not `UNATTACHED_BLOCKS`**: the lower
+block is not descended from the upper one, so splicing would assert a
+containment the plate does not, and it would hit `self_check()`'s last-child
+rule anyway — the bracket-column strip at x 2480, y 9900 shows 154+155's
+vertical ending *on* 164 with nothing beside 232 at all. The independent check
+is that the `generation` field, derived by walking the tree and never read off
+the plate, had already stored 2 and 3.
+
+### Verified at the user's request, no change needed
+
+**254's descent from 235+236** — strip x 4720, y 11400: 236's leader rule meets
+the vertical at its top corner, which is 254's own row, and a stub enters there.
+The vertical runs to 260 and terminates. Stubs enter 254, 255, 256, 258, 259,
+260; **257 takes none**. The 255 anomaly stands as recorded — he takes a stub
+although he is a `+` line, and he is Eagle where every child on that bracket is
+Water, so it is not descent. **U52 (234+54)** and **U60 (254+255)** also
+confirmed.
+
+### 116–118's paternity is deliberately NOT encoded
+
+It was specified as METHOD.md's second editorial attribution, naming 49 as the
+father. It is not being made. METHOD.md requires every such row to be daggered
+to a footnote; **no source for it was identified in Parsons's text**, and the
+user asked for no footnote and no editorial note. The chart therefore draws the
+plate's own fatherless bracket under 48 and asserts nothing. The general rule,
+now in `CLAUDE.md`: **an attribution that cannot be footnoted is not made.**
+Do not re-open this as an oversight.
+
+### Release metadata brought to three tables
+
+`.zenodo.json` and `CITATION.cff` described a two-table edition, and Zenodo
+reads both from the **tagged commit**. Both now describe three plates and 452
+individuals. `CITATION.cff` goes to **`v1.1.0` / `2026-07-30`** — a plate is
+additive, hence the minor bump. **v1.1.0's version DOI is deliberately absent**:
+it does not exist until Zenodo's webhook fires on the release, and it cannot be
+guessed from v1.0.0's. `README.md`'s plate table gained Table 2.
+
+### Published and verified
+
+Merged, deployed, and checked **by SHA-256 against the live URLs** — the Pages
+build API misreports the deployed commit, so hashes are the only real check. All
+four pages byte-identical to `main`, HTTP 200, sitemap carrying four URLs.
+Privacy sweep of the **live** pages: no `class="eng"`/`class="census"`, no
+research vocabulary; the only `census` occurrences are the three allowlisted
+FAQ sentences that state the boundary itself.
+
+### Found by checking the live site, not the build — PR #15, OPEN
+
+The landing-page FAQ was stale in two answers, in the visible copy **and** the
+`FAQPage` JSON-LD:
+
+- it still said **"Tables 2 and 3 … are not yet transcribed"**, shipped by the
+  very release that publishes Genealogy II;
+- it still claimed the clan check **"independently verifies each bracket
+  reading"**.
+
+Both fixed on branch `fix-faq-three-tables`, **PR #15, not merged** — merging is
+a second live deployment and the user authorised #14 only. The privacy allowlist
+is untouched, so the gate still fails closed on a reword.
+
+**The lesson, since this is the second time it has paid off:** the build gate
+inspects `docs/`, but only a fetch of the live page proves what a reader gets.
+Grep the built file for markup; fetch the live URL for truth.
+
+### Measured, 1280×900
+
+Column drift spread **≤ 0.008px across all six generations**, step 425.59px. 57
+bracket groups, **worst 0.023px** (the pre-existing sub-pixel 158→126). **0 rows
+off the `--lh` grid.** 0px body sideways scroll at desktop *and* mobile. Ruler
+labels 425.6px apart, still tracking the grid. All three `self_check()`s pass;
+`--public` exits 0 at 275/275 persons and 8 valid JSON-LD blocks. Tables 1 and 4
+and the landing page byte-identical through the Table 2 work.
+
 ## 2026-07-30 — 31+32+97 drawn where the plate prints them, not at the left margin
 
 The first of the user's reported placement errors, resolved. **The data was
