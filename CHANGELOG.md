@@ -34,6 +34,52 @@ irreversible act.
   Genealogy II, and not this attribution. That is the accepted cost of the
   policy and must not be "fixed" by tagging.
 
+### The publish gates had stopped covering the newest plate (PR #18)
+
+`/publish` was written for a two-table edition and never updated when Genealogy
+II shipped earlier the same day. **Gate 1 ran `transcription.py` and
+`transcription_iv.py` but not `transcription_ii.py`; Gate 6 polled
+`/genealogy-i/` and `/genealogy-iv/` but not `/genealogy-ii/`.** So the
+procedure verified every plate *except* the most recently added one — the
+failure mode of a hardcoded list, which does not break, it just silently stops
+covering the newest thing.
+
+Both gates now **derive** their lists — Gate 1 loops `scripts/transcription*.py`,
+Gate 6 loops the directories in `docs/` — so **Genealogy III is covered the day
+it exists, with no edit to the skill.** The SHA-256 deploy check is derived the
+same way. `/fonts/` appears in the derived page list and 404s harmlessly; that
+is documented inline so it is not mistaken for a failure.
+
+**A gate that would have failed on every correct build was caught by running it
+rather than reasoning about it.** The first draft said the sitemap's `<loc>`
+count should equal the build's page count. It does not — **4 against 5** —
+because `404.html` is deliberately absent from the sitemap. The gate now says to
+expect one fewer, and notes that equality would mean the 404 page had leaked in.
+
+Gate 1 also now states what the structural checks **cannot** see — whether a
+person is attached to the right parents, or drawn in the right column — so a
+pass is not read as evidence the reading is correct.
+
+### Deployed and verified live
+
+PR #18 merged as `1a8a1c6`, PR #17 as `6db1fdb`. Verified by **SHA-256 against
+the committed files**, not the Pages build API: all five `docs/**/*.html` match,
+every page 200, sitemap 4 `<loc>`.
+
+**A live privacy sweep passed and was worthless, and the reason is worth
+keeping.** The pages had been fetched with `curl` *without trailing slashes*, so
+what came back were redirect stubs — the gate inspected near-empty files and
+reported CLEAN on all five. What caught it was a sanity assertion that
+`id="p116"` exists in the fetched Genealogy II; it returned False, which is
+impossible for a real page. **Always pair a privacy sweep with an assertion that
+the content is actually present** — a check that passes because it examined
+nothing is the most dangerous result it can produce.
+
+Re-run with `curl -sL` and trailing slashes: all five pages CLEAN, no
+`class="eng"`, no `class="census"`, and the word `widow` appears **exactly once**
+on Genealogy II (the allowlisted Parsons quotation) and **zero times** on
+Genealogy I.
+
 ## 2026-07-30 — 116–118 attributed to person 49, on Parsons's own testimony
 
 **The edition's second editorial attribution, and the first with a source a

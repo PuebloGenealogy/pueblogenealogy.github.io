@@ -71,9 +71,15 @@ Enforced structurally, and must stay that way:
     the markup grep was blind to the way research would actually escape — a
     footnote explaining *why* a reading was made carries no class at all.
     `<style>` blocks are excluded (the stylesheet ships `.census{}` rules);
-    scripts are not. Three FAQ sentences that state the privacy boundary are
-    allowlisted by exact phrase, so it **fails closed**: reword the FAQ and the
-    build stops until the new wording is allowlisted
+    scripts are not. It **fails closed**: reword an allowlisted phrase and the
+    build stops until the new wording is allowlisted. `RESEARCH_PROSE_ALLOWED`
+    holds **two kinds** of entry, and the distinction matters — three FAQ
+    sentences that *state* the privacy boundary, and (added 2026-07-30) one
+    quotation from **Parsons's own 1923 text**, in Genealogy II's
+    `note-paternity`, where her word "widow" is the source speaking and not
+    research escaping. **Allowlist the exact phrase; never loosen the
+    pattern** — and keep the phrase off a source-line break, since the check is
+    an exact substring replace against the rendered HTML
 - `check_published_pages()` sweeps **every** `.html` in `docs/`. The per-table
   check only ever saw table pages, so the landing page — the one carrying the
   FAQ — went unchecked entirely until 2026-07-28
@@ -528,8 +534,12 @@ Consequences a session must not "fix":
   none of Wikipedia's conflict-of-interest friction), then the Wikipedia *Elsie
   Clews Parsons* external links — **propose on the Talk page**, since adding a
   link to one's own work is a COI and tends to be reverted — then the AMNH
-  Digital Library, which hosts the original and could also supply the handle
-  `.zenodo.json` currently omits from `related_identifiers`.
+  Digital Library, which hosts the original.
+  **The AMNH handle is `2246/158`** — `https://digitallibrary.amnh.org/handle/2246/158`,
+  found 2026-07-30. That is the identifier `.zenodo.json` omits from
+  `related_identifiers`; add it when that file is brought to four tables for the
+  release, not as a standalone edit. Note `digitallibrary.amnh.org` **403s
+  automated fetches** — use a real browser, not `WebFetch`.
 - **Custom domain** — **currently decided against**; listed here because it is
   not closed, only deferred. The reasoning is the paragraph below, which used to
   point at `SESSION-NOTES.md` and no longer does: that file is overwritten every
