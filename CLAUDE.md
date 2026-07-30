@@ -319,8 +319,17 @@ to catch "58+59" links those too.
 ## Facts worth knowing
 
 - **Clan descent is matrilineal**, so a child's clan must equal its mother's.
-  This independently checks every bracket reading and is what caught errors in
-  Table 1. A clan mismatch means the reading is wrong, not the rule.
+  A clan mismatch means the reading is wrong, not the rule, and this is what
+  caught errors in Table 1 and three brackets on Genealogy II.
+  **But it only discriminates where the candidate mothers have DIFFERENT
+  clans**, which is most of the time and not all of it. It said nothing about
+  person 31, who is Water exactly as the couple whose bracket he sits inside.
+  The earlier phrasing here — "independently checks every bracket reading" —
+  overstated it, and `self_check()` reporting *all structural checks pass* is
+  narrower than it sounds: it verifies clan descent, that nobody is a child
+  twice, that union ids resolve and that the counts close. **None of that can
+  see whether a person is attached to the right parents.** For placement the
+  evidence is the plate — the narrow bracket-column strip, stubs counted.
 - **Person 8 (Yu˙si) appears twice** on Table 1; drawn once, with a
   cross-reference standing in for the repeat.
 - **An id addresses a person; `plate_number` is what prints.** There are now two
@@ -432,13 +441,16 @@ publishes Genealogy II, not after.
   real argument is citation permanence and portability — a domain you own can
   change hosts without breaking a doi-adjacent link — which is an argument for
   doing it first or not at all. Drops onto this repo via a `CNAME` file.
-- **Genealogy II is finished and unmerged** — draft PR #14 on branch
+- **Genealogy II builds but its reading is not settled** — draft PR #14 on branch
   `table-ii-transcription`. Read, encoded, rendered and measured; `self_check()`
-  passes and 275 of 275 persons are drawn. What is left is the **release
-  decision**, not the work: rewrite the PR's stale title, run `/publish`, and
-  only then consider a GitHub release, because `.zenodo.json` and `CITATION.cff`
-  still describe a **two-table** edition and the tagged commit is what Zenodo
-  reads. Two things about this plate the published two do not prepare you for:
+  passes and 275 of 275 persons are drawn. **The user has reported errors in
+  where entries are placed** (31, 32, 97 among them) and asked to be questioned
+  about the full list. **Ask before merging or publishing** — `self_check()`
+  cannot see placement, so its passing is not evidence against them.
+  `SESSION-NOTES.md` has the suspects and the method. After that comes the
+  release decision, and `.zenodo.json` and `CITATION.cff` still describe a
+  **two-table** edition while the tagged commit is what Zenodo reads.
+  Two things about this plate the published two do not prepare you for:
   it runs to **six generations** and **274 numbers for 275 people**, and **its
   numbering is not a unique key** — Parsons numbers two different people 101.
   Note also that merging it publishes two changes to **Table 1**, which is

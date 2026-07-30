@@ -53,7 +53,12 @@ And the one this session added, at the cost of eleven wrong readings:
 
 ## State
 
-**Nothing is half-finished, and this is worth trusting.** Working tree clean.
+**The build is finished; the READING is not settled.** The user has found
+placement errors in the rendered table — see *The open thread*, which is where
+to start. Everything below describes a plate that builds and measures correctly,
+which is a weaker claim than "is correct".
+
+Working tree clean.
 `main` untouched. `--public` exits 0, builds **5 pages**, reports 104 / 275 / 73
 persons, and `docs/` is byte-identical to what is committed. All three
 transcription modules pass `self_check()`.
@@ -70,17 +75,54 @@ Tables 1 and 4 re-measured as controls and unchanged at 0px.
 
 ## The open thread
 
-**Merge PR #14 and publish.** Everything upstream is finished; what remains is
-the release decision, and it is not purely mechanical.
+**ASK THE USER WHICH ENTRIES ARE PLACED WRONG, AND FIX THOSE FIRST. Do not merge
+PR #14 or run `/publish` before that conversation.**
 
-1. **The PR title and body are stale** — it says "upper block transcribed (plate
-   numbers 1-153)" and is still a draft. Rewrite both before merging.
-2. **Run `/publish`.** It gates the build, checks privacy, pushes, verifies live.
-3. **Then decide about a release.** Cutting a GitHub release mints a new Zenodo
-   version doi from `.zenodo.json` on the tagged commit. A whole new plate is
-   worth one — but `.zenodo.json` and `CITATION.cff` describe a **two-table**
-   edition, so read them before tagging or the deposit's metadata will describe
-   the wrong thing.
+On 2026-07-29, after reading the rendered table, the user reported **errors in
+where entries sit**, naming **31, 32 and 97** as examples and asking to be
+questioned about the full list. Open the next session with that question, not
+with a status report.
+
+**`self_check()` passing is not evidence against them.** It verifies matrilineal
+clan descent, that nobody is a child twice, that union ids resolve, and that the
+counts close. **None of that can see placement** — a wrong bracket whose clans
+happen to agree passes every check silently. The clan rule only discriminates
+when the candidate parents have *different* clans.
+
+**31, 32 and 97 are worth suspecting on the repo's own evidence**, independently
+of the user's reading, and the previous session recorded this as a footnote when
+it should have been a warning:
+
+- They are **exactly the three people the generation derivation could not reach**
+  from person 1 (child = mother+1, mother = child−1, spouse = partner, run to a
+  fixed point). It determined 272 of 275 and contradicted none of them. Those
+  three are the residue, and they kept column-read values instead.
+- Their placement as a **fourth founding block** rests on a *missing leader stub*
+  alone (verified at x 3450, y 700 — stubs enter rows 33, 35, 36, 38, 40 and 31's
+  row has none). **31 is Water exactly as 9+10 are**, whose bracket he sits
+  inside, so the clan check could never have confirmed or denied it.
+- `roots` in `make_chart.py` carries `31` explicitly. If he is really 9+10's son,
+  that entry comes out, `UNIONS`/`CHILDREN` gain him as a child, and the plate has
+  three blocks, not four — which changes the apparatus copy too, since the
+  "four founding couples" sentence is computed from `len(roots)`.
+
+Other placements decided on thin evidence, worth re-reading in the same pass:
+**49** (`drawn_under` 47), **116–118** (fatherless group under 48), **232+233**
+(third block, also printed at a child's indent), **234+54** (U52), **254+255**
+(U60, the rule from 235+236's bracket that is recorded as an observation, not
+descent).
+
+Method: the narrow **260–320px bracket-column strip** at native resolution, with
+leader stubs counted — not row alignment, and not a downscale.
+
+**Only then** the release path: mark PR #14 ready, merge, run `/publish`, and
+consider a release. Cutting one mints a new Zenodo version doi from
+`.zenodo.json` on the tagged commit, and `.zenodo.json` and `CITATION.cff` both
+still describe a **two-table** edition, so update them before tagging or the
+deposit's metadata will describe the wrong thing.
+
+The PR title and body are current as of 2026-07-29 and describe the finished
+plate; it is deliberately still a **draft**.
 
 Constraints that will surface late if you don't know them:
 
