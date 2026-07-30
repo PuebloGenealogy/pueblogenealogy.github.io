@@ -320,10 +320,14 @@ PERSONS = [
     (158, 3, "M", "Niʼʼy˙ŭyăiʼ",     "",       "",   "Parrot", "",   "", "", ""),
     (159, 3, "F", "",                "",       "",   "Sun",    "",   "", "", "name printed as a dash"),
     (160, 3, "F", "Yo˙ʼs˙iro",       "",       "",   "Chaparral Cock", "d. 1914", "",
-     "For second husband and descendant, see Gen. III, 154, 220 / "
+     "For second husband and descendant, see Gen. III, 154, 220 | "
      "For third husband and descendant, see Gen. I, 8, 90",
      "second wife of 158; the year 1914 is set in bold on the plate. This is "
-     "Genealogy I's person 73 -- name, clan and death year all agree"),
+     "Genealogy I's person 73 -- name, clan and death year all agree. The two "
+     "statements are separated by '|', the renderer's row separator, NOT by "
+     "'/': a slash would be printed on the page, and the plate prints no "
+     "slash -- it sets the two on separate lines. Same correction at 169; "
+     "Genealogy I's own person 73 had it right"),
     (161, 3, "",  "Gawai˙d˙yirăiʼ",  "",       "",   "Parrot", "d.", "", "",
      "sex printed as 'M.-F.' -- a marking used nowhere else on this plate. "
      "Stored empty rather than guessed; recorded here as printed"),
@@ -356,7 +360,7 @@ PERSONS = [
     (167, 4, "F", "Nămăiʼ",          "",       "40", "Oak",    "",   "", "See Gen. I, 17", ""),
     (168, 4, "M", "Kowăuʼsh˙dyiwă",  "",       "42", "Sun",    "",   "", "See Gen. I, 18", ""),
     (169, 4, "F", "Haiʼtyʼʼimăiʼ",   "",       "43", "Parrot", "",   "",
-     "See Gen. I, 19 / For first husband and descendants, see below",
+     "See Gen. I, 19 | For first husband and descendants, see below",
      "appears twice within the lower block; drawn once. A heavy ink stroke runs "
      "from this line's clan to its sibling bracket on the scanned copy -- it is "
      "not type, and is recorded as an observation of this copy, not as data"),
@@ -719,14 +723,33 @@ REPEAT_PERSON_NAMES = {
 #        The three repeat-person name choices, decided by the user the same
 #        day: carry both settings. See REPEAT_PERSON_NAMES, which self_check()
 #        now holds against the records.
-# TO DO: NOTHING IS WAITING ON A DECISION. Gate 4 next -- subset_font.py,
-#        register in TABLES, render, and MEASURE: column drift 0 px at every
-#        one of the SIX generations, which nothing in this layout has been
-#        tested at.
-#        Then THREE apparatus items, not two: this plate's cross-reference
-#        displacement; the sentence it adds to Table 1's #note-misprint; and
-#        the note REPEAT_PERSON_NAMES owes, saying what a parenthesis after a
-#        name means on this table, since alt_name now carries three meanings.
+#        Gate 4 DONE and MEASURED at 1280x900 on 2026-07-29. Registered in
+#        TABLES as "ii"; font subset re-run; apparatus written. Measured:
+#          - column drift 0 px at ALL SIX generations, step 425.6 px each
+#            (= --col + --stub), which nothing in this layout had been tested
+#            at before this plate
+#          - all 55 sibling brackets on their mother's line, max 0.016 px
+#          - 0 in-block rows off the --lh grid
+#          - 0 px body sideways scroll; the plate pans inside .scroll
+#          - Table 1 (5 gens, 24 brackets) and Table 4 (4 gens, 14) re-measured
+#            as controls: 0 px drift, 0 px bracket offset
+#        FIVE DEFECTS SURFACED IN THE PROCESS, all fixed -- see CHANGELOG. Four
+#        were in shared code that the two published plates never exercised:
+#          - 7 people undrawn: a fatherless sibling group whose mother is only
+#            a '+' line was never looked up (116-118 under 48); 49 needed
+#            drawn_under; 31+32+97 are a fourth block and needed a root
+#          - .xref rendered 21.09 px against a 24.8 px budget, putting 7
+#            brackets 3.7 px off their mother's line
+#          - DUPLICATE_PLATE_NUMBERS was declared here but never READ by the
+#            renderer, so the synthetic id 1010 printed on the page in four
+#            places instead of the plate's 101
+#          - two cross-references used '/' where the renderer's row separator
+#            is '|', printing a slash the plate does not set
+#          - the font subset was driven partly by plate_note prose, and was
+#            missing two glyphs the published pages have always used
+# TO DO: the sentence Table 2's cross-reference finding adds to TABLE 1's
+#        #note-misprint. Table 1 is published and cited, so re-verify that page
+#        after building. Table 2's own side of it is written (#note-crossref).
 #
 # WHERE EACH COLUMN WAS READ, in native pixel coordinates of
 # sources/parsons-1923-table-2.jpg. Columns are ~1300-1500 px wide and text
@@ -1022,7 +1045,15 @@ UNIONS = [
                             "splits his children between their two lines"),
     ("U15",  28,  26, 1, 2, "26's second wife"),
     ("U16",  29,  30, 1, 1, ""),
-    ("U17",  32,  31, 1, 1, "31 has no leader rule -- his parents are not drawn"),
+    ("U17",  32,  31, 1, 1,
+     "31 has no leader rule -- his parents are not drawn, so 31+32+97 is a "
+     "FOURTH descent block and 31 is one of this table's roots. Re-verified "
+     "2026-07-29 at x 3450, y 700 (1300 x 700): leader stubs run from the "
+     "vertical rule into rows 33, 35, 36, 38 and 40, and 31's row has none, "
+     "although it sits at the same indent as those five and inside the "
+     "vertical's extent. The indent is what makes this look like a child line; "
+     "the missing stub is what says it is not. 31 is Water as 9+10 are, so the "
+     "clan check could not have caught it"),
     ("U18",  33,  34, 1, 1, ""),
     ("U19",  37,  36, 1, 1, ""),
     ("U20",  39,  38, 1, 1, "no children drawn for this marriage"),
@@ -1031,7 +1062,12 @@ UNIONS = [
     ("U23",  48,  47, 1, 1, "48 has two husbands drawn, 47 and 49; 49's '+' line "
                             "sits under 47, who is himself male, so 49 cannot be "
                             "47's spouse"),
-    ("U24",  48,  49, 2, 1, "48's second husband"),
+    ("U24",  48,  49, 2, 1,
+     "48's second husband. The plate prints three consecutive lines -- '47.' as "
+     "the primary, then '+ 48.', then '+ 49.' (verified at x 3700, y 2150) -- so "
+     "this marriage is drawn inside 47's block, not inside either partner's own. "
+     "That is what drawn_under records. Without it neither partner is a block "
+     "primary anywhere and 49 is never drawn at all", 47),
     ("U25",  52,  51, 1, 1, ""),
     ("U26",  53,  54, 1, 1, "53 has two husbands drawn, 54 and 55. 54 is drawn "
                             "again in the lower block as the son of 232+233"),
