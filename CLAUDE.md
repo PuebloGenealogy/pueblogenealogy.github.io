@@ -26,9 +26,31 @@ the live site still serves two. Genealogy III is scanned and untouched.
 2. **The edition publishes the 1923 transcription only** — never research
    columns. See below; this is the thing that must not go wrong.
 3. **`SESSION-NOTES.md` is where the last session stopped** — read it first.
-   It names the open thread and the decisions not to re-litigate. Rolling, not
-   a history; `/wrap-session` overwrites it.
+   It names the open thread, what is unresolved, and which files were last
+   touched. Rolling, not a history; `/wrap-session` overwrites it.
 4. `CHANGELOG.md` has the history. Read it instead of asking what changed.
+
+### Which file owns what
+
+Keep to this, or the two files drift into two changelogs:
+
+| | Holds | Lifetime |
+|---|---|---|
+| **`CLAUDE.md`** (this file) | Permanent rules, conventions, invariants, and the privacy boundary | Durable. Loaded automatically on every session |
+| **`SESSION-NOTES.md`** | Current progress, unresolved questions, recently edited files, next steps | Overwritten every session by `/wrap-session` |
+| **`CHANGELOG.md`** | What changed and why, including work reverted | Append-only history |
+
+**Anything permanent goes here, not in `SESSION-NOTES.md`** — that file is
+designed to be thrown away, so a rule kept only there will eventually be lost.
+It has happened: the illegible-passage rule below lived only in the handoff until
+2026-07-29. `SESSION-NOTES.md` should **point** at this file rather than restate
+it; a small number of deliberate duplicates is fine where losing the instruction
+would be costly, and each one says it is a duplicate.
+
+**Claude's external memory** (`~/.claude/projects/…/memory/`) is a convenience,
+not a location. It is outside the repo, invisible to collaborators, and not
+guaranteed to be surfaced. **No instruction may live there alone.** Anything
+written there that matters is also written into one of the three files above.
 
 ---
 
@@ -64,6 +86,16 @@ goes in the git-ignored workbook and nowhere else in the repo.
 
 Before committing new material, confirm `git status` lists no `.xlsx` and
 nothing under `build/` or `data/`. `/publish` runs this gate.
+
+**Illegible passages: the user supplies the reading, and it is used as given** —
+no footer note, no chart marker, no hedge in the apparatus. The reason for the
+reading goes in `plate_note`, which is inert in the renderer (read once, only to
+test for `"braced"`). **If a reading came from the census research, its source
+must not be named anywhere in the repo** — not in `plate_note`, not in a commit
+message, not in a changelog entry. Say that a reading rests on evidence outside
+the plate and stop there. This rule lived only in `SESSION-NOTES.md` until
+2026-07-29, which is a file designed to be overwritten; it is permanent, so it
+belongs here.
 
 ## Hard rules
 

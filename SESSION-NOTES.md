@@ -73,6 +73,20 @@ Tables 1 and 4 re-measured as controls and unchanged at 0px.
 
 **The live site does not yet have any of this.** It still serves two tables.
 
+### Files this session changed
+
+Source only — `docs/` and the two `.woff2` are generated, and `CHANGELOG.md` /
+`SESSION-NOTES.md` are the handoff itself.
+
+| File | What changed in it |
+|---|---|
+| `scripts/transcription_ii.py` | The plate, and the bulk of the work: 12 corrected glyph readings, `UNIONS`/`CHILDREN`, `REPEAT_PERSON_NAMES`, a `self_check()` clause, `drawn_under` on U24 |
+| `scripts/make_chart.py` | The `"ii"` entry in `TABLES` and its apparatus; `blocks_note()`; `p["plate_number"]`; the fatherless-group lookup in `Chart.render`; the `.xref` height fix; Table 1's `#note-misprint` |
+| `scripts/subset_font.py` | `plate_note` excluded from the scan; `check_against_build()` added; `†` and `›` added to `TEMPLATE_CHARS` |
+| `CLAUDE.md` | Four false claims corrected, three invariants added, file-ownership table |
+
+Nothing under `data/`, no `.xlsx`, nothing under `build/`.
+
 ## The open thread
 
 **ASK THE USER WHICH ENTRIES ARE PLACED WRONG, AND FIX THOSE FIRST. Do not merge
@@ -181,37 +195,23 @@ Constraints that will surface late if you don't know them:
 - **Cross-plate person references are never `_p()`.** `_p(60)` on Table 1 links
   Table 1's person 60. Only explicit relative hrefs cross pages.
 
-**Standing, from earlier sessions:**
+**Standing decisions from earlier sessions are in `CLAUDE.md`, not here.** They
+used to be restated in this file — fifteen bullets, fourteen of them duplicating
+`CLAUDE.md` verbatim — which made this a second changelog and put the fifteenth
+at risk, since this file gets overwritten. `CLAUDE.md` now owns all of them:
+the reverted per-clan palette and sex colouring, the absent chart key, the
+class-driven row highlight, the plate bar's missing max-width, the ruler's
+load-bearing height, the reproduced misprint, the 83–85 attribution, the
+illegible-passage rule, the deferred custom domain, and `/publish`.
 
-- **Genealogy II's upper-block left column has ONE founding couple**, 1+2. The
-  plate as a whole has four blocks. If a reading suggests three in that column,
-  it is reading the overview.
-- **Duplicate 101 prints 101 on both rows.** `101a`/`101b` was rejected.
-- **Illegible passages: the user supplies the reading, used as given** — no
-  footer note, no chart marker. The reason goes in `plate_note`. **If a reading
-  comes from the census research, its source must not be named anywhere in the
-  repo.**
-- **A half-read plate is not registered.** `TABLES` stays untouched until
-  `self_check()` passes.
-- **A chart row's highlight is class-driven wherever the card script runs.**
-  Re-enabling `:target` alongside `.is-selected` re-opens the bug it fixed.
-- **The plate bar has no max-width, on purpose** — it aligns to the plate.
-- **The ruler's height is load-bearing.** It holds the identity chip off the
-  generation labels.
-- **The person card carries the number, never the annotation.**
-- **No per-clan colours, and no colour-coding of sex.** Both built and reverted.
-  Three colours on a table page are not `--ink`: `--sic`, `--muted-fixed`,
-  `--clan`. A fourth needs the same evidence.
-- **No on-page chart key.** Built twice, removed twice.
-- **The plate's misprint is reproduced, not corrected.** Table 1 prints **68**,
-  and Table 2 now corroborates that 68 is Parsons's own number.
-- **The edition asserts one thing the plate does not** — the paternity of 83–85.
-  Read `METHOD.md` → *Editorial attribution* before adding another.
-- **Research evidence never enters the repo.** The gate protects `docs/` only,
-  reads prose as well as markup, and fails closed.
-- **No custom domain** for now — but **decide it before seeding inbound links**,
-  because every citation placed from now on points at whatever host is chosen.
-- **Publishing goes through `/publish`.**
+Two are repeated here **on purpose**, because acting on either wrongly is
+expensive and this is the file a session reads first:
+
+- **A half-read plate is never registered in `TABLES`.** The renderer builds
+  every registered table, so registering early is how a partial genealogy
+  reaches `docs/`.
+- **Research evidence never enters the repo** — not `plate_note`, not a commit
+  message, not a changelog entry. The build gate protects `docs/` only.
 
 ## Closed — do not re-raise
 
