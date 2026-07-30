@@ -412,18 +412,30 @@ to catch "58+59" links those too.
   the card on `data-printed`; a table without one needs no entry. Do not "fix"
   this to 67: printing 67 makes the chart disagree with the scan, which is the
   one thing the edition exists not to do.
-- **Editorial attribution exists, and 83–85 is the only case** (added
-  2026-07-28). Person 68 has two husbands, 69 and 70; the plate's bracket does
-  not say which marriage her children belong to, so `transcription.py` records
-  no father and **the chart draws the plate's single bracket**. The *apparatus*
-  splits them — 83, 84 to 69; 85 to 70 — from `TABLES["i"]["paternity"]`,
-  marked with a dagger linking to `#note-paternity`. Read METHOD.md's
-  *Editorial attribution* before adding another: four rules govern it, and the
-  first is that the chart never carries it. The supporting evidence is external
-  documentary research and **must not enter the repo** — the footnote says a
-  reading rests on evidence outside the plate and stops there. Note this is the
-  first time the edition asserts anything the plate does not; it is not a
-  precedent for "improving" the chart.
+- **Editorial attribution exists, and there are now two cases** — 83–85 on
+  Table 1 (added 2026-07-28) and **116–118 on Table 2** (added 2026-07-30).
+  Both have the same shape: a woman with two husbands, one bracket, and no
+  statement of which marriage the children belong to, so the transcription
+  records no father and **the chart draws the plate's single bracket**. The
+  *apparatus* splits them, from `TABLES[…]["paternity"]`, marked with a dagger
+  linking to `#note-paternity`: 83, 84 to 69 and 85 to 70; all of 116–118 to 49.
+  **The mark is at both ends** — the parents' `Children` rows and each child's
+  own `Parents` row — and it marks **the pairing, not the mother**, who is the
+  plate's own bracket. It sits on the row and not on the father's chip partly
+  for that reason and partly because the card's rows are anchors: an `<a>`
+  dagger cannot nest inside the chip's `<a>`. Don't "fix" that to a per-chip
+  mark without solving the card, or the card loses the dagger silently.
+  Read METHOD.md's *Editorial attribution* before adding a third — four rules
+  govern it, and the first is that the chart never carries it.
+  **The two differ in the one way a reader checking them cares about, and
+  rule 4 now turns on it.** Table 1's evidence is external documentary research,
+  which **must not enter the repo** — that footnote says a reading rests on
+  evidence outside the plate, names no source, and stops. Table 2's is
+  **Parsons's own text, p. 195**, which is published, so that footnote **quotes
+  it and cites the page**. Do not flatten these into one rule in either
+  direction: citing a printed source is required, and naming an unpublished one
+  is a leak. Note the edition asserts nothing the plate does not *in the chart*,
+  in either case; neither is a precedent for "improving" it.
 - **English names in parentheses are plate data**, not research additions —
   person 90 "Heʼsa (Hazel)" on Table 1, and the Johnsons and Mana on Table 4.
 - **`d.`** means the person had already died when Parsons recorded the
@@ -471,13 +483,43 @@ citation was removed on 2026-07-28 and never carried the doi), and as
 the entity the deposit actually corresponds to. Archiving is automatic from now
 on: Zenodo's webhook is on the repo, so **cutting a GitHub release mints a new
 version doi**. `.zenodo.json` controls the record's metadata; without it Zenodo
-would title the deposit after the repo. **`.zenodo.json` and `CITATION.cff` were
-brought up to three tables on 2026-07-30**, ahead of the release, because Zenodo
-reads them from the *tagged commit* and not from `main`'s tip. `CITATION.cff`
-now says `v1.1.0` / `2026-07-30` — **correct that date before tagging if the
-release slips to another day**, and add v1.1.0's version doi to `identifiers`
-*after* the webhook mints it. **Never guess a version doi**; the suffix is not
-reliably sequential from v1.0.0's.
+would title the deposit after the repo.
+
+### Release policy — set by the user 2026-07-30
+
+**During active development: commit to `main`, cut no GitHub Releases, make no
+Zenodo deposits.** The site keeps deploying from `main` as it always has;
+publishing the site and cutting a release are different acts, and only the
+second one touches Zenodo.
+
+**The next release happens only when all four genealogy tables, the design, the
+transcriptions, the text and the citations are finalized.** Then: one GitHub
+Release, let the webhook archive it, and the **concept doi** stays the one on the
+website.
+
+The objective is to publish only stable, citation-ready editions and to avoid
+minting permanent Zenodo versions that mark nothing. **Published Zenodo records
+cannot be deleted** — every version is permanent and public — which is why
+restraint here is the correct posture and not fussiness.
+
+Consequences a session must not "fix":
+
+- **The archive lags the site on purpose.** v1.0.0 archives Genealogies I and IV
+  only, so the concept doi in every page footer currently resolves to a record
+  without Genealogy II. That is the accepted cost of the policy, not a bug.
+- **`CITATION.cff` describes the newest *minted* release**, `v1.0.0` /
+  `2026-07-28` — never a planned one. It said `v1.1.0` / `2026-07-30` until this
+  policy was set, which advertised a version nobody could resolve in the widget
+  GitHub renders from that file. Do not bump it in anticipation of a tag.
+- **The abstract may describe more plates than the release contains.** That is
+  correct: the abstract describes the *work*, the version fields describe the
+  *release*.
+- **`.zenodo.json` is read from the tagged commit**, so bring it up to all four
+  tables as part of cutting the final release — not before, and not as a
+  standalone task.
+- When the release is finally cut, add its version doi to `identifiers`
+  *after* the webhook mints it. **Never guess a version doi**; the suffix is not
+  reliably sequential from v1.0.0's.
 
 **Outstanding:**
 - **Inbound links** — a fresh `*.github.io` has no authority, and no on-page
@@ -500,10 +542,12 @@ reliably sequential from v1.0.0's.
   real argument is citation permanence and portability — a domain you own can
   change hosts without breaking a doi-adjacent link — which is an argument for
   doing it first or not at all. Drops onto this repo via a `CNAME` file.
-- **The v1.1.0 release has not been cut.** Metadata is ready; see the Zenodo
-  paragraph above for the date and version-doi traps. This is the only thing
-  outstanding on the edition itself — PR #14 and PR #15 are both merged and
-  the live site is correct.
+- **No release is outstanding, and that is deliberate.** v1.1.0 was prepared and
+  then **cancelled** by the release policy above: no GitHub Releases and no
+  Zenodo deposits during active development. **`Genealogy III` is now the only
+  thing between here and the next release** — it is the last plate, and the
+  policy names all four tables plus design, transcriptions, text and citations
+  as the bar. Do not re-add "cut a release" to this list before then.
 - **Genealogy II is published and its reading is closed.** The user re-checked
   their full list on 2026-07-30 and reported **no remaining placement errors**.
   Everything they had flagged is resolved: **31, 32 and 97** via
@@ -511,13 +555,24 @@ reliably sequential from v1.0.0's.
   to their printed columns via `root_columns`; **169's two brackets** via
   `SECOND_VISIT_OMITTED`; **U52**, **U60** and **254's descent from 235+236**
   verified against the plate. Do not re-open any of these.
-  **116–118's paternity is NOT encoded, by decision (2026-07-30).** It was
-  going to be a second editorial attribution naming 49 as the father, but
-  METHOD.md requires every such row to be daggered to a footnote, no source for
-  it was identified in Parsons's text, and the user asked for no footnote and no
-  editorial note. So the chart draws the plate's own fatherless bracket under 48
-  and asserts nothing. Do not re-open this as an oversight; and note the general
-  rule it illustrates — **an attribution that cannot be footnoted is not made.**
+  **116–118's paternity IS encoded, as of 2026-07-30 (later the same day), and
+  49 is the father.** It was declined earlier that day for one reason only —
+  METHOD.md requires every attributed row to be daggered to a footnote, and no
+  source for it had been found in Parsons's text. **The user found the source:
+  p. 195**, where she records of "Gen. II, 47" that his sheep and fields passed
+  to his widow for want of offspring. That names 47 as having died childless, so
+  116–118 are not his, and 49 is the only other husband the plate gives 48. Her
+  sentence also corroborates the plate independently — it has 47 dead and 48
+  surviving him, which is what the plate's `d.` on 47 says.
+  Encoded as `TABLES["ii"]["paternity"]`, apparatus only; **the chart still draws
+  the plate's own fatherless bracket under 48** and its markup is byte-identical
+  to before. The general rule that produced the earlier decision is unchanged and
+  was *satisfied*, not waived — **an attribution that cannot be footnoted is not
+  made.** Note the consequence for the leak gate: quoting Parsons trips
+  `RESEARCH_PROSE` on her word "widow", so the exact phrase is allowlisted in
+  `RESEARCH_PROSE_ALLOWED`. **Allowlist the phrase; never loosen the pattern.**
+  This is the edition's **second** editorial attribution and the first with a
+  citable source — see METHOD.md's rule 4, which now distinguishes the two cases.
   Two things about this plate the other two do not prepare you for:
   it runs to **six generations** and **274 numbers for 275 people**, and **its
   numbering is not a unique key** — Parsons numbers two different people 101.

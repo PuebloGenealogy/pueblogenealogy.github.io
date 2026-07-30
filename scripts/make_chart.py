@@ -106,7 +106,11 @@ TABLES = {
         is why the transcription records their father as unassigned. <strong>The
         chart draws them as the plate does</strong>, in one group under 68. In the
         register and the person cards this edition attributes 83 and 84 to 68&rsquo;s
-        marriage with 69, and 85 to her marriage with 70, marked &dagger;. That
+        marriage with 69, and 85 to her marriage with 70, marked &dagger; &mdash; on
+        the parents&rsquo; entries and on each child&rsquo;s own, so the reading is
+        visible from either end. <strong>The &dagger; marks the pairing, not the
+        mother</strong>: that {_p(68)} is their mother is the plate&rsquo;s own
+        bracket and is not in question. That
         attribution is an editorial reading resting on documentary evidence from
         outside the plate. The plate does not state it, and the supporting
         records are not reproduced in this edition.</li>
@@ -156,6 +160,17 @@ TABLES = {
         "slug": "genealogy-ii",
         "couples": (f"{_p(1)}+{_p(2)}, {_p(154)}+{_p(155)} "
                     f"and {_p(232)}+{_p(233)}"),
+        # The second editorial attribution in the edition, and the first resting
+        # on a source that can be CITED. The plate brackets 116-118 under 48
+        # alone; she has two husbands, 47 and 49. Parsons's own text, p. 195,
+        # says of "Gen. II, 47" that he died offspring lacking -- so the children
+        # are not his, and 49 is the only other husband. This was deliberately
+        # NOT encoded on 2026-07-30, because METHOD.md requires every such row to
+        # be daggered to a footnote and no source had been found in her text.
+        # The source is now found, quoted in note-paternity below, so the rule
+        # that blocked it -- an attribution that cannot be footnoted is not
+        # made -- is satisfied rather than waived.
+        "paternity": {116: 49, 117: 49, 118: 49},
         "notes": f"""
     <li id="note-duplicate-101">The plate <strong>numbers two different people
         101</strong> &mdash; a woman, Naaʼd&#7590;ityʼi of the Water clan, and a man
@@ -225,6 +240,32 @@ TABLES = {
         line. It cannot mean 255 is their child: every child of 236 is Water, her own
         clan, and 255 is Eagle. It is recorded as an observation of the plate, not as
         descent.</li>
+    <li id="note-paternity">The plate brackets {_p(116)}, {_p(117)} and {_p(118)}
+        under {_p(48)} alone. She has two husbands on the plate, {_p(47)} and
+        {_p(49)}, and the bracket does not say which marriage the children belong to
+        &mdash; which is why the transcription records their father as unassigned.
+        <strong>The chart draws them as the plate does</strong>, in the one group
+        under 48. In the register and the person cards this edition attributes all
+        three to 48&rsquo;s marriage with {_p(49)}, marked &dagger; &mdash; on 48
+        and 49&rsquo;s entries and on each child&rsquo;s own, so the reading is
+        visible from either end. <strong>The &dagger; marks the pairing, not the
+        mother</strong>: that these children belong to 48&rsquo;s marriage with 49
+        rather than with 47. That {_p(48)} is their mother is the plate&rsquo;s own
+        bracket and is not in question.
+        <strong>Parsons&rsquo;s own text is what settles it.</strong> Writing on
+        inheritance, she records that &ldquo;in one instance noted (Gen.&nbsp;II, 47),
+        offspring lacking, sheep and fields were inherited
+        by the widow, not by the sister of the deceased or his brothers&rdquo;
+        (p.&nbsp;195) &mdash; naming this man, on this genealogy, as having died
+        <strong>without offspring</strong>. So 116&ndash;118 are not his, and
+        {_p(49)} is the only other husband the plate gives {_p(48)}. Her sentence
+        also agrees with the plate independently: it has him dead and 48 surviving
+        him, which is what the plate&rsquo;s &ldquo;d.&rdquo; on 47 records.
+        This differs from the attribution on
+        <a href="../genealogy-i/#note-paternity">Genealogy&nbsp;I</a> in the one way
+        that matters to a reader checking it: that one rests on evidence this
+        edition does not reproduce, and this one on a published source, quoted and
+        cited here, which anyone can weigh for themselves.</li>
 """,
     },
     "iv": {
@@ -2239,7 +2280,7 @@ function openCard(a){
     }
     return withClan(el);
   }
-  var parents=null,spouses=[],kids={},kidsEd={},order=[];
+  var parents=null,parentsEd=false,spouses=[],kids={},kidsEd={},order=[];
   src.querySelectorAll(".reg-rel").forEach(function(r){
     var kind=r.getAttribute("data-rel");
     if(!kind)return;
@@ -2247,7 +2288,12 @@ function openCard(a){
       return c.className&&(" "+c.className+" ").indexOf(" rel-x ")>=0;
     });
     if(!items.length)return;
-    if(kind==="parents")parents=items;
+    if(kind==="parents"){
+      parents=items;
+      /* Same flag the Children rows use, so an attributed father is marked on
+         the card exactly as he is in the register. */
+      parentsEd=r.getAttribute("data-editorial")==="1";
+    }
     else if(kind==="spouses")spouses=items;
     else if(kind==="children"){
       var w=r.getAttribute("data-with")||"0";
@@ -2259,7 +2305,7 @@ function openCard(a){
   var main=doc.createElement("div");main.className="pc-main";
   if(parents){
     var ps=doc.createElement("section");ps.className="pc-sec";
-    ps.appendChild(heading("Parents"));
+    ps.appendChild(heading("Parents",parentsEd));
     /* Mother and father side by side in equal columns, stacking themselves
        when the card is too narrow -- auto-fit does both, so there is no
        breakpoint here to keep in step with the one on .pc-cols. */
@@ -2517,6 +2563,26 @@ def register_html(persons, unions, ku, km, drawn, paternity=None):
         if rest:
             km_a[m] = rest
 
+    # The attribution read from the CHILD's end as well. Without this the
+    # apparatus stated it in one direction only: 48 and 49 both listed 116-118,
+    # while 116's own entry named just her mother, so a reader who came to Julia
+    # first never learned the edition had supplied her a father.
+    #
+    # The dagger goes on the ROW, not on 49's chip, and the two are not the same
+    # claim. What is editorial here is the PAIRING -- that this child belongs to
+    # 48's marriage with 49 rather than with 47 -- exactly as it is on the
+    # Children rows that already carry a row-level mark. The mother is never in
+    # doubt; she is the plate's own bracket, and the footnote the dagger links
+    # to says so in its first sentence. Marking 49 alone would also strand the
+    # person card, whose rows are anchors: an <a> dagger cannot nest inside the
+    # chip's <a>, and a bare span would give the card an unclickable mark.
+    parents_ed = set()
+    for k, f in pat.items():
+        m = parents.get(k, (0, 0))[0]
+        if m and f and union_of.get((m, f)):
+            parents[k] = (m, f)
+            parents_ed.add(k)
+
     spouses, children = {}, {}
     for u in unions:
         w, h = u["wife"], u["husband"]
@@ -2581,7 +2647,8 @@ def register_html(persons, unions, ku, km, drawn, paternity=None):
         pm, pf = parents.get(pid, (0, 0))
         par = [rel_link(x) for x in (pm, pf) if x]
         if par:
-            rows.append(rel_row("Parents", par, "parents"))
+            rows.append(rel_row("Parents", par, "parents",
+                                editorial=pid in parents_ed))
         sp = [rel_link(x) for x in spouses.get(pid, [])]
         if sp:
             rows.append(rel_row("Spouse" if len(sp) == 1 else "Spouses",
@@ -2590,8 +2657,23 @@ def register_html(persons, unions, ku, km, drawn, paternity=None):
         for other, kids, ed in groups:
             if not other:
                 label = "Children (father not recorded)"
-            elif len(groups) > 1:
-                label = f"Children (with {other})"
+            elif len(groups) > 1 or ed:
+                # `or ed`: an editorial group NAMES the parent even when it is
+                # the person's only one. Genealogy II's 48 has both her
+                # husbands' children in a single attributed group, so without
+                # this the row would read a bare "Children" with a dagger and
+                # the reader would have to open the note to learn which
+                # marriage is being asserted. It changes exactly one row on
+                # Table 1 as well -- person 69, whose only group is the
+                # editorial one; 68 and 70 each have two groups and were
+                # already naming the parent.
+                #
+                # plate_number, not `other`: this is a number SHOWN, and the id
+                # is a key. No duplicate-numbered person is a spouse on any
+                # plate today, so the two agree everywhere -- which is exactly
+                # why this path survived the 2026-07-29 sweep that fixed four
+                # others. It is written correctly now rather than left to bite.
+                label = f"Children (with {persons[other]['plate_number']})"
             else:
                 label = "Children"
             rows.append(rel_row(label, [rel_link(k) for k in kids],
@@ -3207,6 +3289,17 @@ RESEARCH_PROSE_ALLOWED = (
     "census matches or identifications of living people",
     "hard to match to census records",
     "spellings used by census takers",
+    # A SECOND KIND of entry, added 2026-07-30. The three above are the FAQ
+    # stating the privacy boundary. This one is a quotation from the edition's
+    # own published source -- Parsons 1923, p. 195 -- in Genealogy II's
+    # note-paternity, and "widow" is her word about a man dead before her
+    # 1918-19 fieldwork. Quoting the 1923 paper is not research escaping; it is
+    # the primary text, and an editorial attribution that cites its source is
+    # worth more than one that gestures at it. The phrase is allowlisted in
+    # full rather than by weakening the pattern, so the gate still fails closed
+    # on every other use of the word, and it must not cross a source-line break
+    # -- the check is an exact substring replace against the rendered HTML.
+    "by the widow, not by the sister of the deceased or his brothers",
 )
 
 

@@ -91,19 +91,23 @@ Nothing under `data/`, no `.xlsx`, nothing under `build/`.
 
 ## The open thread
 
-**Cutting the v1.1.0 release.** Nothing else is outstanding — PR #14 and PR #15
-are both merged and deployed, and the site is correct.
+**Genealogy III — the last plate.** It is now the only thing between here and
+the next release.
 
-The metadata blocker is gone: `.zenodo.json` and `CITATION.cff` already describe
-three tables. What is left is the tagging itself, and it carries two traps:
+**Cutting v1.1.0 is NO LONGER the open thread; it was cancelled.** The user set
+a release policy on 2026-07-30: during active development, commit to `main` and
+cut **no GitHub Releases and no Zenodo deposits**. One release only, once all
+four tables, the design, the transcriptions, the text and the citations are
+final. **The policy is in `CLAUDE.md` — read it there, not here.**
 
-- **`CITATION.cff` says `version: v1.1.0`, `date-released: "2026-07-30"`. If the
-  tag is cut on a later day, correct the date FIRST** — Zenodo reads the file
-  from the tagged commit, not from `main`'s tip.
-- Cutting a GitHub release fires Zenodo's webhook and **mints a new version
-  doi**. Add it to `CITATION.cff`'s `identifiers` afterwards. **Do not guess it
-  from v1.0.0's** — the suffix is not reliably sequential.
-- The concept doi `10.5281/zenodo.21637900` is unchanged and needs no edit.
+Two consequences that look like bugs and are not:
+
+- `CITATION.cff` says `v1.0.0` / `2026-07-28`, the newest release that actually
+  exists, while its abstract describes three plates. That is correct: the
+  abstract describes the *work*, the version fields the *release*.
+- The concept doi in every page footer resolves to v1.0.0, which holds
+  Genealogies I and IV only. **The archive lags the site on purpose.** Do not
+  tag to close the gap.
 
 ## Other things that could be picked up
 

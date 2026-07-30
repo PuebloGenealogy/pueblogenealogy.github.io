@@ -3,6 +3,119 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-30 (latest) — 116–118 attributed to person 49; release policy set
+
+### Release policy — no releases, no Zenodo deposits, until the edition is done
+
+**Set by the user.** During active development the project commits to `main`
+and cuts **no GitHub Releases and no Zenodo deposits**. The next release comes
+only when **all four genealogy tables, the design, the transcriptions, the text
+and the citations are finalized** — then one release, archived automatically by
+the webhook, with the **concept doi** staying the one on the website.
+
+The objective is to publish only stable, citation-ready editions and to avoid
+minting permanent Zenodo versions that mark nothing. Published Zenodo records
+**cannot be deleted**, so the restraint is the correct posture for an
+irreversible act.
+
+**v1.1.0 is cancelled, not deferred.** It had been prepared the same day.
+
+- `CITATION.cff` goes back to **`v1.0.0` / `2026-07-28`** — the newest release
+  that actually exists. It had been bumped to `v1.1.0` / `2026-07-30` in
+  anticipation of a tag, and GitHub renders that file as the repo's "Cite this
+  repository" widget, so it was advertising a version no reader could resolve.
+  The **abstract stays at three plates on purpose**: it describes the *work*,
+  the version fields describe the *release*.
+- `.zenodo.json` needs nothing now — it carries no version field, Zenodo fills
+  that from the tag. Bring it to four tables as part of cutting the final
+  release, since Zenodo reads it from the **tagged commit**.
+- **The archive now lags the site by design.** The concept doi in every page
+  footer resolves to v1.0.0, which holds Genealogies I and IV only — not
+  Genealogy II, and not this attribution. That is the accepted cost of the
+  policy and must not be "fixed" by tagging.
+
+## 2026-07-30 — 116–118 attributed to person 49, on Parsons's own testimony
+
+**The edition's second editorial attribution, and the first with a source a
+reader can check.** Genealogy II's 116, 117 and 118 are now attributed to 48's
+marriage with **49**, in the apparatus only.
+
+### The claim in the entry below that this reverses
+
+- **"116–118's paternity is not encoded, and that is final"** → **encoded.**
+  The decision was never about the genealogy; it was about evidence. METHOD.md
+  requires every attributed row to be daggered to a footnote, and that morning
+  no source for it had been found in Parsons's text, so the attribution could
+  not be footnoted and therefore was not made.
+
+  **The user found the source: p. 195.** Writing on inheritance, Parsons records
+  that in one instance noted — *"Gen. II, 47"* — the sheep and fields passed to
+  his widow for want of offspring. That names this man, on this genealogy, as
+  having died childless. So 116–118 are not 47's, and 49 is the only other
+  husband the plate gives 48.
+
+  The rule that blocked it is unchanged and was **satisfied, not waived**: *an
+  attribution that cannot be footnoted is not made.* This one can be, and the
+  footnote quotes her and gives the page.
+
+Her sentence also corroborates the plate independently: it has 47 dead and 48
+surviving him, which is exactly what the plate's `d.` on 47 records.
+
+### What changed
+
+- `TABLES["ii"]["paternity"] = {116: 49, 117: 49, 118: 49}`, plus a
+  `note-paternity` footnote quoting p. 195.
+- **The chart is byte-identical.** Verified by extracting the `.sheet` markup
+  from the committed build and the new one — 78382 bytes, equal. METHOD.md's
+  first rule holds: the chart still draws the plate's own fatherless bracket.
+- **The leak gate had to be taught this quotation.** `RESEARCH_PROSE` matches
+  `\bwidow\b`, so quoting Parsons would have tripped the gate and **deleted the
+  page**. The exact phrase is now in `RESEARCH_PROSE_ALLOWED` — a second *kind*
+  of entry there, the first three being the FAQ stating the boundary. The
+  pattern was **not** loosened, so the gate still fails closed on every other
+  use of the word. METHOD.md's rule 4 now records this as the standing procedure
+  for quoting a printed source.
+- **An editorial children group now names the other parent even when it is the
+  person's only group** (`or ed` in `register_html`). Without it 48's row read a
+  bare "Children" with a dagger, and the reader had to open the footnote to
+  learn which marriage was being asserted. It changes **one** row on Table 1 as
+  well — person 69, whose only group is the editorial one; 68 and 70 each have
+  two groups and already named the parent. That row was measured, not assumed:
+  a 10-byte diff, `Children` → `Children (with 68)`.
+- The same line now reads `plate_number` rather than the raw id. No
+  duplicate-numbered person is a spouse on any plate, so the two agree
+  everywhere today — which is why this path survived the 2026-07-29 sweep that
+  fixed four others. Written correctly rather than left to bite.
+- **The attribution now reads from the child's end too.** It stated itself in
+  one direction only: 48 and 49 both listed 116–118, while Julia's own entry
+  named just her mother, so a reader who came to her first never learned the
+  edition had supplied her a father. Children's `Parents` rows now carry the
+  attributed father, in the register and on the person card. **This applies to
+  Table 1 as well** — 83 and 84 now read `Parents† 68 · 69`, and 85
+  `Parents† 68 · 70`.
+- **The dagger sits on the row, not on the father's chip**, and the note now
+  says why: what is editorial is the **pairing**, not the mother. She is the
+  plate's own bracket. Marking the father alone would also strand the card,
+  whose rows are anchors — an `<a>` dagger cannot nest inside the chip's `<a>`,
+  and a bare span would give the card an unclickable mark. Both footnotes gained
+  a sentence stating this, so a reader meeting `Parents†` cannot read it as
+  doubt about the mother.
+
+### Verified
+
+`--public` exits 0, 5 pages, 104 / 275 / 73 drawn, gate clean. All three
+`self_check()`s pass. **All three charts are byte-identical to the published
+build** — `.sheet` markup extracted and compared against `HEAD` for i, ii and
+iv. The person card for 48 puts 47 in a column with **no children** and 49 in a
+column with all three under a daggered heading — the card is a picture of
+Parsons's sentence. Julia's card reads `Parents†  48 Nati · 49 Gawaiʼᶦsᶦ`, and
+Table 1's 85 correctly takes 70 rather than 69, so the per-child map is being
+read and not the union. Register invariants re-checked on the changed entries:
+relation links `display:inline`, entry titles 16px, `data-with="49"` present so
+the card pairs without reading the label. `#note-paternity` still highlights on
+`:target` with an outline outside the border box. No new characters entered
+`docs/`, so `subset_font.py` was **not** run.
+
 ## 2026-07-30 (later) — Genealogy II published: reading settled, PR #14 merged, live
 
 **The edition now serves three plates.** The user re-checked their placement
