@@ -62,10 +62,27 @@ context.** It is there before you act.
    handoff's *open thread* and *Other things that could be picked up*. Effort in
    two or three words; add **needs you** where it applies, since that saves a
    wasted turn. **Never more than one line per item.**
+
+   **Every item in that table appears, every time.** The list is something the
+   user returns to until the items are done, so an omission reads as "finished"
+   when it is not. An item that is deferred or decided against is **marked**,
+   never dropped — *Custom domain* went missing this way on 2026-07-30.
 3. **Before you start** — **at most three bullets**, and only for the **first**
-   item. Not every warning in the handoff.
+   item. Choose them by **consequence, not by order in the file**: the ones
+   whose failure is expensive and irreversible outrank procedural ones. For
+   Genealogy III, *don't register it in `TABLES` until `self_check()` passes*
+   publishes a partial plate if ignored, and outranks *read `/transcribe-plate`*.
 4. **Don't re-open** — **one line** naming what is settled, so its absence from
    the list reads as a choice.
+
+**Summarise; never embellish.** Every number, count and attribution must come
+from the handoff. Do not reach into `CLAUDE.md` or memory for a supporting
+detail the handoff did not give, and do not attribute a measurement to the user
+unless the handoff says they made it. On 2026-07-30 a `resume` reported that the
+user had "verified all 24 brackets" of Genealogy II — the handoff said only that
+they reported no remaining errors, and the 24 was **Table 1's** child-group
+count, borrowed from an unrelated paragraph. **If the handoff is vague, be
+vague.**
 
 ### Then stop
 
