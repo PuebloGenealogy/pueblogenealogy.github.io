@@ -4,8 +4,8 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-07-29**, after a session that finished **Genealogy II** —
-read, encoded, rendered and measured. It is on a branch, not published.
+Last updated **2026-07-30**, after a session that fixed the first of the user's
+reported placement errors on **Genealogy II** and found one it did not fix.
 
 ---
 
@@ -17,12 +17,12 @@ warnings over anything written here.
 
 1. **`git switch table-ii-transcription`.** The work is on a branch, and there
    is an open **draft PR #14**.
-2. Read the top section of `CHANGELOG.md` — one entry covers this whole
-   session, and it opens with a list of claims in the entry *below* it that are
-   now false. Read that list; the older entry is not safe on its own.
+2. Read the top entry of `CHANGELOG.md` — it opens with a list of claims in the
+   entry below it that are now false, including two the previous session
+   measured and got wrong.
 3. Read `CLAUDE.md` — **The one thing to get right** and **Design invariants**.
 4. `scripts/transcription_ii.py` only if you are working on Table 2 itself. Its
-   `STATE` block is accurate, and its per-record notes carry the pixel
+   `STATE` block is accurate and its per-record notes carry the pixel
    coordinates every reading was verified at.
 5. Preview: `preview_start`, config name `site`, on `http://localhost:4173`.
    **Don't call `preview_stop` when you finish** — the user may still be
@@ -31,103 +31,111 @@ warnings over anything written here.
 **A rebuild on a later day dirties `docs/` with dates alone** — `dateModified`,
 the "Last updated" line, the sitemap's `lastmod`. So "rebuild produces no diff"
 is a valid sync check only *within* a day. `docs/` was last built and committed
-on **2026-07-29**; on any later date the first rebuild shows a date-only diff.
+on **2026-07-30**; on any later date the first rebuild shows a date-only diff.
 If that is all it is, `git checkout -- docs/` rather than committing.
 
 **Habits this project keeps re-learning:**
 
 - **Measure, don't look.** Drift, contrast, row heights, bracket alignment.
+- **Measure the right element.** See the open thread — a bracket check that
+  compared `.node` tops read 0px on a bracket that is a full row out.
 - **Grep the built file, not the rendered DOM.**
 - **Read the staged diff before committing.**
 - **Ask what *clears* a state, not only what sets it.**
 - **Judge structure at native resolution.** A downscale loses exactly the thin
   rules that carry the genealogy.
+- **A column tile reads a NAME and never its final mark.** Re-crop at 6–25×
+  before calling a reading done.
 
-And the one this session added, at the cost of eleven wrong readings:
+And the one this session added:
 
-- **A column tile reads a NAME and never its final mark.** At 1450px a trailing
-  diacritic is 4–6px wide with the sentence period beside it. Nine of eleven
-  corrections were a *dropped* mark, almost all at the end of a name. Re-crop at
-  6–25× before calling a reading done, and compare two marks at the **same**
-  magnification rather than judging one alone.
+- **"Wrong parents" and "wrong place on the page" are different findings.** The
+  data can be right and the drawing wrong, and no structural check can tell you
+  so. 31 was correctly read as having no leader stub *and* drawn four columns
+  from where the plate sets him, for a whole session, because the only
+  mechanism for drawing an unreachable person was to make him a root.
 
 ## State
 
-**The build is finished; the READING is not settled.** The user has found
-placement errors in the rendered table — see *The open thread*, which is where
-to start. Everything below describes a plate that builds and measures correctly,
-which is a weaker claim than "is correct".
+Working tree clean. `main` untouched. `--public` exits 0, builds **5 pages**,
+reports 104 / 275 / 73 persons, and `docs/` is byte-identical to what is
+committed. All three transcription modules pass `self_check()`.
 
-Working tree clean.
-`main` untouched. `--public` exits 0, builds **5 pages**, reports 104 / 275 / 73
-persons, and `docs/` is byte-identical to what is committed. All three
-transcription modules pass `self_check()`.
+**Nothing is half-finished in code.** One defect is known, diagnosed and
+deliberately not fixed — person 169's bracket, below.
 
-**Genealogy II is done and unpublished.** Branch `table-ii-transcription`,
-commits `04d2deb`, `e7b2bdd`, `d8f9525`, `d657094` on top of the earlier
-sessions' work. 275 records for the plate's 274 numbers, 61 marriages, 214
-parent–child links, six generations, four descent blocks, **275 of 275 drawn**.
-Measured at 1280×900: 0px column drift at every generation, 55 brackets on their
-mother's line (≤0.016px), 0 rows off the `--lh` grid, 0px body sideways scroll.
-Tables 1 and 4 re-measured as controls and unchanged at 0px.
+**The build is sound; the READING is still not settled.** The user has more
+placement errors to report and asked to be questioned about them. Everything
+measured below describes a plate that builds and measures correctly, which is
+a weaker claim than "is correct".
 
-**The live site does not yet have any of this.** It still serves two tables.
+**Genealogy II is unpublished.** Branch `table-ii-transcription`, draft PR #14.
+275 records for the plate's 274 numbers, 61 marriages, 214 parent–child links,
+six generations, **three** descent blocks (not four — 31+32 was recounted this
+session), 275 of 275 drawn. Measured at 1280×900: 0px column drift at all six
+generations, step 425.59px, 0 rows off the `--lh` grid, 0px body sideways
+scroll. Tables 1 and 4 re-measured as controls and unchanged at 0px.
+
+**The live site does not have any of this.** It still serves two tables.
 
 ### Files this session changed
 
-Source only — `docs/` and the two `.woff2` are generated, and `CHANGELOG.md` /
-`SESSION-NOTES.md` are the handoff itself.
-
 | File | What changed in it |
 |---|---|
-| `scripts/transcription_ii.py` | The plate, and the bulk of the work: 12 corrected glyph readings, `UNIONS`/`CHILDREN`, `REPEAT_PERSON_NAMES`, a `self_check()` clause, `drawn_under` on U24 |
-| `scripts/make_chart.py` | The `"ii"` entry in `TABLES` and its apparatus; `blocks_note()`; `p["plate_number"]`; the fatherless-group lookup in `Chart.render`; the `.xref` height fix; Table 1's `#note-misprint` |
-| `scripts/subset_font.py` | `plate_note` excluded from the scan; `check_against_build()` added; `†` and `›` added to `TEMPLATE_CHARS` |
-| `CLAUDE.md` | Four false claims corrected, three invariants added, file-ownership table |
+| `scripts/transcription_ii.py` | `UNATTACHED_BLOCKS` and its `self_check()` clause; `STATE` and the bracket-reading note corrected |
+| `scripts/make_chart.py` | The splice in `Chart.render`; `.node.unattached` CSS; `roots` lost 31; undrawn persons now abort `--public`; `#note-unattached` |
+| `CLAUDE.md` | Four claims corrected, two invariants added |
+| `CHANGELOG.md` | The entry for this session |
 
 Nothing under `data/`, no `.xlsx`, nothing under `build/`.
 
 ## The open thread
 
-**ASK THE USER WHICH ENTRIES ARE PLACED WRONG, AND FIX THOSE FIRST. Do not merge
-PR #14 or run `/publish` before that conversation.**
+**ASK THE USER FOR THE REST OF THE PLACEMENT ERRORS. Do not merge PR #14 or run
+`/publish` before that conversation.** They named 31, 32 and 97 as *examples*
+and said the rest is "for later". That list is still outstanding.
 
-On 2026-07-29, after reading the rendered table, the user reported **errors in
-where entries sit**, naming **31, 32 and 97** as examples and asking to be
-questioned about the full list. Open the next session with that question, not
-with a status report.
+Resolved this session, so don't re-open:
 
-**`self_check()` passing is not evidence against them.** It verifies matrilineal
-clan descent, that nobody is a child twice, that union ids resolve, and that the
-counts close. **None of that can see placement** — a wrong bracket whose clans
-happen to agree passes every check silently. The clan rule only discriminates
-when the candidate parents have *different* clans.
+- **31, 32, 97** — the data was right, the drawing was wrong. Fixed via
+  `UNATTACHED_BLOCKS`; 31 now sits at generation 4 between 29+30 and 33+34, at
+  1336.98px, identical to 29 and 33, with no leader stub and the vertical
+  passing his row as on the plate. The user confirmed 98–99 stay as children of
+  33+34.
+- **49 under 47** — confirmed correct by the user. No change.
 
-**31, 32 and 97 are worth suspecting on the repo's own evidence**, independently
-of the user's reading, and the previous session recorded this as a footnote when
-it should have been a warning:
+**Then the two pieces of work that are already specified:**
 
-- They are **exactly the three people the generation derivation could not reach**
-  from person 1 (child = mother+1, mother = child−1, spouse = partner, run to a
-  fixed point). It determined 272 of 275 and contradicted none of them. Those
-  three are the residue, and they kept column-read values instead.
-- Their placement as a **fourth founding block** rests on a *missing leader stub*
-  alone (verified at x 3450, y 700 — stubs enter rows 33, 35, 36, 38, 40 and 31's
-  row has none). **31 is Water exactly as 9+10 are**, whose bracket he sits
-  inside, so the clan check could never have confirmed or denied it.
-- `roots` in `make_chart.py` carries `31` explicitly. If he is really 9+10's son,
-  that entry comes out, `UNIONS`/`CHILDREN` gain him as a child, and the plate has
-  three blocks, not four — which changes the apparatus copy too, since the
-  "four founding couples" sentence is computed from `len(roots)`.
+1. **116–118's father is 49**, on the authority of Parsons's prose text — the
+   user said so and it is not on the plate. This is METHOD.md's **second
+   editorial attribution** and must meet all four of its rules: the chart never
+   carries it, it is declared in `make_chart.py`'s `TABLES` entry and not in the
+   transcription module, every row it produces is daggered to a footnote, and
+   the evidence is not reproduced. Rule 4 differs here in one way worth getting
+   right: Table 1's attribution rests on census research and its footnote had to
+   stay vague, but **this one rests on a published 1923 sentence and can cite
+   it**. *Blocked on the user for the page or the sentence* — ask for it.
+2. **Person 169's leader rule and bracket stub point one row above her line.**
+   Pre-existing, present identically in the committed build, 24.8px = exactly
+   one `--lh`. 169 has two husbands, 168 and 183, and each marriage gets its own
+   bracket, so both groups get `mother_row = 0` (`Chart.render` sets that
+   whenever `u["wife"] == pid`). Two brackets cannot both start on one line, so
+   the push logic adds `line_pad[0]` and moves 169's own line down to meet the
+   **second** group — stranding the first. The Table 4 case the push logic was
+   written for (11 and 12 under 10) has two *different* mothers, which is why it
+   works there. Fixing it needs a plate reading first: how does Parsons actually
+   set 169's two brackets? Also seen in the same pass: 158's group to 126 is
+   0.023px off, probably the same cause and visually nothing.
 
-Other placements decided on thin evidence, worth re-reading in the same pass:
-**49** (`drawn_under` 47), **116–118** (fatherless group under 48), **232+233**
-(third block, also printed at a child's indent), **234+54** (U52), **254+255**
-(U60, the rule from 235+236's bracket that is recorded as an observation, not
-descent).
+**How this was found, because it is the method and not the incident:** measure a
+bracket against the first **`.line`** in the group, never the first `.node`. The
+`line_pad` displacement is a margin *inside* the block, so the node top reads
+correct while the name sits a row lower. The previous session's "all 55 brackets
+on their mother's line, max 0.016px" was measuring node tops.
 
-Method: the narrow **260–320px bracket-column strip** at native resolution, with
-leader stubs counted — not row alignment, and not a downscale.
+Placements still flagged by the user for later, all deferred by them explicitly:
+**232+233** (third block, printed at a child's indent — the same shape as 31 was,
+so `UNATTACHED_BLOCKS` may apply), **U52 (234+54)**, **U60 (254+255)**.
 
 **Only then** the release path: mark PR #14 ready, merge, run `/publish`, and
 consider a release. Cutting one mints a new Zenodo version doi from
@@ -135,36 +143,33 @@ consider a release. Cutting one mints a new Zenodo version doi from
 still describe a **two-table** edition, so update them before tagging or the
 deposit's metadata will describe the wrong thing.
 
-The PR title and body are current as of 2026-07-29 and describe the finished
-plate; it is deliberately still a **draft**.
-
 Constraints that will surface late if you don't know them:
 
-- **This session changed both published pages, and one change is visible.** The
-  `.xref` fix makes every cross-reference row 3.7px taller, and Table 1's
-  `#note-misprint` gained a paragraph. Table 1 is cited. Re-verify it after
-  building — 0px drift, 24 brackets at 0px, misprint marker still pointing at
-  its note.
+- **Merging changes both published pages, and one change is visible.** The
+  `.xref` fix makes every cross-reference row 3.7px taller, Table 1's
+  `#note-misprint` gained a paragraph, and every page now carries the
+  `.node.unattached` CSS rule. Table 1 is cited. Re-verify it after building.
+- **An undrawn person now aborts `--public`.** New this session. A half-read
+  plate will therefore not build in public mode — that is deliberate, and the
+  private build still only warns.
 - **Run `subset_font.py` BEFORE `make_chart.py`, or not at all.** It is not
-  deterministic (fontTools rewrites `head.modified`) and the woff2 is
-  base64-inlined into every page, so the wrong order leaves the pages carrying a
-  font that is no longer on disk. Nothing fails. Don't re-run it just to see
-  whether anything changed — read its coverage report.
-- **The landing page's `PENDING` list now holds only Table 3.** Genealogy II
-  moved out of it into `TABLES`.
-- **Nothing may link to Genealogy III.** Persons 160 and 163 point into it;
-  `linkify_xref` leaves any `Gen.` reference unlinked, which is what keeps that
-  promise. Note it also leaves *Genealogy I* references unlinked — over-
-  conservative on its face, but correct here for a second reason: Table 2's
-  numbers into Genealogy I are displaced, so a link would resolve to the wrong
-  person.
+  deterministic and the woff2 is base64-inlined into every page. Don't re-run it
+  to see whether anything changed — read its coverage report. To check coverage
+  *without* dirtying anything, read the two `.woff2` cmaps with fontTools and
+  diff against the text of `docs/` — that was done this session and found
+  nothing missing.
+- **The landing page's `PENDING` list holds only Table 3.**
+- **Nothing may link to Genealogy III.** `linkify_xref` leaves any `Gen.`
+  reference unlinked, which is what keeps that promise. It also leaves
+  *Genealogy I* references unlinked — correct here, because Table 2's numbers
+  into Genealogy I are displaced and a link would resolve to the wrong person.
 
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
 | **Table 3** | Large, and harder than Table 2 | Scan is in `sources/` at 3770 × 5503 — **a ninth of Table 1's pixel count**. Do not start it in the same session as anything else |
-| **A wrapped cross-reference still miscounts its row** | Unknown; needs a design call | `row += 1` assumes one visual line. Nothing wraps today, so all 93 brackets align, but a longer reference would sit two rows in a one-row budget. Unguardable at build time — no font metrics. The fix is probably to split at the plate's own line break with `\|`, as 160 and 169 now do |
+| **A wrapped cross-reference still miscounts its row** | Unknown; needs a design call | `row += 1` assumes one visual line. Nothing wraps today. Unguardable at build time — no font metrics. The fix is probably to split at the plate's own line break with `\|`, as 160 and 169 now do |
 | **Confirm the 83 / 84 attribution** (Genealogy I) | Needs the user + the records | 85 is firmly pinned. 83 and 84 rest on ages that do not cleanly reconcile. Published and citable now, so this is the open item with a correctness edge |
 | **Register's relation lists lack the point** | ~1 line | They read `56 Weʼdyumă` where entry titles read `56.`. One line in `rel_link`, but it changes the apparatus |
 | Wikidata item | ~10 min, **needs the user** | Payload at `wikidata-quickstatements.txt`, 18 ids verified. Would need updating for three tables |
@@ -174,35 +179,34 @@ Constraints that will surface late if you don't know them:
 
 **From this session:**
 
-- **The three repeat people carry BOTH of the plate's settings** — 13, 54, 125.
-  First occurrence in `name_as_printed`, second in `alt_name`, printed as
-  `A (B)`. All six settings are unambiguous at magnification, so this is not a
-  reading problem: the plate prints one name two ways, and suppressing either
-  would hide what it says. Considered and rejected: print one and footnote the
-  other; keep the variant only in `plate_note`.
-- **`alt_name` now carries three meanings, knowingly.** English names the plate
-  parenthesises (27, 42, 43, 140), the second half of a braced pair (14), and
-  repeat-person settings. Only the first is parenthetical on the page.
-  `#note-repeat-names` exists so a reader is told which is which. Don't "fix"
-  this with a fourth field without reading that note first.
-- **`31` is a root, and it is a man** — the other three roots are the mothers,
-  because the plate makes the woman's line the primary. At 31+32 it does the
-  opposite, so rooting at 32 would invert the two lines and show the reader
-  something the plate does not.
-- **The plate's numbers are shown; ids are plumbing.** `p["plate_number"]`
-  prints, `p["id"]` addresses. They differ only at the duplicate 101. Distinct
-  from the misprint path, which additionally rings the number in `--sic`.
-- **Cross-plate person references are never `_p()`.** `_p(60)` on Table 1 links
-  Table 1's person 60. Only explicit relative hrefs cross pages.
+- **`UNATTACHED_BLOCKS` is the mechanism for "printed here, descent not
+  drawn"** — not `roots`, and not a leader stub. `roots` is for a genuinely
+  separate block at the left margin; a stub would assert a descent the plate
+  withholds. It withholds `::before` only, so the vertical still passes the row.
+  Considered and rejected: leaving 31 a root (draws him at generation 1, which
+  is the bug); giving him a stub (asserts he is 9+10's son, which the plate
+  does not).
+- **31 is still the primary of his block, and he is a man.** The plate sets his
+  line above and `+ 32` below; everywhere else on this plate the woman's line is
+  the primary. Rooting at 32 would invert the two lines. `UNATTACHED_BLOCKS`
+  therefore names the primary explicitly — it cannot be derived.
+- **An undrawn person is fatal on `--public`, a warning on the private build.**
+  A half-read plate legitimately has people no bracket reaches yet.
+- **98 and 99 stay children of 33+34**, confirmed by the user against the
+  plate's own rules: the rule from 33's line runs to their bracket, and both are
+  Water as she is. 97 is Sun and hangs off 32's line, which is what makes 32 —
+  not 33 — necessarily his mother.
+- **9+10's vertical and 11+12's are two different rules.** The former takes 26,
+  29, 33 and ends at 33; the latter begins at 35. The previous session's note
+  read them as one.
 
-**Standing decisions from earlier sessions are in `CLAUDE.md`, not here.** They
-used to be restated in this file — fifteen bullets, fourteen of them duplicating
-`CLAUDE.md` verbatim — which made this a second changelog and put the fifteenth
-at risk, since this file gets overwritten. `CLAUDE.md` now owns all of them:
-the reverted per-clan palette and sex colouring, the absent chart key, the
-class-driven row highlight, the plate bar's missing max-width, the ruler's
-load-bearing height, the reproduced misprint, the 83–85 attribution, the
-illegible-passage rule, the deferred custom domain, and `/publish`.
+**Standing decisions from earlier sessions are in `CLAUDE.md`, not here.**
+`CLAUDE.md` owns all of them: the reverted per-clan palette and sex colouring,
+the absent chart key, the class-driven row highlight, the plate bar's missing
+max-width, the ruler's load-bearing height, the reproduced misprint, the 83–85
+attribution, the illegible-passage rule, the deferred custom domain, the repeat
+people carrying both settings, `alt_name`'s three meanings, the plate's numbers
+vs ids, and `/publish`.
 
 Two are repeated here **on purpose**, because acting on either wrongly is
 expensive and this is the file a session reads first:
@@ -217,8 +221,10 @@ expensive and this is the file a session reads first:
 
 - **Genealogy II's glyph readings.** All verified at 6–25× on 2026-07-29, each
   with coordinates in its record. `ˑ` U+02D1 is **not used on this plate**;
-  `˘` U+02D8 is, at 170 only. Font coverage is checked against the cmap of both
-  master faces and now also against the built pages, by `check_against_build()`.
+  `˘` U+02D8 is, at 170 only. Font coverage re-checked against the built pages
+  on 2026-07-30 from the cmaps: nothing missing.
+- **31 is not 9+10's son, and 33 is.** Verified three times now, most recently
+  on the bracket-column strip x 3320, y 500, 480 × 1100.
 - **`prettyph3nom/laguna-genealogy` is deleted.** Verified three ways.
 - **Glyph rendering on Windows and Android was checked on device.**
 - **The GitHub Pages build API misreports the deployed commit.** Verify deploys

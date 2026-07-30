@@ -468,8 +468,10 @@ publishes Genealogy II, not after.
   link to one's own work is a COI and tends to be reverted — then the AMNH
   Digital Library, which hosts the original and could also supply the handle
   `.zenodo.json` currently omits from `related_identifiers`.
-- **Custom domain** — **currently decided against**, and the reasoning is in
-  `SESSION-NOTES.md`; listed here because it is not closed, only deferred.
+- **Custom domain** — **currently decided against**; listed here because it is
+  not closed, only deferred. The reasoning is the paragraph below, which used to
+  point at `SESSION-NOTES.md` and no longer does: that file is overwritten every
+  session and had already lost it.
   **Decide it before seeding any inbound links.** Every
   link and citation placed from now on points permanently at whatever host is
   chosen, and most will never be updated. Note the old framing of this as "the
