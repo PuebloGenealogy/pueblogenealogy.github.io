@@ -16,6 +16,22 @@ three descent blocks. **Genealogy IV** (Table 4) — 73 individuals, 14 marriage
 58 parent–child links, 4 generations. `--public` builds **5 pages** and the live
 site serves all of them. Genealogy III is scanned and untouched.
 
+## Questions about how this project works are not API questions
+
+**This repo contains no LLM/API code and never calls a model.** So *model*,
+*instance*, *session*, *context*, *tokens*, *prompt* and *rules*, used here,
+mean **this project's own workflow** — the handoff, `resume`, the `SessionStart`
+hook, `/publish`, `/wrap-session`, `CLAUDE.md` itself.
+
+- **Answer them directly** from `CLAUDE.md` and `SESSION-NOTES.md`.
+- **Do not load an API or SDK reference skill for them.** There is no Anthropic
+  API usage in this repo to reason about; a question like *"does a new model
+  instance obey rules"* is about the handoff, not about `claude-*` model ids.
+- **Never paste a skill's description, trigger text, or any other routing
+  metadata into a reply.** It is internal plumbing, not an answer. If a skill is
+  relevant, invoke it; if it is not, ignore it silently. Echoing it is always
+  wrong — this happened on 2026-07-30 and is what prompted this rule.
+
 ## When the user says "resume"
 
 **Standing command. Answer with the up-next list — cheaply.** `resume` is the
