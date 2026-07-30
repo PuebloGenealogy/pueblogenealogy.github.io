@@ -10,8 +10,13 @@ Natural History*, vol. 19, pt. 5 (1923), pp. 133–292.
 
 Published: **Genealogy I** (Table 1) — 104 individuals, 27 marriages, 80
 parent–child links, 5 generations. **Genealogy IV** (Table 4) — 73 individuals,
-14 marriages, 58 parent–child links, 4 generations. Genealogy II is half
-transcribed and unpublished; Genealogy III is scanned and untouched.
+14 marriages, 58 parent–child links, 4 generations.
+
+**Genealogy II** (Table 2) is **complete, rendered and awaiting merge** on
+branch `table-ii-transcription`, draft PR #14 — 275 individuals for the plate's
+274 numbers, 61 marriages, 214 parent–child links, **6 generations**, four
+descent blocks. It is registered in `TABLES`, so `--public` builds **5 pages**;
+the live site still serves two. Genealogy III is scanned and untouched.
 
 ## Start here
 
@@ -75,14 +80,31 @@ nothing under `build/` or `data/`. `/publish` runs this gate.
 
 ```bash
 python3 scripts/transcription.py          # structural self-check, Table 1
+python3 scripts/transcription_ii.py       # structural self-check, Table 2
 python3 scripts/transcription_iv.py       # structural self-check, Table 4
-python3 scripts/make_chart.py --public    # the published build -> docs/
 python3 scripts/subset_font.py            # only when the data gains new characters
+python3 scripts/make_chart.py --public    # the published build -> docs/
 ```
 
 `--public` must end `N JSON-LD blocks valid` and **exit 0**. It exits 1 on
 invalid structured data or a research-data leak. `make_chart.py` with no flag is
 the private build; it needs `data/*.xlsx`, which is not in this clone.
+
+**That order is not cosmetic. `subset_font.py` runs BEFORE the build, or not at
+all** — it is **not deterministic** (fontTools writes a fresh `head.modified` on
+every run) and `make_chart.py` base64-inlines the woff2 into every page. Run it
+after, and the pages carry the base64 of a font that is no longer on disk.
+Nothing fails; the two simply disagree, and the next "does a rebuild produce a
+diff?" check answers misleadingly. For the same reason **never re-run it to see
+whether anything changed** — it dirties every page — read its coverage report,
+which names each plate's new characters, or `none`.
+
+It ends by holding the subset against the **built pages**, and that check is the
+one that matters: it reads `docs/` and demands every character in it be in the
+font. Reasoning from the data about what *ought* to render is how `†` and `›`
+stayed missing from every published page since launch — both are set from the
+page's own script, so they appear in no template string anyone would scan, and
+macOS substituted silently.
 
 **Preview:** `preview_start`, config name `site` — serves `docs/` on
 `http://localhost:4173`. Loop: edit `make_chart.py` → rerun `--public` → reload.
@@ -259,6 +281,22 @@ by walking all 24 child groups and confirming each still sits on its mother's
 line. `--sic` is text, so it clears 4.5:1 on both papers alone (6.43:1 light,
 7.19:1 dark).
 
+**Every in-block row must be an exact whole number of `--lh`, and that includes
+`.xref`.** `Chart.render` budgets one `--lh` per `row += 1`, so a sibling group
+whose mother's line sits *below* a cross-reference row is offset by the
+difference. `.xref` shipped at `line-height:1.4` plus block padding — 21.09px
+against a 24.8px budget — which put seven of Genealogy II's brackets 3.7px off
+their mother's line (2026-07-29). It is now `line-height:var(--lh)` with zero
+block padding, the same shape `.sic-row` already had. **Table 1 measured clean
+throughout**, because no group there has a mother's line below an xref row: the
+defect sat latent in shared CSS until a plate with six generations and 30
+cross-references arrived, which is why this is stated as an invariant rather than
+a fix. One thing it does *not* solve: a cross-reference that **wraps** occupies
+two rows against a one-row budget. None does today, on any plate, and the build
+has no font metrics with which to guard it — so split a long reference at the
+plate's own line break with `|`, the row separator (see persons 160 and 169),
+rather than letting CSS decide where the row count goes wrong.
+
 **Three colours on a table page are not `--ink`**, and a fourth needs the same
 evidence: `--sic` on the misprint annotation, `--muted-fixed` on the statistics
 line, and **`--clan`** on the clan field (added 2026-07-28). `--clan` is *not*
@@ -285,6 +323,20 @@ to catch "58+59" links those too.
   Table 1. A clan mismatch means the reading is wrong, not the rule.
 - **Person 8 (Yu˙si) appears twice** on Table 1; drawn once, with a
   cross-reference standing in for the repeat.
+- **An id addresses a person; `plate_number` is what prints.** There are now two
+  reasons they differ, and they are not the same reason. A **misprint** (Table 1)
+  shows the plate's wrong number, ringed in `--sic` with an annotation row,
+  carried on the union via `PLATE_NUMBER_MISPRINTS`. A **duplicate** (Table 2,
+  where Parsons numbers two people 101) shows the plate's *correct* number
+  unringed and unannotated, carried on the person via
+  `DUPLICATE_PLATE_NUMBERS` → `p["plate_number"]`. Both rows print 101 with
+  distinct `#p` anchors. Every place a number is **shown** reads
+  `plate_number` — chart line, register entry, relation chip, Find suggestion
+  label — and every place one is **keyed** reads `id`: hrefs, `id="p…"`,
+  `id="r…"`, and the datalist `value`, which the Find script turns into
+  `#p` + value. Get that backwards and either a synthetic id prints on the page
+  (it did, in four places, until 2026-07-29) or a name search jumps to the wrong
+  person. Declaring the mapping is not enough — the renderer has to read it.
 - **Misprint at 76 (Table 1):** the `+` line is numbered 68 but names person 67.
   The chart **prints 68** — the plate's number — ringed in `--sic` red, links it
   to person 67, and carries *(misprint, click here to see notes)* on its **own
@@ -356,7 +408,10 @@ citation was removed on 2026-07-28 and never carried the doi), and as
 the entity the deposit actually corresponds to. Archiving is automatic from now
 on: Zenodo's webhook is on the repo, so **cutting a GitHub release mints a new
 version doi**. `.zenodo.json` controls the record's metadata; without it Zenodo
-would title the deposit after the repo.
+would title the deposit after the repo. **`.zenodo.json` and `CITATION.cff` both
+still describe a two-table edition**, and Zenodo reads them from the *tagged
+commit* — so they have to be brought up to three tables before the release that
+publishes Genealogy II, not after.
 
 **Outstanding:**
 - **Inbound links** — a fresh `*.github.io` has no authority, and no on-page
@@ -377,14 +432,17 @@ would title the deposit after the repo.
   real argument is citation permanence and portability — a domain you own can
   change hosts without breaking a doi-adjacent link — which is an argument for
   doing it first or not at all. Drops onto this repo via a `CNAME` file.
-- **Genealogy II is half transcribed**, on branch `table-ii-transcription`.
-  Both remaining scans arrived 2026-07-29, so the earlier "await scans" blocker
-  and the decision to hold the tables back until the design settled are both
-  closed. Plate numbers 1–153 are read; 154–269 and all of `UNIONS` /
-  `CHILDREN` are not. `SESSION-NOTES.md` has the order of work.
-  Two things about this plate that the published two do not prepare you for:
-  it runs to **six generations** and past **269 people**, and **its numbering is
-  not a unique key** — Parsons numbers two different people 101.
+- **Genealogy II is finished and unmerged** — draft PR #14 on branch
+  `table-ii-transcription`. Read, encoded, rendered and measured; `self_check()`
+  passes and 275 of 275 persons are drawn. What is left is the **release
+  decision**, not the work: rewrite the PR's stale title, run `/publish`, and
+  only then consider a GitHub release, because `.zenodo.json` and `CITATION.cff`
+  still describe a **two-table** edition and the tagged commit is what Zenodo
+  reads. Two things about this plate the published two do not prepare you for:
+  it runs to **six generations** and **274 numbers for 275 people**, and **its
+  numbering is not a unique key** — Parsons numbers two different people 101.
+  Note also that merging it publishes two changes to **Table 1**, which is
+  cited: a longer `#note-misprint`, and cross-reference rows 3.7px taller.
 
 ## Working style
 
@@ -402,10 +460,22 @@ rather than plates.
 
 **Never read structure off a downscaled plate.** A whole-plate overview is for
 orientation and tile planning only. Genealogy II's overview appeared to show
-three founding couples in its left column; at native resolution there is one,
-and 5 and 7 sit in the same column as 3, all carried by a single rule off
-person 1's row. A downscale loses exactly the thin rules that carry the
-genealogy, so it will misplace people while looking perfectly legible.
+three founding couples in its **left column**; at native resolution that column
+has one, and 5 and 7 sit in the same column as 3, all carried by a single rule
+off person 1's row. (The plate *as a whole* has four descent blocks — 1+2, 31+32,
+154+155, 232+233 — which is a different claim about a different part of the
+plate.) A downscale loses exactly the thin rules that carry the genealogy, so it
+will misplace people while looking perfectly legible.
+
+**Indentation does not establish descent — a leader stub does.** On Genealogy II
+this cost three near-misses, so treat it as the rule and not the exception:
+232+233 and 31+32 both sit at exactly a child's indent, and 31 sits at that
+indent *inside another bracket's vertical extent*. What says they are not
+children is the **absence of a horizontal stub** joining the vertical rule to
+their row. Read the bracket column as its own narrow strip — 260–320px, so the
+vertical and every stub entering it are the only things in frame — and count the
+stubs. The clan check will not save you here: 31 is Water exactly as the couple
+whose bracket he sits inside are.
 
 **A half-read plate is never registered in `TABLES`.** The renderer builds every
 registered table on every `--public` run, so registering early is how a partial

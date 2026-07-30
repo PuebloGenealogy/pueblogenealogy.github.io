@@ -3,6 +3,172 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-29 — Genealogy II published to the branch: read, encoded, rendered, measured
+
+**Genealogy II is complete and rendered** — 275 records for the plate's 274
+numbers, 61 marriages, 214 parent–child links, **six generations**, four descent
+blocks. Registered in `TABLES` as `"ii"`, so `--public` now builds **5 pages**
+and reports 104 / 275 / 73 persons. Still on branch `table-ii-transcription`;
+nothing is on `main` and the live site is unchanged.
+
+Commits: `04d2deb`, `e7b2bdd`, `d8f9525`, `d657094`.
+
+### Claims in the entry below that this session falsified
+
+Read these before trusting anything in the previous section:
+
+- **"Exact through its 27" and "six independent matches" → 53 and 29.** The
+  cross-reference exact range reaches Genealogy I's person **53**, on 22 name
+  matches, plus 7 displaced ones. Both footnotes say 53.
+- **"Runs past 269 persons" → 274.** Already corrected mid-session below; noted
+  again because the figure appears twice.
+- **"One founding couple, not three" → FOUR descent blocks.** That claim was
+  about the upper block's left column and is still true *there*. The plate as a
+  whole has four: 1+2, **31+32**, 154+155, 232+233.
+- **`ˑ` U+02D1 is not used on this plate at all.** Its only two sites, 142 and
+  163, were misreadings; see below. `˘` U+02D8 replaces it as the one new
+  codepoint.
+- **Person 13's discrepancy is not "the upper marked the less certain".** Both
+  settings were re-read at high magnification and both are unambiguous.
+- **Person 14 is `S˙ʼiʼrowaisiwa`, not `S˙ʼĭʼrowaisiwa`** — a plain dotted i.
+
+### Gate 1b: eleven of thirteen glyph readings were wrong
+
+Every reading marked `SEE TODO` was re-read at 6–25× native magnification, and
+each record now carries the pixel coordinates it was verified at. **Two
+confirmed the earlier reading (20, 59). Eleven corrected it**, including one
+that carried no marker and was found only because another was wrong the same
+way:
+
+| | was | is |
+|---|---|---|
+| 14 | `S˙ʼĭʼrowaisiwa` | `S˙ʼiʼrowaisiwa` |
+| 21 | `Dziwaikch` | `Dziwaikch˙ʼ` |
+| 45 | `Ka˙chănĭsh` | `Ka˙chănĭshʼ` |
+| 52 | `Gauʼs˙inăiʼ` | `Gauʼs˙in˙ăiʼ` |
+| 64 | `Kʼaisĭyăiʼ` | `Kʼais˙ĭyăiʼ` |
+| 80 | `Gauʼs˙iro` | `Gauʼs˙ĭro` |
+| 135 | `Săp` | `Säpʼ` |
+| 142 | `Kăaiˑʼyunăiʼ` | `Kăaiʼʼyunăiʼ` |
+| 146 | `Aiʼs˙iyĕ` | `Aiʼs˙iyĕʼᵉ` |
+| 162 | `Da˙ʼyu` | `Da˙ʼyuʼ` |
+| 163 | `Ĭyaˑʼsi` | `Ĭya˙ʼsi` |
+| 170 | `Kʼuʼn˙ash` | `Kʼuʼn˙ash˘` |
+
+**The pattern is the part worth keeping.** Nine of the eleven *dropped a mark*
+rather than misidentifying one, and nearly all sit at the **end** of a name,
+where a 1450px column tile renders the mark 4–6px wide with the sentence period
+beside it. **A column tile is enough to read a name and never enough to read its
+final mark.** Two shape confusions account for the rest, and both need a
+same-magnification comparison rather than a judgement in isolation: `˙` (round,
+no tail) against `ʼ` (bulb at top, tail down-left) — person 22's `Shaiyo˙ʼsi˙ĕ`
+prints the pair adjacent and is the reference specimen; and a mark against the
+same mark repeated, which is how 142 and 163 both became an exotic `ˑ`.
+
+### Five defects, four of them latent in code the published plates never exercise
+
+Registering the plate was one `TABLES` entry. Making it *correct* surfaced five
+bugs, and the reason they had never fired is worth more than the fixes.
+
+**1. Seven people were not drawn — three separate causes.** A fatherless sibling
+group (one the plate brackets under a mother without saying which marriage) was
+only ever looked up on a block's **primary**, so 116–118 under 48 — who has two
+husbands and is printed only as a `+` line under the first — were silently
+absent. Person 49 needed `drawn_under`: the plate sets `47.` / `+ 48.` / `+ 49.`
+as three consecutive lines, so neither partner of 48+49 is a primary anywhere.
+And **31+32+97 is a fourth descent block**: re-verified on the scan at x 3450
+y 700, leader stubs enter rows 33, 35, 36, 38 and 40 and 31's row has none,
+though it sits at the same indent and inside another bracket's vertical extent.
+*The indent is what makes it look like a child line; the missing stub is what
+says it is not.* 31 is Water exactly as 9+10 are, so the clan check could never
+have caught it. **An undrawn person is reported by the build but is not an
+error**, so all seven would have shipped.
+
+**2. `.xref` rendered 21.09px against a 24.8px budget.** `Chart.render` counts a
+cross-reference as `row += 1`; the CSS set `line-height:1.4` plus block padding.
+Seven of Genealogy II's brackets sat **3.7px off their mother's line**. Table 1
+has cross-reference rows too and measured clean — because no group there has a
+mother's line *below* one. Fixed the way `.sic-row` already does it:
+`line-height` is the token, block padding zero. **This does change Table 1's
+published appearance**, by 3.7px per cross-reference row.
+
+**3. `DUPLICATE_PLATE_NUMBERS` was declared and never read.** The decision to
+give the second person numbered 101 a synthetic id for addressing while printing
+the plate's number was recorded in `transcription_ii.py` and never implemented
+in the renderer, so **`1010` — a number that appears nowhere on the plate —
+printed in four places**: chart line, register entry, relation chips and the
+Find suggestions. Now `p["plate_number"]` carries what is shown and `p["id"]`
+stays the key. **This is not the misprint path**: there the plate is wrong and
+the number is ringed in `--sic` with an annotation row; here the plate is right
+and merely reuses a number, so it is set like any other, unringed.
+
+**4. Two cross-references used `/` where the row separator is `|`** (160, 169),
+so the page printed a slash the plate does not set and two statements collapsed
+into one budgeted row. Genealogy I's person 73 had it right.
+
+**5. The font subset was partly driven by `plate_note` prose** — editorial
+commentary, inert in the renderer — so quoting a glyph in order to say it is
+*not* on the plate shipped it. Narrowing the scan made room for a real check,
+`check_against_build()`, which reads the built pages and demands every character
+in them be in the subset. It immediately found **two glyphs missing, and missing
+since each page shipped: `†` U+2020 and `›` U+203A**, both set from the page's
+own script and therefore in no HTML template string anyone would scan. The
+dagger is not decorative — it marks the single editorial attribution this
+edition makes (Genealogy I, 83–85). They rendered only because macOS substitutes
+silently, *the exact trap `subset_font.py` exists to prevent*.
+
+### Measured, not eyeballed
+
+At 1280×900, with Tables 1 and 4 re-measured as controls:
+
+| | Table 1 | **Table 2** | Table 4 |
+|---|---|---|---|
+| generations | 5 | **6** | 4 |
+| column drift | 0 px | **0 px** | 0 px |
+| step per generation | 425.6 px | **425.6 px** | 425.6 px |
+| sibling brackets | 24 at 0 px | **55 at ≤0.016 px** | 14 at 0 px |
+| rows off the `--lh` grid | 0 | **0** | 0 |
+| body sideways scroll | 0 px | **0 px** | 0 px |
+
+425.6px is `--col + --stub` (26.6rem at the pinned 16px root). Nothing in this
+layout had been tested past five generations before this plate.
+
+### Decisions taken
+
+- **The three repeat people carry BOTH of the plate's settings** (user, this
+  session) — 13 `Dzia˙ʼyotsʼa (Tsiaiutsa)`, 54 `Ma˙ʼrani (Ma˙ʼran˙i)`, 125
+  `Gowaʼk˙ʼd˙yăiʼ (Gowaʼkʼad˙zăiʼ)`. First occurrence in `name_as_printed`,
+  second in `alt_name`. All six settings are unambiguous at magnification, so
+  suppressing either would hide something the plate says. `REPEAT_PERSON_NAMES`
+  declares each pair and `self_check()` holds it against the records — the pair
+  otherwise lives in two places and a later edit to one would be silent.
+  **The cost, accepted knowingly:** `alt_name` now carries three meanings the
+  renderer cannot tell apart, all printed as `(alt)` — an English name the plate
+  itself parenthesises (27, 42, 43, 140), the second half of a braced pair (14),
+  and this. Only the first is parenthetical on the page. `#note-repeat-names`
+  is what stops a reader taking `Ma˙ʼrani (Ma˙ʼran˙i)` for an English name.
+- **Table 1's `#note-misprint` now carries Table 2's corroboration.** It said
+  *what* the plate does; it can now say why 68 is Parsons's own number rather
+  than a typesetter's slip. **Cross-plate person references must not go through
+  `_p()`** — `_p(60)` on Table 1's page links *its* person 60, a different human
+  being — so "Table 2's own person 60" is deliberately plain text and the only
+  link added is the explicit `../genealogy-ii/#note-crossref`.
+
+### Two traps for the next session
+
+- **`subset_font.py` is not deterministic.** fontTools writes a fresh
+  `head.modified` on every run, and `make_chart.py` base64-inlines the woff2
+  into every page. **Run the subsetter first, then the build** — backwards, the
+  pages carry the base64 of a font no longer on disk. Nothing fails; the two
+  just disagree, and the next "does a rebuild produce a diff?" check gives a
+  misleading answer. For the same reason, do not re-run it to see whether
+  anything changed — read the coverage report.
+- **A wrapped cross-reference still miscounts.** `row += 1` assumes one visual
+  line. Every in-block row is now an exact `--lh` multiple and no cross-
+  reference currently wraps on any table, so all 93 brackets across the three
+  plates align — but a longer one would occupy two rows against a one-row
+  budget. Unguarded, because the build has no font metrics.
+
 ## 2026-07-29 — Genealogy II: scans in, upper block read, three findings
 
 Nothing published and nothing registered. `docs/` is byte-identical to what it
