@@ -87,7 +87,19 @@ TABLES = {
         {_p(67, "person 67")}. The chart prints <strong>68</strong>, as the plate does,
         and links it to 67; the misprint is recorded on union U23. Person 67&rsquo;s own
         cross-reference &mdash; &ldquo;For second wife and offspring see below,
-        76, 90-3&rdquo; &mdash; is what identifies him.</li>
+        76, 90-3&rdquo; &mdash; is what identifies him.
+        <strong>Table&nbsp;2 corroborates it independently</strong>: its own person 60
+        is Shuwai&#700;&#7590;ri, Turkey, and the line beneath his name reads
+        &ldquo;See Gen. I, 68&rdquo; &mdash; naming this same man 68 again, on a
+        different plate. It is part of a pattern there, not an isolated slip:
+        Table&nbsp;2&rsquo;s references into this genealogy are exact through
+        person&nbsp;53 and one too high from person&nbsp;66 onward, checked by name,
+        sex and clan on twenty-nine of them. So <strong>68 is Parsons&rsquo;s own
+        number</strong>, carried from a numbering of Genealogy&nbsp;I that ran one
+        ahead of the one finally printed &mdash; which is the reason this edition
+        reproduces it rather than correcting it to 67. See
+        <a href="../genealogy-ii/#note-crossref">Table&nbsp;2&rsquo;s note on the
+        displacement</a>.</li>
     <li id="note-paternity">The plate brackets {_p(83)}, {_p(84)} and {_p(85)} under
         {_p(68)} alone. She has two husbands on the plate, {_p(69)} and {_p(70)}, and
         the bracket does not say which marriage the children belong to &mdash; which
@@ -98,6 +110,121 @@ TABLES = {
         attribution is an editorial reading resting on documentary evidence from
         outside the plate. The plate does not state it, and the supporting
         records are not reproduced in this edition.</li>
+""",
+    },
+    "ii": {
+        "numeral": "II",
+        "plate": "Table 2",
+        "module": "transcription_ii",
+        # THREE blocks, and they are one genealogy, not three. 14 is a child of
+        # 154+155 and a husband in the first block; 54 is a child of 232+233 and
+        # a husband in the first. That is why the derived generations of those
+        # two are 2 and 3 rather than 1: they are the parents of people drawn
+        # above them.
+        #
+        # 31 WAS a fourth root here until 2026-07-30, and that was wrong -- not
+        # about the genealogy but about the page. He has no leader stub, so
+        # nothing links him to a bracket and rooting him was the only way he
+        # got drawn at all; but a root is drawn at generation 1, at the far
+        # left, and the plate sets him at the children's indent inside 9+10's
+        # bracket, four columns over. The block was correct and its position
+        # was not. He is now spliced into that column by UNATTACHED_BLOCKS in
+        # transcription_ii.py, which withholds the stub, so the page says what
+        # the plate says: printed here, descent not drawn.
+        "roots": [1, 154, 232],
+        # A root is drawn at generation 1 unless it says otherwise, and on this
+        # plate two of the three say otherwise. Parsons does not set the lower
+        # block at the sheet's left margin: measured on the scan 2026-07-30,
+        # person 1 sits at x 225 and person 3 -- generation 2 -- at x 1425,
+        # while the lower block's 154 sits at x 1340 (person 3's column) and
+        # 232 at x 2690, the same column as 164, who is 154+155's child. So the
+        # plate prints 154+155 one column in and 232+233 two columns in, and
+        # the generation field already stored for them, 2 and 3, is that same
+        # reading arrived at independently by walking the tree.
+        #
+        # This is an INDENT, not a splice. UNATTACHED_BLOCKS puts a couple
+        # inside somebody's child column, which is right for 31 -- the plate
+        # prints him among 9+10's children with the vertical passing his row.
+        # It is wrong here: the lower block is not descended from the upper
+        # one, it is a separate block that simply starts further in, and the
+        # bracket-column strip at x 2480, y 9900 shows 154+155's vertical
+        # ending on 164 with nothing beside 232 at all. Splicing would also run
+        # into self_check()'s last-child rule for exactly that reason.
+        # Expressed in the same GEOM tokens as the grid, so generation d still
+        # lands at d x (--col + --stub) and column drift stays 0.
+        "root_columns": {154: 2, 232: 3},
+        "slug": "genealogy-ii",
+        "couples": (f"{_p(1)}+{_p(2)}, {_p(154)}+{_p(155)} "
+                    f"and {_p(232)}+{_p(233)}"),
+        "notes": f"""
+    <li id="note-duplicate-101">The plate <strong>numbers two different people
+        101</strong> &mdash; a woman, Naaʼd&#7590;ityʼi of the Water clan, and a man
+        whose name it prints as a dash. Both rows print <strong>101</strong> here,
+        because the chart prints what the plate prints. They are separate entries in
+        the register and separate person cards; the numbering, not the edition, is
+        what is ambiguous. One consequence a reader will meet: typing
+        &ldquo;101&rdquo; into Find goes to the first of the two, since the number
+        alone cannot say which is meant. Searching the name, or opening either row
+        from the register, reaches each of them exactly.</li>
+    <li id="note-unattached">{_p(31)} and {_p(32)} sit inside the bracket holding
+        {_p(9)} and {_p(10)}&rsquo;s children, at the children&rsquo;s indent,
+        <strong>with no rule joining them to it</strong> &mdash; and that gap is the
+        plate&rsquo;s, reproduced here rather than tidied away. Every other person in
+        a bracket is reached by a short horizontal stub off its vertical rule;
+        {_p(31)}&rsquo;s row is the one the rule passes without stopping. So Parsons
+        prints him among {_p(9)}&rsquo;s children while declining to say he is one,
+        and this edition prints him where she does and says no more. His clan is
+        Water, as {_p(9)} and {_p(10)} are, so the matrilineal check that tests every
+        other bracket on this plate can neither confirm nor deny it; the absent stub
+        is the whole of the evidence. His wife {_p(32)} and their child {_p(97)}
+        follow from his line as usual.</li>
+    <li>Six people are drawn twice on the plate and are drawn <strong>once</strong>
+        here, with the plate&rsquo;s own &ldquo;For descendants, see above&rdquo;
+        standing in for the repeat: {_p(13)}, {_p(14)}, {_p(53)}, {_p(54)}, {_p(125)}
+        and {_p(126)}. Person {_p(169)} repeats within the lower block in the same way.</li>
+    <li id="note-repeat-names">Where a person is drawn twice, <strong>the plate
+        sometimes sets the name differently in the two places</strong> &mdash;
+        {_p(13)} (Dzia&#729;&#700;yots&#700;a / Tsiaiutsa), {_p(54)}
+        (Ma&#729;&#700;rani / Ma&#729;&#700;ran&#729;i) and {_p(125)}
+        (Gowa&#700;k&#729;&#700;d&#729;y&#259;i&#700; / Gowa&#700;k&#700;ad&#729;z&#259;i&#700;).
+        Both settings were read at high magnification and both are what the plate
+        prints, so this edition carries both rather than choosing between them.
+        A <strong>parenthesis after a name</strong> on this table therefore means
+        one of three things: the second setting of a repeat person&rsquo;s name, as
+        here; an English name the plate itself prints in parentheses, at {_p(27)},
+        {_p(42)}, {_p(43)} and {_p(140)}; or the second half of a pair the plate
+        joins with a brace, at {_p(14)}.</li>
+    <li id="note-crossref">Parsons&rsquo;s cross-references from this plate into
+        Genealogy&nbsp;I <strong>do not all use the numbering Genealogy&nbsp;I was
+        finally printed with</strong>. Checked by name, sex and clan, they are exact
+        through Genealogy&nbsp;I&rsquo;s person&nbsp;53 &mdash; twenty-two matches
+        &mdash; and <strong>one too high</strong> from its person&nbsp;66 onward, on
+        seven more. Nothing between its 54 and 65 is referenced from here, so where
+        the displacement begins cannot be settled from these two plates.
+        The references are reproduced exactly as printed and are deliberately
+        <strong>not</strong> linked: a link would have to resolve the displacement,
+        and resolving it silently would send a reader to the wrong person.
+        This is the same phenomenon as Genealogy&nbsp;I&rsquo;s own misprint at
+        <a href="../genealogy-i/#note-misprint">person&nbsp;67</a>, which
+        Table&nbsp;2 independently numbers 68 at {_p(60)}.</li>
+    <li>One cross-reference carries <strong>Parsons&rsquo;s own question mark</strong>
+        &mdash; {_p(199)} prints &ldquo;See Gen. I, 43 (?)&rdquo;. It is the only
+        reference on the plate with one, and the only one in the exact range that does
+        not match by name. The &ldquo;(?)&rdquo; is hers and is reproduced.</li>
+    <li>Three lines print a word in the clan position that is <strong>not a
+        clan</strong> &mdash; White at {_p(179)}, Mexican at {_p(183)}, Mohave at
+        {_p(243)}. Each is recorded where the plate sets it, not reinterpreted.
+        Person {_p(161)} is marked &ldquo;M.-F.&rdquo;, a notation used nowhere else
+        on the plate; the sex is left as printed rather than resolved.</li>
+    <li>Persons {_p(160)} and {_p(163)} carry cross-references into
+        <strong>Genealogy&nbsp;III</strong>, which is not yet transcribed. Those
+        references are printed as the plate has them and are not links, because a
+        link must not promise a page that does not exist.</li>
+    <li>The plate draws a short rule from {_p(235)}+{_p(236)}&rsquo;s sibling bracket
+        to the &lsquo;+&rsquo; line of {_p(255)}, which it does for no other spouse
+        line. It cannot mean 255 is their child: every child of 236 is Water, her own
+        clan, and 255 is Eagle. It is recorded as an observation of the plate, not as
+        descent.</li>
 """,
     },
     "iv": {
@@ -130,13 +257,13 @@ TABLES = {
 # They appear on the landing page as inert cards so the edition states its own
 # scope rather than implying Genealogy I is the whole work.
 PENDING = [
-    ("Table 2", "Genealogy II",
-     "Genealogy I carries live cross-references into this table at persons 12 and 73."),
     ("Table 3", "Genealogy III",
-     "Referenced from Genealogy I at person 73."),
+     "Referenced from Genealogy I at person 73, and from Genealogy II at "
+     "persons 160 and 163."),
 ]
 
-NUMBER_WORDS = {3: "three", 4: "four", 5: "five", 6: "six", 7: "seven"}
+NUMBER_WORDS = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five",
+                6: "six", 7: "seven"}
 
 # The chart's geometry, in rem at the fixed 16px root. Single source of truth:
 # the CSS custom properties are emitted from here, and the print reduction is
@@ -325,6 +452,31 @@ SECOND_VISIT_NOTE = {
     "V02": "For descendants, see above",                 # Table 4, under 4
 }
 
+# Where the plate does not repeat the marriage AT ALL on the second visit --
+# no '+' line, no bracket, no child-column note, only a prose cross-reference
+# printed in the block. This is NOT SECOND_VISIT_NOTE: there the plate does
+# print the '+' line and replaces only the sibling bracket, which is why the
+# note sits in the child column on that spouse's row.
+#
+# The distinction is structural, not cosmetic. Table 1's person 8 has two
+# DIFFERENT wives, 7 and 73, so his two groups hang off two different rows and
+# nothing collides. Genealogy II's 169 has two husbands and is the mother of
+# both groups, so `u["wife"] == pid` gives both `mother_row = 0` -- and two
+# brackets cannot begin on one line. The push logic then moves 169's own line
+# down to meet the second group and strands the first, one --lh out. Parsons
+# has no such problem because she prints 169 TWICE, one marriage each: under
+# 156+157 as 168's wife with the bracket to 196-200, and under 164+165 as her
+# parents' daughter with the bracket to 225, 226. Verified on the scan at
+# x 3650 y 7500 and x 3650 y 9700, 1500 px wide, 2026-07-30.
+#
+# So the collision was self-inflicted -- the renderer printed a marriage in a
+# block where the plate prints none -- and suppressing it is what makes the
+# page agree with the scan. Keyed by union id; the value is the plate's own
+# line, verbatim.
+SECOND_VISIT_OMITTED = {
+    "U43": "For second husband and descendants, see above",  # Table 2, under 164+165
+}
+
 RESEARCH_KEYS = ("english_name", "census_name", "census_year", "match_confidence", "notes")
 BASE_KEYS = ("sex", "name_as_printed", "alt_name", "age", "clan", "vital_note",
              "origin", "cross_ref", "plate_note")
@@ -347,12 +499,30 @@ def load_baseline(spec):
         raise SystemExit(f"{spec['module']}.py failed its structural checks:\n  "
                          + "\n  ".join(problems))
 
+    # A table may declare DUPLICATE_PLATE_NUMBERS: {synthetic id: the number the
+    # plate prints}. Parsons numbers two different people 101 on Genealogy II, so
+    # the plate's numbering is not a unique key and one of the two needs an id of
+    # its own to be addressable -- anchors, register entries and relation chips
+    # all key on it. But the id is PLUMBING, and every place a number is SHOWN
+    # must show the plate's. Without this both rows were addressable and the
+    # second printed "1010.", a number that appears nowhere on the plate, in
+    # three places: its chart line, its register entry and every relation chip
+    # pointing at it.
+    #
+    # Note what this is NOT: a misprint. PLATE_NUMBER_MISPRINTS also separates a
+    # shown number from an id, but there the plate is WRONG and the number is
+    # ringed in --sic and carries an annotation row. Here the plate is right and
+    # simply reuses a number, so it is set exactly like every other number, with
+    # no ring and no annotation. A footer note explains the reuse once.
+    dupes = getattr(T, "DUPLICATE_PLATE_NUMBERS", {})
+
     persons = {}
     for pid, _gen, sex, name, alt, age, clan, vital, origin, xref, note in T.PERSONS:
         p = dict(zip(BASE_KEYS, (sex, name, alt, age, clan, vital, origin, xref, note)))
         p = {k: ("" if v is None else str(v).strip()) for k, v in p.items()}
         p.update({k: "" for k in RESEARCH_KEYS})
         p["id"] = pid
+        p["plate_number"] = dupes.get(pid, pid)
         p["generation"] = _gen
         persons[pid] = p
 
@@ -384,7 +554,15 @@ def load_baseline(spec):
             # off the mother's line alone.
             kids_by_mother.setdefault(mother, []).append(child)
 
-    return persons, unions, kids_by_union, kids_by_mother
+    # UNATTACHED_BLOCKS: a couple the plate prints inside another couple's
+    # child column with no leader stub -- placed on the page, but no descent
+    # asserted. Keyed by the column it is printed in, since that is where
+    # Chart.render needs it. Read with getattr: Tables 1 and 4 have none.
+    unattached = {}
+    for uid, primary, parent_uid, after, _note in getattr(T, "UNATTACHED_BLOCKS", []):
+        unattached.setdefault(parent_uid, []).append((after, primary))
+
+    return persons, unions, kids_by_union, kids_by_mother, unattached
 
 
 def load():
@@ -411,6 +589,8 @@ def load():
                       "census_year", "match_confidence", "notes")
         }
         persons[int(r["id"])]["id"] = int(r["id"])
+        # The workbook has no duplicate-number column; see load_baseline.
+        persons[int(r["id"])]["plate_number"] = int(r["id"])
         persons[int(r["id"])]["generation"] = r.get("generation") or 0
 
     unions = [
@@ -434,7 +614,9 @@ def load():
         else:
             kids_by_mother.setdefault(mother, []).append(child)
 
-    return persons, unions, kids_by_union, kids_by_mother
+    # The workbook has no unattached-block sheet; it is a plate-layout fact and
+    # lives in the transcription modules. See load_baseline.
+    return persons, unions, kids_by_union, kids_by_mother, {}
 
 
 def esc(s):
@@ -536,7 +718,9 @@ def person_line(p, is_spouse, english_seen, printed_number=0):
                     f'<a class="num num-sic" data-printed="{printed_number}" '
                     f'href="#p{p["id"]}">{printed_number}.</a></span>')
     else:
-        bits.append(f'<a class="num" href="#p{p["id"]}">{p["id"]}.</a>')
+        # href on the id (unique, addressable), text from plate_number (what the
+        # plate prints). They differ only where the plate reuses a number.
+        bits.append(f'<a class="num" href="#p{p["id"]}">{p["plate_number"]}.</a>')
     bits.append(f'<span class="sex">{esc(p["sex"])}.</span>')
 
     name, alt = p["name_as_printed"], p["alt_name"]
@@ -588,11 +772,13 @@ def person_line(p, is_spouse, english_seen, printed_number=0):
 
 
 class Chart:
-    def __init__(self, persons, unions, kids_by_union, kids_by_mother):
+    def __init__(self, persons, unions, kids_by_union, kids_by_mother, unattached=None):
         self.P = persons
         self.U = unions
         self.KU = kids_by_union
         self.KM = kids_by_mother
+        # {parent union id: [(after this child, primary of the block to splice)]}
+        self.UB = unattached or {}
         self.rendered_unions = set()
         self.xref_printed = set()
         self.english_seen = set()
@@ -606,9 +792,13 @@ class Chart:
         return [u for u in self.U
                 if pid in (u["wife"], u["husband"]) or u["drawn_under"] == pid]
 
-    def render(self, pid, depth=0):
+    def render(self, pid, depth=0, unattached=False):
         """
         Draw one block (a person plus their '+' spouse lines) and its descendants.
+
+        `unattached` marks a block the plate prints inside this child column
+        without a leader stub -- see UNATTACHED_BLOCKS. It changes nothing but
+        the node's class; the block itself is drawn exactly as any other.
 
         Vertical alignment follows the plate: a sibling bracket hangs off the
         MOTHER's line, not off the top of the block. Where the mother is the
@@ -643,8 +833,19 @@ class Chart:
         # Pass 1: lay out this block's own lines and decide where each sibling
         # group belongs. No recursion here, so union bookkeeping resolves in the
         # same order it did before descendants are drawn.
+        deferred_xref = []     # plate lines that stand in for an omitted union
         for u in self.unions_of(pid):
             drawn_before = u["union_id"] in self.rendered_unions
+            # The plate prints no second occurrence of this marriage -- see
+            # SECOND_VISIT_OMITTED. Print nothing for it here except the
+            # cross-reference the plate puts in its place, held back until the
+            # block's other union lines are down, because that is where the
+            # plate sets it: under 183, not between 169 and him.
+            if drawn_before and u["union_id"] in SECOND_VISIT_OMITTED:
+                kids = self.KU.get(u["union_id"], [])
+                deferred_xref.append((SECOND_VISIT_OMITTED[u["union_id"]],
+                                      kids[0] if kids else None))
+                continue
             self.rendered_unions.add(u["union_id"])
             if pid in (u["wife"], u["husband"]):
                 other = u["husband"] if u["wife"] == pid else u["wife"]
@@ -685,15 +886,43 @@ class Chart:
                 # The note stands in for THESE children, already drawn on an
                 # earlier row -- so the first of them is exactly where "see
                 # above" points. Taken from the union, never from the English.
-                groups.append((mother_row, "note", (note, kids[0])))
+                groups.append((mother_row, "note", (note, kids[0]), u["union_id"]))
             else:
                 new = [k for k in kids if k not in self.placed]
                 if new:
-                    groups.append((mother_row, "kids", new))
+                    groups.append((mother_row, "kids", new, u["union_id"]))
+
+            # A fatherless group -- one the plate brackets under a mother
+            # without saying which marriage it belongs to -- hangs off HER
+            # line, and she is not always this block's primary. Genealogy II
+            # brackets 116-118 under 48, who has two husbands and is printed
+            # only as a '+' line under the first of them, 47. Looked up on the
+            # primary alone (below) those three children were never drawn at
+            # all: silently, because an undrawn person is not an error anywhere
+            # in this file. Tables 1 and 4 never showed it -- Table 1's one
+            # such group is under 68, who is a child and therefore a primary.
+            # mother_row is already her row here, which is the row the bracket
+            # must hang on; and `not in self.placed` is what keeps a mother
+            # printed as a '+' in two blocks from drawing them twice.
+            if other and u["wife"] == other:
+                spouse_kids = [k for k in self.KM.get(other, [])
+                               if k not in self.placed]
+                if spouse_kids:
+                    # No union id: this group is bracketed under the mother
+                    # alone, so there is no column for an unattached block to
+                    # be spliced into.
+                    groups.append((mother_row, "kids", spouse_kids, ""))
+
+        # The omitted marriages' cross-references, now that every '+' line this
+        # block does print is down. Counted like any other xref row so the rows
+        # below stay on the --lh grid; no group hangs off one.
+        for text, tgt in deferred_xref:
+            block.append(("xref", linkify_xref(esc(text), self.P, tgt), None))
+            row += 1
 
         orphans = [k for k in self.KM.get(pid, []) if k not in self.placed]
         if orphans:
-            groups.append((0, "kids", orphans))
+            groups.append((0, "kids", orphans, ""))
 
         # Pass 2: draw the child column, each group on its own mother's row.
         #
@@ -709,7 +938,7 @@ class Chart:
         child_cursor = 0     # next free row in the child column
         pushed = 0           # rows inserted into the block so far
         line_pad = {}        # block line index -> extra rows before that line
-        for mother_row, kind, payload in groups:
+        for mother_row, kind, payload, uid in groups:
             target = mother_row + pushed
             if child_cursor > target:
                 delta = child_cursor - target
@@ -725,7 +954,16 @@ class Chart:
                          '</div></div></div>')
                 rows = 1
             else:
-                parts = [self.render(k, depth + 1) for k in payload]
+                # An unattached block is spliced in after the child the plate
+                # prints it below, and counts its rows like any sibling -- it
+                # occupies the column, so everything under it must move down.
+                # Only the leader stub is withheld, by the node's class.
+                splice = dict(self.UB.get(uid, []))
+                parts = []
+                for k in payload:
+                    parts.append(self.render(k, depth + 1))
+                    if k in splice:
+                        parts.append(self.render(splice[k], depth + 1, unattached=True))
                 inner = "".join(h for h, _ in parts)
                 rows = sum(r for _, r in parts)
             style = f' style="margin-top:calc(var(--lh) * {gap})"' if gap else ""
@@ -752,6 +990,8 @@ class Chart:
         # Leaf blocks need no fixed width: nothing hangs off them, so a long
         # generation-5 entry can run past the column instead of widening the sheet.
         node_class = "node" if col else "node leaf"
+        if unattached:
+            node_class += " unattached"
         out = [f'<div class="{node_class}">', '<div class="block">', *lines, "</div>"]
         if col:
             out.append('<div class="kidcol">' + "".join(col) + "</div>")
@@ -1211,6 +1451,15 @@ body.chart .titlepage{max-width:var(--measure-wide)}
 .kids > .node:last-child::after{top:0;height:calc(var(--lh)/2)}
 .kids > .node:not(:first-child):not(:last-child)::after{top:0;bottom:0}
 .kids > .node:only-child::after{display:none}
+/* A block the plate prints INSIDE this column with no leader stub joining it
+   to the bracket -- see UNATTACHED_BLOCKS. Genealogy II sets 31+32 between
+   9+10's children 29 and 33 at exactly the children's indent, and draws no
+   stub: the vertical passes the row. So ::before goes and ::after stays, and
+   the indent is untouched -- withholding the padding too would move the block
+   out of the column the plate puts it in, which is the error this replaced.
+   It can never be first or last in a column (self_check() forbids it), so the
+   :first-child / :last-child terminus rules above are unaffected. */
+.kids > .node.unattached::before{display:none}
 /* Lineage inking: hovering or focusing within a block darkens the rules a
    reader would trace with a finger -- its own bracket and the brackets it
    hangs. Color-only, on the existing 1px borders; the plate is never dimmed.
@@ -1267,9 +1516,20 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
 .census{background:var(--cen-bg);color:var(--cen-fg);border-radius:2px;
   padding:.02em .38em;font-size:.8em}
 /* Wraps at the column edge, as the plate sets it:
-   'For second husband and offspring see Gen.' / 'II, 21, 74' */
+   'For second husband and offspring see Gen.' / 'II, 21, 74'
+
+   EACH VISUAL LINE MUST BE EXACTLY --lh TALL, which is why line-height is the
+   token and the block padding is zero. Chart.render counts a cross-reference
+   row as `row += 1`, so a sibling group whose mother's line sits BELOW one is
+   offset by mother_row * --lh -- and this rule used to render 21.09px against a
+   24.8px budget, putting seven of Genealogy II's brackets 3.7px off their
+   mother's line (measured 2026-07-29). Table 1 never showed it: no group there
+   has a mother's line below an xref row, so the whole defect sat latent in
+   shared CSS until a plate with six generations and 30 cross-references
+   arrived. Exactly the reasoning .sic-row already carries -- keep the two
+   together, and see the wrapping note below. */
 .xref{font-size:.8rem;color:var(--muted);font-style:italic;
-  white-space:normal;max-width:var(--col);line-height:1.4;padding:.1rem 0 .1rem 1.4rem}
+  white-space:normal;max-width:var(--col);line-height:var(--lh);padding:0 0 0 1.4rem}
 .xref a{color:inherit;text-decoration:underline dotted;text-underline-offset:.15em}
 .xref a:hover{color:var(--accent)}
 .xref a:focus-visible{color:var(--accent)}
@@ -1587,9 +1847,39 @@ READING_COMMON = """
     <li>Clan membership is matrilineal: every sibling group carries its mother's clan.
         That rule was used to verify the bracket readings against the plate.</li>
     <li>A dash in place of a name means the plate printed no name.</li>
-    <li>The dashed rule separating the two halves is an editorial addition,
-        not on the plate. It marks the two founding couples, {couples}.</li>
+    {blocks}
 """
+
+
+def blocks_note(spec):
+    """
+    The note on the dashed rules between descent blocks, counted from
+    spec["roots"] rather than typed.
+
+    This existed as fixed copy reading "the dashed rule separating the two
+    halves ... the two founding couples" while both published plates happened
+    to have exactly two. Genealogy II has THREE, and `.tree + .tree` draws a
+    rule before every block after the first, so the fixed copy stated two
+    wrong numbers at once. Anything here that counts must come from the data,
+    for the same reason the statistics line does.
+    """
+    n = len(spec["roots"])
+    couples = spec["couples"]
+    if n < 2:
+        return f"<li>The chart draws one descent block, from {couples}.</li>"
+    if n == 2:
+        # The published wording, kept verbatim DOWN TO THE SOURCE LINE BREAK,
+        # so this refactor leaves the two cited pages byte-identical. Without
+        # the break the rendered text is the same and the file still differs,
+        # which is a diff to explain on a page nobody meant to touch.
+        return ("<li>The dashed rule separating the two halves is an editorial addition,\n"
+                "        not on the plate. It marks the two founding couples, "
+                f"{couples}.</li>")
+    blocks = NUMBER_WORDS.get(n, str(n))
+    return (f"<li>The dashed rules separating the {blocks} descent blocks are an "
+            "editorial addition, not on the plate &mdash; one above each block "
+            f"after the first. They mark the {blocks} founding couples, "
+            f"{couples}.</li>")
 
 # The redesign's one disclosure: the reading aids are 2026 apparatus, the sheet
 # is 1923. Printed with the editorial notes on every chart page.
@@ -2172,7 +2462,13 @@ def datalist_html(persons, drawn):
         nm = p["name_as_printed"] or "———"
         if p["alt_name"]:
             nm += f" ({p['alt_name']})"
-        label = f"{pid} · {nm}" + (f" · {p['clan']}" if p["clan"] else "")
+        # The LABEL carries the plate's number, the VALUE the id. The script
+        # jumps to "#p" + value, so the value has to stay the id or a name match
+        # lands on the wrong person; the label is what the reader reads, so it
+        # has to be what the plate prints. They differ only where the plate
+        # reuses a number, and the suggestion list is the last place the
+        # synthetic id was still visible.
+        label = f"{p['plate_number']} · {nm}" + (f" · {p['clan']}" if p["clan"] else "")
         opts.append(f'<option value="{pid}">{esc(label)}</option>')
     return '<datalist id="persons-list">' + "".join(opts) + "</datalist>"
 
@@ -2246,10 +2542,12 @@ def register_html(persons, unions, ku, km, drawn, paternity=None):
         # these as rows, and loose sibling spans cannot be enumerated. Both
         # forms therefore carry .rel-x, and the card checks the tag, not the
         # class, to decide whether a row is navigable.
+        # Shown number is the plate's; the href and the key stay the id.
+        shown = p["plate_number"]
         if pid not in drawn:
-            return f'<span class="rel-x"><span class="num">{pid}</span> {nm}</span>'
+            return f'<span class="rel-x"><span class="num">{shown}</span> {nm}</span>'
         return (f'<a class="rel-x" href="#p{pid}">'
-                f'<span class="num">{pid}</span> {nm}</a>')
+                f'<span class="num">{shown}</span> {nm}</a>')
 
     def rel_row(label, links, kind, with_id=None, editorial=False):
         """
@@ -2628,7 +2926,7 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
     </section>
     <section class="app-sec">
       <h2>Editorial notes</h2>
-      <ul>{READING_COMMON.format(couples=spec["couples"])}{spec["notes"]}{APPARATUS_NOTE}</ul>
+      <ul>{READING_COMMON.format(blocks=blocks_note(spec))}{spec["notes"]}{APPARATUS_NOTE}</ul>
     </section>
 {provenance}
     <section class="app-sec">
@@ -2959,17 +3257,28 @@ def check_published_pages():
 def build_table(spec, public, today):
     """Build one table. Returns (doc, stats) so the caller can assemble the site."""
     if public:
-        persons, unions, ku, km = load_baseline(spec)
+        persons, unions, ku, km, ub = load_baseline(spec)
         out = DOCS / spec["slug"] / "index.html"
     else:
         if not XLSX.exists():
             print(f"missing {XLSX}; run build_workbook.py first")
             return None, None
-        persons, unions, ku, km = load()
+        persons, unions, ku, km, ub = load()
         out = OUT
 
-    chart = Chart(persons, unions, ku, km)
-    trees = "".join(f'<div class="tree">{chart.render(r)[0]}</div>' for r in spec["roots"])
+    chart = Chart(persons, unions, ku, km, ub)
+    # A root starts at generation 1 unless spec["root_columns"] sets it further
+    # in -- see the Genealogy II entry in TABLES for why this is an indent and
+    # not an UNATTACHED_BLOCKS splice. The offset is stated in the grid's own
+    # tokens, so it is the same step the nesting produces and drift stays 0.
+    rc = spec.get("root_columns", {})
+    def _tree(r):
+        col = rc.get(r, 1)
+        style = ("" if col <= 1 else
+                 ' style="margin-inline-start:calc((var(--col) + var(--stub))'
+                 f' * {col - 1})"')
+        return f'<div class="tree"{style}>{chart.render(r)[0]}</div>'
+    trees = "".join(_tree(r) for r in spec["roots"])
 
     missing = sorted(set(persons) - chart.seen)
     links = sum(len(v) for v in ku.values()) + sum(len(v) for v in km.values())
@@ -2996,7 +3305,18 @@ def build_table(spec, public, today):
         if census_filled:
             status.append("<li>Census matches recorded for: "
                           + ", ".join(str(i) for i in census_filled) + ".</li>")
+    # An undrawn person used to be a status line and a console warning, which
+    # is how seven of Genealogy II's went unnoticed through a whole session:
+    # nothing fails, the page just quietly holds fewer people than the plate.
+    # It is now fatal on the published build, like a duplicate anchor. The
+    # private build keeps reporting it, because a half-read plate legitimately
+    # has people no bracket reaches yet.
     if missing:
+        if public:
+            raise SystemExit(
+                f"ABORTED: {len(missing)} persons in PERSONS are not drawn in "
+                f"{out.name}: {missing}. Every person the plate numbers must reach "
+                "the page -- check roots, drawn_under and UNATTACHED_BLOCKS.")
         status.append(f"<li><strong>Not drawn:</strong> {missing} &mdash; these ids are in "
                       "PERSONS but reachable from neither founding couple.</li>")
 

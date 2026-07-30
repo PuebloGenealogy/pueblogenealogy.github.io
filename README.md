@@ -11,8 +11,8 @@ American Museum of Natural History**, vol. 19, pt. 5 (1923), pp. 133–292.
 | Plate | | |
 |---|---|---|
 | [Table 1 — Genealogy I](https://pueblogenealogy.github.io/genealogy-i/) | 104 individuals · 5 generations · 27 marriages · 80 parent–child links | founding couples 1+2, 54+55 |
+| [Table 2 — Genealogy II](https://pueblogenealogy.github.io/genealogy-ii/) | 275 individuals · 6 generations · 61 marriages · 214 parent–child links | founding couples 1+2, 154+155, 232+233 |
 | [Table 4 — Genealogy IV](https://pueblogenealogy.github.io/genealogy-iv/) | 73 individuals · 4 generations · 14 marriages · 58 parent–child links | founding couples 1+2, 59+60 |
-| Table 2 — Genealogy II | in preparation | |
 | Table 3 — Genealogy III | in preparation | |
 
 The plates are transcribed character by character, including the Americanist
@@ -122,7 +122,7 @@ cite both this edition and Parsons — see [`CITATION.cff`](CITATION.cff).
 Each release is archived at Zenodo. Cite
 [**10.5281/zenodo.21637900**](https://doi.org/10.5281/zenodo.21637900), which
 always resolves to the current version; a citation made against it keeps working
-when Tables 2 and 3 are added. Individual releases also carry their own DOI if
+when Table 3 is added. Individual releases also carry their own DOI if
 you need to pin one — v1.0.0 is
 [10.5281/zenodo.21637901](https://doi.org/10.5281/zenodo.21637901).
 

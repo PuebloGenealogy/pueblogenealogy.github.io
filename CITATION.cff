@@ -9,14 +9,18 @@ authors:
     given-names: Elizabeth
 abstract: >-
   A verified digital transcription of the genealogical plates published with
-  Elsie Clews Parsons's "Laguna Genealogies" (1923). Table 1, "Genealogy I",
-  records 104 individuals across five generations, with 27 marriages and 80
-  parent-child links. Table 4, "Genealogy IV", records 73 individuals across
-  four generations, with 14 marriages and 58 parent-child links. Both are
-  transcribed character by character including Americanist phonetic diacritics,
-  and encoded as a normalised persons/unions/children schema. Clan descent is
-  matrilineal, which provides an independent structural check on every bracket
-  reading.
+  Elsie Clews Parsons's "Laguna Genealogies" (1923). Three of the four plates
+  are edited here, 452 individuals in all. Table 1, "Genealogy I", records 104
+  individuals across five generations, with 27 marriages and 80 parent-child
+  links. Table 2, "Genealogy II", records 275 individuals across six
+  generations, with 61 marriages and 214 parent-child links, in three descent
+  blocks. Table 4, "Genealogy IV", records 73 individuals across four
+  generations, with 14 marriages and 58 parent-child links. Table 3 is not yet
+  edited. All are transcribed character by character including Americanist
+  phonetic diacritics, and encoded as a normalised persons/unions/children
+  schema. Clan descent is matrilineal, which gives a structural check on the
+  bracket readings, though only where the candidate mothers belong to different
+  clans; elsewhere the evidence is the plate's own bracket geometry.
 keywords:
   - Laguna Pueblo
   - genealogy
@@ -26,11 +30,15 @@ keywords:
   - Southwest anthropology
 license: CC-BY-4.0
 # The CONCEPT doi, which always resolves to the newest version. A citation made
-# against it keeps working when Tables 2 and 3 are added; the per-release doi is
+# against it keeps working when Table 3 is added; the per-release doi is
 # under identifiers for anyone who needs to pin a specific version.
 doi: 10.5281/zenodo.21637900
-version: v1.0.0
-date-released: "2026-07-28"
+# These two describe the release Zenodo will mint from the TAGGED commit, so
+# they must match the tag actually cut. Adding a plate is additive, hence the
+# minor bump. If the release slips to another day, correct date-released before
+# tagging -- Zenodo reads this file from the tag, not from main's tip.
+version: v1.1.0
+date-released: "2026-07-30"
 identifiers:
   - type: doi
     value: 10.5281/zenodo.21637900
@@ -38,6 +46,9 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.21637901
     description: Version DOI — v1.0.0, Genealogies I and IV
+  # v1.1.0's version DOI does not exist until Zenodo's webhook fires on the
+  # release. Add it here afterwards; do not guess it from v1.0.0's, the suffix
+  # is not sequential in any way that can be relied on.
 repository-code: "https://github.com/PuebloGenealogy/pueblogenealogy.github.io"
 url: "https://pueblogenealogy.github.io/"
 references:
