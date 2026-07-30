@@ -82,18 +82,38 @@ Conventions:
 
 ## Editorial attribution
 
-The transcription records what the plate shows. Once, so far, the plate leaves a
+The transcription records what the plate shows. Twice, so far, the plate leaves a
 question open that evidence outside it can answer, and this edition answers it —
 in the apparatus only, never in the chart.
 
-That case is the sibling group 83–85 on Table 1. Person 68 has two husbands on
-the plate, 69 and 70, and the bracket does not say which marriage the children
-belong to; the transcription therefore records no father, and **the chart draws
-the single bracket the plate draws**. In the register and the person cards the
-edition attributes 83 and 84 to 68's marriage with 69, and 85 to her marriage
-with 70.
+Both cases have the same shape: a woman with two husbands on the plate, one
+bracket, and no statement of which marriage the children belong to. The
+transcription therefore records no father in either, and **the chart draws the
+single bracket the plate draws**.
 
-Four rules govern this, and a future attribution must meet all four:
+- **83–85 on Table 1.** Person 68 has two husbands, 69 and 70. In the register
+  and the person cards the edition attributes 83 and 84 to her marriage with 69,
+  and 85 to her marriage with 70.
+- **116–118 on Table 2.** Person 48 has two husbands, 47 and 49. The edition
+  attributes all three children to her marriage with 49.
+
+**The two rest on different kinds of evidence, and the difference is the point
+of rule 4 below.** Table 1's is external documentary research, which this
+edition does not publish. Table 2's is Parsons's own text: at p. 195, writing on
+inheritance, she records that in one instance noted — "Gen. II, 47" — the sheep
+and fields passed to his widow for want of offspring. That names this man, on
+this genealogy, as having died childless, so 116–118 are not his and 49 is the
+only other husband the plate gives 48. The footnote quotes and cites her, and a
+reader can weigh it without taking the edition's word for anything.
+
+Table 2's attribution was **deliberately not made** when the plate was first
+published, on 2026-07-30, because no source for it had been found in Parsons's
+text and rule 3 requires a footnote that can say what the reading rests on. The
+general rule that produced that decision still stands — *an attribution that
+cannot be footnoted is not made* — and it was satisfied, not waived, when the
+passage was found.
+
+Four rules govern all of this, and a future attribution must meet all four:
 
 1. **The chart never carries it.** The chart is the transcription. An
    attribution that changed a bracket would make the page disagree with the
@@ -104,12 +124,36 @@ Four rules govern this, and a future attribution must meet all four:
 3. **Every row it produces is marked** with a dagger linking to a footnote that
    says the attribution is editorial and that the plate does not state it.
    Plate-attested groups sit unmarked beside marked ones, so the difference is
-   visible rather than asserted.
-4. **The supporting records are not published.** The evidence for the Table 1
-   attribution is external documentary research, which falls under *What is
-   published* below: it stays in the git-ignored workbook. The footnote says
-   that a reading rests on evidence outside the plate; it does not reproduce
-   the evidence, and the build now refuses output that would.
+   visible rather than asserted. The mark appears at **both ends** — on the
+   parents' `Children` rows and on each child's own `Parents` row — because an
+   attribution visible from one side only is one a reader can miss entirely by
+   arriving from the other.
+
+   **The dagger marks the pairing, not the mother.** She is the plate's own
+   bracket and is never in doubt; what the edition supplies is which marriage
+   the children belong to. Each footnote says so, so `Parents†` cannot be read
+   as doubt about the mother. It sits on the row rather than on the father's
+   chip for that reason and one mechanical one: the person card's rows are
+   anchors, an `<a>` dagger cannot nest inside the chip's `<a>`, and a bare
+   `<span>` would leave the card with a mark that goes nowhere.
+4. **A published source is cited; unpublished records are not reproduced.**
+   Which of the two applies depends on where the evidence comes from, and the
+   distinction is not negotiable in either direction.
+   - Where the evidence is **already published** — Parsons's own 1923 text, or
+     any other printed source — the footnote **quotes it and gives the page**,
+     as Table 2's does. An attribution a reader can check is worth more than one
+     they must accept.
+   - Where the evidence is **external documentary research**, as Table 1's is,
+     it falls under *What is published* below: it stays in the git-ignored
+     workbook. The footnote says that a reading rests on evidence outside the
+     plate, names no source, and stops there. The build refuses output that
+     would go further.
+
+   One practical consequence of quoting a printed source: the leak gate's prose
+   check does not know the difference between Parsons's vocabulary and a
+   researcher's, so a quotation may trip it. The fix is to allowlist the exact
+   phrase in `RESEARCH_PROSE_ALLOWED`, never to loosen the pattern — the gate
+   must keep failing closed on every other use of the word.
 
 ## Verification
 

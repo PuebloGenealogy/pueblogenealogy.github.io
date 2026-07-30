@@ -33,12 +33,19 @@ license: CC-BY-4.0
 # against it keeps working when Table 3 is added; the per-release doi is
 # under identifiers for anyone who needs to pin a specific version.
 doi: 10.5281/zenodo.21637900
-# These two describe the release Zenodo will mint from the TAGGED commit, so
-# they must match the tag actually cut. Adding a plate is additive, hence the
-# minor bump. If the release slips to another day, correct date-released before
-# tagging -- Zenodo reads this file from the tag, not from main's tip.
-version: v1.1.0
-date-released: "2026-07-30"
+# These two describe the newest release that ACTUALLY EXISTS on Zenodo -- never
+# a planned one. GitHub renders this file as the repo's "Cite this repository"
+# widget, so a version here that has not been minted advertises something no
+# reader can resolve. They said v1.1.0 / 2026-07-30 until the release policy was
+# set on 2026-07-30 (see CLAUDE.md): during active development the project
+# commits to main and cuts NO releases and NO Zenodo deposits, and the next
+# release comes only when all four tables, the design, the transcriptions, the
+# text and the citations are final. Do not bump these in anticipation of a tag.
+#
+# The abstract above deliberately describes MORE than this release contains: it
+# describes the work, these fields describe the release.
+version: v1.0.0
+date-released: "2026-07-28"
 identifiers:
   - type: doi
     value: 10.5281/zenodo.21637900
@@ -46,8 +53,9 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.21637901
     description: Version DOI — v1.0.0, Genealogies I and IV
-  # v1.1.0's version DOI does not exist until Zenodo's webhook fires on the
-  # release. Add it here afterwards; do not guess it from v1.0.0's, the suffix
+  # The next version DOI will not exist until Zenodo's webhook fires on the
+  # release, which under the current policy is not until the edition is
+  # complete. Add it here afterwards; do not guess it from v1.0.0's, the suffix
   # is not sequential in any way that can be relied on.
 repository-code: "https://github.com/PuebloGenealogy/pueblogenealogy.github.io"
 url: "https://pueblogenealogy.github.io/"

@@ -1269,7 +1269,7 @@ function openCard(a){
     }
     return withClan(el);
   }
-  var parents=null,spouses=[],kids={},kidsEd={},order=[];
+  var parents=null,parentsEd=false,spouses=[],kids={},kidsEd={},order=[];
   src.querySelectorAll(".reg-rel").forEach(function(r){
     var kind=r.getAttribute("data-rel");
     if(!kind)return;
@@ -1277,7 +1277,12 @@ function openCard(a){
       return c.className&&(" "+c.className+" ").indexOf(" rel-x ")>=0;
     });
     if(!items.length)return;
-    if(kind==="parents")parents=items;
+    if(kind==="parents"){
+      parents=items;
+      /* Same flag the Children rows use, so an attributed father is marked on
+         the card exactly as he is in the register. */
+      parentsEd=r.getAttribute("data-editorial")==="1";
+    }
     else if(kind==="spouses")spouses=items;
     else if(kind==="children"){
       var w=r.getAttribute("data-with")||"0";
@@ -1289,7 +1294,7 @@ function openCard(a){
   var main=doc.createElement("div");main.className="pc-main";
   if(parents){
     var ps=doc.createElement("section");ps.className="pc-sec";
-    ps.appendChild(heading("Parents"));
+    ps.appendChild(heading("Parents",parentsEd));
     /* Mother and father side by side in equal columns, stacking themselves
        when the card is too narrow -- auto-fit does both, so there is no
        breakpoint here to keep in step with the one on .pc-cols. */
