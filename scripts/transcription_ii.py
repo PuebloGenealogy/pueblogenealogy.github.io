@@ -740,7 +740,9 @@ REPEAT_PERSON_NAMES = {
 #        were in shared code that the two published plates never exercised:
 #          - 7 people undrawn: a fatherless sibling group whose mother is only
 #            a '+' line was never looked up (116-118 under 48); 49 needed
-#            drawn_under; 31+32+97 are a fourth block and needed a root
+#            drawn_under; 31+32+97 were reachable from nothing and were rooted,
+#            which drew them but at generation 1 -- see UNATTACHED_BLOCKS, which
+#            replaced that on 2026-07-30 and puts them where the plate does
 #          - .xref rendered 21.09 px against a 24.8 px budget, putting 7
 #            brackets 3.7 px off their mother's line
 #          - DUPLICATE_PLATE_NUMBERS was declared here but never READ by the
@@ -1028,6 +1030,18 @@ REPEAT_PERSON_NAMES = {
 # 9+10's son; he is a husband whose own parents the plate does not draw, the
 # same pattern as 232+233 in the lower block. His clan is Water like theirs,
 # so the clan check could not have found this.
+#
+# Re-verified 2026-07-30 on the bracket-column strip x 3320, y 500, 480 x 1100,
+# which also corrected a detail this file had wrong: the stubs into 33 and into
+# 35, 36, 38, 40 are on TWO DIFFERENT verticals, not one. 9+10's vertical takes
+# 26, 29 and 33 and ends at 33; 11+12's begins at 35. 31's row lies between the
+# stubs to 29 and 33 and takes neither.
+#
+# Where he is DRAWN is a separate question from whose son he is, and the two
+# were conflated until 2026-07-30: he was made a root, which is the only way an
+# unreachable person gets drawn at all, and a root is drawn at generation 1 --
+# four columns left of where the plate sets him. UNATTACHED_BLOCKS above is
+# what fixed that.
 # ---------------------------------------------------------------------------
 UNIONS = [
     # ---- upper block ----------------------------------------------------
@@ -1124,6 +1138,45 @@ UNIONS = [
      "and 255 is Eagle. Recorded as 254's husband; the rule is an observation "
      "of the plate, not descent. Verified at x 4700, y 11520"),
     ("U61", 256, 257, 1, 1, ""),
+]
+
+# ---------------------------------------------------------------------------
+# UNATTACHED BLOCKS -- where the plate PRINTS a couple whose descent it does
+# not draw.
+# union_id, primary, in the child column of, immediately after this child, note
+#
+# `primary` is the partner the plate sets on the upper line, the one WITHOUT
+# the '+'. It cannot be derived: everywhere else on this plate the woman's
+# line is the primary and her husband's is the '+' beneath it, and at 31+32
+# Parsons does the opposite. Rooting at the wife would invert the two lines
+# and show the reader something the plate does not.
+#
+# This is layout, not descent. The plate sets these lines at the children's
+# indent, inside another bracket's vertical extent, with NO leader stub
+# joining them to it: the vertical simply passes their row. Parsons is placing
+# them on the page beside the family they married into, while saying nothing
+# about whose children they are.
+#
+# It is recorded because the alternative is worse in both directions. Drawn as
+# a descent block of their own -- which is what this table did until
+# 2026-07-30 -- they land at generation 1, at the far left, four columns from
+# where the plate sets them. Given a leader stub they would assert a descent
+# the plate withholds. So the renderer puts the block in the right column and
+# in the right place in the sibling order, and draws no stub.
+#
+# The vertical rule still runs past the row, exactly as on the plate, because
+# the block sits BETWEEN two real children of the bracket.
+# ---------------------------------------------------------------------------
+UNATTACHED_BLOCKS = [
+    ("U17", 31, "U05", 29,
+     "31+32 and their child 97. The plate prints '31. M. Re˙ʼni. Water' with no "
+     "'+' and no leader stub, between 29+30 and 33+34, who are the second and "
+     "third children of 9+10. Re-verified 2026-07-30 on the bracket-column "
+     "strip x 3320, y 500, 480 x 1100: one vertical carries stubs into 29 and "
+     "33 and ENDS at 33; a separate vertical begins at 35 for 11+12's children. "
+     "31's row lies between the two stubs and takes none. 31 is Water as 9+10 "
+     "are, so the clan check can neither confirm nor deny this -- the evidence "
+     "is the absent stub and nothing else."),
 ]
 
 # ---------------------------------------------------------------------------
@@ -1352,6 +1405,45 @@ def self_check() -> list[str]:
     unplaced = set(ids) - set(kids) - spouses
     if unplaced:
         problems.append(f"persons neither child nor spouse: {sorted(unplaced)}")
+
+    # UNATTACHED_BLOCKS is the only thing that puts these couples on the page
+    # at all -- they are reachable from no bracket, so a stale entry here does
+    # not misdraw them, it drops them silently. Hold every field against the
+    # data: the union exists, the column it names exists, and the child it is
+    # printed after really is a child of that column.
+    for uid, primary, parent_uid, after, _note in UNATTACHED_BLOCKS:
+        if uid not in known:
+            problems.append(f"UNATTACHED_BLOCKS names union {uid}, which does not exist")
+        if primary not in {i for u in UNIONS if u[0] == uid for i in (u[1], u[2])}:
+            problems.append(f"{uid}: primary {primary} is not a partner in that union")
+        if parent_uid not in known:
+            problems.append(
+                f"{uid} is drawn in the child column of {parent_uid}, which does not exist")
+        siblings = [c[3] for c in CHILDREN if c[0] == parent_uid]
+        if after not in siblings:
+            problems.append(
+                f"{uid} is drawn after {after}, who is not a child of {parent_uid} "
+                f"(its children are {siblings})")
+        # The bracket's bottom terminus is drawn from DOM position -- the last
+        # node in the column is where the vertical stops. Splice an unattached
+        # block in after the last child and the rule would run PAST the last
+        # real child, down to a row it does not serve. On the plate the
+        # vertical always ends on a child, so this can only be an encoding
+        # error, and it is one the eye would not catch.
+        elif after == siblings[-1]:
+            problems.append(
+                f"{uid} is drawn after {after}, the LAST child of {parent_uid}; the "
+                "bracket's vertical would then extend past its own last child")
+        # A block drawn inside someone else's column must not ALSO be a child
+        # somewhere: that would be two placements for one couple.
+        for pid in (u[1] for u in UNIONS if u[0] == uid):
+            if pid in set(kids):
+                problems.append(
+                    f"{uid} is an unattached block but its wife {pid} is also a child")
+        for pid in (u[2] for u in UNIONS if u[0] == uid):
+            if pid in set(kids):
+                problems.append(
+                    f"{uid} is an unattached block but its husband {pid} is also a child")
 
     return problems
 

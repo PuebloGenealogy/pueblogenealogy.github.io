@@ -3,6 +3,69 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
+## 2026-07-30 — 31+32+97 drawn where the plate prints them, not at the left margin
+
+The first of the user's reported placement errors, resolved. **The data was
+right and the drawing was wrong**, which is a distinction the previous session
+did not have a mechanism for.
+
+### Claims in the entry below that this session falsified
+
+- **"Four descent blocks" → three.** 1+2, 154+155, 232+233. 31+32 is a couple
+  the plate prints *inside* the first block. The page copy is computed from
+  `len(roots)` and now reads "three descent blocks / three founding couples".
+- **"All 55 sibling brackets on their mother's line, max 0.016px" → 54 of 55.**
+  Person **169**'s bracket is a full `--lh` (24.8px) out, and was in the
+  committed build too. The measurement compared each group's first `.node` top
+  against the mother's line; the displacement is *inside* the block, in
+  `line_pad`, so the node top reads correct while the name sits a row lower.
+  Measure the first `.line`. Still open — see below.
+- **"Stubs run from the vertical rule into rows 33, 35, 36, 38 and 40"** — those
+  are **two** verticals, not one. 9+10's takes 26, 29, 33 and ends at 33;
+  11+12's begins at 35. It does not change any reading, but it is the strip a
+  future session will re-crop.
+
+### What changed
+
+- **`UNATTACHED_BLOCKS`** in `scripts/transcription_ii.py` — a new plate-layout
+  declaration: the union, the partner on the upper line, the child column it is
+  printed in, the child it is printed after. One entry, `U17` after 29 in `U05`.
+  `self_check()` validates every field and forbids splicing after a column's
+  last child, which would drag the bracket's bottom terminus past its own last
+  child.
+- **`Chart.render` splices** that block into the column and marks the node
+  `unattached`; `.kids > .node.unattached::before{display:none}` withholds the
+  leader stub and nothing else, so the vertical still passes the row exactly as
+  it does on the plate. Group tuples now carry their union id, which is how the
+  splice knows which column it is in.
+- **31 came out of `roots`.** He was there because rooting was the only way an
+  unreachable person got drawn at all — but a root is drawn at generation 1, and
+  the plate sets him at generation 4, between 29+30 and 33+34.
+- **An undrawn person is now fatal on `--public`**, like a duplicate anchor. It
+  was a console warning, which is how seven of this plate's went unnoticed
+  through a whole session. The private build still only warns.
+- **`#note-unattached`** added to Table 2's apparatus: a couple sitting in a
+  bracket with no rule joining it is otherwise indistinguishable from a
+  rendering fault.
+
+### Measured, 1280×900
+
+31 at left 1336.98px, identical to 29 and 33 (0px), sibling order 26, 29, **31**,
+33, no stub, vertical present. Column drift **0px at all six generations**, step
+425.59px. 0 rows off the `--lh` grid, 0px body overflow, register unharmed.
+Tables 1 and 4 as controls: 0px drift, 0 brackets off, 0 rows off grid. Their
+only diff is `dateModified`, the "Last updated" line, and the one shared CSS
+rule.
+
+### Settled with the user, and still open
+
+49 under 47 is **correct**. **116–118's father is 49** on the authority of
+Parsons's prose — to be added as an editorial attribution under METHOD.md's four
+rules, apparatus only, and unlike Table 1's it can cite its source, since a
+published 1923 sentence is not census research. Deferred at the user's request:
+the rest of the placement-error list, **232+233**, **U52**, **U60**, and
+person **169**'s bracket.
+
 ## 2026-07-29 — Genealogy II published to the branch: read, encoded, rendered, measured
 
 **Genealogy II is complete and rendered** — 275 records for the plate's 274

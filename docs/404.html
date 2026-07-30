@@ -433,6 +433,15 @@ body.chart .titlepage{max-width:var(--measure-wide)}
 .kids > .node:last-child::after{top:0;height:calc(var(--lh)/2)}
 .kids > .node:not(:first-child):not(:last-child)::after{top:0;bottom:0}
 .kids > .node:only-child::after{display:none}
+/* A block the plate prints INSIDE this column with no leader stub joining it
+   to the bracket -- see UNATTACHED_BLOCKS. Genealogy II sets 31+32 between
+   9+10's children 29 and 33 at exactly the children's indent, and draws no
+   stub: the vertical passes the row. So ::before goes and ::after stays, and
+   the indent is untouched -- withholding the padding too would move the block
+   out of the column the plate puts it in, which is the error this replaced.
+   It can never be first or last in a column (self_check() forbids it), so the
+   :first-child / :last-child terminus rules above are unaffected. */
+.kids > .node.unattached::before{display:none}
 /* Lineage inking: hovering or focusing within a block darkens the rules a
    reader would trace with a finger -- its own bracket and the brackets it
    hangs. Color-only, on the existing 1px borders; the plate is never dimmed.

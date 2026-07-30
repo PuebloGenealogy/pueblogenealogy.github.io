@@ -14,7 +14,7 @@ parent–child links, 5 generations. **Genealogy IV** (Table 4) — 73 individua
 
 **Genealogy II** (Table 2) is **complete, rendered and awaiting merge** on
 branch `table-ii-transcription`, draft PR #14 — 275 individuals for the plate's
-274 numbers, 61 marriages, 214 parent–child links, **6 generations**, four
+274 numbers, 61 marriages, 214 parent–child links, **6 generations**, three
 descent blocks. It is registered in `TABLES`, so `--public` builds **5 pages**;
 the live site still serves two. Genealogy III is scanned and untouched.
 
@@ -119,7 +119,12 @@ python3 scripts/make_chart.py --public    # the published build -> docs/
 ```
 
 `--public` must end `N JSON-LD blocks valid` and **exit 0**. It exits 1 on
-invalid structured data or a research-data leak. `make_chart.py` with no flag is
+invalid structured data, a research-data leak, or **any person in `PERSONS` that
+the page does not draw**. That last gate was added 2026-07-30: an undrawn person
+used to be a console warning and a status line, which is how seven of Genealogy
+II's went unnoticed for a whole session — nothing fails, the page just quietly
+holds fewer people than the plate. The private build still only warns, because a
+half-read plate legitimately has people no bracket reaches yet. `make_chart.py` with no flag is
 the private build; it needs `data/*.xlsx`, which is not in this clone.
 
 **That order is not cosmetic. `subset_font.py` runs BEFORE the build, or not at
@@ -476,11 +481,15 @@ publishes Genealogy II, not after.
 - **Genealogy II builds but its reading is not settled** — draft PR #14 on branch
   `table-ii-transcription`. Read, encoded, rendered and measured; `self_check()`
   passes and 275 of 275 persons are drawn. **The user has reported errors in
-  where entries are placed** (31, 32, 97 among them) and asked to be questioned
-  about the full list. **Ask before merging or publishing** — `self_check()`
-  cannot see placement, so its passing is not evidence against them.
-  `SESSION-NOTES.md` has the suspects and the method. After that comes the
-  release decision, and `.zenodo.json` and `CITATION.cff` still describe a
+  where entries are placed** and asked to be questioned about the full list.
+  **Ask before merging or publishing** — `self_check()` cannot see placement, so
+  its passing is not evidence against them. Settled so far (2026-07-30): **31,
+  32 and 97** are placed correctly as data but were *drawn* in the wrong column,
+  now fixed via `UNATTACHED_BLOCKS`; **49 under 47** confirmed correct;
+  **116–118's father is 49** per Parsons's prose, still to be added as an
+  editorial attribution. Deferred by the user, and still open: the rest of the
+  list, **232+233**, **U52 (234+54)** and **U60 (254+255)**. After that comes
+  the release decision, and `.zenodo.json` and `CITATION.cff` still describe a
   **two-table** edition while the tagged commit is what Zenodo reads.
   Two things about this plate the published two do not prepare you for:
   it runs to **six generations** and **274 numbers for 275 people**, and **its
@@ -492,6 +501,15 @@ publishes Genealogy II, not after.
 
 Report what was measured, not what was attempted. Flag uncertain readings
 explicitly rather than burying them.
+
+**Measure a bracket against the first `.line` in the group, never the first
+`.node`.** They are not the same element and the difference is exactly the bug
+worth finding. When two sibling groups claim one `mother_row`, `Chart.render`
+pushes the mother's line down with `line_pad` — a margin *inside* the block. The
+node's top stays where it belongs, so a node-to-node measurement reads 0px while
+the name itself sits a row lower and the stub points at empty space. That is how
+"all 55 brackets on their mother's line, max 0.016px" was reported for a page
+that had one a full 24.8px out (person 169, still open).
 
 **Check the built file, not only the rendered page.** A DOM read in the browser
 happens after the page's own script has run, so it cannot see what the HTML
@@ -506,10 +524,12 @@ rather than plates.
 orientation and tile planning only. Genealogy II's overview appeared to show
 three founding couples in its **left column**; at native resolution that column
 has one, and 5 and 7 sit in the same column as 3, all carried by a single rule
-off person 1's row. (The plate *as a whole* has four descent blocks — 1+2, 31+32,
+off person 1's row. (The plate *as a whole* has three descent blocks — 1+2,
 154+155, 232+233 — which is a different claim about a different part of the
-plate.) A downscale loses exactly the thin rules that carry the genealogy, so it
-will misplace people while looking perfectly legible.
+plate. 31+32 was counted as a fourth until 2026-07-30; it is a couple the plate
+prints *inside* the first block, not a block of its own — see below.) A
+downscale loses exactly the thin rules that carry the genealogy, so it will
+misplace people while looking perfectly legible.
 
 **Indentation does not establish descent — a leader stub does.** On Genealogy II
 this cost three near-misses, so treat it as the rule and not the exception:
@@ -520,6 +540,24 @@ their row. Read the bracket column as its own narrow strip — 260–320px, so t
 vertical and every stub entering it are the only things in frame — and count the
 stubs. The clan check will not save you here: 31 is Water exactly as the couple
 whose bracket he sits inside are.
+
+**"Not a child" and "not drawn here" are two different findings, and the second
+one has its own mechanism.** Reading the missing stub correctly still left 31 in
+the wrong place on the page for a whole session, because the only way an
+unreachable person got drawn at all was to make him a **root** — and a root is
+drawn at generation 1, at the far left, four columns from where the plate sets
+him. The block was right and its position was not, which no structural check can
+see and no clan can contradict. `UNATTACHED_BLOCKS` in a transcription module is
+now the mechanism: it names the union, the partner the plate sets on the upper
+line, the child column it is printed in and the child it is printed after, and
+the renderer splices the block into that column and **withholds only the leader
+stub** (`.kids > .node.unattached::before`). The vertical still passes the row,
+as it does on the plate. Reach for it whenever the plate *prints* a couple
+somewhere it does not *descend* them; reach for `roots` only when the plate
+starts a genuinely separate block at the left margin. An entry is validated by
+`self_check()`, which also forbids splicing after a column's **last** child —
+the bracket's bottom terminus is drawn from DOM position, so the rule would then
+run past its own last child.
 
 **A half-read plate is never registered in `TABLES`.** The renderer builds every
 registered table on every `--public` run, so registering early is how a partial

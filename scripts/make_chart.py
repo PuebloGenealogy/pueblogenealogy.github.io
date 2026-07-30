@@ -116,25 +116,25 @@ TABLES = {
         "numeral": "II",
         "plate": "Table 2",
         "module": "transcription_ii",
-        # FOUR blocks, and they are one genealogy, not four. 14 is a child of
+        # THREE blocks, and they are one genealogy, not three. 14 is a child of
         # 154+155 and a husband in the first block; 54 is a child of 232+233 and
         # a husband in the first. That is why the derived generations of those
         # two are 2 and 3 rather than 1: they are the parents of people drawn
         # above them.
         #
-        # 31 is the odd one, and it is a MAN -- the other three roots are the
-        # women, because on the plate the woman's line is the primary and her
-        # husband's is the '+' beneath it. At 31+32 the plate prints it the
-        # other way round, so rooting at 32 would invert the two lines and show
-        # the reader something the plate does not. 31 has no leader rule: he
-        # sits at the children's indent inside another bracket's extent with no
-        # stub joining him to it (see UNIONS U17, re-verified 2026-07-29).
-        # Nothing links him to a root, so without this entry 31, 32 and their
-        # child 97 are not drawn at all.
-        "roots": [1, 31, 154, 232],
+        # 31 WAS a fourth root here until 2026-07-30, and that was wrong -- not
+        # about the genealogy but about the page. He has no leader stub, so
+        # nothing links him to a bracket and rooting him was the only way he
+        # got drawn at all; but a root is drawn at generation 1, at the far
+        # left, and the plate sets him at the children's indent inside 9+10's
+        # bracket, four columns over. The block was correct and its position
+        # was not. He is now spliced into that column by UNATTACHED_BLOCKS in
+        # transcription_ii.py, which withholds the stub, so the page says what
+        # the plate says: printed here, descent not drawn.
+        "roots": [1, 154, 232],
         "slug": "genealogy-ii",
-        "couples": (f"{_p(1)}+{_p(2)}, {_p(31)}+{_p(32)}, "
-                    f"{_p(154)}+{_p(155)} and {_p(232)}+{_p(233)}"),
+        "couples": (f"{_p(1)}+{_p(2)}, {_p(154)}+{_p(155)} "
+                    f"and {_p(232)}+{_p(233)}"),
         "notes": f"""
     <li id="note-duplicate-101">The plate <strong>numbers two different people
         101</strong> &mdash; a woman, Naaʼd&#7590;ityʼi of the Water clan, and a man
@@ -145,6 +145,18 @@ TABLES = {
         &ldquo;101&rdquo; into Find goes to the first of the two, since the number
         alone cannot say which is meant. Searching the name, or opening either row
         from the register, reaches each of them exactly.</li>
+    <li id="note-unattached">{_p(31)} and {_p(32)} sit inside the bracket holding
+        {_p(9)} and {_p(10)}&rsquo;s children, at the children&rsquo;s indent,
+        <strong>with no rule joining them to it</strong> &mdash; and that gap is the
+        plate&rsquo;s, reproduced here rather than tidied away. Every other person in
+        a bracket is reached by a short horizontal stub off its vertical rule;
+        {_p(31)}&rsquo;s row is the one the rule passes without stopping. So Parsons
+        prints him among {_p(9)}&rsquo;s children while declining to say he is one,
+        and this edition prints him where she does and says no more. His clan is
+        Water, as {_p(9)} and {_p(10)} are, so the matrilineal check that tests every
+        other bracket on this plate can neither confirm nor deny it; the absent stub
+        is the whole of the evidence. His wife {_p(32)} and their child {_p(97)}
+        follow from his line as usual.</li>
     <li>Six people are drawn twice on the plate and are drawn <strong>once</strong>
         here, with the plate&rsquo;s own &ldquo;For descendants, see above&rdquo;
         standing in for the repeat: {_p(13)}, {_p(14)}, {_p(53)}, {_p(54)}, {_p(125)}
@@ -496,7 +508,15 @@ def load_baseline(spec):
             # off the mother's line alone.
             kids_by_mother.setdefault(mother, []).append(child)
 
-    return persons, unions, kids_by_union, kids_by_mother
+    # UNATTACHED_BLOCKS: a couple the plate prints inside another couple's
+    # child column with no leader stub -- placed on the page, but no descent
+    # asserted. Keyed by the column it is printed in, since that is where
+    # Chart.render needs it. Read with getattr: Tables 1 and 4 have none.
+    unattached = {}
+    for uid, primary, parent_uid, after, _note in getattr(T, "UNATTACHED_BLOCKS", []):
+        unattached.setdefault(parent_uid, []).append((after, primary))
+
+    return persons, unions, kids_by_union, kids_by_mother, unattached
 
 
 def load():
@@ -548,7 +568,9 @@ def load():
         else:
             kids_by_mother.setdefault(mother, []).append(child)
 
-    return persons, unions, kids_by_union, kids_by_mother
+    # The workbook has no unattached-block sheet; it is a plate-layout fact and
+    # lives in the transcription modules. See load_baseline.
+    return persons, unions, kids_by_union, kids_by_mother, {}
 
 
 def esc(s):
@@ -704,11 +726,13 @@ def person_line(p, is_spouse, english_seen, printed_number=0):
 
 
 class Chart:
-    def __init__(self, persons, unions, kids_by_union, kids_by_mother):
+    def __init__(self, persons, unions, kids_by_union, kids_by_mother, unattached=None):
         self.P = persons
         self.U = unions
         self.KU = kids_by_union
         self.KM = kids_by_mother
+        # {parent union id: [(after this child, primary of the block to splice)]}
+        self.UB = unattached or {}
         self.rendered_unions = set()
         self.xref_printed = set()
         self.english_seen = set()
@@ -722,9 +746,13 @@ class Chart:
         return [u for u in self.U
                 if pid in (u["wife"], u["husband"]) or u["drawn_under"] == pid]
 
-    def render(self, pid, depth=0):
+    def render(self, pid, depth=0, unattached=False):
         """
         Draw one block (a person plus their '+' spouse lines) and its descendants.
+
+        `unattached` marks a block the plate prints inside this child column
+        without a leader stub -- see UNATTACHED_BLOCKS. It changes nothing but
+        the node's class; the block itself is drawn exactly as any other.
 
         Vertical alignment follows the plate: a sibling bracket hangs off the
         MOTHER's line, not off the top of the block. Where the mother is the
@@ -801,11 +829,11 @@ class Chart:
                 # The note stands in for THESE children, already drawn on an
                 # earlier row -- so the first of them is exactly where "see
                 # above" points. Taken from the union, never from the English.
-                groups.append((mother_row, "note", (note, kids[0])))
+                groups.append((mother_row, "note", (note, kids[0]), u["union_id"]))
             else:
                 new = [k for k in kids if k not in self.placed]
                 if new:
-                    groups.append((mother_row, "kids", new))
+                    groups.append((mother_row, "kids", new, u["union_id"]))
 
             # A fatherless group -- one the plate brackets under a mother
             # without saying which marriage it belongs to -- hangs off HER
@@ -823,11 +851,14 @@ class Chart:
                 spouse_kids = [k for k in self.KM.get(other, [])
                                if k not in self.placed]
                 if spouse_kids:
-                    groups.append((mother_row, "kids", spouse_kids))
+                    # No union id: this group is bracketed under the mother
+                    # alone, so there is no column for an unattached block to
+                    # be spliced into.
+                    groups.append((mother_row, "kids", spouse_kids, ""))
 
         orphans = [k for k in self.KM.get(pid, []) if k not in self.placed]
         if orphans:
-            groups.append((0, "kids", orphans))
+            groups.append((0, "kids", orphans, ""))
 
         # Pass 2: draw the child column, each group on its own mother's row.
         #
@@ -843,7 +874,7 @@ class Chart:
         child_cursor = 0     # next free row in the child column
         pushed = 0           # rows inserted into the block so far
         line_pad = {}        # block line index -> extra rows before that line
-        for mother_row, kind, payload in groups:
+        for mother_row, kind, payload, uid in groups:
             target = mother_row + pushed
             if child_cursor > target:
                 delta = child_cursor - target
@@ -859,7 +890,16 @@ class Chart:
                          '</div></div></div>')
                 rows = 1
             else:
-                parts = [self.render(k, depth + 1) for k in payload]
+                # An unattached block is spliced in after the child the plate
+                # prints it below, and counts its rows like any sibling -- it
+                # occupies the column, so everything under it must move down.
+                # Only the leader stub is withheld, by the node's class.
+                splice = dict(self.UB.get(uid, []))
+                parts = []
+                for k in payload:
+                    parts.append(self.render(k, depth + 1))
+                    if k in splice:
+                        parts.append(self.render(splice[k], depth + 1, unattached=True))
                 inner = "".join(h for h, _ in parts)
                 rows = sum(r for _, r in parts)
             style = f' style="margin-top:calc(var(--lh) * {gap})"' if gap else ""
@@ -886,6 +926,8 @@ class Chart:
         # Leaf blocks need no fixed width: nothing hangs off them, so a long
         # generation-5 entry can run past the column instead of widening the sheet.
         node_class = "node" if col else "node leaf"
+        if unattached:
+            node_class += " unattached"
         out = [f'<div class="{node_class}">', '<div class="block">', *lines, "</div>"]
         if col:
             out.append('<div class="kidcol">' + "".join(col) + "</div>")
@@ -1345,6 +1387,15 @@ body.chart .titlepage{max-width:var(--measure-wide)}
 .kids > .node:last-child::after{top:0;height:calc(var(--lh)/2)}
 .kids > .node:not(:first-child):not(:last-child)::after{top:0;bottom:0}
 .kids > .node:only-child::after{display:none}
+/* A block the plate prints INSIDE this column with no leader stub joining it
+   to the bracket -- see UNATTACHED_BLOCKS. Genealogy II sets 31+32 between
+   9+10's children 29 and 33 at exactly the children's indent, and draws no
+   stub: the vertical passes the row. So ::before goes and ::after stays, and
+   the indent is untouched -- withholding the padding too would move the block
+   out of the column the plate puts it in, which is the error this replaced.
+   It can never be first or last in a column (self_check() forbids it), so the
+   :first-child / :last-child terminus rules above are unaffected. */
+.kids > .node.unattached::before{display:none}
 /* Lineage inking: hovering or focusing within a block darkens the rules a
    reader would trace with a finger -- its own bracket and the brackets it
    hangs. Color-only, on the existing 1px borders; the plate is never dimmed.
@@ -3142,16 +3193,16 @@ def check_published_pages():
 def build_table(spec, public, today):
     """Build one table. Returns (doc, stats) so the caller can assemble the site."""
     if public:
-        persons, unions, ku, km = load_baseline(spec)
+        persons, unions, ku, km, ub = load_baseline(spec)
         out = DOCS / spec["slug"] / "index.html"
     else:
         if not XLSX.exists():
             print(f"missing {XLSX}; run build_workbook.py first")
             return None, None
-        persons, unions, ku, km = load()
+        persons, unions, ku, km, ub = load()
         out = OUT
 
-    chart = Chart(persons, unions, ku, km)
+    chart = Chart(persons, unions, ku, km, ub)
     trees = "".join(f'<div class="tree">{chart.render(r)[0]}</div>' for r in spec["roots"])
 
     missing = sorted(set(persons) - chart.seen)
@@ -3179,7 +3230,18 @@ def build_table(spec, public, today):
         if census_filled:
             status.append("<li>Census matches recorded for: "
                           + ", ".join(str(i) for i in census_filled) + ".</li>")
+    # An undrawn person used to be a status line and a console warning, which
+    # is how seven of Genealogy II's went unnoticed through a whole session:
+    # nothing fails, the page just quietly holds fewer people than the plate.
+    # It is now fatal on the published build, like a duplicate anchor. The
+    # private build keeps reporting it, because a half-read plate legitimately
+    # has people no bracket reaches yet.
     if missing:
+        if public:
+            raise SystemExit(
+                f"ABORTED: {len(missing)} persons in PERSONS are not drawn in "
+                f"{out.name}: {missing}. Every person the plate numbers must reach "
+                "the page -- check roots, drawn_under and UNATTACHED_BLOCKS.")
         status.append(f"<li><strong>Not drawn:</strong> {missing} &mdash; these ids are in "
                       "PERSONS but reachable from neither founding couple.</li>")
 
