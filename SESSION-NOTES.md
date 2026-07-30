@@ -15,8 +15,8 @@ A `SessionStart` hook (`.claude/hooks/session-start.sh`) loads this file and
 prefixes `STALE:` or `UNCOMMITTED WORK:` when either applies. Believe those
 warnings over anything written here.
 
-1. **`git switch fix-faq-three-tables`** if you are picking up the open thread —
-   it has an open **PR #15**. Otherwise `main` is current and deployed.
+1. **`git switch main && git pull`.** There is no work in flight and no open PR;
+   `main` is current and deployed.
 2. Read the top entry of `CHANGELOG.md`. It opens with the claims in the entry
    below it that are now false, including a sentence that has now been found and
    corrected in three separate files.
@@ -56,20 +56,21 @@ And the one this session added, which paid off immediately:
 
 ## State
 
-Working tree clean, on branch `fix-faq-three-tables`. `--public` exits 0, builds
+Working tree clean, `main` current and deployed. `--public` exits 0, builds
 **5 pages**, reports 104 / 275 / 73 persons, and `docs/` is byte-identical to
 what is committed. All three transcription modules pass `self_check()`.
 
-**Genealogy II is PUBLISHED.** PR #14 merged as `04ded51`. All four live pages
-verified byte-identical to `main` by SHA-256, HTTP 200, sitemap carrying four
-URLs, and a privacy sweep of the **live** pages clean — no `class="eng"` or
-`class="census"`, no research vocabulary, and the only `census` occurrences are
-the three allowlisted FAQ sentences that state the boundary itself.
+**Genealogy II is PUBLISHED and the site is correct.** PR #14 merged as
+`04ded51`, PR #15 (the FAQ correction) as `f9e50c2`. After each merge all four
+live pages were verified byte-identical to `main` by SHA-256, HTTP 200, sitemap
+carrying four URLs, and a privacy sweep of the **live** pages came back clean —
+no `class="eng"` or `class="census"`, no research vocabulary, and the only
+`census` occurrences are the three allowlisted FAQ sentences that state the
+boundary itself.
 
-**Nothing is half-finished in code.** One thing is finished but **not merged**,
-deliberately: PR #15, below. One defect is known, diagnosed and left alone —
-the 0.023px sub-pixel offset on 158's group to 126, which is invisible and not
-worth touching shared bracket code to chase.
+**Nothing is half-finished, and nothing is unmerged.** One defect is known,
+diagnosed and left alone — the 0.023px sub-pixel offset on 158's group to 126,
+which is invisible and not worth touching shared bracket code to chase.
 
 Measured at 1280×900: column drift spread ≤ 0.008px at all six generations, step
 425.59px; 57 bracket groups, worst 0.023px; 0 rows off the `--lh` grid; 0px body
@@ -90,24 +91,12 @@ Nothing under `data/`, no `.xlsx`, nothing under `build/`.
 
 ## The open thread
 
-**PR #15 is finished and unmerged, waiting on the user.** Branch
-`fix-faq-three-tables`. It corrects two landing-page FAQ answers that are wrong
-**right now on the live site**, in the visible copy and in the `FAQPage` JSON-LD
-that search engines read:
+**Cutting the v1.1.0 release.** Nothing else is outstanding — PR #14 and PR #15
+are both merged and deployed, and the site is correct.
 
-1. *"Tables 2 and 3 … are not yet transcribed"* — shipped by the release that
-   published Genealogy II.
-2. *"…which independently verifies each bracket reading"* — the clan check does
-   not do that.
+The metadata blocker is gone: `.zenodo.json` and `CITATION.cff` already describe
+three tables. What is left is the tagging itself, and it carries two traps:
 
-It was not merged because **merging is a second live deployment and the user
-authorised PR #14 only**. Ask, then merge and re-verify by SHA-256. The privacy
-allowlist is untouched, so the gate still fails closed on a reword.
-
-**Then the release**, which is the substantive next piece of work:
-
-- `.zenodo.json` and `CITATION.cff` are already updated to three tables — that
-  was the blocker and it is gone.
 - **`CITATION.cff` says `version: v1.1.0`, `date-released: "2026-07-30"`. If the
   tag is cut on a later day, correct the date FIRST** — Zenodo reads the file
   from the tagged commit, not from `main`'s tip.
@@ -120,7 +109,6 @@ allowlist is untouched, so the gate still fails closed on a reword.
 
 | | Effort | Notes |
 |---|---|---|
-| **Merge PR #15** | ~2 min, **needs the user** | The live FAQ is wrong until this lands |
 | **Cut the v1.1.0 release** | ~15 min, **needs the user** | Metadata is ready; read the date warning above |
 | **Wikidata item** | ~10 min, **needs the user** | Payload at `wikidata-quickstatements.txt`, 18 ids verified. **Needs updating for three tables** |
 | **Table 3** | Large, and harder than Table 2 | Scan is in `sources/` at 3770 × 5503 — **a ninth of Table 1's pixel count**. Do not start it in the same session as anything else |

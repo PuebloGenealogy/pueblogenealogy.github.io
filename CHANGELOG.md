@@ -110,9 +110,9 @@ The landing-page FAQ was stale in two answers, in the visible copy **and** the
 - it still claimed the clan check **"independently verifies each bracket
   reading"**.
 
-Both fixed on branch `fix-faq-three-tables`, **PR #15, not merged** — merging is
-a second live deployment and the user authorised #14 only. The privacy allowlist
-is untouched, so the gate still fails closed on a reword.
+Both fixed on branch `fix-faq-three-tables` and merged as **`f9e50c2`** once the
+user authorised the second deployment, then re-verified live by SHA-256. The
+privacy allowlist is untouched, so the gate still fails closed on a reword.
 
 **The lesson, since this is the second time it has paid off:** the build gate
 inspects `docs/`, but only a fetch of the live page proves what a reader gets.
