@@ -10,12 +10,14 @@ sha256 38d86b7a7b57ad24e4a25c0e22be0c36b866d38f18988aa960322e320420a200
 Read tile by tile at native resolution. This file is the immutable 1923
 baseline. Do NOT add research data here -- see the README's privacy boundary.
 
-*** THIS MODULE IS NOT FINISHED. DO NOT REGISTER IT IN make_chart.py's TABLES. ***
+*** THIS MODULE IS FINISHED, REGISTERED IN make_chart.py's TABLES, AND LIVE. ***
+Genealogy III was published 2026-07-31. Structure, orthography and the
+cross-reference audit are all closed. ONE reading is still open and it is a
+glyph, not a placement: the turned-comma mark at 154, 156, 157, 228 and 242.
+See "ORTHOGRAPHY" at the foot of this docstring.
 
 ORTHOGRAPHY_VERIFIED is True as of 2026-07-31: the STRUCTURE is read and
-checked, and the NAMES are now verified at 5x for **all 261 ids**.
-What is still open is the CROSS-REFERENCE audit, not the orthography.
-See "ORTHOGRAPHY" at the foot of this docstring.
+checked, and the NAMES are verified at 5x for **all 261 ids**.
 
 THE SCAN
 --------
@@ -90,7 +92,7 @@ b. 50's CLAN SPELLING: "Chapparral Cock", with a doubled p, where her own four
 c. 255's CLAN SPELLING: "Bager" for "Badger". Verified at 20x.
 d. 258 / 259 printed twice each; 256 / 257 unused. See above.
 
-WHAT A TRIAL REGISTRATION SHOWED (2026-07-31, reverted afterwards)
+WHAT REGISTRATION SHOWED (2026-07-31; this is now the published state)
 ------------------------------------------------------------------
 Registered in TABLES as roots [1, 230] with root_columns {230: 2}, this plate
 builds and draws all 261 people, and column drift measures 0 px within each
@@ -104,11 +106,16 @@ subset_font.py reports this plate needs exactly two characters the subset does
 not already carry: `ó` and `ô`. Run it BEFORE the build that registers the
 plate, never after -- see CLAUDE.md.
 
-TWO BRACKET READINGS, ONE SETTLED AND ONE STILL NEEDING A SECOND EYE
+TWO BRACKET READINGS, BOTH NOW SETTLED BY THE USER ON THE SCAN
 --------------------------------------------------------------------
 Both are recorded in plate_note on the people concerned.
 
-i.  STILL OPEN. 43's two husbands. One unbroken vertical at native x 2267 runs
+i.  SETTLED BY THE USER, 2026-07-31. 43's two husbands, and the reading below
+    is the one that stands: 43 + 44 -> 124 and 43 + 45 -> 126, encoded as
+    unions W25 and W26. This is the case LEADER_ON_SPOUSE_ROW exists for --
+    45's leader sits on his own line, not 43's, so without it the renderer
+    gave both unions mother_row 0 and stranded the first group.
+    One unbroken vertical at native x 2267 runs
     from y 2157 to y 2222 with stubs to 124 and 126, and TWO leaders enter it:
     43's own line at 124's row and 45's line at 126's row. Encoded per the
     convention in (1) as 43 + 44 -> 124 and 43 + 45 -> 126. The alternative
@@ -180,13 +187,38 @@ where the plate prints the person twice -- 152 and 153 differ between their two
 occurrences, which is recorded in their plate_note and is a finding about the
 plate, not an unresolved reading.
 
-ONE GLYPH IS STILL OPEN, and it is now a pattern rather than a single mark.
+ONE GLYPH WAS OPEN, and it is now closed AS UNANSWERABLE FROM THIS SCAN.
 At 154, 156, 157, 228 and 242 the final mark reads as a TURNED comma (opening
 quote) rather than the U+02BC used everywhere else -- five instances, enough
-that it may be a distinct sort rather than print noise. ALL FIVE ARE LEFT AS
-U+02BC; do not introduce a new codepoint on this evidence alone, and do not
-"tidy" it away either. Resolving it needs a 20x look at the five against a
-known U+02BC on the same line of type.
+that it might be a distinct sort rather than print noise. ALL FIVE REMAIN
+U+02BC.
+
+The 20x test this paragraph used to ask for WAS RUN, 2026-07-31, on 157
+(`Dziotyʼ`, questioned) against 159 (`Kyiwisdyuwitsʼa`, a known U+02BC two
+lines below it in the same block of type) -- native crops at x 2452/2524,
+y 3460/3509, magnified 20x. THE RESULT IS A NEGATIVE ONE AND IT CLOSES THE
+QUESTION RATHER THAN ANSWERING IT:
+
+  A mark on this plate is about TEN PIXELS of ink. At 20x the questioned mark
+  and the known U+02BC are the SAME AMORPHOUS BLOB -- there is no letterform
+  left to compare. The apparent difference between them, which is quite
+  convincing at 6x-8x, is the UPSCALER INVENTING AN EDGE, not ink on paper.
+  Magnifying further returns scanner noise.
+
+So the difference cannot be confirmed OR denied from sources/parsons-1923-
+table-3.jpg, at any magnification. This is a property of the scan, not of the
+reading: 3770 x 5503 is a ninth of Table 1's pixel count, which is why the same
+test is decidable there and not here.
+
+DO NOT RE-CROP THIS. The five stay U+02BC, and the reason is now "checked, and
+this scan cannot resolve it", not "not yet checked". The only thing that would
+settle it is a HIGHER-RESOLUTION SCAN of Table 3 -- the AMNH Digital Library
+holds the original, handle 2246/158. If one is ever obtained, 154, 156, 157,
+228 and 242 are the five to look at, and 159 is the control.
+
+Not done: 154, 228 and 242 were never individually magnified. That is
+deliberate and costs nothing -- the limit demonstrated on 157 is a property of
+the scan and applies to every mark on the plate equally.
 
 CROSS-REFERENCES -- AUDITED 2026-07-31
 --------------------------------------
@@ -209,6 +241,9 @@ carry Genealogy II's offset over to this plate.
 FOUR EXCEPTIONS, and no two are the same kind of error:
 
 a. 170-174: the Gen. II half of five consecutive references is TEN LOW. The
+   Gen. I half of those lines is exact EXCEPT 173's, which is (c) below --
+   an earlier wording of this paragraph said the Gen. I half was exact
+   throughout, and that contradicted (c). Corrected 2026-07-31.
    plate prints Gen. II 191, 192, 193, 194, 195; the people it names are
    Genealogy II's 201-205 (Dziwaiʼi˙siro, Kuyăiʼd˙yid˙uweʼ, Edna,
    Yăaiʼdyid˙yuwi, Owi˙ʼd˙zĭraiʼ -- all Sun, in that order, an exact
@@ -253,8 +288,11 @@ repo's doing, not Parsons's:
 Every other divergent-looking pair folds to the same key and is not a
 divergence at all -- 152, 153, 192, 194, 255 among them.
 
-STILL OPEN: whether (a)-(d) get a footnote on the published page, as Genealogy
-II's displacement did. That is the user's call, not this file's.
+SETTLED 2026-07-31 (the user's call): (a)-(d) DO get a footnote on the published
+page, as Genealogy II's displacement did. It is a single `#note-crossref` entry
+in the apparatus, in this table's TABLES["iii"]["notes"] -- the negative result
+first, then the four exceptions and the person each reference actually reaches.
+Nothing on the chart changes and no reference is corrected in the data.
 """
 
 ORTHOGRAPHY_VERIFIED = True

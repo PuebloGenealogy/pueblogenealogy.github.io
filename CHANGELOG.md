@@ -3,7 +3,87 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-07-31 (latest) — Genealogy III published: the edition is now all four plates
+## 2026-07-31 (latest, second session) — Genealogy III's two editorial items, both closed
+
+Not published. Three files changed: `scripts/make_chart.py`,
+`scripts/transcription_iii.py`, `docs/genealogy-iii/index.html` (44 insertions,
+no deletions — the note and nothing else). `--public` exits 0, 6 pages,
+104 / 275 / 261 / 73 persons, self-checks pass, privacy gate clean.
+
+### 1. Genealogy III now has a cross-reference footnote — `#note-crossref`
+
+**The design call was the user's and they took the fullest option**: one note
+in the apparatus covering all four exceptions, parallel to Table 2's. It opens
+with the negative result — this plate does **not** share Genealogy II's +1
+displacement, its citations of Genealogy I's 78, 79, 97, 98, 99, 100, 101, 103
+and 104 all reaching the person finally printed under that number — then gives
+the four exceptions and **the person each reference actually reaches**: 170–174
+→ Gen. II's 201–205, 218 → Gen. I's 102, 173's "Gen. I, 149" → nobody (the
+person is Gen. I's 49), and 155's prose note's "90" → Gen. I's 89.
+
+Nothing on the chart changed, no reference is corrected in the data, and **no
+other plate's number is linked** — verified in the built HTML: the note's ten
+in-page anchors all resolve, and the single cross-plate link goes to Table 2's
+own note, which is the existing precedent.
+
+**The counts in the note were measured, not carried over.** 56 numeric
+references in total: 51 on the numbered lines, 5 in the two prose notes under
+155. The module docstring's "51 plus two" meant *two prose notes*, not two
+references, which is a reading a future session could easily get wrong.
+
+**A contradiction in the docstring was found and corrected.** Exception (a)
+said the Gen. I half of 170–174's lines was exact throughout; exception (c)
+says 173's Gen. I half is the unresolvable `149`. Both cannot be true. (a) now
+states the exception, and the published note does not repeat the wrong claim.
+
+### 2. The turned-comma mark is closed — as UNANSWERABLE FROM THIS SCAN
+
+The 20× test the docstring specified **was run**, on 157 (`Dziotyʼ`,
+questioned) against 159 (`Kyiwisdyuwitsʼa`, a known U+02BC **two lines below it
+in the same block of type**) — native crops at x 2452 / 2524, y 3460 / 3509.
+
+**The result is negative and it closes the question rather than answering it.**
+A mark on this plate is about **ten pixels of ink**. At 20× the questioned mark
+and the known U+02BC are the same amorphous blob; there is no letterform left
+to compare. The difference that is quite convincing at 6×–8× is **the upscaler
+inventing an edge**, not ink on paper.
+
+So all five — 154, 156, 157, 228, 242 — stay U+02BC, but **the reason has
+changed** from "not yet checked" to "checked, and this scan cannot resolve it".
+That distinction is the whole value of the entry: it is what stops a future
+session spending another session's budget on the same crops.
+
+154, 228 and 242 were deliberately **not** individually magnified. The limit
+demonstrated on 157 is a property of the scan (3770 × 5503, a ninth of Table 1's
+pixel count) and applies to every mark on the plate equally.
+
+Only a **higher-resolution scan** would settle it; the AMNH Digital Library
+holds the original, handle `2246/158`. If one is ever obtained, those five are
+the marks and 159 is the control.
+
+**One thing attempted and not used as evidence:** an ink-geometry measurement
+(bounding box, ink pixel count, top-vs-bottom x-centroid, decoding the PNG with
+`zlib` since there is no PIL). The crop windows caught neighbouring glyphs —
+156's box came back 26×26 px with 156 ink px, which is several letters — so the
+numbers are contaminated and are **not** reported anywhere as a finding. The
+visual test is what carries the conclusion.
+
+### Stale scope claims removed from `transcription_iii.py`'s docstring
+
+`CLAUDE.md` says to grep for these after any change to the edition's scope, and
+four had survived publication:
+
+- *"THIS MODULE IS NOT FINISHED. DO NOT REGISTER IT IN make_chart.py's TABLES"*
+  — it is finished, registered and live
+- *"What is still open is the CROSS-REFERENCE audit"* — the audit closed
+  2026-07-31
+- *"WHAT A TRIAL REGISTRATION SHOWED (reverted afterwards)"* — that registration
+  is now the published state
+- *"TWO BRACKET READINGS, ONE SETTLED AND ONE STILL NEEDING A SECOND EYE"* — 43's
+  two husbands were settled by the user on 2026-07-31; the paragraph now records
+  the reading that stands and why `LEADER_ON_SPOUSE_ROW` exists for it
+
+## 2026-07-31 — Genealogy III published: the edition is now all four plates
 
 `b06eb10` on `main`, live and verified by hash. `--public` builds **6 pages**,
 104 / 275 / **261** / 73 persons, and the site serves all of them. Genealogy III

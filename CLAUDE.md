@@ -585,6 +585,17 @@ to catch "58+59" links those too.
   correctly on both.** Note macOS substitutes for any font, so no on-screen
   comparison here can demonstrate the absence of substitution — if this is ever
   questioned again, read the cmap, don't measure widths.
+- **Magnification has a floor, and past it the upscaler invents letterform.**
+  A diacritic on Genealogy III is about **ten pixels of ink**. Crops read
+  cleanly to roughly 5–8×; beyond that the mark becomes an amorphous blob and
+  any apparent shape is the resampler, not the plate. Demonstrated 2026-07-31
+  on III's turned-comma question: at 20× the questioned mark at 157 and a
+  **known U+02BC two lines below it in the same block of type** are
+  indistinguishable. So a glyph distinction that survives only above ~8× is
+  **not evidence** — and the honest finding is "this scan cannot resolve it",
+  which is a closure, not an open thread. Table 3 is 3770 × 5503, a ninth of
+  Table 1's pixel count, so the same test is decidable on Table 1 and not here.
+  Settling such a question needs a **better scan**, not a bigger crop.
 - Google's structured-data validator is **stricter than schema.org** — valid
   schema.org has been rejected twice here. `check_structured_data()` guards the
   rules we have been told about, not all of them; a Search Console report
@@ -688,11 +699,12 @@ Consequences a session must not "fix":
 - **No release is outstanding, and that is still deliberate.** v1.1.0 was
   prepared and then **cancelled** by the release policy above: no GitHub
   Releases and no Zenodo deposits during active development. **All four plates
-  are now published** (2026-07-31), so the *plates* clause of the bar is met —
-  but the policy names four things, and the other three are not. Two editorial
-  items are open on Genealogy III (the cross-reference footnote, the
-  turned-comma mark), `.zenodo.json` still describes three plates, and the AMNH
-  handle is still absent from its `related_identifiers`. **Publishing the site
+  are now published** (2026-07-31), and **Genealogy III's two editorial items
+  are both closed** — same day, later session: the cross-reference footnote is
+  written and live in the source, and the turned-comma mark is settled as
+  unresolvable from this scan. So **two** of the policy's four clauses are met.
+  The other two are not: `.zenodo.json` still describes three plates, and the
+  AMNH handle is still absent from its `related_identifiers`. **Publishing the site
   is not releasing it.** Do not read "the last plate is up" as "cut the tag";
   when it is finally wanted, `.zenodo.json` must already be on `main` and
   current for all four tables, because Zenodo reads it from the tagged commit.

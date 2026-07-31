@@ -343,6 +343,50 @@ TABLES = {
           <li>{_p(255)}&rsquo;s clan is printed <strong>Bager</strong> for
               <em>Badger</em>.</li>
         </ul></li>
+    <li id="note-crossref">This plate&rsquo;s cross-references into
+        Genealogies&nbsp;I and&nbsp;II have been checked against this edition&rsquo;s
+        transcriptions of those plates, by name, sex and clan &mdash; fifty-one
+        references on the numbered lines and five more in the two prose notes under
+        {_p(155)}. They are <strong>reproduced exactly as printed</strong>, and the
+        numbers are deliberately not links: another plate&rsquo;s numbering is not an
+        anchor on this page, so following one means opening that table and looking
+        the number up there.
+        <strong>This plate does not share Genealogy&nbsp;II&rsquo;s
+        displacement.</strong> Table&nbsp;2&rsquo;s references into
+        Genealogy&nbsp;I run <a href="../genealogy-ii/#note-crossref">one too high
+        from its person&nbsp;66 onward</a>; this plate&rsquo;s are exact right across
+        that same range, its citations of Genealogy&nbsp;I&rsquo;s 78, 79, 97, 98,
+        99, 100, 101, 103 and 104 each reaching the person finally printed under that
+        number. Genealogy&nbsp;III was numbered against the Genealogy&nbsp;I that went
+        to press; Genealogy&nbsp;II was not. Neither plate&rsquo;s numbering may be
+        used to correct the other.
+        <strong>Four references do not resolve as printed</strong>, and no two are
+        the same kind of slip:
+        <ul>
+          <li>{_p(170, "170-174")} cite Genealogy&nbsp;II&rsquo;s 191 to 195 on five
+              consecutive lines. The people named there are its <strong>201 to
+              205</strong> &mdash; five for five, in that order, all of the Sun clan.
+              Genealogy&nbsp;II&rsquo;s actual 191 to 195 are a group of Oak people,
+              and this plate cites <em>them</em> correctly elsewhere, from {_p(194)},
+              {_p(195)} and {_p(198)}.</li>
+          <li>{_p(218)} cites Genealogy&nbsp;I&rsquo;s 101, who is the father already
+              cited from {_p(257)}. The person meant is its <strong>102</strong>. Her
+              sisters {_p(219)} and {_p(261)} cite 103 and 104 exactly, so this is an
+              isolated slip and not a run.</li>
+          <li>{_p(173)} cites &ldquo;Gen.&nbsp;I, 149&rdquo;, and
+              <strong>Genealogy&nbsp;I numbers 104 people</strong>. The reference
+              resolves to nobody. It was read again at high magnification: 149 is
+              what the plate prints. The person is Genealogy&nbsp;I&rsquo;s
+              <strong>49</strong>, which is how Genealogy&nbsp;II cites her from its
+              own 204.</li>
+          <li>The prose note under {_p(155)} sends a reader to
+              &ldquo;Gen.&nbsp;I, 8, 90&rdquo;. The husband, 8, is exact; the
+              descendant is <strong>89</strong>, the one child of
+              Genealogy&nbsp;I&rsquo;s 73+8. This is the only place on this plate
+              where Genealogy&nbsp;II&rsquo;s displacement appears, and it attests it
+              from a third plate. {_p(155)}&rsquo;s other prose note, into
+              Genealogy&nbsp;II, resolves exactly.</li>
+        </ul></li>
     <li>Many entries carry <strong>no sex letter</strong> &mdash; most of the unnamed
         children in the last two generations, and {_p(155)}, {_p(193)}, {_p(195)} and
         {_p(260)}, who are named or numbered but printed without one. Where the plate
