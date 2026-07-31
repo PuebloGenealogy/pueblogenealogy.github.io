@@ -3,7 +3,113 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-07-30 (latest) — 116–118 attributed to person 49; release policy set
+## 2026-07-30 (latest) — Genealogy III read and encoded; nothing published
+
+**A second session the same day.** Nothing reached `docs/`: `--public` still
+builds the same 5 pages, 104 / 275 / 73 persons, and `docs/` is byte-identical
+to what was committed. `scripts/transcription_iii.py` is **not registered in
+`TABLES`**, by the rule that a half-read plate never is.
+
+### The plate
+
+3770 × 5503 — a **ninth** of Table 1's pixel count and half of Table 2's. That
+makes it harder, not easier. **261 persons, 72 unions, 192 parent–child links,
+seven generations** — the deepest plate in the edition — in **two descent
+blocks**. `self_check()` passes, and **all 192 links are matrilineally
+consistent on the first run**, which is the independent evidence METHOD.md asks
+for.
+
+Block 2 (230 + 231) is **indented into the generation-2 column**, so it is
+Genealogy II's `root_columns` case, not `UNATTACHED_BLOCKS`. **Person 8 joins
+the two blocks**: husband of 7 in block 1, son of 236 + 237 in block 2.
+
+### This plate assigns paternity that Tables 1 and 2 left open
+
+The leader rule reaching a sibling bracket sits on **the line of the parent
+whose marriage the group belongs to**. Where someone has two spouses, each
+spouse's own line either carries a leader or does not. Confirmed independently
+on 38/39/40, 62/63/64, 22/23/24 and 85/86/87.
+
+So 85/86/87 is the same *shape* as Table 1's 83–85 — one person, two spouses,
+one bracket — but here 86's leader is on her own line and 87 has none.
+**No editorial attribution is needed anywhere on Genealogy III, and none is
+made.** Do not reach for METHOD.md's attribution rules on this plate.
+
+### Four couples are printed twice
+
+7 + 8, 91 + 92, 124 + 125, 152 + 153 — each with a descendants line standing in
+for the bracket at the second occurrence. Genealogy II's `SECOND_VISIT_OMITTED`
+shape, four times over. 166 and 167 are printed twice too, with no descendants
+line either time.
+
+### Misprints found, to reproduce and not fix
+
+All verified at 20×:
+
+- **37's sex letter** is printed `M.` She is the mother of 109–112, whose clan
+  is Chaparral Cock where her husband 36 is Lizard.
+- **50's clan** is printed `Chapparral Cock`, doubled p; her own four children
+  print `Chaparral Cock`.
+- **255's clan** is printed `Bager`.
+- **258 and 259 are each printed on two different people, and 256 and 257
+  appear nowhere on the plate.** Both pairs re-zoomed to rule out misreading.
+  Handled as `DUPLICATE_PLATE_NUMBERS` with synthetic ids 256 / 257. The
+  edition states the fact and does **not** guess at the cause.
+
+The first three have no mechanism yet — `PLATE_NUMBER_MISPRINTS` covers numbers
+only. They are held in `PLATE_MISPRINTS` in the transcription module, which
+`make_chart.py` does not yet read.
+
+### Two bracket readings that want a second eye
+
+Both are recorded in `plate_note`, and both are the same shape: **one unbroken,
+unoffset vertical with two leaders entering it.**
+
+- **43's two husbands** — vertical at native x 2267, y 2157–2222, stubs to 124
+  and 126, leaders at 43's row and 45's row. Encoded 43 + 44 → 124 and
+  43 + 45 → 126.
+- **22 and 25** — vertical at native x 1749, y 4339–4425, stubs to 80, 82, 83,
+  leaders at 22's row and 25's row. Encoded 22 → 80, 82 and 25 → 83. All three
+  children are Corn, so clan descent cannot separate them.
+
+For contrast, **86's and 89's brackets at native x 2853 *are* visibly offset**
+where they meet — this plate does distinguish adjacent brackets when it means
+to, which is exactly what makes the two above worth checking.
+
+### Orthography: 1.5× is not enough, and the first pass was wrong
+
+Tiles read comfortably at 1.5× for structure, but **at 1.5× this scan cannot
+separate `˙` U+02D9 from `ʼ` U+02BC, and the first pass defaulted to `ʼ`
+throughout.** At 5–6× the two are plainly different. This is the failure
+METHOD.md records for Table 1's #25, reproduced at nine times less resolution.
+
+**Ids 1–84 and 230–247 are now verified at 5×**; ids 85–229 and 248–261 are
+still provisional, and `ORTHOGRAPHY_VERIFIED` stays `False` until they are done.
+Sixteen names were corrected in the verified range — every one a dot read as an
+apostrophe or the reverse — and 45 also lost a breve (`Wi˙ʼsh˙gă`, not
+`Wĭ˙ʼsh˙gă`). Two independent confirmations came out right: III's 193 is `Ko˙ri`
+and 192 `Kiwaʼd˙yuwi`, matching Genealogy II's readings of the same two people
+from a scan nine times the size.
+
+**One glyph is still open:** 242's name ends in a mark that reads as a *turned*
+comma rather than U+02BC. Left as U+02BC; a new codepoint on that evidence would
+be a guess.
+
+### Cross-references are not yet audited
+
+`transcription_ii.py` records that Parsons's "See Gen. I, n" references run
+exact through Genealogy I's person 53 and **one high from its person 66 onward**.
+Genealogy III's own references have **not** been checked against that finding.
+One is already known not to resolve: **173 cites `See Gen. I, 149`, and
+Genealogy I has 104 people.**
+
+### Tooling: a sips trap that silently corrupts a tile
+
+**`sips -c H W --cropOffset 0 0` does not crop at the origin — it centre-crops.**
+The first tile of the grid came back showing a region 2450 px down the plate,
+and nothing errors. Use `1 1`. Recorded in `CLAUDE.md`.
+
+## 2026-07-30 — 116–118 attributed to person 49; release policy set
 
 ### Release policy — no releases, no Zenodo deposits, until the edition is done
 

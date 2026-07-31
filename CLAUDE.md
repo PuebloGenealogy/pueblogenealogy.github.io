@@ -14,7 +14,10 @@ links, 5 generations. **Genealogy II** (Table 2) — 275 individuals for the
 plate's 274 numbers, 61 marriages, 214 parent–child links, **6 generations**,
 three descent blocks. **Genealogy IV** (Table 4) — 73 individuals, 14 marriages,
 58 parent–child links, 4 generations. `--public` builds **5 pages** and the live
-site serves all of them. Genealogy III is scanned and untouched.
+site serves all of them. **Genealogy III is read and encoded but NOT published**
+— `scripts/transcription_iii.py` holds 261 persons and passes `self_check()`,
+and it is deliberately absent from `TABLES`. Its names are only part-verified;
+see the module docstring.
 
 ## Questions about how this project works are not API questions
 
@@ -521,6 +524,12 @@ to catch "58+59" links those too.
   direction: citing a printed source is required, and naming an unpublished one
   is a leak. Note the edition asserts nothing the plate does not *in the chart*,
   in either case; neither is a precedent for "improving" it.
+  **Genealogy III needs none of this, and that is a finding about the plate, not
+  an oversight.** It marks paternity itself: the leader rule reaching a bracket
+  sits on the line of the parent whose marriage the group belongs to, so a
+  spouse with no leader had no recorded issue. 85/86/87 is Table 1's 83–85 shape
+  and still needs no attribution, because 86's leader is on her own line and 87
+  has none. Don't reach for the attribution machinery on this plate.
 - **English names in parentheses are plate data**, not research additions —
   person 90 "Heʼsa (Hazel)" on Table 1, and the Johnsons and Mana on Table 4.
 - **`d.`** means the person had already died when Parsons recorded the
@@ -547,6 +556,12 @@ to catch "58+59" links those too.
 macOS, Python 3.11. openpyxl 3.1.5, fontTools 4.63.0 + brotli. `gh` 2.96.0 at
 `~/.local/bin/gh`, authenticated as `prettyph3nom`, owner of the
 `PuebloGenealogy` org. **No Homebrew, no ImageMagick, no PIL** — use `sips`.
+
+**`sips -c H W --cropOffset 0 0` centre-crops instead of cropping at the
+origin.** It does not error; it returns a tile from the middle of the image, so
+a plate-tiling grid silently reads the wrong region. Use `1 1`. Found
+2026-07-30 while tiling Genealogy III, where it returned a region 2450 px down
+the plate.
 
 The repo lives under Google Drive, whose sync daemon can touch `.git` mid-write;
 if git reports object corruption, that is the likely cause.
@@ -634,7 +649,9 @@ Consequences a session must not "fix":
 - **No release is outstanding, and that is deliberate.** v1.1.0 was prepared and
   then **cancelled** by the release policy above: no GitHub Releases and no
   Zenodo deposits during active development. **`Genealogy III` is now the only
-  thing between here and the next release** — it is the last plate, and the
+  thing between here and the next release** — it is read and encoded as of
+  2026-07-30 but not published; what it still needs is in `SESSION-NOTES.md` and
+  in `scripts/transcription_iii.py`'s docstring. It is the last plate, and the
   policy names all four tables plus design, transcriptions, text and citations
   as the bar. Do not re-add "cut a release" to this list before then.
 - **Genealogy II is published and its reading is closed.** The user re-checked
