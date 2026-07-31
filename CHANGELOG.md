@@ -5,10 +5,28 @@ Newest first.
 
 ## 2026-07-31 (latest, second session) — Genealogy III's two editorial items, both closed
 
-Not published. Three files changed: `scripts/make_chart.py`,
-`scripts/transcription_iii.py`, `docs/genealogy-iii/index.html` (44 insertions,
-no deletions — the note and nothing else). `--public` exits 0, 6 pages,
-104 / 275 / 261 / 73 persons, self-checks pass, privacy gate clean.
+**Published**, same session, via PR
+[#26](https://github.com/PuebloGenealogy/pueblogenealogy.github.io/pull/26)
+fast-forwarded onto `main` at `05c9a5b`. Three source files changed:
+`scripts/make_chart.py`, `scripts/transcription_iii.py`,
+`docs/genealogy-iii/index.html` (44 insertions, no deletions — the note and
+nothing else). `--public` exits 0, 6 pages, 104 / 275 / 261 / 73 persons,
+self-checks pass, privacy gate clean.
+
+**Live verification:** all nine URLs 200 (`/fonts/` 404s, correctly — it is an
+asset directory); all six `.html` byte-identical to `docs/` by SHA-256;
+sitemap 5 `<loc>` against the build's 6 pages, which is right because
+`404.html` is deliberately absent; 0 stale-identity matches on `/`;
+0 research markers on all five served pages; `#note-crossref` present once on
+`/genealogy-iii/` and 261 person anchors alongside it. Genealogy III served
+the previous build on the first hash pass and matched ten seconds later —
+**that is Pages lagging, not a bad deploy**, and the fix is to poll, never to
+rebuild.
+
+**No release was cut and none should be read into this.** Publishing the site
+does not touch Zenodo; the release policy in `CLAUDE.md` still gates that on
+`.zenodo.json` covering four plates and the AMNH handle landing in
+`related_identifiers`.
 
 ### 1. Genealogy III now has a cross-reference footnote — `#note-crossref`
 

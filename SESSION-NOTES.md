@@ -5,8 +5,8 @@ History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
 Last updated **2026-07-31**, after the session that closed **both of Genealogy
-III's editorial items**. The edition is all four plates and Genealogy III has
-nothing open on it.
+III's editorial items** and **published them**. The edition is all four plates,
+Genealogy III has nothing open on it, and the site is current.
 
 ---
 
@@ -33,20 +33,19 @@ that is all it is, `git checkout -- docs/` rather than committing.
 
 ## State
 
-**The session's work is finished, not half-done**, and is committed on the
-branch named at the foot of this section. Three files:
-`scripts/make_chart.py` (Genealogy III's new `#note-crossref`),
-`scripts/transcription_iii.py` (docstring only — **no data changed**) and
-`docs/genealogy-iii/index.html` (44 insertions, no deletions). `--public` exits
-0, builds 6 pages, 104 / 275 / 261 / 73 persons; all four `self_check()`s pass;
-the privacy gate reports no research chips or vocabulary in 6 pages; 10 JSON-LD
-blocks valid. `git status` listed no `.xlsx` and nothing under `build/` or
-`data/`.
+**Nothing is half-finished, and this is true rather than reassuring.** `main`
+is current and pushed at `05c9a5b`, clean tree, no open PRs. Genealogy III's
+`#note-crossref` is **live**. `--public` exits 0, builds 6 pages,
+104 / 275 / 261 / 73 persons; all four `self_check()`s pass; the privacy gate
+reports no research chips or vocabulary in 6 pages; 10 JSON-LD blocks valid.
+A rebuild after the push left the tree clean, so `docs/` and the source agree
+byte-for-byte.
 
-**Not yet published, and possibly not yet merged.** The change is built into
-`docs/` but the live site does not carry the new footnote until `/publish`
-runs. Check `git branch --show-current` and `gh pr list` before assuming it
-landed.
+**Verified live:** all six `.html` byte-identical to `docs/` by SHA-256,
+`#note-crossref` present once on `/genealogy-iii/` with 261 person anchors
+beside it, 0 research markers on all five served pages. PR
+[#26](https://github.com/PuebloGenealogy/pueblogenealogy.github.io/pull/26)
+merged.
 
 The 0.023px sub-pixel offset on Genealogy II's 158 group is still known,
 diagnosed and deliberately left alone. Invisible; not worth touching shared
@@ -54,19 +53,23 @@ bracket code.
 
 ## The open thread
 
-**There isn't one on the plates.** Genealogy III's two editorial items are both
-closed (see *Decisions*), and no plate has an open reading. What remains is
-outreach, one correctness item on Genealogy I, and the release — none of them
-blocking each other.
+**There isn't one, on the plates or on the site.** Genealogy III's two
+editorial items are both closed (see *Decisions*), no plate has an open
+reading, and the footnote is published. What remains is **outreach**, **one
+correctness item on Genealogy I**, and **the release** — none of them blocking
+each other, and every one of them needing the user rather than a build.
 
-The most likely next action is simply **merge and `/publish`**, to put the new
-footnote live. It is a gated build; nothing about it needs a decision first.
+The most likely next action is the **Wikidata item**: it is the highest
+effort-to-return inbound link, the payload already exists at
+`wikidata-quickstatements.txt` with 18 ids verified, and the only work is
+**updating it from three tables to four**. Note the standing caveat above it —
+**decide the custom domain before seeding any inbound link**, because every
+link placed from now on points permanently at whatever host is chosen.
 
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
-| **Merge and publish the new footnote** | ~5 min | `/publish`. The only reason the site lacks it is that this session stopped to wrap |
 | **Wikidata item** | ~10 min, **needs you** | Payload at `wikidata-quickstatements.txt`, 18 ids verified. **Needs updating for all four tables** — it was written for three |
 | **AMNH Digital Library** | Slow, **needs you** | Strong inbound link. Handle `2246/158` — `https://digitallibrary.amnh.org/handle/2246/158`. That is the identifier `.zenodo.json` omits from `related_identifiers`. The site 403s automated fetches; use a real browser. **Now also the only route to settling the turned-comma mark** — see below |
 | **Confirm the 83 / 84 attribution** (Genealogy I) | Needs you + the records | 85 is firmly pinned. 83 and 84 rest on ages that do not cleanly reconcile. Published and citable, so this is the open item with a correctness edge |
@@ -147,7 +150,12 @@ expensive and this is the file a session reads first:
 ## Closed — do not re-raise
 
 - **Genealogy III, entirely — now including both editorial items.** Read, drawn,
-  audited, verified, live, footnoted. Nothing on this plate is open.
+  audited, verified, live, footnoted, **and the footnote is deployed**. Nothing
+  on this plate is open.
+- **Pages lags a push by seconds, and that is not a failed deploy.** Genealogy
+  III's page served the previous build on the first SHA-256 pass and matched
+  ten seconds later. **Poll; never rebuild to "fix" a `DIFF`** — rebuilding
+  changes the local hash you are comparing against and hides the recovery.
 - **Whether the plate can be drawn.** All 261 drawn, 0.000 px column drift at
   every generation in both blocks, every block row a whole `--lh`, no node's
   first line displaced from its top.

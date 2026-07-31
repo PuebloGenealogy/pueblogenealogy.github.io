@@ -701,8 +701,9 @@ Consequences a session must not "fix":
   Releases and no Zenodo deposits during active development. **All four plates
   are now published** (2026-07-31), and **Genealogy III's two editorial items
   are both closed** — same day, later session: the cross-reference footnote is
-  written and live in the source, and the turned-comma mark is settled as
-  unresolvable from this scan. So **two** of the policy's four clauses are met.
+  written and **deployed** (`#note-crossref`, verified live by SHA-256), and
+  the turned-comma mark is settled as unresolvable from this scan. So **two**
+  of the policy's four clauses are met.
   The other two are not: `.zenodo.json` still describes three plates, and the
   AMNH handle is still absent from its `related_identifiers`. **Publishing the site
   is not releasing it.** Do not read "the last plate is up" as "cut the tag";
