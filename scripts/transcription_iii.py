@@ -104,23 +104,38 @@ subset_font.py reports this plate needs exactly two characters the subset does
 not already carry: `ó` and `ô`. Run it BEFORE the build that registers the
 plate, never after -- see CLAUDE.md.
 
-TWO BRACKET READINGS THAT NEED A SECOND EYE
--------------------------------------------
+TWO BRACKET READINGS, ONE SETTLED AND ONE STILL NEEDING A SECOND EYE
+--------------------------------------------------------------------
 Both are recorded in plate_note on the people concerned.
 
-i.  43's two husbands. One unbroken vertical at native x 2267 runs from y 2157
-    to y 2222 with stubs to 124 and 126, and TWO leaders enter it: 43's own line
-    at 124's row and 45's line at 126's row. Encoded per the convention in (1)
-    as 43 + 44 -> 124 and 43 + 45 -> 126. The alternative reading is a single
-    undivided bracket of 43's two children with the father unstated.
-ii. 22 and 25. Same shape: one unbroken, unoffset vertical at native x 1749 from
-    y 4339 to y 4425, stubs to 80, 82 and 83, leaders entering at 80's row (22)
-    and 83's row (25). Encoded as 22 -> 80, 82 and 25 -> 83. All three children
-    are Corn, so clan descent cannot separate them.
+i.  STILL OPEN. 43's two husbands. One unbroken vertical at native x 2267 runs
+    from y 2157 to y 2222 with stubs to 124 and 126, and TWO leaders enter it:
+    43's own line at 124's row and 45's line at 126's row. Encoded per the
+    convention in (1) as 43 + 44 -> 124 and 43 + 45 -> 126. The alternative
+    reading is a single undivided bracket of 43's two children with the father
+    unstated.
+ii. SETTLED BY THE USER, 2026-07-31, AND IT IS A MISPRINT. 22 and 25. One
+    unbroken, unoffset vertical at native x 1749 from y 4339 to y 4425, stubs to
+    80, 82 and 83, leaders entering at 80's row (22) and 83's row (25). All
+    three children are Corn, so clan descent cannot separate them.
+
+    The user read the plate and ruled: 80 and 82 are 22's, 83 is 25's, and THE
+    VERTICAL IS DRAWN FURTHER THAN IT SHOULD BE. 22's bracket ought to terminate
+    after 82; the plate carries it on down to 83, which belongs to 25's leader.
+    So the continuous rule is a printing error, not evidence of one group.
+    Encoded as 22 -> 80, 82 and 25 -> 83, which is what this file already held.
+
+    NOTE WHAT THE CHART THEREFORE DOES: it draws TWO brackets where the plate
+    draws one continuous vertical. That is the one place on this plate where the
+    drawn structure departs from the scan, and it rests on the user's reading.
+    It is not a candidate for PLATE_MISPRINTS, which carries printed TEXT the
+    data contradicts (a sex letter, a clan spelling); this is a rule, and
+    make_chart.py does not read that table anyway.
 
     For contrast, 86's and 89's brackets at native x 2853 ARE visibly offset
-    where they meet, so this plate does distinguish adjacent brackets when it
-    means to -- which is what makes (i) and (ii) worth checking.
+    where they meet, and the 77-79 bracket's vertical sits visibly left of this
+    one. So the plate does distinguish adjacent brackets when it means to --
+    which is what makes (i) worth checking and what makes (ii) an error.
 
 ORTHOGRAPHY -- WHY EVERY NAME BELOW WAS READ TWICE
 --------------------------------------------------
@@ -274,10 +289,10 @@ _P = [
     (19,  3, "M", "A˙ʼushuyăi",            "", "",   "Corn",           "",        "",           "", ""),
     (20,  3, "F", "Hi˙ʼn˙iăitsʼă",         "", "",   "Lizard",         "",        "",           "", "the plate prints '(Sister of 10)' beneath the name"),
     (21,  3, "F", "Dyia˙ʼro",              "", "",   "Sun",            "",        "",           "", "second wife of 19"),
-    (22,  3, "F", "Dzaiaaiʼdʼyuwitsʼă",    "", "",   "Corn",           "d.",      "",           "", "her bracket and 25's share one unbroken vertical; see the docstring"),
+    (22,  3, "F", "Dzaiaaiʼdʼyuwitsʼă",    "", "",   "Corn",           "d.",      "",           "", "her bracket runs 80, 82; the plate draws its vertical on past 82 to 83, which is 25's child. Over-drawn rule, confirmed 2026-07-31"),
     (23,  3, "M", "",                      "", "",   "Sun",            "",        "",           "", "name printed as a dash"),
     (24,  3, "M", "Ai˙ʼtyʼiai",            "", "",   "Turkey",         "",        "",           "", "second husband of 22; no issue recorded"),
-    (25,  3, "F", "Wayaiduitsa",           "", "",   "Corn",           "",        "",           "", "her bracket and 22's share one unbroken vertical; see the docstring"),
+    (25,  3, "F", "Wayaiduitsa",           "", "",   "Corn",           "",        "",           "", "83 is hers; her leader enters at his row. The plate runs 22's vertical down past 82 to reach him. Over-drawn rule, confirmed 2026-07-31"),
     (26,  3, "M", "Oshăʼ",                 "", "",   "Eagle",          "",        "",           "", ""),
     # ---- block 1, generation 4 -------------------------------------------
     (27,  4, "M", "Na˙ʼtsiwă",             "", "",   "Corn",           "d. 1917", "",           "", ""),
@@ -537,11 +552,30 @@ PERSONS = sorted(_P, key=lambda p: p[0])
 # number is SHOWN reads plate_number; every place one is KEYED reads id.
 DUPLICATE_PLATE_NUMBERS = {256: "258", 257: "259"}
 
-# What the plate prints where the transcription records something else.
+# What the plate prints where the transcription records something else. The
+# PLATE's value is what the page shows -- ringed in --sic with an annotation
+# row, exactly as Genealogy I's misprinted number 68 is -- while the data below
+# keeps the reading the plate's own bracket and clan descent establish, because
+# that is what the structure is computed from. Read by make_chart.py.
 PLATE_MISPRINTS = {
     "sex":  {37: "M."},
     "clan": {50: "Chapparral Cock", 255: "Bager"},
 }
+
+# Unions whose sibling bracket the plate hangs off the '+' SPOUSE's line rather
+# than off the mother's. This plate draws the leader from the line of the parent
+# whose marriage the group belongs to (docstring, point 1), so a woman's second
+# husband carries his own leader; every other plate in the edition hangs every
+# bracket on the mother's row and declares none of these.
+#
+# W26 is the only one on this plate: 43 has two husbands and issue by both, and
+# the plate puts 124's leader on her line and 126's on 45's. Without this entry
+# both groups claim row 0, the second cannot start there, and make_chart.py's
+# push logic moves 43's own line down five rows to meet it -- stranding 124's
+# bracket on 15's line, so the page says 124 is 14+15's child. Found 2026-07-31
+# on the first full preview; the same failure CLAUDE.md records for Gen. II's
+# 169, which was sidestepped there because Parsons prints her twice.
+LEADER_ON_SPOUSE_ROW = {"W26"}
 
 # (union_id, wife_id, husband_id, wife_order, husband_order, note)
 UNIONS = [
@@ -795,6 +829,36 @@ def self_check() -> list[str]:
     for pid in DUPLICATE_PLATE_NUMBERS:
         if pid not in clan:
             problems.append(f"DUPLICATE_PLATE_NUMBERS names unknown id {pid}")
+
+    for field, entries in PLATE_MISPRINTS.items():
+        if field not in ("sex", "clan"):
+            problems.append(f"PLATE_MISPRINTS field {field!r} is not one the "
+                            "renderer knows how to ring")
+        for pid, printed in entries.items():
+            if pid not in clan:
+                problems.append(f"PLATE_MISPRINTS names unknown id {pid}")
+            elif str(printed).strip().rstrip(".") == str(
+                    dict(sex={p[0]: p[2] for p in PERSONS},
+                         clan=clan).get(field, {}).get(pid, "")).strip():
+                # An entry that agrees with the data rings a value for no
+                # reason and points the reader at a note about nothing.
+                problems.append(f"PLATE_MISPRINTS {field} {pid} repeats the "
+                                "transcribed value; it records a DIFFERENCE")
+
+    # A bracket can only hang off a spouse's line if there is a spouse line to
+    # hang it on and children to bracket. The one that matters is not checkable
+    # here -- whether the plate really draws that leader from his row -- so this
+    # guards the mechanics and the docstring carries the reading.
+    by_uid = {u[0]: u for u in UNIONS}
+    with_issue = {c[0] for c in CHILDREN if c[0]}
+    for uid in LEADER_ON_SPOUSE_ROW:
+        u = by_uid.get(uid)
+        if not u:
+            problems.append(f"LEADER_ON_SPOUSE_ROW names unknown union {uid}")
+        elif not (u[1] and u[2]):
+            problems.append(f"LEADER_ON_SPOUSE_ROW {uid} has no '+' spouse line")
+        elif uid not in with_issue:
+            problems.append(f"LEADER_ON_SPOUSE_ROW {uid} brackets no children")
 
     return problems
 

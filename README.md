@@ -12,8 +12,8 @@ American Museum of Natural History**, vol. 19, pt. 5 (1923), pp. 133–292.
 |---|---|---|
 | [Table 1 — Genealogy I](https://pueblogenealogy.github.io/genealogy-i/) | 104 individuals · 5 generations · 27 marriages · 80 parent–child links | founding couples 1+2, 54+55 |
 | [Table 2 — Genealogy II](https://pueblogenealogy.github.io/genealogy-ii/) | 275 individuals · 6 generations · 61 marriages · 214 parent–child links | founding couples 1+2, 154+155, 232+233 |
+| [Table 3 — Genealogy III](https://pueblogenealogy.github.io/genealogy-iii/) | 261 individuals · 7 generations · 72 marriages · 192 parent–child links | founding couples 1+2, 230+231 |
 | [Table 4 — Genealogy IV](https://pueblogenealogy.github.io/genealogy-iv/) | 73 individuals · 4 generations · 14 marriages · 58 parent–child links | founding couples 1+2, 59+60 |
-| Table 3 — Genealogy III | in preparation | |
 
 The plates are transcribed character by character, including the Americanist
 phonetic diacritics, and redrawn as text you can search, copy and cite. Nothing
@@ -87,7 +87,9 @@ python3 -m http.server 4173 --directory docs
   to the editorial note. The reading is recorded on union `U23` and declared in
   `PLATE_NUMBER_MISPRINTS`.
 - **Persons 12 and 73** have further spouses and offspring in Genealogies II and
-  III, not yet transcribed. Their cross-references are preserved verbatim.
+  III, both of which are edited here. Their cross-references are preserved
+  verbatim and, like every reference from one plate into another, are not links:
+  those numbers are the other plate's numbering.
 - **Blank names.** A dash on the plate means Parsons recorded no name; these are
   stored as empty `name_as_printed`, not as a dash.
 - **`d.`** means the person had already died when Parsons recorded the

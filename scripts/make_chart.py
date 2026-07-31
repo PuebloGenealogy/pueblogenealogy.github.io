@@ -232,9 +232,12 @@ TABLES = {
         Person {_p(161)} is marked &ldquo;M.-F.&rdquo;, a notation used nowhere else
         on the plate; the sex is left as printed rather than resolved.</li>
     <li>Persons {_p(160)} and {_p(163)} carry cross-references into
-        <strong>Genealogy&nbsp;III</strong>, which is not yet transcribed. Those
-        references are printed as the plate has them and are not links, because a
-        link must not promise a page that does not exist.</li>
+        <strong><a href="../genealogy-iii/">Genealogy&nbsp;III</a></strong>, which is
+        now transcribed and published here. The references themselves are printed as
+        the plate has them, without links on the numbers: those numbers are Genealogy
+        III&rsquo;s own numbering, and every numbered link on this page is an anchor
+        within this plate. Following one means opening that table and looking the
+        number up there.</li>
     <li>The plate draws a short rule from {_p(235)}+{_p(236)}&rsquo;s sibling bracket
         to the &lsquo;+&rsquo; line of {_p(255)}, which it does for no other spouse
         line. It cannot mean 255 is their child: every child of 236 is Water, her own
@@ -268,6 +271,84 @@ TABLES = {
         cited here, which anyone can weigh for themselves.</li>
 """,
     },
+    "iii": {
+        "numeral": "III",
+        "plate": "Table 3",
+        "module": "transcription_iii",
+        "roots": [1, 230],         # the founding women, in plate order
+        # 230's block is NOT descended from 1+2 -- the plate simply sets it in
+        # the generation-2 column rather than at the sheet's left edge. Same
+        # case as Genealogy II's 154 and 232: an indent, not a splice.
+        "root_columns": {230: 2},
+        "slug": "genealogy-iii",
+        "couples": f"{_p(1)}+{_p(2)} and {_p(230)}+{_p(231)}",
+        # No "paternity" key, and that is a finding about the plate rather than
+        # an omission. This plate marks paternity itself: the leader rule
+        # reaching a sibling bracket sits on the line of the parent whose
+        # marriage the group belongs to, so a spouse with no leader had no
+        # recorded issue. 85/86/87 is Genealogy I's 83-85 shape and still needs
+        # nothing, because 86's leader is on her own line and 87 has none.
+        "notes": f"""
+    <li id="note-paternity-rule">This plate <strong>says which marriage a sibling
+        group belongs to</strong>, where Genealogies&nbsp;I and&nbsp;II leave it open.
+        The rule reaching a bracket is drawn from the line of the parent whose
+        marriage it is, so where someone has two spouses, each spouse&rsquo;s line
+        either carries that rule or does not. {_p(86)} and {_p(87)} are the case that
+        would need an editorial reading on another plate &mdash; one woman, two
+        husbands, one bracket &mdash; and here it needs none: {_p(86)}&rsquo;s line
+        carries the rule and {_p(87)}&rsquo;s does not. <strong>Nothing on this table
+        is attributed by this edition</strong>; the plate does it.</li>
+    <li id="note-overdrawn">One bracket on the plate is <strong>drawn further than it
+        should be</strong>. {_p(22)}&rsquo;s children are {_p(80)} and {_p(82)}, and
+        {_p(83)} is {_p(25)}&rsquo;s son &mdash; {_p(25)}&rsquo;s own rule reaches him
+        on his row. But the vertical that gathers {_p(80)} and {_p(82)} is carried on
+        down past {_p(82)} to touch {_p(83)} as well, so on the plate the three appear
+        to share one bracket. <strong>The chart draws two</strong>, which is the one
+        place on this table where it departs from the scan. All three children are of
+        the Corn clan, as both mothers are, so matrilineal descent cannot settle it;
+        the two rules entering the bracket, on {_p(22)}&rsquo;s row and
+        {_p(25)}&rsquo;s, are the evidence. Elsewhere this plate keeps adjacent
+        brackets plainly apart, offsetting their verticals where they meet.</li>
+    <li>Four couples are <strong>printed twice</strong>, the second setting carrying
+        the plate&rsquo;s own &ldquo;For her descendants, see above&rdquo; in place of
+        the bracket: {_p(7)}+{_p(8)}, {_p(91)}+{_p(92)}, {_p(124)}+{_p(125)} and
+        {_p(152)}+{_p(153)}. Each is drawn once here, where its issue is drawn.
+        {_p(166)} and {_p(167)} are printed twice as well, with no descendants line.
+        Person {_p(8)} is what <strong>joins the plate&rsquo;s two blocks</strong>:
+        husband of {_p(7)} in the first and a son of {_p(236)}+{_p(237)} in the
+        second.</li>
+    <li id="note-duplicate-numbers">The numbering on this plate is
+        <strong>not a unique key</strong>. The numbers <strong>258</strong> and
+        <strong>259</strong> are each printed on two different people, and
+        <strong>256</strong> and <strong>257</strong> appear nowhere. Both pairs were
+        read at high magnification to rule out a misreading. This edition states the
+        fact and does not guess at the cause: all four rows print the number the plate
+        prints, and each is a separate entry in the register with its own card.</li>
+    <li id="note-misprint">Three entries are <strong>printed with a value this
+        edition reads as a misprint</strong>, and each is set on the chart as the
+        plate sets it, ringed in red with this note beneath it. The chart is not
+        corrected; the correction is here.
+        <ul>
+          <li>{_p(37)} is printed <strong>M.</strong> She is the mother of
+              {_p(109, "109-112")}, whose clan is Chaparral Cock, where her husband
+              {_p(36)} is Lizard. <strong>Clan descent is matrilineal</strong>, so
+              the children&rsquo;s clan is hers and she is a woman; her bracket and
+              her name agree. Read at high magnification to rule out a broken
+              <em>F</em>. Everything computed from this table &mdash; her bracket,
+              her children&rsquo;s clan, the register &mdash; follows the reading,
+              not the letter.</li>
+          <li>{_p(50)}&rsquo;s clan is printed <strong>Chapparral Cock</strong>, with
+              a doubled <em>p</em>. Her own four children {_p(135, "135-138")}, and
+              every other line on this plate, print <em>Chaparral Cock</em>.</li>
+          <li>{_p(255)}&rsquo;s clan is printed <strong>Bager</strong> for
+              <em>Badger</em>.</li>
+        </ul></li>
+    <li>Many entries carry <strong>no sex letter</strong> &mdash; most of the unnamed
+        children in the last two generations, and {_p(155)}, {_p(193)}, {_p(195)} and
+        {_p(260)}, who are named or numbered but printed without one. Where the plate
+        records no sex, none is supplied.</li>
+""",
+    },
     "iv": {
         "numeral": "IV",
         "plate": "Table 4",
@@ -297,11 +378,7 @@ TABLES = {
 # Plates referenced by a transcribed table but not yet transcribed themselves.
 # They appear on the landing page as inert cards so the edition states its own
 # scope rather than implying Genealogy I is the whole work.
-PENDING = [
-    ("Table 3", "Genealogy III",
-     "Referenced from Genealogy I at person 73, and from Genealogy II at "
-     "persons 160 and 163."),
-]
+PENDING = []
 
 NUMBER_WORDS = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five",
                 6: "six", 7: "seven"}
@@ -397,9 +474,10 @@ FAQ = [
      "Each plate charts several generations of related families at Laguna Pueblo, "
      "New Mexico, recording each person's number, sex, Keresan name and clan."),
     ("Which plates are transcribed here?",
-     "Table 1 (Genealogy I), Table 2 (Genealogy II) and Table 4 (Genealogy IV) are "
-     "transcribed in full and published on this site. Table 3, Genealogy III, is "
-     "referenced by cross-references in the other plates but is not yet transcribed."),
+     "All four. Table 1 (Genealogy I), Table 2 (Genealogy II), Table 3 "
+     "(Genealogy III) and Table 4 (Genealogy IV) are transcribed in full and "
+     "published on this site, which is the whole of the genealogical material "
+     "published with Parsons's 1923 paper."),
     ("How accurate is the transcription?",
      "The plates are transcribed character by character, including the Americanist "
      "phonetic diacritics, and nothing is corrected, normalised or filled in. Where "
@@ -559,6 +637,15 @@ def load_baseline(spec):
     # no ring and no annotation. A footer note explains the reuse once.
     dupes = getattr(T, "DUPLICATE_PLATE_NUMBERS", {})
 
+    # PLATE_MISPRINTS: {field: {id: what the plate prints}}, for the fields that
+    # are not the number -- Genealogy III prints "M." on 37, who is plainly a
+    # woman, and misspells two clans. Same principle as PLATE_NUMBER_MISPRINTS
+    # and the same treatment: the PLATE's value is what is shown, ringed in
+    # --sic with an annotation row, while the DATA keeps the reading the plate's
+    # own bracket and clan descent establish, because that is what the structure
+    # is computed from. Declared per table; read with getattr.
+    field_misprints = getattr(T, "PLATE_MISPRINTS", {})
+
     persons = {}
     for pid, _gen, sex, name, alt, age, clan, vital, origin, xref, note in T.PERSONS:
         p = dict(zip(BASE_KEYS, (sex, name, alt, age, clan, vital, origin, xref, note)))
@@ -567,6 +654,11 @@ def load_baseline(spec):
         p["id"] = pid
         p["plate_number"] = dupes.get(pid, pid)
         p["generation"] = _gen
+        # "M." and "M" both read as the sex letter: person_line sets the point.
+        p["printed_sex"] = str(field_misprints.get("sex", {})
+                               .get(pid, "")).strip().rstrip(".")
+        p["printed_clan"] = str(field_misprints.get("clan", {})
+                                .get(pid, "")).strip()
         persons[pid] = p
 
     # UNIONS rows are 6-tuples, or 7 with a trailing drawn_under -- the id of
@@ -576,6 +668,18 @@ def load_baseline(spec):
     # a '+' line where it is not the number of the person that line names. Read
     # with getattr so a table without one needs no entry -- Table 4 has none.
     misprints = getattr(T, "PLATE_NUMBER_MISPRINTS", {})
+    # LEADER_ON_SPOUSE_ROW: unions whose sibling bracket the plate hangs off the
+    # '+' SPOUSE's line rather than off the mother's. The default -- the bracket
+    # is the mother's row -- is right on every plate for a first marriage, and on
+    # Genealogy III it is wrong for a second one: that plate draws the leader
+    # from the line of the parent whose marriage the group belongs to, so a
+    # woman's second husband carries his own leader (see transcription_iii's
+    # docstring, point 1). Without it BOTH of person 43's unions claim her line,
+    # the second group cannot start there, and the push logic below moves her
+    # line down to meet it -- stranding the first group, which is the identical
+    # failure CLAUDE.md records for Genealogy II's 169. Read with getattr:
+    # Tables 1, 2 and 4 declare none.
+    leader_on_spouse = set(getattr(T, "LEADER_ON_SPOUSE_ROW", ()))
     unions = []
     for row in T.UNIONS:
         uid, wife, husband, _wo, _ho, note = row[:6]
@@ -586,6 +690,7 @@ def load_baseline(spec):
             "note": note or "",
             "drawn_under": (row[6] if len(row) > 6 else 0) or 0,
             "printed_number": misprints.get(uid, 0),
+            "leader_on_spouse": uid in leader_on_spouse,
         })
 
     kids_by_union, kids_by_mother = {}, {}
@@ -678,7 +783,7 @@ def dotted(s):
 SEE_PHRASE = re.compile(r"\bsee (?:above|below|elsewhere on this table)\b", re.I)
 
 
-def linkify_xref(text, persons, target=None):
+def linkify_xref(text, persons, target=None, cross_plate=False):
     """
     Wrap person-number tokens in same-table anchors: '76' -> <a href="#p76">76</a>,
     '90-3' -> <a href="#p90">90-3</a>. `text` is already HTML-escaped.
@@ -691,11 +796,22 @@ def linkify_xref(text, persons, target=None):
     left as plain text rather than pointed somewhere plausible.
 
     A cross-reference into another genealogy ('see Gen. II, 21, 74') is left
-    entirely untouched: those numbers belong to a table that is not transcribed,
-    and a link must not promise content that does not exist. The visible text is
-    identical either way -- only the markup around it changes.
+    entirely untouched: those numbers are another plate's numbering, and every
+    href here is an anchor on THIS page. The visible text is identical either
+    way -- only the markup around it changes.
+
+    `cross_plate` is that same judgement made by the caller, and it exists
+    because the guard below reads one ROW while the reference is a whole
+    sentence. A long reference is split at the plate's own line break with '|'
+    (see 160 and 169 on Genealogy II, and 155 on Genealogy III), and the row
+    that carries the numbers need not be the row that carries the words 'Gen.'
+    -- Parsons breaks 155 as 'see Gen. | II, 126, 158, 160'. Judged row by row
+    those three numbers looked local and were linked to Genealogy III's own
+    126, 158 and 160: three real people, none of them the ones referred to, and
+    nothing on the page to reveal it. Callers that split a reference pass the
+    verdict for the whole of it.
     """
-    if "Gen." in text:
+    if cross_plate or "Gen." in text:
         return text
 
     found = []
@@ -764,7 +880,15 @@ def person_line(p, is_spouse, english_seen, printed_number=0):
         # href on the id (unique, addressable), text from plate_number (what the
         # plate prints). They differ only where the plate reuses a number.
         bits.append(f'<a class="num" href="#p{p["id"]}">{p["plate_number"]}.</a>')
-    bits.append(f'<span class="sex">{esc(p["sex"])}.</span>')
+    # Sex and clan take the same treatment the number does where the plate is
+    # wrong: its value, ringed. The ring is a CLASS ON THE EXISTING SPAN, never
+    # a wrapper -- the person card drops the header's .sex/.clan by reading a
+    # direct child's className, and moves the .clan node itself into its badge,
+    # so a wrapper would either leak the letter into the card title or strip the
+    # ring off the badge. .sic-ring is an outline, so no row moves.
+    printed_sex = str(p.get("printed_sex", "") or "")
+    sex_cls = "sex sic-ring" if printed_sex else "sex"
+    bits.append(f'<span class="{sex_cls}">{esc(printed_sex or p["sex"])}.</span>')
 
     name, alt = p["name_as_printed"], p["alt_name"]
     if name and alt:
@@ -792,8 +916,12 @@ def person_line(p, is_spouse, english_seen, printed_number=0):
         bits.append(f'<span class="vital">{dotted(p["vital_note"])}</span>')
 
     clan_cls = "clan"
+    printed_clan = str(p.get("printed_clan", "") or "")
     if p["clan"]:
-        clan = esc(p["clan"]) + (f' ({esc(p["origin"])})' if p["origin"] else "")
+        if printed_clan:
+            clan_cls = "clan sic-ring"
+        clan = (esc(printed_clan or p["clan"])
+                + (f' ({esc(p["origin"])})' if p["origin"] else ""))
     elif p["origin"]:
         clan = f'of {esc(p["origin"])}'
         # NOT a clan: the plate names only where this person came from ("of
@@ -867,10 +995,22 @@ class Chart:
         row = 0                # index of the last line written into the block
         groups = []            # (mother_row, kind, payload) -> the child column
 
+        # A misprinted sex letter or clan on the primary's own line. Counted
+        # with row += 1 exactly as the number misprint's annotation is, so every
+        # row below stays a whole --lh and no bracket leaves its mother's line.
+        # Printed once per person, on the line that carries the id.
+        if first and (p.get("printed_sex") or p.get("printed_clan")):
+            block.append(("sic", SIC_ROW, None))
+            row += 1
+
         if p["cross_ref"] and pid not in self.xref_printed:
             self.xref_printed.add(pid)
+            # The verdict is taken on the WHOLE reference, before the split:
+            # the '|' is the plate's line break, not a change of subject.
+            xp = "Gen." in p["cross_ref"]
             for part in p["cross_ref"].split("|"):
-                block.append(("xref", linkify_xref(esc(part.strip()), self.P), None))
+                block.append(("xref", linkify_xref(esc(part.strip()), self.P,
+                                                   cross_plate=xp), None))
                 row += 1
 
         # Pass 1: lay out this block's own lines and decide where each sibling
@@ -912,16 +1052,24 @@ class Chart:
                 # The misprint annotation is its own row, directly under the
                 # line it annotates -- the same slot a cross-reference takes,
                 # and counted the same way, so the rows below stay on the grid.
-                if u["printed_number"] and u["printed_number"] != other:
+                if (u["printed_number"] and u["printed_number"] != other) or (
+                        first_sp and (sp.get("printed_sex") or sp.get("printed_clan"))):
                     block.append(("sic", SIC_ROW, None))
                     row += 1
                 if sp["cross_ref"] and other not in self.xref_printed:
                     self.xref_printed.add(other)
+                    xp = "Gen." in sp["cross_ref"]
                     for part in sp["cross_ref"].split("|"):
-                        block.append(("xref", linkify_xref(esc(part.strip()), self.P), None))
+                        block.append(("xref", linkify_xref(esc(part.strip()), self.P,
+                                                           cross_plate=xp), None))
                         row += 1
-            if u["wife"] == pid:
-                mother_row = 0          # the primary is the mother
+            # The primary is the mother, so the bracket is her own row -- unless
+            # the plate draws this marriage's leader from the '+' spouse's line,
+            # which is what LEADER_ON_SPOUSE_ROW declares and what Genealogy III
+            # does for a second husband. There mother_row is already the spouse's
+            # row, set when his line went down.
+            if u["wife"] == pid and not u.get("leader_on_spouse"):
+                mother_row = 0
 
             kids = self.KU.get(u["union_id"], [])
             if kids and (drawn_before or all(k in self.placed for k in kids)):
@@ -2680,9 +2828,11 @@ def register_html(persons, unions, ku, km, drawn, paternity=None):
                                 "children", other, ed))
         xr = persons[pid]["cross_ref"]
         if xr:
+            xp = "Gen." in xr
             for part in xr.split("|"):
                 rows.append('<div class="reg-rel"><em>'
-                            + linkify_xref(esc(part.strip()), persons)
+                            + linkify_xref(esc(part.strip()), persons,
+                                           cross_plate=xp)
                             + "</em></div>")
         line = person_line(p, False, set())
         if pid not in drawn:
