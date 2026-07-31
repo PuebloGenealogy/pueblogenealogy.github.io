@@ -3,7 +3,118 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-07-31 (latest) — Genealogy III: orthography finished, cross-references audited, still not published
+## 2026-07-31 (latest) — Genealogy III published: the edition is now all four plates
+
+`b06eb10` on `main`, live and verified by hash. `--public` builds **6 pages**,
+104 / 275 / **261** / 73 persons, and the site serves all of them. Genealogy III
+is registered as `TABLES["iii"]`, `roots [1, 230]`, `root_columns {230: 2}`;
+`PENDING` is now empty.
+
+**No release was cut, and none is due.** The release policy in `CLAUDE.md`
+stands: publishing the site and cutting a release are different acts. The
+concept doi still resolves to v1.0.0 (Genealogies I and IV), and `.zenodo.json`
+still describes three plates — deliberately, since Zenodo reads it from the
+tagged commit and it is brought to four as part of cutting the release.
+
+### Two plate readings the user settled against the scan
+
+- **22 and 25 share one vertical, and it is a misprint.** 80 and 82 are 22's,
+  83 is 25's. The plate draws 22's vertical on **past 82 to touch 83**, so the
+  three appear to share one bracket. The encoding was already right; what was
+  wrong was the record, which called it an open reading. **The chart draws two
+  brackets where the plate draws one** — the single place on this table where
+  the drawn structure departs from the scan, footnoted at `#note-overdrawn`.
+  Not a `PLATE_MISPRINTS` case: that table carries printed *text*, this is a
+  rule.
+- **43's bracket carries two leaders**, hers to 124 and 45's to 126. Encoded
+  `W25` 43+44 → 124, `W26` 43+45 → 126, per this plate's own paternity
+  convention.
+- **The four `drawn_under` values were checked against the scan** and all four
+  hold: W23 (40 under 38), W34 (64 under 62), W36 (66 under 65), W45 (86 under
+  85). The two that carry children pass clan descent *independently and
+  discriminatingly* — W23's 116, 118 are Parrot, which is 40's clan and not
+  host 38's Sun; W34's 146–151 are Turkey, 64's clan and not host 62's Badger.
+  W36 and W45 have no issue, so they assert nothing about descent.
+
+### Two renderer changes, both forced by this plate
+
+**`LEADER_ON_SPOUSE_ROW` — a bracket that hangs off the '+' spouse's line.**
+This plate draws a sibling bracket's leader from the line of the parent whose
+marriage it is, so a woman's second husband carries his own. Person 43 has two
+husbands and issue by both, so both unions claimed her row; the second group
+could not start there, and `Chart.render`'s push logic **moved her own line down
+five rows to meet it, stranding the first**. The built page said 124 was 14+15's
+child, and 43's name sat beside 126. This is the identical failure `CLAUDE.md`
+records for Genealogy II's 169 — sidestepped there only because Parsons prints
+her twice, which is no help here. Declared per union in the transcription
+module, read via `getattr`, guarded by `self_check()`. Tables 1, 2 and 4 declare
+none and their markup did not move.
+
+*How it was found matters for the next plate:* the trial registration on
+2026-07-30 reported all 261 drawn and 0 px column drift, and **both were true**.
+Column drift measures columns. Nothing in the build, in `self_check()`, or in
+clan descent can see a row displaced inside its own block. The check that found
+it was **"is any node's first `.line` displaced from that node's top?"** — one
+hit on the whole plate. Worth running on any new plate.
+
+**`PLATE_MISPRINTS` is now read by the renderer.** 37's sex letter `M.`, 50's
+clan `Chapparral Cock` and 255's `Bager` print **as the plate sets them**,
+ringed in `--sic` with an annotation row, under a new `#note-misprint` giving
+the three corrections and the evidence. Until now the table was declared and
+never read, so the build silently printed the *corrected* readings — the one
+thing this edition exists not to do. The data keeps the corrected reading,
+because the structure is computed from it. **The ring is a class on the existing
+`.sex` / `.clan` span, never a wrapper**: the person card drops the header's
+`.sex`/`.clan` by reading a *direct child's* `className` and moves the `.clan`
+node itself into its badge, so a wrapper would leak the sex letter into the card
+title or strip the ring off the badge. Verified: card title clean, badge reads
+"Clan: Chapparral Cock" ringed, no annotation row on the card, register intact.
+
+### A wrong-link bug found while previewing, not by any gate
+
+**Person 155's cross-references linked to the wrong people.** A long reference is
+split at the plate's own line break with `|`, and `linkify_xref`'s guard —
+`if "Gen." in text` — reads **one row**. Parsons breaks 155 as
+`see Gen. | II, 126, 158, 160`, so the row carrying the numbers carried no
+`Gen.`, and those three linked to **Genealogy III's own 126, 158 and 160**:
+three real people, none of them the ones referred to, with nothing on the page
+to reveal it. `linkify_xref` now takes a `cross_plate` verdict computed on the
+whole reference before the split, passed at all three splitting call sites.
+Genealogy III: **0 cross-plate links, was 6.** Genealogies I and II were already
+correct and are unchanged. The general rule: **`|` is a typographic line break,
+never a change of subject** — any judgement about a reference is made on the
+whole of it.
+
+### Scope claims that had gone stale
+
+Three places still said Genealogy III was untranscribed, and all three are
+public: the landing-page FAQ ("Which plates are transcribed here?"), Genealogy
+II's apparatus note on {160, 163} — which *justified* its unlinked references by
+III not existing — and the README's plate table. All corrected; the README now
+carries III's row. Note the convention this settles: **no cross-plate reference
+anywhere in the edition is a link**, on any plate, because another plate's
+numbering is not an anchor on this page.
+
+### Measured on the built page
+
+All 261 drawn. Column drift **0.000 px** at every generation in both blocks at a
+425.59 px step. Every block row a whole `--lh`; `.sic-row` is 24.80 px, the same
+as a line. No node's first line displaced from its top (was 1). Worst
+bracket-vs-group offset 0.000 px. Register 261 entries, relation links
+`inline`, entry titles 16 px. Leak gate clean over 6 pages, 10 JSON-LD blocks
+valid, font subset (with the two new characters `ó` and `ô`) covers all six
+pages. Live pages byte-identical to `docs/` by SHA-256; sitemap 5 `<loc>`.
+
+### Still open on this plate
+
+- **A footnote for the cross-reference exceptions.** Four, no two alike:
+  170–174's Gen. II refs are ten low, 218's `Gen. I, 101` one low, 173's
+  `Gen. I, 149` cannot resolve, 155's prose note is one high. All are recorded
+  in the module; the page says nothing about them. Genealogy II got a footnote
+  for its displacement.
+- **The turned-comma mark** at 154, 156, 157, 228, 242 — all five still U+02BC.
+
+## 2026-07-31 — Genealogy III: orthography finished, cross-references audited, still not published
 
 **Nothing reached `docs/`.** `--public` still builds the same 5 pages —
 104 / 275 / 73 persons — and `docs/` is byte-identical to what was committed.

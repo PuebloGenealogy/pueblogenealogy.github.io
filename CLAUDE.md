@@ -8,19 +8,23 @@ Natural History*, vol. 19, pt. 5 (1923), pp. 133–292.
 `PuebloGenealogy/pueblogenealogy.github.io` (public) · Pages from `main` /
 `/docs`, HTTPS enforced.
 
-Published, **three plates, 452 individuals** (PR #14 merged 2026-07-30):
+Published, **all four plates, 713 individuals** (Genealogy III published
+2026-07-31, `b06eb10`):
 **Genealogy I** (Table 1) — 104 individuals, 27 marriages, 80 parent–child
 links, 5 generations. **Genealogy II** (Table 2) — 275 individuals for the
 plate's 274 numbers, 61 marriages, 214 parent–child links, **6 generations**,
-three descent blocks. **Genealogy IV** (Table 4) — 73 individuals, 14 marriages,
-58 parent–child links, 4 generations. `--public` builds **5 pages** and the live
-site serves all of them. **Genealogy III is fully read but NOT published**
-— `scripts/transcription_iii.py` holds 261 persons and passes `self_check()`,
-`ORTHOGRAPHY_VERIFIED` is `True` as of 2026-07-31, its cross-reference audit is
-done, and it is deliberately absent from `TABLES`. What holds it back is no
-longer the reading: it is six plate readings that have had one pair of eyes and
-three decisions that are the user's. See the module docstring and
-`SESSION-NOTES.md`.
+three descent blocks. **Genealogy III** (Table 3) — 261 individuals, 72
+marriages, 192 parent–child links, **7 generations**, two descent blocks, the
+second indented. **Genealogy IV** (Table 4) — 73 individuals, 14 marriages,
+58 parent–child links, 4 generations. `--public` builds **6 pages** and the live
+site serves all of them; `PENDING` is empty.
+
+**The edition is now the whole of the genealogical material Parsons published**,
+which changes what a stale scope claim costs: any sentence saying a plate is "in
+preparation" or "not yet transcribed" is now simply false, and three such
+sentences were live until 2026-07-31 — the landing-page FAQ, Genealogy II's note
+on 160 and 163, and the README's plate table. There is no build gate for this.
+Grep for it after any change to the edition's scope.
 
 ## Questions about how this project works are not API questions
 
@@ -202,6 +206,7 @@ belongs here.
 ```bash
 python3 scripts/transcription.py          # structural self-check, Table 1
 python3 scripts/transcription_ii.py       # structural self-check, Table 2
+python3 scripts/transcription_iii.py      # structural self-check, Table 3
 python3 scripts/transcription_iv.py       # structural self-check, Table 4
 python3 scripts/subset_font.py            # only when the data gains new characters
 python3 scripts/make_chart.py --public    # the published build -> docs/
@@ -484,6 +489,21 @@ to catch "58+59" links those too.
   the block's other union lines are down because that is where the plate sets
   it. **Don't reach for it when the two groups have different mothers**; that
   is `SECOND_VISIT_NOTE`'s case and it already works.
+- **There is now a THIRD shape, and it is the one where the push logic actually
+  has to be told the answer.** Genealogy III's **43** has two husbands and issue
+  by both, printed **once**, so neither `SECOND_VISIT_*` applies. Both unions
+  have `wife == pid`, so `Chart.render` gave both `mother_row = 0`; the second
+  group could not begin there, and the push moved 43's own line down five rows
+  to meet it — **stranding the first group**, exactly as 169's did. The page
+  said 124 was 14+15's child. `LEADER_ON_SPOUSE_ROW` in a transcription module
+  is the mechanism: it names the unions whose bracket the plate hangs off the
+  **'+' spouse's** line, which is what Genealogy III does for a second husband
+  (its leader sits on the line of the parent whose marriage the group is).
+  Validated by `self_check()`; Tables 1, 2 and 4 declare none.
+  **No gate can see this defect.** The build reported all 261 drawn and 0 px
+  column drift, and both were true — drift measures *columns*. The check that
+  finds it is **"is any node's first `.line` displaced from that node's top?"**,
+  in the browser, over every `.node`. Run it on any new plate.
 - **An id addresses a person; `plate_number` is what prints.** There are now two
   reasons they differ, and they are not the same reason. A **misprint** (Table 1)
   shows the plate's wrong number, ringed in `--sic` with an annotation row,
@@ -665,15 +685,17 @@ Consequences a session must not "fix":
   real argument is citation permanence and portability — a domain you own can
   change hosts without breaking a doi-adjacent link — which is an argument for
   doing it first or not at all. Drops onto this repo via a `CNAME` file.
-- **No release is outstanding, and that is deliberate.** v1.1.0 was prepared and
-  then **cancelled** by the release policy above: no GitHub Releases and no
-  Zenodo deposits during active development. **`Genealogy III` is now the only
-  thing between here and the next release** — as of 2026-07-31 it is **fully
-  read**, drawable and audited, and still not published; what it needs now is
-  confirmation and three design calls, listed in `SESSION-NOTES.md` and in
-  `scripts/transcription_iii.py`'s docstring. It is the last plate, and the
-  policy names all four tables plus design, transcriptions, text and citations
-  as the bar. Do not re-add "cut a release" to this list before then.
+- **No release is outstanding, and that is still deliberate.** v1.1.0 was
+  prepared and then **cancelled** by the release policy above: no GitHub
+  Releases and no Zenodo deposits during active development. **All four plates
+  are now published** (2026-07-31), so the *plates* clause of the bar is met —
+  but the policy names four things, and the other three are not. Two editorial
+  items are open on Genealogy III (the cross-reference footnote, the
+  turned-comma mark), `.zenodo.json` still describes three plates, and the AMNH
+  handle is still absent from its `related_identifiers`. **Publishing the site
+  is not releasing it.** Do not read "the last plate is up" as "cut the tag";
+  when it is finally wanted, `.zenodo.json` must already be on `main` and
+  current for all four tables, because Zenodo reads it from the tagged commit.
 - **Genealogy II is published and its reading is closed.** The user re-checked
   their full list on 2026-07-30 and reported **no remaining placement errors**.
   Everything they had flagged is resolved: **31, 32 and 97** via
