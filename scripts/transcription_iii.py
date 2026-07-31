@@ -90,6 +90,20 @@ b. 50's CLAN SPELLING: "Chapparral Cock", with a doubled p, where her own four
 c. 255's CLAN SPELLING: "Bager" for "Badger". Verified at 20x.
 d. 258 / 259 printed twice each; 256 / 257 unused. See above.
 
+WHAT A TRIAL REGISTRATION SHOWED (2026-07-31, reverted afterwards)
+------------------------------------------------------------------
+Registered in TABLES as roots [1, 230] with root_columns {230: 2}, this plate
+builds and draws all 261 people, and column drift measures 0 px within each
+block at a 425.59 px step. It did NOT on the first attempt: fifteen people --
+40, 64, 67, 87, 116-118, 146-151, 212-213 -- reached the page from nothing,
+which is what the four drawn_under values on W23, W34, W36 and W45 fix. Those
+four are PLATE READINGS, taken from the scan at the generation-4 and -5
+columns, and they have not been checked by a second reader.
+
+subset_font.py reports this plate needs exactly two characters the subset does
+not already carry: `ó` and `ô`. Run it BEFORE the build that registers the
+plate, never after -- see CLAUDE.md.
+
 TWO BRACKET READINGS THAT NEED A SECOND EYE
 -------------------------------------------
 Both are recorded in plate_note on the people concerned.
@@ -493,7 +507,9 @@ UNIONS = [
     ("W20",  35,  34, 1, 1, ""),
     ("W21",  37,  36, 1, 1, ""),
     ("W22",  38,  39, 1, 1, ""),
-    ("W23",  40,  39, 1, 2, "second wife of 39"),
+    ("W23",  40,  39, 1, 2, "second wife of 39. The plate prints '+ 40.' inside 38's "
+     "block, below 38's own bracket; neither partner is a block primary anywhere, so "
+     "without drawn_under 40 and her children 116, 118 are never drawn", 38),
     ("W24",  41,  42, 1, 1, ""),
     ("W25",  43,  44, 1, 1, ""),
     ("W26",  43,  45, 2, 1, "second husband of 43"),
@@ -504,9 +520,12 @@ UNIONS = [
     ("W31",  58,  59, 1, 1, ""),
     ("W32",  60,  61, 1, 1, ""),
     ("W33",  62,  63, 1, 1, "no issue recorded"),
-    ("W34",  64,  63, 1, 2, "second wife of 63"),
+    ("W34",  64,  63, 1, 2, "second wife of 63. The plate prints 62, '+ 63.', '+ 64.' "
+     "as three consecutive lines, so this marriage is drawn inside 62's block", 62),
     ("W35",  66,  65, 1, 1, "no issue recorded"),
-    ("W36",  66,  67, 2, 1, "second husband of 66; no issue recorded"),
+    ("W36",  66,  67, 2, 1, "second husband of 66; no issue recorded. The plate prints "
+     "65, '+ 66.', '+ 67.' as three consecutive lines, so this marriage is drawn "
+     "inside 65's block", 65),
     ("W37",  68,  69, 1, 1, ""),
     ("W38",  71,  70, 1, 1, ""),
     ("W39",  72,  73, 1, 1, ""),
@@ -515,7 +534,9 @@ UNIONS = [
     ("W42",  81,  80, 1, 1, "no issue recorded"),
     ("W43",  84,  83, 1, 1, ""),
     ("W44",  86,  85, 1, 1, ""),
-    ("W45",  86,  87, 2, 1, "second husband of 86; no issue recorded"),
+    ("W45",  86,  87, 2, 1, "second husband of 86; no issue recorded. The plate prints "
+     "85, '+ 86.', '+ 87.' as three consecutive lines, so this marriage is drawn "
+     "inside 85's block", 85),
     ("W46",  89,  90, 1, 1, ""),
     ("W47",  92,  91, 1, 1, "printed twice on the plate"),
     ("W48",  95,  94, 1, 1, "no issue recorded"),
