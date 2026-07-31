@@ -173,23 +173,73 @@ U+02BC; do not introduce a new codepoint on this evidence alone, and do not
 "tidy" it away either. Resolving it needs a 20x look at the five against a
 known U+02BC on the same line of type.
 
-CROSS-REFERENCES STILL TO CHECK
--------------------------------
-This is the remaining gate, and it is independent of the orthography above.
-Cross-check the people this plate references into Genealogies I and II against
-scripts/transcription.py and scripts/transcription_ii.py -- and where the two
-plates disagree, RECORD WHAT THIS PLATE PRINTS.
+CROSS-REFERENCES -- AUDITED 2026-07-31
+--------------------------------------
+All 51 person-level references plus the two prose references under 155 were
+matched against transcription.py and transcription_ii.py by NAME, SEX and
+CLAN, in the way transcription_ii.py's CROSS_REF_OFFSET block was built.
+NOTHING BELOW IS CORRECTED IN THE DATA. cross_ref carries what the plate
+prints; the finding lives in the plate_note beside it.
 
-transcription_ii.py records that Parsons's "See Gen. I, n" references run exact
-through Genealogy I's person 53 and ONE HIGH from its person 66 onward. This
-plate cites Gen. I at 8, 9, 20, 21, 31, 33, 34, 35, 37, 45, 47, 48, 78, 79, 90,
-97, 98, 99, 100, 101, 103, 104 -- and at 149, which cannot resolve, Genealogy I
-having 104 people. Person 173 is Yăaiʼdyidʼyuwi, whom Genealogy II's 204 cites
-as Gen. I 49.
+THE HEADLINE IS A NEGATIVE RESULT, AND IT MATTERS.
+transcription_ii.py records that Genealogy II's references into Genealogy I
+run exact through person 53 and ONE HIGH from person 66 onward. THIS PLATE
+DOES NOT SHARE THAT DISPLACEMENT. Its references into Genealogy I are exact
+right across the displaced range -- 78, 79, 97, 98, 99, 100, 101, 103, 104 all
+name the person Genealogy I finally printed under that number, matched by name
+where there is one and by sex and clan where the name is a dash. So Genealogy
+III was numbered against the FINAL Genealogy I and Genealogy II was not. Do not
+carry Genealogy II's offset over to this plate.
 
-  173's "See Gen. I, 149" was RE-ZOOMED at 5x and is real -- it is what the
-  plate prints, not a misreading of 49. It still does not resolve. The rest of
-  the set has NOT been checked; do that before publishing.
+FOUR EXCEPTIONS, and no two are the same kind of error:
+
+a. 170-174: the Gen. II half of five consecutive references is TEN LOW. The
+   plate prints Gen. II 191, 192, 193, 194, 195; the people it names are
+   Genealogy II's 201-205 (Dziwaiʼi˙siro, Kuyăiʼd˙yid˙uweʼ, Edna,
+   Yăaiʼdyid˙yuwi, Owi˙ʼd˙zĭraiʼ -- all Sun, in that order, an exact
+   five-for-five match). The Gen. I half of the same lines is exact. RE-READ ON
+   THE SCAN at x 2330, y 3890: the plate really does print 191-195. Note what
+   makes this findable at all -- Gen. II 191-195 are a group of Oak people whom
+   this plate ALSO cites correctly, from its own 194, 195 and 198.
+
+b. 218: "See Gen. I, 101" is ONE LOW. 101 is the father, "--- of Zuñi", already
+   cited from 257. The person is Genealogy I's 102. Her sisters 219 and 261
+   cite 103 and 104 exactly, so this is an isolated slip, not a run.
+
+c. 173: "See Gen. I, 149" cannot resolve -- Genealogy I has 104 people -- and
+   was re-read at 5x, so 149 is what the plate prints. The person is Genealogy
+   I's 49, which is how Genealogy II's own 204 cites her.
+
+d. The prose note under 155, "For third husband and descendant, see Gen. I,
+   8, 90": the husband is exact, the descendant is ONE HIGH. Genealogy I's
+   73+8 have one child, 89. This is the ONLY place on this plate where Genealogy
+   II's +1 displacement appears, and it is a third-plate attestation of it.
+
+VERIFIED CLEAN: the other prose note under 155, "For first husband and
+descendants, see Gen. II, 126, 158, 160" -- all three resolve, 160 being 155
+herself.
+
+WHERE THE PLATES SPELL A NAME DIFFERENTLY, THIS FILE KEEPS THIS PLATE'S
+SPELLING, as the rule requires. Seven references land on the right person under
+a spelling the other plate does not share -- and one of the seven is this
+repo's doing, not Parsons's:
+
+   75  Kʼuʼna˙shᵘ        Gen. II 170  Kʼuʼn˙ash˘
+  101  Dziŏ˙kwid˙yuʼă    Gen. II 124  Dzĭo˙kwid˙yuʼă
+  102  Gowak˙ʼad˙yăi     Gen. II 125  Gowaʼk˙ʼd˙yăiʼ
+  162  Minni             Gen. II  27  Mini
+  171  Kuyăiʼd˙yid˙uwĕʼ  Gen. I   48  Kuyăiʼd˙yid˙yuweʼ
+  223  Ha˙tsʼe           Gen. II  84  Ha˙tsʼᵉ
+  191  Ramona            Gen. II 187  "Ramona of Sant Ana"  <- NOT a plate
+        divergence: both plates print the same thing, and this file stores
+        "of Sant Ana" in the origin field where transcription_ii.py keeps it
+        in the name. Do not "reconcile" the two by editing either name.
+
+Every other divergent-looking pair folds to the same key and is not a
+divergence at all -- 152, 153, 192, 194, 255 among them.
+
+STILL OPEN: whether (a)-(d) get a footnote on the published page, as Genealogy
+II's displacement did. That is the user's call, not this file's.
 """
 
 ORTHOGRAPHY_VERIFIED = True
@@ -372,11 +422,20 @@ _P += [
     (167, 5, "M", "Dziwaiʼid˙yirăiʼ",      "", "",   "Water",          "",        "", "", "printed twice, with no descendants line either time"),
     (168, 5, "F", "Dziu˙ʼtyᶦty˙ᶦ",         "", "",   "Lizard",         "",        "", "", ""),
     (169, 5, "F", "E˙d˙ă",                 "", "",   "Lizard",         "",        "", "", ""),
-    (170, 5, "M", "Dziwaiʼisiro",          "", "",   "Sun",            "",        "", "See Gen. I, 45; Gen. II, 191", ""),
-    (171, 5, "F", "Kuyăiʼd˙yid˙uwĕʼ",      "", "",   "Sun",            "",        "", "See Gen. I, 48; Gen. II, 192", ""),
-    (172, 5, "F", "Edna",                  "", "",   "Sun",            "",        "", "See Gen. II, 193", ""),
-    (173, 5, "F", "Yăaiʼdyid˙yuwi",        "", "",   "Sun",            "",        "", "See Gen. I, 149; Gen. II, 194", "the Gen. I reference cannot resolve: Genealogy I has 104 people. Re-read at 6x"),
-    (174, 5, "M", "Owi˙ʼd˙zĭraiʼ",         "", "",   "Sun",            "",        "", "See Gen. I, 47; Gen. II, 195", ""),
+    # 170-174: the Gen. II half of these five references is TEN LOW. Audited
+    # 2026-07-31 and re-read on the scan at x 2330, y 3890 -- the plate really
+    # does print 191-195, and the people it names are Genealogy II's 201-205.
+    # See "CROSS-REFERENCES" in the docstring. Recorded as printed.
+    (170, 5, "M", "Dziwaiʼisiro",          "", "",   "Sun",            "",        "", "See Gen. I, 45; Gen. II, 191",
+     "the Gen. I reference is exact; the Gen. II reference names Gen. II's 201, Dziwaiʼi˙siro, M, Sun -- ten higher than the 191 printed"),
+    (171, 5, "F", "Kuyăiʼd˙yid˙uwĕʼ",      "", "",   "Sun",            "",        "", "See Gen. I, 48; Gen. II, 192",
+     "the Gen. I reference is exact; the Gen. II reference names Gen. II's 202, Kuyăiʼd˙yid˙uweʼ, F, Sun -- ten higher than the 192 printed"),
+    (172, 5, "F", "Edna",                  "", "",   "Sun",            "",        "", "See Gen. II, 193",
+     "the reference names Gen. II's 203, Edna, F, Sun -- ten higher than the 193 printed"),
+    (173, 5, "F", "Yăaiʼdyid˙yuwi",        "", "",   "Sun",            "",        "", "See Gen. I, 149; Gen. II, 194",
+     "BOTH references are wrong, in different ways. 'Gen. I, 149' cannot resolve -- Genealogy I has 104 people -- and was re-read at 5x, so 149 is what the plate prints; the person named is Genealogy I's 49, Yăaiʼdyid˙yuwi, F, Sun, age 7, which is how Genealogy II's own 204 cites her. The Gen. II reference names Gen. II's 204 -- ten higher than the 194 printed"),
+    (174, 5, "M", "Owi˙ʼd˙zĭraiʼ",         "", "",   "Sun",            "",        "", "See Gen. I, 47; Gen. II, 195",
+     "the Gen. I reference is exact; the Gen. II reference names Gen. II's 205, Owi˙ʼd˙zĭraiʼ, M, Sun -- ten higher than the 195 printed"),
     (175, 5, "F", "",                      "", "",   "Sun",            "",        "", "", "name printed as a dash"),
     (176, 5, "",  "",                      "", "",   "Sun",            "",        "", "", "name printed as a dash; no sex printed"),
     (177, 5, "",  "",                      "", "",   "Sun",            "",        "", "", "name printed as a dash; no sex printed"),
@@ -417,7 +476,8 @@ _P += [
 _P += [(i, 6, "", "", "", "", "Lizard", "", "", "", "name printed as a dash; no sex printed")
        for i in range(214, 218)]
 _P += [
-    (218, 6, "F", "",                      "", "",   "Badger",         "", "", "See Gen. I, 101", "name printed as a dash"),
+    (218, 6, "F", "",                      "", "",   "Badger",         "", "", "See Gen. I, 101",
+     "name printed as a dash. The reference is ONE LOW: Genealogy I's 101 is the father, '--- of Zuñi', M, no clan, and this plate already cites him at 257. The person here is Genealogy I's 102, F, Badger, age 5 -- her sisters 219 and 261 cite 103 and 104 exactly. Recorded as printed"),
     (219, 6, "F", "",                      "", "",   "Badger",         "", "", "See Gen. I, 103", "name printed as a dash"),
     (220, 6, "F", "Dzitdziro",             "", "",   "Chaparral Cock", "", "", "", ""),
     (221, 6, "M", "Dzawaiʼd˙yăiʼ",         "", "",   "Sun",            "", "", "", ""),
@@ -641,9 +701,18 @@ PLATE_NOTES = [
     ("block 2, col. 3", "For her descendants, see above",
      "printed opposite the second appearance of 7"),
     ("block 1, col. 5", "For first husband and descendants, see Gen. II, 126, 158, 160",
-     "printed under 155, set over two lines"),
+     "printed under 155, set over two lines. AUDITED 2026-07-31 and exact: "
+     "Genealogy II's 160 is 155 herself (Yo˙ʼs˙iro, F, Chaparral Cock, d. 1914), "
+     "her union U38 there is with 158 (Niʼʼy˙ŭyăiʼ, M, Parrot) and its child is "
+     "126 (Yo˙ʼkwi, M, Chaparral Cock). All three numbers resolve"),
     ("block 1, col. 5", "For third husband and descendant, see Gen. I, 8, 90",
-     "printed under 155, set over two lines"),
+     "printed under 155, set over two lines. AUDITED 2026-07-31: the husband is "
+     "exact -- Genealogy I's 8 is Yu˙si, M, Water -- but the DESCENDANT IS ONE "
+     "HIGH. Genealogy I's union U22 is 73 (Yo˙ʼs˙iro, i.e. 155) + 8, and its only "
+     "child is 89, a girl the plate leaves unnamed and unclanned. Genealogy I's "
+     "90 is Heʼsa (Hazel), F, Badger, a child of 76+67 and no relation. This is "
+     "the SAME +1 displacement transcription_ii.py records as CROSS_REF_OFFSET, "
+     "and it is the only place on this plate where it appears. Recorded as printed"),
 ]
 
 CLANS = ["Corn", "Oak", "Parrot", "Lizard", "Water", "Sun", "Bear", "Badger",
