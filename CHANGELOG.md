@@ -3,7 +3,52 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-07-31 (latest, second session) — Genealogy III's two editorial items, both closed
+## 2026-07-31 (latest) — the custom domain is closed: the edition stays on github.io
+
+**A decision by the user, not another deferral.** It had been carried as
+"deferred, not closed" since 2026-07-28 and had already gone missing from a
+`resume` list once, which is the failure mode that keeps a settled question
+alive. It is now closed and the durable docs say so.
+
+**The edition stays on `pueblogenealogy.github.io` permanently.** `SITE` in
+`make_chart.py` never changes, no `CNAME` file is ever added, and the Search
+Console and Bing properties stay as verified.
+
+**The reasoning is recorded in `CLAUDE.md` in full, and it should not be
+re-derived** — the obvious argument reaches the wrong answer. Two steps:
+
+1. **It was never an SEO question.** Google treats `github.io` as a public
+   suffix, so no authority is inherited from it and none is lost by leaving.
+   The original framing of a custom domain as "the strongest SEO upgrade" was
+   wrong, and had already been corrected before this session.
+2. **The real trade is durability against portability.** A domain you own is
+   portable — it can change hosts without breaking a doi-adjacent link — but it
+   survives only while someone keeps renewing it, and a lapsed domain does not
+   degrade gracefully: it is re-registered, and every citation seeded from
+   Zenodo, Wikidata and AMNH then resolves to whoever bought it. `github.io`
+   needs no renewal and cannot be taken. For an edition meant to outlive its
+   editor's attention, **GitHub's institutional durability beats the editor's
+   own.**
+
+**The consequence that matters for the next session: the gate on seeding
+inbound links is lifted.** "Decide the custom domain before placing any inbound
+link" sat in front of Wikidata, the Wikipedia Talk-page proposal and AMNH.
+Nothing blocks them now.
+
+One correction offered to the user and worth keeping, since it bears on how
+urgent this ever was: GitHub redirects a Pages site's `github.io` address to a
+custom domain once one is set, so links seeded before a switch would have
+followed rather than broken. `CLAUDE.md` had stated the "decide first" gate
+more strongly than that behaviour warrants. **Flagged as documented behaviour,
+not tested here** — it is moot now, and if it ever matters again, confirm it
+against GitHub's docs rather than against this entry.
+
+`CLAUDE.md`'s `resume` rules also now distinguish a **deferred** item, which
+stays in the pickup table and is marked, from a **closed** one, which leaves
+the table for *Closed — do not re-raise* and must not be listed. Re-listing a
+closed item invites a settled decision to be re-taken.
+
+## 2026-07-31 (second session) — Genealogy III's two editorial items, both closed
 
 **Published**, same session, via PR
 [#26](https://github.com/PuebloGenealogy/pueblogenealogy.github.io/pull/26)

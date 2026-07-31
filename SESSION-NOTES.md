@@ -62,9 +62,10 @@ each other, and every one of them needing the user rather than a build.
 The most likely next action is the **Wikidata item**: it is the highest
 effort-to-return inbound link, the payload already exists at
 `wikidata-quickstatements.txt` with 18 ids verified, and the only work is
-**updating it from three tables to four**. Note the standing caveat above it —
-**decide the custom domain before seeding any inbound link**, because every
-link placed from now on points permanently at whatever host is chosen.
+**updating it from three tables to four**. **Nothing gates it any more** — the
+custom-domain question that used to sit in front of every inbound link was
+closed on 2026-07-31 in favour of staying on `github.io`, so the host every
+seeded link will point at is settled and permanent.
 
 ## Other things that could be picked up
 
@@ -76,7 +77,6 @@ link placed from now on points permanently at whatever host is chosen.
 | **A wrapped cross-reference still miscounts its row** | Unknown; needs a design call | `row += 1` assumes one visual line. Nothing wraps today. Unguardable at build time — no font metrics. The fix is to split at the plate's own line break with `\|`, as 160, 169 and III's 155 do |
 | **Register's relation lists lack the point** | ~1 line | They read `56 Weʼdyumă` where entry titles read `56.`. One line in `rel_link`, but it changes the apparatus |
 | **Cross-plate references are never links** | Deliberate, not a gap | No reference from one plate into another is a link, on any plate. **Genealogy III's new `#note-crossref` now states this in so many words**, as Genealogy II's note on 160 and 163 already did. Making them links would be a new feature across all four plates |
-| **Custom domain** | **Deferred, not closed** | Decided against for now. Decide before seeding inbound links. See `CLAUDE.md` |
 | **Cut the release** | **Not yet — see the policy** | Two of the four clauses now met: all four plates published, **and the editorial items on III are closed**. Still outstanding: `.zenodo.json` describes three plates, and the AMNH handle is absent from `related_identifiers`. **Publishing the site is not releasing it** |
 
 ## Decisions already made — don't re-litigate
@@ -149,6 +149,14 @@ expensive and this is the file a session reads first:
 
 ## Closed — do not re-raise
 
+- **The custom domain. Closed by the user 2026-07-31: the edition stays on
+  `pueblogenealogy.github.io` permanently.** Not deferred this time — decided.
+  A domain is portable but survives only while someone renews it, and a lapsed
+  one is re-registered rather than merely lost, which would point every seeded
+  citation at a squatter. `github.io` cannot lapse. Full reasoning in
+  `CLAUDE.md`; **don't re-derive it**, the obvious argument reaches the wrong
+  answer. **The gate on seeding inbound links is lifted** — Wikidata and AMNH
+  no longer wait on anything.
 - **Genealogy III, entirely — now including both editorial items.** Read, drawn,
   audited, verified, live, footnoted, **and the footnote is deployed**. Nothing
   on this plate is open.

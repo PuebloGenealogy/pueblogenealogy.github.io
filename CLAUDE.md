@@ -75,8 +75,12 @@ context.** It is there before you act.
 
    **Every item in that table appears, every time.** The list is something the
    user returns to until the items are done, so an omission reads as "finished"
-   when it is not. An item that is deferred or decided against is **marked**,
-   never dropped — *Custom domain* went missing this way on 2026-07-30.
+   when it is not. An item that is **deferred** is **marked**, never dropped —
+   *Custom domain* went missing this way on 2026-07-30 while it was still open.
+   An item the user has **closed** is a different case: it leaves the table
+   altogether and moves to the handoff's *Closed — do not re-raise*, and it must
+   **not** be listed. *Custom domain* was closed on 2026-07-31 and is now such an
+   item; re-listing it as pending would invite a settled decision to be re-taken.
 3. **Before you start** — **at most three bullets**, and only for the **first**
    item. Choose them by **consequence, not by order in the file**: the ones
    whose failure is expensive and irreversible outrank procedural ones. For
@@ -684,18 +688,29 @@ Consequences a session must not "fix":
   `related_identifiers`; add it when that file is brought to four tables for the
   release, not as a standalone edit. Note `digitallibrary.amnh.org` **403s
   automated fetches** — use a real browser, not `WebFetch`.
-- **Custom domain** — **currently decided against**; listed here because it is
-  not closed, only deferred. The reasoning is the paragraph below, which used to
-  point at `SESSION-NOTES.md` and no longer does: that file is overwritten every
-  session and had already lost it.
-  **Decide it before seeding any inbound links.** Every
-  link and citation placed from now on points permanently at whatever host is
-  chosen, and most will never be updated. Note the old framing of this as "the
-  strongest SEO upgrade" overstated it: Google treats `github.io` as a public
-  suffix, so no authority is inherited from it and none is lost by leaving. The
-  real argument is citation permanence and portability — a domain you own can
-  change hosts without breaking a doi-adjacent link — which is an argument for
-  doing it first or not at all. Drops onto this repo via a `CNAME` file.
+- **Custom domain — CLOSED 2026-07-31 by the user. The edition stays on
+  `pueblogenealogy.github.io` permanently.** This is a decision, not another
+  deferral, and it is **not to be re-opened** — it had been carried as "deferred,
+  not closed" through several sessions and went missing from a `resume` list
+  once. The reasoning is kept here in full, because the argument that settles it
+  is not the obvious one and a future session that re-derives it from scratch
+  will probably reach the wrong answer.
+  **It is not an SEO question.** Google treats `github.io` as a public suffix,
+  so no authority is inherited from it and none is lost by leaving. The old
+  framing of a custom domain as "the strongest SEO upgrade" was simply wrong.
+  **The real trade is durability against portability, and durability won.** A
+  domain you own is portable — it can change hosts without breaking a
+  doi-adjacent link — but it survives only as long as someone keeps paying for
+  it. A lapsed domain does not degrade gracefully: it gets re-registered, and
+  every citation seeded from Zenodo, Wikidata and AMNH then points at whoever
+  bought it. `pueblogenealogy.github.io` needs no renewal, cannot lapse, and
+  cannot be taken by a squatter. For a scholarly edition meant to outlive the
+  attention of its editor, **GitHub's institutional durability beats the
+  editor's own**, and that is the whole of the argument.
+  Consequences: `SITE` in `make_chart.py` never changes; no `CNAME` file is ever
+  added to this repo; the Search Console and Bing properties stay as verified;
+  and **inbound links may now be seeded freely** — the "decide before seeding
+  any inbound link" gate that used to sit on Wikidata and AMNH is **lifted**.
 - **No release is outstanding, and that is still deliberate.** v1.1.0 was
   prepared and then **cancelled** by the release policy above: no GitHub
   Releases and no Zenodo deposits during active development. **All four plates
