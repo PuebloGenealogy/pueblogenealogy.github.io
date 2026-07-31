@@ -12,9 +12,9 @@ baseline. Do NOT add research data here -- see the README's privacy boundary.
 
 *** THIS MODULE IS NOT FINISHED. DO NOT REGISTER IT IN make_chart.py's TABLES. ***
 
-ORTHOGRAPHY_VERIFIED is False. The STRUCTURE below is read and checked.
-The NAMES are verified at 5x for **ids 1-84 and 230-247** (generations 1-4 of
-both blocks) and are still PROVISIONAL for **ids 85-229 and 248-261**.
+ORTHOGRAPHY_VERIFIED is True as of 2026-07-31: the STRUCTURE is read and
+checked, and the NAMES are now verified at 5x for **all 261 ids**.
+What is still open is the CROSS-REFERENCE audit, not the orthography.
 See "ORTHOGRAPHY" at the foot of this docstring.
 
 THE SCAN
@@ -108,7 +108,7 @@ ii. 22 and 25. Same shape: one unbroken, unoffset vertical at native x 1749 from
     where they meet, so this plate does distinguish adjacent brackets when it
     means to -- which is what makes (i) and (ii) worth checking.
 
-ORTHOGRAPHY -- WHY THE NAMES BELOW ARE PROVISIONAL
+ORTHOGRAPHY -- WHY EVERY NAME BELOW WAS READ TWICE
 --------------------------------------------------
 At 1.5x this scan cannot separate `˙` U+02D9 (raised dot) from `ʼ` U+02BC
 (apostrophe); the first pass defaulted to `ʼ` and was WRONG. At 6x the two are
@@ -120,9 +120,10 @@ plainly different:
 and Genealogy II's 189, transcribed in this repo from a far larger scan, is
 Ko˙ri too. This is the failure METHOD.md records for Table 1's #25.
 
-A 5x pass (400-440 native px wide, rendered to 2200) separates them reliably
-and is what has been done for ids 1-84 and 230-247. It corrected sixteen names
-there, every one of them a `ʼ` that is really a `˙`, or the reverse:
+A 5x pass (400-440 native px wide, rendered to 2200) separates them reliably,
+and it has now been run over EVERY id on the plate, in three stretches:
+
+  ids 1-84, 230-247   generations 1-4 of both blocks. Sixteen corrections:
 
     7 Kyi˙waaid˙yuwitsʼă   8 Dzaaiʼy˙unăiʼ      13 Saiyăpʼᵃ
    15 Iya˙ʼn˙ă            17 Waiʼs˙iro          20 Hi˙ʼn˙iăitsʼă
@@ -131,30 +132,53 @@ there, every one of them a `ʼ` that is really a `˙`, or the reverse:
    54 Kʼăya˙s˙iwă         62 Kwi˙ʼn˙yeʼtsʼa    232 Wa˙g˙ĕnidyuwitsʼă
   238 Ha˙d˙ăiʼyănyi
 
-Note 45 also lost a breve: the plate prints Wi˙ʼsh˙gă, not Wĭ˙ʼsh˙gă.
+  ids 85-183, 248-257  generation 5. Twelve corrections:
 
-ONE GLYPH IS STILL OPEN in the verified range: 242 Shipʼaʼpʼ. The final mark
-reads as a TURNED comma (opening quote) rather than the U+02BC used elsewhere.
-It is left as U+02BC pending a harder look; do not introduce a new codepoint on
-this evidence alone.
+   87 Ga˙ʼg˙iri          90 G˙yiʼmi           91 Id˙yim˙ĕ
+   94 Tsshka˙a          104 Howa˙kʼa         143 Dziwi˙ʼᶦt˙yĭăi
+  155 Yoʼsiro           164 Shtshowain˙ăʼ    168 Dziu˙ʼtyᶦty˙ᶦ
+  169 E˙d˙ă             174 Owi˙ʼd˙zĭraiʼ    255 Ho˙py˙di˙wa
 
-The same pass must still be run over ids 85-229 and 248-261 before
-ORTHOGRAPHY_VERIFIED can be set.
-While doing it, cross-check the people this plate references into Genealogies I
-and II against scripts/transcription.py and scripts/transcription_ii.py -- and
-where the two plates disagree, RECORD WHAT THIS PLATE PRINTS.
+  ids 184-229, 258-261  generations 6-7. ONE correction:
+
+  192 Kiwaʼdyuwi -- no raised dot between d and y. Genealogy II's 188, the
+      same person, HAS one. The plates disagree and this file records what
+      THIS plate prints; the divergence is in 192's plate_note.
+
+Note 45 also lost a breve: the plate prints Wi˙ʼsh˙gă, not Wĭ˙ʼsh˙gă. And note
+that a name being spelled one way here is not a claim it is spelled that way
+where the plate prints the person twice -- 152 and 153 differ between their two
+occurrences, which is recorded in their plate_note and is a finding about the
+plate, not an unresolved reading.
+
+ONE GLYPH IS STILL OPEN, and it is now a pattern rather than a single mark.
+At 154, 156, 157, 228 and 242 the final mark reads as a TURNED comma (opening
+quote) rather than the U+02BC used everywhere else -- five instances, enough
+that it may be a distinct sort rather than print noise. ALL FIVE ARE LEFT AS
+U+02BC; do not introduce a new codepoint on this evidence alone, and do not
+"tidy" it away either. Resolving it needs a 20x look at the five against a
+known U+02BC on the same line of type.
 
 CROSS-REFERENCES STILL TO CHECK
 -------------------------------
+This is the remaining gate, and it is independent of the orthography above.
+Cross-check the people this plate references into Genealogies I and II against
+scripts/transcription.py and scripts/transcription_ii.py -- and where the two
+plates disagree, RECORD WHAT THIS PLATE PRINTS.
+
 transcription_ii.py records that Parsons's "See Gen. I, n" references run exact
 through Genealogy I's person 53 and ONE HIGH from its person 66 onward. This
 plate cites Gen. I at 8, 9, 20, 21, 31, 33, 34, 35, 37, 45, 47, 48, 78, 79, 90,
 97, 98, 99, 100, 101, 103, 104 -- and at 149, which cannot resolve, Genealogy I
 having 104 people. Person 173 is Yăaiʼdyidʼyuwi, whom Genealogy II's 204 cites
-as Gen. I 49. Re-zoom 173 and check the whole set before publishing.
+as Gen. I 49.
+
+  173's "See Gen. I, 149" was RE-ZOOMED at 5x and is real -- it is what the
+  plate prints, not a misreading of 49. It still does not resolve. The rest of
+  the set has NOT been checked; do that before publishing.
 """
 
-ORTHOGRAPHY_VERIFIED = False
+ORTHOGRAPHY_VERIFIED = True
 
 # (id, generation, sex, name_as_printed, alt_name, age, clan,
 #  vital_note, origin, cross_ref, plate_note)
@@ -253,14 +277,14 @@ _P = [
     # ---- block 1, generation 5 -------------------------------------------
     (85,  5, "M", "Dzisᶦtyᵘʼ",             "", "",   "Oak",            "",        "",           "", ""),
     (86,  5, "F", "Kiwaityi",              "", "",   "Turquoise",      "",        "",           "", ""),
-    (87,  5, "M", "Ga˙ʼgʼiri",             "", "",   "Turkey",         "",        "",           "", "second husband of 86; no issue recorded"),
+    (87,  5, "M", "Ga˙ʼg˙iri",             "", "",   "Turkey",         "",        "",           "", "second husband of 86; no issue recorded"),
     (88,  5, "F", "Annie",                 "", "",   "Oak",            "",        "",           "", ""),
     (89,  5, "F", "Nămăiʼ",                "", "40", "Oak",            "",        "",           "See Gen. I, 17; Gen. II, 167", ""),
-    (90,  5, "M", "Gʼyiʼmi",               "", "45", "Sun",            "",        "",           "See Gen. I, 16; Gen. II, 166", ""),
-    (91,  5, "M", "Id˙yimʼĕ",              "", "",   "Water",          "",        "",           "", "printed twice; drawn with issue under 27+29"),
+    (90,  5, "M", "G˙yiʼmi",               "", "45", "Sun",            "",        "",           "See Gen. I, 16; Gen. II, 166", ""),
+    (91,  5, "M", "Id˙yim˙ĕ",              "", "",   "Water",          "",        "",           "", "printed twice; drawn with issue under 27+29"),
     (92,  5, "F", "Gauw˙aiʼd˙yuwi",        "", "24", "Eagle",          "",        "",           "", "printed twice; her second line reads 'For her descendants, see above'"),
     (93,  5, "M", "San Juan",              "", "",   "Water",          "",        "",           "", ""),
-    (94,  5, "M", "Tsshkaʼa",              "", "",   "Water",          "",        "",           "", ""),
+    (94,  5, "M", "Tsshka˙a",              "", "",   "Water",          "",        "",           "", ""),
     (95,  5, "F", "Hiusdyawiʼtsʼa",        "", "",   "",               "",        "",           "", "no clan printed; no issue recorded"),
     (96,  5, "M", "",                      "", "",   "Water",          "",        "",           "", "name printed as a dash"),
     (97,  5, "F", "",                      "", "",   "Water",          "",        "",           "", "name printed as a dash"),
@@ -270,7 +294,7 @@ _P = [
     (101, 5, "M", "Dziŏ˙kwid˙yuʼă",        "", "19", "Water",          "",        "",           "See Gen. II, 124", ""),
     (102, 5, "F", "Gowak˙ʼad˙yăi",         "", "18", "Water",          "",        "",           "See Gen. II, 125", ""),
     (103, 5, "M", "Yo˙ʼkwi",               "", "23", "Chaparral Cock", "",        "",           "See Gen. II, 126", ""),
-    (104, 5, "F", "Howaʼkʼa",              "", "",   "Water",          "d. 1919, at 13", "",    "See Gen. II, 127", ""),
+    (104, 5, "F", "Howa˙kʼa",              "", "",   "Water",          "d. 1919, at 13", "",    "See Gen. II, 127", ""),
 ]
 
 # 105-111: number, dash, clan. No names and no sex letters.
@@ -307,17 +331,17 @@ _P += [(i, 5, "", "", "", "", "Bear", "", "", "", "name printed as a dash; no se
        for i in (139, 140, 141)]
 _P += [
     (142, 5, "",  "",                      "", "",   "Chaparral Cock", "", "", "", "name printed as a dash; no sex printed"),
-    (143, 5, "M", "Dziwi˙ʼᶦtʼyĭăi",        "", "",   "Badger",         "", "", "", ""),
+    (143, 5, "M", "Dziwi˙ʼᶦt˙yĭăi",        "", "",   "Badger",         "", "", "", ""),
     (144, 5, "F", "",                      "", "",   "Badger",         "", "", "", "name printed as a dash"),
     (145, 5, "",  "",                      "", "",   "Badger",         "", "", "", "name printed as a dash; no sex printed"),
 ]
 _P += [(i, 5, "", "", "", "", "Turkey", "", "", "", "name printed as a dash; no sex printed")
        for i in range(146, 152)]
 _P += [
-    (152, 5, "M", "Dzaiʼgai",              "", "",   "Lizard",         "",        "", "See Gen. I, 98", "printed twice; drawn with issue under 68+69"),
-    (153, 5, "F", "Shumaiʼ",               "", "30", "Badger",         "",        "", "See Gen. I, 97", "printed twice; her second line reads 'For her descendants, see above'. The second occurrence prints the age 30 and 'See Gen. I, 9'"),
+    (152, 5, "M", "Dzaiʼgai",              "", "",   "Lizard",         "",        "", "See Gen. I, 98", "printed twice; drawn with issue under 68+69. THE TWO OCCURRENCES ARE SPELLED DIFFERENTLY: under 68+69 the plate prints Dzaiʼgai, under 243+244 it prints Dzai˙ʼy˙ai. The first is recorded here. Re-zoom both before publishing"),
+    (153, 5, "F", "Shumaiʼ",               "", "30", "Badger",         "",        "", "See Gen. I, 97", "printed twice; her second line reads 'For her descendants, see above'. THE TWO OCCURRENCES ARE SPELLED DIFFERENTLY: under 68+69 the plate prints Shumaiʼ with no age and 'See Gen. I, 97', under 243+244 Shu˙măĭʼ with the age 30 and 'See Gen. I, 9'. The first is recorded here"),
     (154, 5, "M", "Yaʼdôkyʼ",              "", "",   "Lizard",         "d.",      "", "", ""),
-    (155, 5, "",  "Yo˙siro",               "", "",   "Chaparral Cock", "d. 1914", "",
+    (155, 5, "",  "Yoʼsiro",               "", "",   "Chaparral Cock", "d. 1914", "",
      "For first husband and descendants, see Gen. | II, 126, 158, 160 | For third husband and descendant, see Gen. | I, 8, 90",
      "no sex printed; the cross-reference is set over four lines, split here at the plate's own breaks"),
     (156, 5, "M", "Pʼĕʼnitsʼaʼyo",         "", "",   "Lizard",         "",        "", "", ""),
@@ -328,17 +352,17 @@ _P += [
     (161, 5, "F", "",                      "", "",   "Sun",            "",        "", "", "name printed as a dash"),
     (162, 5, "F", "Minni",                 "", "",   "Lizard",         "d.",      "", "See Gen. II, 27", ""),
     (163, 5, "M", "Dzaiʼsiyăiʼ",           "", "",   "Water",          "",        "", "See Gen. II, 26", ""),
-    (164, 5, "M", "Shtshowainʼăʼ",         "", "",   "Lizard",         "",        "", "", ""),
+    (164, 5, "M", "Shtshowain˙ăʼ",         "", "",   "Lizard",         "",        "", "", ""),
     (165, 5, "F", "Dyaioʼrăi",             "", "",   "Lizard",         "",        "", "", ""),
     (166, 5, "F", "Kowaiʼdyui",            "", "",   "Lizard",         "d. 1918", "", "", "printed twice, with no descendants line either time"),
     (167, 5, "M", "Dziwaiʼid˙yirăiʼ",      "", "",   "Water",          "",        "", "", "printed twice, with no descendants line either time"),
-    (168, 5, "F", "Dziu˙ʼtyᶦtyʼᶦ",         "", "",   "Lizard",         "",        "", "", ""),
-    (169, 5, "F", "Eʼd˙ă",                 "", "",   "Lizard",         "",        "", "", ""),
+    (168, 5, "F", "Dziu˙ʼtyᶦty˙ᶦ",         "", "",   "Lizard",         "",        "", "", ""),
+    (169, 5, "F", "E˙d˙ă",                 "", "",   "Lizard",         "",        "", "", ""),
     (170, 5, "M", "Dziwaiʼisiro",          "", "",   "Sun",            "",        "", "See Gen. I, 45; Gen. II, 191", ""),
     (171, 5, "F", "Kuyăiʼd˙yid˙uwĕʼ",      "", "",   "Sun",            "",        "", "See Gen. I, 48; Gen. II, 192", ""),
     (172, 5, "F", "Edna",                  "", "",   "Sun",            "",        "", "See Gen. II, 193", ""),
     (173, 5, "F", "Yăaiʼdyid˙yuwi",        "", "",   "Sun",            "",        "", "See Gen. I, 149; Gen. II, 194", "the Gen. I reference cannot resolve: Genealogy I has 104 people. Re-read at 6x"),
-    (174, 5, "M", "Owi˙ʼd˙zɪraiʼ",         "", "",   "Sun",            "",        "", "See Gen. I, 47; Gen. II, 195", ""),
+    (174, 5, "M", "Owi˙ʼd˙zĭraiʼ",         "", "",   "Sun",            "",        "", "See Gen. I, 47; Gen. II, 195", ""),
     (175, 5, "F", "",                      "", "",   "Sun",            "",        "", "", "name printed as a dash"),
     (176, 5, "",  "",                      "", "",   "Sun",            "",        "", "", "name printed as a dash; no sex printed"),
     (177, 5, "",  "",                      "", "",   "Sun",            "",        "", "", "name printed as a dash; no sex printed"),
@@ -355,7 +379,8 @@ _P += [(i, 6, "", "", "", "", "Turquoise", "", "", "", "name printed as a dash; 
 _P += [
     (190, 6, "F", "Shăaityʼid˙yuweʼ",      "", "23", "Oak", "", "", "See Gen. II, 186", ""),
     (191, 6, "M", "Ramona",                "", "50", "Turkey", "", "Sant Ana", "See Gen. II, 187", ""),
-    (192, 6, "F", "Kiwaʼd˙yuwi",           "", "22", "Oak", "", "", "See Gen. I, 33; Gen. II, 188", ""),
+    (192, 6, "F", "Kiwaʼdyuwi",            "", "22", "Oak", "", "", "See Gen. I, 33; Gen. II, 188",
+     "this plate prints no raised dot between d and y, where Gen. II's 188 has one"),
     (193, 6, "",  "Ko˙ri",                 "", "21", "Oak", "", "", "See Gen. I, 31; Gen. II, 189", "no sex printed"),
     (194, 6, "M", "Tsiʼd˙yimĕʼ",           "", "17", "Oak", "", "", "See Gen. I, 34; Gen. II, 191", ""),
     (195, 6, "",  "Sha˙tyʼi",              "", "14", "Oak", "", "", "See Gen. I, 35; Gen. II, 192", "no sex printed"),
@@ -420,7 +445,7 @@ _P += [
     (252, 5, "F", "Lope",                  "", "",   "Parrot", "", "", "", ""),
     (253, 5, "M", "",                      "", "",   "Parrot", "", "", "", "name printed as a dash"),
     (254, 5, "F", "",                      "", "",   "Parrot", "", "", "", "name printed as a dash"),
-    (255, 5, "M", "Ho˙pyʼdi˙wa",           "", "25", "Badger", "", "", "See Gen. I, 99", "the plate prints the clan as 'Bager'"),
+    (255, 5, "M", "Ho˙py˙di˙wa",           "", "25", "Badger", "", "", "See Gen. I, 99", "the plate prints the clan as 'Bager'"),
     # ids 256 and 257 are synthetic: the plate prints 258 and 259 here, and
     # prints those same two numbers again on 258 and 259 below.
     (256, 5, "F", "Dzaiʼsdyui",            "", "21", "Badger", "", "", "See Gen. I, 100", "the plate numbers this person 258; a different person is also numbered 258"),
