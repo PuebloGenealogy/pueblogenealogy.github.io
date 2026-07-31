@@ -14,10 +14,13 @@ links, 5 generations. **Genealogy II** (Table 2) — 275 individuals for the
 plate's 274 numbers, 61 marriages, 214 parent–child links, **6 generations**,
 three descent blocks. **Genealogy IV** (Table 4) — 73 individuals, 14 marriages,
 58 parent–child links, 4 generations. `--public` builds **5 pages** and the live
-site serves all of them. **Genealogy III is read and encoded but NOT published**
+site serves all of them. **Genealogy III is fully read but NOT published**
 — `scripts/transcription_iii.py` holds 261 persons and passes `self_check()`,
-and it is deliberately absent from `TABLES`. Its names are only part-verified;
-see the module docstring.
+`ORTHOGRAPHY_VERIFIED` is `True` as of 2026-07-31, its cross-reference audit is
+done, and it is deliberately absent from `TABLES`. What holds it back is no
+longer the reading: it is six plate readings that have had one pair of eyes and
+three decisions that are the user's. See the module docstring and
+`SESSION-NOTES.md`.
 
 ## Questions about how this project works are not API questions
 
@@ -221,6 +224,13 @@ Nothing fails; the two simply disagree, and the next "does a rebuild produce a
 diff?" check answers misleadingly. For the same reason **never re-run it to see
 whether anything changed** — it dirties every page — read its coverage report,
 which names each plate's new characters, or `none`.
+
+The coupling runs backwards too, and that is the half that gets missed:
+**throwing away a trial build means reverting `docs/` and the font together.**
+Revert only `docs/` and the pages carry the base64 of the old font while a new
+one sits on disk; revert only the font and it is the reverse. Same silent
+disagreement, same misleading sync check. Found 2026-07-31, previewing
+Genealogy III.
 
 It ends by holding the subset against the **built pages**, and that check is the
 one that matters: it reads `docs/` and demands every character in it be in the
@@ -500,6 +510,15 @@ to catch "58+59" links those too.
   the card on `data-printed`; a table without one needs no entry. Do not "fix"
   this to 67: printing 67 makes the chart disagree with the scan, which is the
   one thing the edition exists not to do.
+- **A cross-reference displacement belongs to a plate, not to the edition.**
+  Genealogy II's references into Genealogy I run one high from person 66 onward
+  (`CROSS_REF_OFFSET`). **Genealogy III's do not** — audited 2026-07-31, exact
+  right across that range. So II was numbered against a Genealogy I that ran one
+  ahead and III was numbered against the final one. **Never apply one plate's
+  offset to another**; audit each by name, sex and clan. Genealogy III's four
+  exceptions are its own, and no two are alike — one run of five that is *ten*
+  low, one that is one low, one that cannot resolve at all, and exactly one
+  instance of II's +1.
 - **Editorial attribution exists, and there are now two cases** — 83–85 on
   Table 1 (added 2026-07-28) and **116–118 on Table 2** (added 2026-07-30).
   Both have the same shape: a woman with two husbands, one bracket, and no
@@ -649,9 +668,10 @@ Consequences a session must not "fix":
 - **No release is outstanding, and that is deliberate.** v1.1.0 was prepared and
   then **cancelled** by the release policy above: no GitHub Releases and no
   Zenodo deposits during active development. **`Genealogy III` is now the only
-  thing between here and the next release** — it is read and encoded as of
-  2026-07-30 but not published; what it still needs is in `SESSION-NOTES.md` and
-  in `scripts/transcription_iii.py`'s docstring. It is the last plate, and the
+  thing between here and the next release** — as of 2026-07-31 it is **fully
+  read**, drawable and audited, and still not published; what it needs now is
+  confirmation and three design calls, listed in `SESSION-NOTES.md` and in
+  `scripts/transcription_iii.py`'s docstring. It is the last plate, and the
   policy names all four tables plus design, transcriptions, text and citations
   as the bar. Do not re-add "cut a release" to this list before then.
 - **Genealogy II is published and its reading is closed.** The user re-checked

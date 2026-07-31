@@ -3,7 +3,116 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-07-30 (latest) — Genealogy III read and encoded; nothing published
+## 2026-07-31 (latest) — Genealogy III: orthography finished, cross-references audited, still not published
+
+**Nothing reached `docs/`.** `--public` still builds the same 5 pages —
+104 / 275 / 73 persons — and `docs/` is byte-identical to what was committed.
+`scripts/transcription_iii.py` is still **not registered in `TABLES`**. Three
+commits, all to `scripts/transcription_iii.py` alone: `eb1fd87`, `809c7c5`,
+`9d0c98c`.
+
+### The 5× orthography pass is finished — all 261 names
+
+Generations 5, 6 and 7 were read, completing the pass that had covered only
+ids 1–84 and 230–247. **Thirteen corrections**, and the balance is worth
+noting: generation 5 gave twelve (87, 90, 91, 94, 104, 143, 155, 164, 168, 169,
+174, 255), generations 6–7 gave **one**. The deeper generations are shorter
+names with fewer diacritics, so the remaining risk was smaller than the
+remaining line count suggested. `ORTHOGRAPHY_VERIFIED` is now `True`.
+
+**192 corrects a claim the 2026-07-30 entry above got wrong.** That entry
+recorded 192 as `Kiwaʼd˙yuwi`, "matching Genealogy II's reading of the same
+person". At 25× this plate prints **`Kiwaʼdyuwi` with no raised dot**, where
+Genealogy II's 188 has one. The plates *disagree*; the transcription records
+what this plate prints and the divergence is in 192's `plate_note`.
+
+**The turned-comma mark is now a pattern, not a single glyph.** It appears at
+154, 156, 157, **228** and 242 — five instances. All five stay U+02BC; five
+occurrences is enough to suspect a distinct sort but not enough to mint a
+codepoint. Settling it needs a 20× look at the five against a known U+02BC on
+the same line of type.
+
+Also recorded: **152 and 153 are spelled differently at their two occurrences**
+(`Dzaiʼgai` / `Dzai˙ʼy˙ai`; `Shumaiʼ` / `Shu˙măĭʼ`). That is a finding about the
+plate, not an unresolved reading — the first occurrence is what the file
+carries.
+
+### A trial registration, done and reverted
+
+Registering the plate locally to look at it — `roots [1, 230]`,
+`root_columns {230: 2}` — **aborted the build**: fifteen people in `PERSONS`
+reached the page from nothing. 40, 64, 67 and 87 are each a **second spouse
+whose partner is not a block primary anywhere**, and 116–118, 146–151, 212–213
+fell out as their descendants.
+
+This is Genealogy II's `U24` shape and `drawn_under` is the same fix. All four
+were **read off the scan before being encoded**, at the generation-4 and
+generation-5 columns: `W23` 40+39 → 38 (the plate prints `+ 40.` inside 38's
+block, below 38's own bracket); `W34` 64+63 → 62, `W36` 66+67 → 65 and `W45`
+86+87 → 85 (each three consecutive lines). **These four are plate readings and
+have not had a second eye** — the same class of claim as the two bracket
+readings.
+
+With them the plate draws **all 261 people** and column drift measures 0 px
+within each block at a 425.59 px step. The 425.59 px offset *between* blocks is
+`root_columns` indenting block 2, not drift.
+
+`subset_font.py` reports this plate needs exactly **two** characters the subset
+does not carry: `ó` and `ô`.
+
+**The registration, the built `docs/`, and the regenerated font were all
+reverted.** Only the four `drawn_under` values were kept. Reverting the font and
+`docs/` together is what keeps them agreeing — reverting one alone would leave
+pages carrying the base64 of a font no longer on disk.
+
+### The cross-reference audit — done
+
+All 51 person-level references plus the two prose references under 155, matched
+against `transcription.py` and `transcription_ii.py` by name, sex and clan.
+**Nothing is corrected**: `cross_ref` carries what the plate prints and every
+finding sits in the `plate_note` beside it.
+
+**The headline is a negative result, and it is the thing most likely to be
+re-derived wrongly.** `transcription_ii.py` records that Genealogy II's
+references into Genealogy I run one high from person 66 onward. **Genealogy III
+does not share that displacement.** Its references across the displaced
+range — 78, 79, 97, 98, 99, 100, 101, 103, 104 — all name the person Genealogy I
+finally printed under that number. Genealogy III was numbered against the
+**final** Genealogy I; Genealogy II was not. Do not carry the offset over.
+
+Four exceptions, and no two are the same kind of error:
+
+- **170–174 — the Gen. II half of five consecutive references is ten low.** The
+  plate prints Gen. II 191–195; the people named are Genealogy II's **201–205**
+  (all Sun, in order, five for five). The Gen. I half of the same lines is
+  exact. **Re-read on the scan at x 2330, y 3890 — the plate really does print
+  191–195.** It is findable only because Gen. II 191–195 are a group of Oak
+  people this plate *also* cites, correctly, from its own 194, 195 and 198.
+- **218 — `See Gen. I, 101` is one low.** 101 is the father, already cited from
+  257. The person is Genealogy I's 102; her sisters 219 and 261 cite 103 and 104
+  exactly, so it is a slip, not a run.
+- **173 — `See Gen. I, 149` is real and cannot resolve.** The person is
+  Genealogy I's 49, which is how Genealogy II's own 204 cites her.
+- **The prose note under 155, `see Gen. I, 8, 90` — husband exact, descendant
+  one high.** Genealogy I's 73+8 have one child, 89, unnamed and unclanned;
+  90 is Heʼsa (Hazel), a child of 76+67 and no relation. **This is the only
+  place on this plate where Genealogy II's +1 displacement appears**, and a
+  third-plate attestation of it.
+
+**Verified clean:** 155's other note, `see Gen. II, 126, 158, 160` — 160 is 155
+herself, 158 her husband, 126 their child.
+
+Seven references land on the right person under a spelling the other plate does
+not share. **One of the seven is this repo's doing, not Parsons's**: 191
+`Ramona` against Genealogy II's `Ramona of Sant Ana` is the same printed text
+stored in different fields — this file puts "of Sant Ana" in `origin`,
+`transcription_ii.py` puts it in the name. Do not reconcile them by editing
+either name.
+
+**Undecided, and left to the user:** whether those four exceptions get a
+footnote on the published page, as Genealogy II's displacement did.
+
+## 2026-07-30 — Genealogy III read and encoded; nothing published
 
 **A second session the same day.** Nothing reached `docs/`: `--public` still
 builds the same 5 pages, 104 / 275 / 73 persons, and `docs/` is byte-identical
