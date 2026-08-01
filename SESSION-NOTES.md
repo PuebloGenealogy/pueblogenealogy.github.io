@@ -35,7 +35,10 @@ that is all it is, `git checkout -- docs/` rather than committing.
 ## State
 
 **Nothing is half-finished, and this is true rather than reassuring.** `main`
-is current and pushed at `8cc4bee`, clean tree, no open PRs. Genealogy III's
+is current and pushed, clean tree, no open PRs. **`8cc4bee` is the last commit
+that changed the site**; anything after it is notes and changelog only and
+touches no built page, so `HEAD` sitting ahead of it is expected rather than an
+unpublished change. Genealogy III's
 `#note-crossref` is **live**. `--public` exits 0, builds 6 pages,
 104 / 275 / 261 / 73 persons; all four `self_check()`s pass; the privacy gate
 reports no research chips or vocabulary in 6 pages; 10 JSON-LD blocks valid.
