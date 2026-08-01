@@ -72,6 +72,18 @@ gates it: the custom-domain question that used to sit in front of every inbound
 link was closed on 2026-07-31 in favour of staying on `github.io`, so the host
 every seeded link points at is settled and permanent.
 
+**The user asked on 2026-07-31 for this to be waiting for them at the next
+`resume`.** They had the payload in hand and ran out of time; nothing about it
+is unfinished. When they pick it up, **send them the file itself** rather than
+pasting its contents into the reply — **the separators are tabs**, QuickStatements
+V1 splits each line on them, and a re-render can turn them into spaces and fail
+every line. If the tabs are mangled in transit anyway, the fallback is a
+`#/v1=` URL using `|` between columns and `||` between rows. The three
+non-obvious choices inside the payload — `P2093` over `P50`, `P144` to
+`Q51498010`, and no counts of individuals — are explained in `CLAUDE.md` under
+*Inbound links*; don't re-derive them, and don't re-verify the ids, which were
+checked live on 2026-07-31.
+
 ## Other things that could be picked up
 
 | | Effort | Notes |
