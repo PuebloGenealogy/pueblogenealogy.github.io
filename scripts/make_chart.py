@@ -503,7 +503,7 @@ CITATION_TEXT = ('Elsie Clews Parsons, "Laguna Genealogies", Anthropological Pap
 # Open Graph card and the CollectionPage structured data, so all three agree.
 SITE_DESCRIPTION = (
     "A digital edition of the Laguna Pueblo genealogical plates published by "
-    "Elsie Clews Parsons in \"Laguna Genealogies\" (1923). Genealogies I and IV "
+    "Elsie Clews Parsons in \"Laguna Genealogies\" (1923). All four plates "
     "transcribed character by character from the originals and redrawn as text "
     "you can search, copy and check against the plate.")
 
