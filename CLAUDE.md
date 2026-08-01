@@ -26,6 +26,16 @@ sentences were live until 2026-07-31 — the landing-page FAQ, Genealogy II's no
 on 160 and 163, and the README's plate table. There is no build gate for this.
 Grep for it after any change to the edition's scope.
 
+**Grep the plate numerals too, not only the hedging vocabulary.** A **fourth**
+sentence survived that sweep the same day and was found only on 2026-07-31, in
+`SITE_DESCRIPTION`: "Genealogies I and IV transcribed character by character".
+It names its scope *positively*, so it contained none of the words a
+"not yet"/"in preparation" grep looks for while being just as wrong — and it was
+the most exposed sentence on the site, since that one constant renders **four
+times on `/`**: the meta description, `og:description`, `twitter:description`
+and the `CollectionPage` JSON-LD `description`. So sweep for `Genealog(y|ies) I`,
+`II`, `III`, `IV` and "three" as well.
+
 ## Questions about how this project works are not API questions
 
 **This repo contains no LLM/API code and never calls a model.** So *model*,
@@ -683,6 +693,18 @@ Consequences a session must not "fix":
   Clews Parsons* external links — **propose on the Talk page**, since adding a
   link to one's own work is a COI and tends to be reverted — then the AMNH
   Digital Library, which hosts the original.
+  **The Wikidata payload is `wikidata-quickstatements.txt`**, current for all
+  four tables and ready to run as a `CREATE` batch; only the user can run it,
+  because QuickStatements needs their OAuth login. Three things about it are
+  decisions, not defaults, and re-deriving them wastes a session: `P2093` author
+  name string rather than `P50`, which would require creating a biographical
+  item about a living person; `P144` based on → `Q51498010`, the existing item
+  for Parsons's 1923 article, so the new item joins the graph instead of
+  dangling, and reaches her authorship through it; and **no counts of
+  individuals**, which would be an uncheckable copy of numbers the site computes
+  from the transcriptions. **Never put a backslash-escaped quote in that file** —
+  QuickStatements V1 splits on tabs and strips the surrounding quote pair rather
+  than honouring an escape, so use typographic quotes inside a value.
   **The AMNH handle is `2246/158`** — `https://digitallibrary.amnh.org/handle/2246/158`,
   found 2026-07-30. That is the identifier `.zenodo.json` omits from
   `related_identifiers`; add it when that file is brought to four tables for the

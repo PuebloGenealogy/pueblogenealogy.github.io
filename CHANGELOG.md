@@ -3,7 +3,69 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-07-31 (latest) — the custom domain is closed: the edition stays on github.io
+## 2026-07-31 (latest) — the landing page says all four plates, and the Wikidata payload is ready to run
+
+**The site's own description was still a two-plate claim.** `SITE_DESCRIPTION`
+in `make_chart.py` read "Genealogies I and IV transcribed character by
+character". Three stale scope sentences were fixed earlier the same day — the
+FAQ, Genealogy II's note on 160 and 163, and the README's plate table — and this
+was the fourth. It is also the most visible: **one constant renders in four
+places on `/`** — the meta description, `og:description`, `twitter:description`
+and the `CollectionPage` JSON-LD `description` — so it is the sentence Google
+and every social card read, and it was the last place the edition described
+itself as a partial one. It now reads "All four plates". Verified live: four
+occurrences on `/`, zero of the old string.
+
+**No count is typed into it.** The plate count is fixed at four by Parsons's
+1923 paper and cannot rot; the per-table statistics stay computed from the
+transcriptions, as `CLAUDE.md` requires. The FAQ's "All four." is the same
+shape and the precedent followed here.
+
+**How it survived the 2026-07-31 sweep is worth keeping.** That sweep grepped
+for prose — "in preparation", "not yet transcribed" — and this sentence contains
+neither. It names the plates it covers *positively*, so a scope claim can be
+wrong without using any of the words that mark one. **Grep the plate numerals
+too**, not only the hedging vocabulary.
+
+### The Wikidata payload, updated from three tables to four
+
+`wikidata-quickstatements.txt` is **drafted and not yet run**; it is still a
+`CREATE` batch, confirmed by search — no item for this edition exists on
+Wikidata. Four changes:
+
+- **The description states the four-plate scope**, matching the site's.
+- **The inner quotes around "Laguna Genealogies" are now typographic**, and this
+  was a live import risk rather than a style preference. They were
+  backslash-escaped straight quotes; **QuickStatements V1 splits a line on tabs
+  and strips the surrounding quote pair rather than honouring an escape**, so
+  that line could have imported with literal backslashes in the description.
+  Curly quotes need no escape. If any future value must contain a quotation
+  mark, use typographic ones.
+- **An English alias**, "Laguna Genealogies (digital edition)", so the item is
+  findable under the name a reader would type.
+- **`P921` main subject gains Pueblo of Laguna (Q30258195) and genealogy
+  (Q47307)** beside Laguna people (Q1800513).
+
+All 19 Q/P ids re-verified live at commit time; every one resolves.
+
+**Counts of individuals are deliberately not encoded.** 713 / 104 / 275 / 261 /
+73 would be an uncheckable copy on Wikidata of numbers the site computes from
+the transcriptions, and nothing would ever reconcile them. The item describes
+the work; the site holds the data.
+
+**Two choices carried forward from the original draft, still deliberate:**
+`P2093` author name string rather than `P50`, because `P50` would require
+creating a biographical item about a living person; and `P144` based on →
+Q51498010, the existing item for Parsons's 1923 article, so the new item joins
+the graph rather than dangling. Q51498010 already carries `P50` Elsie Clews
+Parsons and `P577` 1923, so her authorship reaches the new item through it and
+needs no second claim.
+
+**Running the batch needs the user** — QuickStatements requires their Wikidata
+OAuth login. When it runs, record the resulting Q-number in `CLAUDE.md` and
+`SESSION-NOTES.md`; it is the edition's first seeded inbound link after Zenodo.
+
+## 2026-07-31 — the custom domain is closed: the edition stays on github.io
 
 **A decision by the user, not another deferral.** It had been carried as
 "deferred, not closed" since 2026-07-28 and had already gone missing from a

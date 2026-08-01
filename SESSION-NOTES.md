@@ -4,8 +4,9 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-07-31**, after the session that closed **both of Genealogy
-III's editorial items** and **published them**. The edition is all four plates,
+Last updated **2026-07-31**, after the session that brought the **Wikidata
+payload to four tables** and fixed the **last stale scope claim on the site** —
+the landing page's own meta description. The edition is all four plates,
 Genealogy III has nothing open on it, and the site is current.
 
 ---
@@ -34,18 +35,19 @@ that is all it is, `git checkout -- docs/` rather than committing.
 ## State
 
 **Nothing is half-finished, and this is true rather than reassuring.** `main`
-is current and pushed at `05c9a5b`, clean tree, no open PRs. Genealogy III's
+is current and pushed at `8cc4bee`, clean tree, no open PRs. Genealogy III's
 `#note-crossref` is **live**. `--public` exits 0, builds 6 pages,
 104 / 275 / 261 / 73 persons; all four `self_check()`s pass; the privacy gate
 reports no research chips or vocabulary in 6 pages; 10 JSON-LD blocks valid.
 A rebuild after the push left the tree clean, so `docs/` and the source agree
 byte-for-byte.
 
-**Verified live:** all six `.html` byte-identical to `docs/` by SHA-256,
+**Verified live:** all six `.html` byte-identical to `docs/` by SHA-256, five
+pages plus `sitemap.xml`, `robots.txt` and `404.html` all 200, sitemap 5 `<loc>`
+entries (landing page plus one per plate — one fewer than the build's page
+count, because `404.html` is deliberately absent), 0 stale-identity markers.
 `#note-crossref` present once on `/genealogy-iii/` with 261 person anchors
-beside it, 0 research markers on all five served pages. PR
-[#26](https://github.com/PuebloGenealogy/pueblogenealogy.github.io/pull/26)
-merged.
+beside it, 0 research markers on all five served pages.
 
 The 0.023px sub-pixel offset on Genealogy II's 158 group is still known,
 diagnosed and deliberately left alone. Invisible; not worth touching shared
@@ -59,19 +61,22 @@ reading, and the footnote is published. What remains is **outreach**, **one
 correctness item on Genealogy I**, and **the release** — none of them blocking
 each other, and every one of them needing the user rather than a build.
 
-The most likely next action is the **Wikidata item**: it is the highest
-effort-to-return inbound link, the payload already exists at
-`wikidata-quickstatements.txt` with 18 ids verified, and the only work is
-**updating it from three tables to four**. **Nothing gates it any more** — the
-custom-domain question that used to sit in front of every inbound link was
-closed on 2026-07-31 in favour of staying on `github.io`, so the host every
-seeded link will point at is settled and permanent.
+The one thing waiting on the user is **running the Wikidata batch**. The payload
+at `wikidata-quickstatements.txt` is **current for all four tables** and every
+Q/P id in it was re-verified live on 2026-07-31; a search confirms **no item for
+this edition exists yet**, so it is still a `CREATE`. Paste it into
+QuickStatements V1 at `quickstatements.toolforge.org` — it needs the user's
+Wikidata OAuth login, which is the whole of why this cannot be finished without
+them — then **record the resulting Q-number in `CLAUDE.md` and here**. Nothing
+gates it: the custom-domain question that used to sit in front of every inbound
+link was closed on 2026-07-31 in favour of staying on `github.io`, so the host
+every seeded link points at is settled and permanent.
 
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
-| **Wikidata item** | ~10 min, **needs you** | Payload at `wikidata-quickstatements.txt`, 18 ids verified. **Needs updating for all four tables** — it was written for three |
+| **Wikidata item** | ~5 min, **needs you** | Payload at `wikidata-quickstatements.txt` is **current for four tables and ready to run**, 19 ids verified live, still a `CREATE`. Only the OAuth-logged-in batch run is left. Record the Q-number afterwards |
 | **AMNH Digital Library** | Slow, **needs you** | Strong inbound link. Handle `2246/158` — `https://digitallibrary.amnh.org/handle/2246/158`. That is the identifier `.zenodo.json` omits from `related_identifiers`. The site 403s automated fetches; use a real browser. **Now also the only route to settling the turned-comma mark** — see below |
 | **Confirm the 83 / 84 attribution** (Genealogy I) | Needs you + the records | 85 is firmly pinned. 83 and 84 rest on ages that do not cleanly reconcile. Published and citable, so this is the open item with a correctness edge |
 | **A wrapped cross-reference still miscounts its row** | Unknown; needs a design call | `row += 1` assumes one visual line. Nothing wraps today. Unguardable at build time — no font metrics. The fix is to split at the plate's own line break with `\|`, as 160, 169 and III's 155 do |
