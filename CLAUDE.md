@@ -463,6 +463,60 @@ never recolour the genealogy. Declared in **all five** palette blocks; the three
 static fallbacks exist for engines without `light-dark()`, and missing one
 leaves that browser with an unstyled clan.
 
+## The published markup is now an interface, not just a rendering
+
+**Added 2026-08-03.** A separate finding aid — `laguna-search`, outside this
+repo and not deployed — builds its whole index by fetching the four
+`genealogy-*/` pages and parsing them. It reads no transcription module. So
+some of what `make_chart.py` emits is now **consumed by something other than a
+browser**, and changing it silently breaks a reader elsewhere:
+
+| Hook | What is read from it |
+|---|---|
+| `<li class="reg" id="rN">` | one person; `N` is the **id** |
+| `.num` `href="#pN"` + its text | the id and the **printed number**, the distinction that matters |
+| `.sex` `.name` `.alt` `.blank` `.age` `.clan` `.vital` | the fields |
+| `sic-ring` on `.sex` / `.clan` | that the value is the plate's misprint |
+| `.reg-rel[data-rel]`, `data-with`, `data-editorial`, `a.edmark` | every relation, and which attribution is editorial |
+| `.node` nesting depth, plus `.tree`'s `margin-inline-start` multiplier | **generation** — the register does not print it |
+| `.xref` directly after a `.line#pN` | that person's cross-reference; `xref-cell` belongs to nobody |
+
+Two consequences that are not obvious:
+
+- **`dotted()` is not reversible, and one value is already lost.** It appends a
+  period "unless the value already ends in one", so `d. in childhood.` and
+  `d. in infancy` render identically. A parser cannot tell them apart; II·50
+  reads back one period short. Nothing on this site is wrong — this is a cost
+  paid by the consumer, recorded so nobody hunts it as a bug.
+- **The reading behind a misprint is not published.** `sic-ring` marks that
+  the printed sex or clan is wrong but never says what the transcription holds,
+  so a consumer can show the misprint and cannot recover the reading. If that
+  ever matters, the fix here is a `data-reading` attribute, not a change to
+  what is displayed.
+
+None of this constrains the edition's design — it constrains **silent** change.
+Restructure the register freely; just expect `laguna-search` to need its parser
+updated, and run its `tools/validate.py`, which compares all 713 entries and
+every relation against `scripts/transcription*.py`.
+
+## Two names cannot be found by their own plate's `fold()`
+
+**Found 2026-08-03; not fixed, because it is a defect in this repo's data.**
+The four transcription modules each carry their own `_FOLD` map and they are
+**not identical**: only `transcription_ii.py` maps `ŏ` and `Ĭ`. Two names on
+other plates carry those characters, so their own plate's `fold()` leaves the
+diacritic in the key:
+
+- `Dziŏ˙kwid˙yuʼă` — Genealogy III, 101
+- `Ĭya˙ʼsi` — Genealogy III, 16
+
+`fold()` is documented as a "diacritic-free lowercase key", and for these two it
+is not one. Nothing on the site uses `fold()` today, so nothing is visibly
+broken; the Find box keys on names and numbers directly. The fix is to give all
+four modules the union of the maps. It is a one-line edit per module and it
+changes no rendered output — but it touches four files that are otherwise
+immutable, so it wants a deliberate decision rather than a drive-by.
+
 Person references in the apparatus are linked by `_p()` at each call site,
 **never by regex over the prose**. The apparatus is full of numbers that are not
 people — 1923, vol. 19, pp. 133–292, U23, `d. 1908` — and a pattern loose enough
