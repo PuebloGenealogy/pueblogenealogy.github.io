@@ -4,10 +4,15 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-03**, after a session that built a **search tool over
-all four plates** — outside this repo, not deployed — and, in doing so, turned
-the published markup into something another program reads. **Nothing on the
+Last updated **2026-08-07**, after a short housekeeping session: the
+`2026-08-03` notes branch was merged, a preview entry was added for the search
+tool, and **every stale branch was deleted on both sides**. **Nothing on the
 site changed.** The edition is all four plates and is current.
+
+The session before it, on **2026-08-03**, built a **search tool over all four
+plates** — outside this repo, not deployed — and, in doing so, turned the
+published markup into something another program reads. That is still the open
+thread.
 
 ---
 
@@ -42,6 +47,24 @@ it is notes and changelog and touches no built page. `--public` was re-run on
 2026-08-03: 6 pages, 104 / 275 / 261 / 73 drawn, all four `self_check()`s pass,
 privacy gate clean on 6 pages, 10 JSON-LD blocks valid, and the only diff was
 dates, which was reverted.
+
+**`main` is the only branch that exists, locally and on the remote** (swept
+2026-08-07, `main` at `1263ad7`). Everything else was merged and deleted;
+`docs/` did not move, so the Pages redeploy served identical bytes. The one
+functional change was a `.claude/launch.json` entry named **`laguna-search`**,
+serving that tool's `dist/` on 4180 beside `site` on 4173 — inert if the
+directory is absent, since nothing here builds it.
+
+**`git branch --no-merged` is not a "has unmerged work" test on this repo, and
+reading it as one produces a false alarm.** PRs here are **squash**-merged, so
+a branch's own commit is never an ancestor of `main` even though its content
+is. `handoff-2026-07-29-plate-chrome` looked unmerged on exactly this basis;
+it is PR #13, squashed onto `main` as `5a37bdf`, whose tree is **identical**
+to the branch head `df2b1e0` (`39b8487` both, empty diff). **Check the PR
+state, not the ancestry.** Ten other tracking refs were likewise stale —
+GitHub had auto-deleted the branches on merge — and a batch
+`git push --delete` **fails whole** when any named ref is already gone, so
+`git fetch --prune` comes first.
 
 The 0.023px sub-pixel offset on Genealogy II's 158 group is still known,
 diagnosed and deliberately left alone. Invisible; not worth touching shared
