@@ -3,7 +3,60 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-07-31 (latest) — the landing page says all four plates, and the Wikidata payload is ready to run
+## 2026-08-03 (latest) — a search tool now reads the published pages, and two things it found
+
+**Nothing on the site changed.** `docs/` is byte-identical apart from the dates
+a rebuild always moves, and no transcription was touched. The only edits here
+are to `CLAUDE.md`. What follows is worth recording because a future session
+would otherwise re-derive it — or break it without noticing.
+
+### A finding aid outside this repo now consumes the register and the chart
+
+`laguna-search` lives at
+`claude-random/Search by ChatGPT Sites - Claude Recreate/laguna-search/` — a
+standalone, not-deployed search interface over all four plates. It was
+recreated from a ChatGPT Sites prototype the user supplied, and **it builds its
+entire index by fetching the four `genealogy-*/` pages and parsing them.** It
+imports no transcription module and keeps no copy of the data.
+
+That makes parts of `make_chart.py`'s output an interface. The exact hooks it
+depends on are tabulated in `CLAUDE.md` under *The published markup is now an
+interface*. The short version: `li.reg#rN`, the `.num` href-versus-text split,
+the field spans, `sic-ring`, `.reg-rel`'s data attributes and `a.edmark`,
+`.node` nesting plus `.tree`'s margin multiplier for generation, and `.xref`
+positioning. Restructure any of it freely — but expect to update that parser,
+and run its `tools/validate.py`, which compares **all 713 entries and every
+relation** against `scripts/transcription*.py`. They agree today.
+
+### `dotted()` cannot be inverted, and one value is unrecoverable
+
+`dotted()` appends a trailing period "unless the value already ends in one".
+That is not injective: the plate's `d. in childhood.` (II·50) and
+`d. in infancy` (I·89) render to the same shape, so no reader of the rendered
+page can tell which way it went. **This is not a bug on the site** — the pages
+are correct — but it is a permanent limit on anything parsing them, and it cost
+one trailing period. Recorded so it is not hunted later.
+
+### `fold()` is not diacritic-free for two names, and this is a defect here
+
+The four modules' `_FOLD` maps are **not identical**: only `transcription_ii.py`
+maps `ŏ` and `Ĭ`. So `Dziŏ˙kwid˙yuʼă` (III·101) and `Ĭya˙ʼsi` (III·16) keep
+their diacritics in the key their own plate's `fold()` produces, though the
+docstring calls it "diacritic-free". **Nothing on the site is affected** —
+`fold()` is unused in the published build, and the Find box keys on names and
+numbers. Left unfixed deliberately: the fix is the union of the four maps, one
+line per module, and it touches four otherwise-immutable files, so it should be
+a decision rather than a drive-by. See `CLAUDE.md`.
+
+### Incidentally confirmed
+
+The published register carries `data-editorial` and `a.edmark` on the two
+attributed paternity rows, and `sic-ring` on Genealogy III's three
+non-numeric misprints — so a consumer reads the edition's editorial judgement
+off the page rather than restating it. It does **not** publish the reading
+behind a misprint, only that there is one.
+
+## 2026-07-31 — the landing page says all four plates, and the Wikidata payload is ready to run
 
 **The site's own description was still a two-plate claim.** `SITE_DESCRIPTION`
 in `make_chart.py` read "Genealogies I and IV transcribed character by
