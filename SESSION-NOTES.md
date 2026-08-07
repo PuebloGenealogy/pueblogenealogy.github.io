@@ -4,15 +4,17 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-07**, after a short housekeeping session: the
-`2026-08-03` notes branch was merged, a preview entry was added for the search
-tool, and **every stale branch was deleted on both sides**. **Nothing on the
-site changed.** The edition is all four plates and is current.
+Last updated **2026-08-07**. Two things happened that day. First a short
+housekeeping session: the `2026-08-03` notes branch was merged, a preview entry
+was added for the search tool, and **every stale branch was deleted on both
+sides**. Then the user reported apparent duplicates in `laguna-search`, and the
+fix went in there. **Nothing on the site changed on either count** — the
+edition is all four plates and is current, and `8cc4bee` is still the last
+commit that moved a built page.
 
-The session before it, on **2026-08-03**, built a **search tool over all four
-plates** — outside this repo, not deployed — and, in doing so, turned the
-published markup into something another program reads. That is still the open
-thread.
+The **search tool is still the open thread**. It was built on **2026-08-03**,
+outside this repo and not deployed, and in building it turned the published
+markup into something another program reads.
 
 ---
 
@@ -49,7 +51,7 @@ privacy gate clean on 6 pages, 10 JSON-LD blocks valid, and the only diff was
 dates, which was reverted.
 
 **`main` is the only branch that exists, locally and on the remote** (swept
-2026-08-07, `main` at `1263ad7`). Everything else was merged and deleted;
+2026-08-07, `main` at `e81c9c5`). Everything else was merged and deleted;
 `docs/` did not move, so the Pages redeploy served identical bytes. The one
 functional change was a `.claude/launch.json` entry named **`laguna-search`**,
 serving that tool's `dist/` on 4180 beside `site` on 4173 — inert if the
@@ -74,11 +76,19 @@ one level up from this repo, and is **its own git repo** with its own README,
 ANALYSIS.md and gates. **It is not deployed and is not wired into this site.**
 
 What it is: a framework-free search over all four plates — 713 plate entries
-resolved to **634 people** — built by fetching the four published
+resolved to **620 people** — built by fetching the four published
 `genealogy-*/` pages and parsing them. No transcription module, no local data,
-nothing written back. `python3 build.py` runs five gates; `python3
+nothing written back. `python3 build.py` runs **six** gates; `python3
 tools/validate.py` compares every field and every relation against
 `scripts/transcription*.py` and they agree.
+
+**Its `main` is at `fd51810`, clean, and is now its only branch.** It has no
+remote, so nothing there has been or can be pushed.
+
+**The counts in this file were two sessions stale until 2026-08-07** — they
+said 634 people, five gates, 65 joins. Sessions have worked on that tool
+without touching this repo, so its numbers drift here silently and are worth
+re-reading from its own build output rather than trusted from this paragraph.
 
 **Read its `ANALYSIS.md` before changing it.** It records what was wrong with
 the ChatGPT prototype the user supplied, and three of those are the kind of
@@ -90,13 +100,36 @@ thing that gets reintroduced by someone being helpful:
   strangers in a pueblo where names repeat. It is now decided by **Parsons's
   own cross-references**, each one verified against the entry it lands on by
   name, sex and clan, because the printed numbers are displaced on three of the
-  four plates. 65 people, 144 entries, and the evidence is printed in the UI.
+  four plates. **79 people, 172 entries** — 65 of them Parsons's own joins and
+  **14 the tool's**, added 2026-08-04, each labelled *NOT PRINTED* in the UI.
 
 Three things it reports on every build and does **not** resolve, all of which
 match what this edition already documents: II·199's `Gen. I, 43 (?)` (Parsons's
 own question mark), II·208's `Gaaish` against `Gaaiʼd˙yuitsʼa`, III·173's
 `Gen. I, 149`, plus a conflict where II·138 and II·139 both land on I·82 and
 neither is merged.
+
+**The joins it refuses are now marked too — 2026-08-07, `fd51810`.** The user
+read the alphabetical list and reported *"I, 52 is the same as III, 250"*. The
+data was right: I·52 is a boy of 4 and III·250 has a wife and three children in
+the same fieldwork. But the refusal was **nowhere on the page**, so two
+adjacent rows read as the tool repeating itself. A row now carries `≠ III · 250`
+while closed, and the panel gives the verdict and its evidence.
+
+**The gate is the part worth knowing about, not the three findings.**
+`gate_namesakes_adjudicated` finds every unjoined pair sharing a folded name,
+sex and clan and **fails closed both ways** — a pair with no verdict aborts the
+build, a verdict naming no pair aborts it too. That matters *here*: a new pair
+can appear without anyone touching that repo, because **this edition need only
+correct a diacritic** for one to show up. It caught two things on its first
+run — a pair the hand sweep missed on a **single plate** (II·83 / II·144), and
+a verdict that had been written against III·222, which already carries
+Parsons's own *Gen. II, 83*. Namesakes are now computed between **people**, not
+entries.
+
+One verdict is **open** and says so: II·182 / IV·69 agree on name, sex, clan and
+generation with nothing to corroborate or contradict. It is marked `?`, not
+`≠`. Do not "resolve" it from this file — settling it needs the plates.
 
 **Two decisions are the user's, and neither is urgent:** whether the two-panel
 layout is right, and whether this ever lands on the site. Landing it means a
@@ -108,7 +141,8 @@ consequence of the tool existing.
 | | Effort | Notes |
 |---|---|---|
 | **Wikidata item** | ~5 min, **needs you** | Payload at `wikidata-quickstatements.txt` is **current for four tables and ready to run**, 19 ids verified live, still a `CREATE`. Only the OAuth-logged-in batch run is left. **Send the file, don't paste it** — the separators are tabs. Record the Q-number afterwards |
-| **`laguna-search` design pass** | Session-sized | The open thread. Two-panel layout, URL state, whether to land it on the site |
+| **`laguna-search` design pass** | Session-sized | The open thread. Two-panel layout, and whether to land it on the site. URL state is done (phase 2) |
+| **II·182 / IV·69 — one woman or two?** | **needs you + the plates** | The one **open** namesake. Both F., Sun, generation 4; nothing contradicts them and no relative of either is drawn on the other plate, so name, sex and clan are the whole of the evidence. Marked `?` in the tool and joined nowhere. Only the plates can settle it — and if they do, it is a line in that tool's `NAMESAKES`, **not** a change to this edition |
 | **Unify the four `_FOLD` maps** | ~4 lines, needs a decision | Only `transcription_ii.py` maps `ŏ` and `Ĭ`, so `fold()` leaves diacritics in the keys for III·101 and III·16 despite its docstring. **Affects nothing published** — `fold()` is unused in the build. Touches four otherwise-immutable files, so decide rather than drive by. In `CLAUDE.md` |
 | **AMNH Digital Library** | Slow, **needs you** | Strong inbound link. Handle `2246/158` — `https://digitallibrary.amnh.org/handle/2246/158`. That is the identifier `.zenodo.json` omits from `related_identifiers`. The site 403s automated fetches; use a real browser. **Also the only route to settling the turned-comma mark** |
 | **Confirm the 83 / 84 attribution** (Genealogy I) | Needs you + the records | 85 is firmly pinned. 83 and 84 rest on ages that do not cleanly reconcile. Published and citable, so this is the open item with a correctness edge |
@@ -126,10 +160,22 @@ consequence of the tool existing.
   unrecoverable trailing period (`dotted()` is not injective) and a dependency
   on the register's markup; the gain is that provenance is exactly what the
   edition publishes. `tools/validate.py` proves the parse against the modules.
-- **A person is not a plate entry.** 713 entries are 634 people. Entries are
+- **A person is not a plate entry.** 713 entries are 620 people. Entries are
   joined only where Parsons cross-references them, and only after the reference
   is confirmed by name, sex and clan. **Never on a name coincidence** — that is
-  what the prototype did — and never by trusting a printed number.
+  what the prototype did — and never by trusting a printed number. The
+  fourteen joins the tool makes itself (2026-08-04) are the stated exception:
+  each rests on **relatives matching by name on both plates**, not on the name
+  alone, and each is labelled in the UI.
+- **Refusing to merge is a claim, and is shown like one** (2026-08-07). Two
+  people sharing a name, a sex and a clan get a mark on the closed row and a
+  verdict in the panel. `distinct` and `open` never share a mark — letting an
+  unsettled pair look settled is the prototype's error told backwards.
+- **`build.py` decides, `search.js` renders.** The namesake note used to be
+  computed in the browser from its own `twinKey`, a second implementation of
+  the build's rule, and it was wrong in two ways the build is not. Don't
+  reintroduce a client-side identity or namesake rule; the fold map is
+  single-sourced for exactly this reason.
 - **Merged entries are not flattened into one record.** Each plate's reading
   stands; the panel shows them side by side. The plates disagree, and that is
   data.
