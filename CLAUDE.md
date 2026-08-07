@@ -684,6 +684,25 @@ the plate.
 The repo lives under Google Drive, whose sync daemon can touch `.git` mid-write;
 if git reports object corruption, that is the likely cause.
 
+**PRs here are squash-merged, so `git branch --no-merged` is not a test of
+whether a branch holds unmerged work.** A squash puts the branch's *content*
+on `main` as a new single-parent commit; the branch's own commit is never an
+ancestor, so ancestry-based checks report merged work as unmerged and invite a
+session to "rescue" something that is already published. **Read the PR state
+instead** — `gh pr list --state all --head <branch>`, and compare
+`git rev-parse <head>^{tree}` against the merge commit's tree if you want
+proof. Found 2026-08-07 sweeping stale branches:
+`handoff-2026-07-29-plate-chrome` looked unmerged and is PR #13, squashed onto
+`main` as `5a37bdf`, tree `39b8487` — **identical** to the branch head
+`df2b1e0`, empty diff. Nothing was ever at risk.
+
+Two mechanics from the same sweep. GitHub **auto-deletes a branch on merge**,
+so remote-tracking refs here go stale in bulk — ten did — and
+`git fetch --prune` belongs *before* any cleanup. And a batch
+`git push origin --delete a b c` **fails whole** if any one ref is already
+gone: nothing is deleted, and the refs that do exist are left untouched, which
+reads as a permissions problem and is not one.
+
 `_backup-v1-laguna-genealogy-tables-2026-07-27/`, one level up, is the **sole
 surviving copy** of the deleted v1 repo. Do not clean it up as stale.
 

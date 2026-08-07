@@ -55,16 +55,10 @@ functional change was a `.claude/launch.json` entry named **`laguna-search`**,
 serving that tool's `dist/` on 4180 beside `site` on 4173 — inert if the
 directory is absent, since nothing here builds it.
 
-**`git branch --no-merged` is not a "has unmerged work" test on this repo, and
-reading it as one produces a false alarm.** PRs here are **squash**-merged, so
-a branch's own commit is never an ancestor of `main` even though its content
-is. `handoff-2026-07-29-plate-chrome` looked unmerged on exactly this basis;
-it is PR #13, squashed onto `main` as `5a37bdf`, whose tree is **identical**
-to the branch head `df2b1e0` (`39b8487` both, empty diff). **Check the PR
-state, not the ancestry.** Ten other tracking refs were likewise stale —
-GitHub had auto-deleted the branches on merge — and a batch
-`git push --delete` **fails whole** when any named ref is already gone, so
-`git fetch --prune` comes first.
+That sweep produced one durable finding, now in **`CLAUDE.md` → Environment**:
+**PRs here are squash-merged, so `git branch --no-merged` reports merged work
+as unmerged** — read the PR state, not the ancestry. Nothing was at risk; the
+worked example and the two `push --delete` / prune mechanics are there.
 
 The 0.023px sub-pixel offset on Genealogy II's 158 group is still known,
 diagnosed and deliberately left alone. Invisible; not worth touching shared
