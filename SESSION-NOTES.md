@@ -4,15 +4,21 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-08**. The session removed the edition's outreach surface
-on the user's instruction: **Wikidata deleted outright**, **the Zenodo deposit
-deleted** and every doi stripped from the repo and the live site. It then
-**published** — `778bfb9`, the first commit to move a built page since
-`8cc4bee`.
+Last updated **2026-08-08**. A short session, and **nothing on the site
+changed** — `778bfb9` is still the last commit to move a built page. It closed
+the one task the previous handoff left open: `laguna-search` was re-run against
+the deployed pages after the doi removal, and **its build and validator both
+pass**.
 
-**De-indexing was deliberately NOT done.** `robots.txt`, `sitemap.xml` and the
-`noindex` question are untouched pending a separate decision. That is the open
-thread; see below.
+**The finding is not that it passed — it is that it nearly didn't prove
+anything.** `build.py` re-parses a cache of this site unless `--refresh` is
+passed, and that cache was five days older than the deploy, so the first run
+green-lit the **pre-removal** markup. Recorded in `CLAUDE.md`; see *Start here*
+step 6.
+
+**De-indexing is still untouched.** `robots.txt`, `sitemap.xml` and the
+`noindex` question are exactly where the previous session left them, awaiting a
+decision. That is still the open thread.
 
 ---
 
@@ -36,10 +42,11 @@ preview config. Editing the sibling directory from here works fine.
 | `launch.json` | `site` **and** `laguna-search` | tool only |
 
 1. **`git switch main && git pull`.**
-2. Read the top entry of `CHANGELOG.md` — now **2026-08-08**, the exposure entry.
-3. Read `CLAUDE.md` — **Exposure posture** and **Release policy** first, since
-   both were rewritten this session and both now forbid things a cold start
-   would otherwise propose as easy wins. Then **The one thing to get right** and
+2. Read the top two entries of `CHANGELOG.md` — both **2026-08-08**. The lower
+   one is the exposure change and is the substantial one.
+3. Read `CLAUDE.md` — **Exposure posture** and **Release policy** first. Both
+   were rewritten on 2026-08-08 and both now forbid things a cold start would
+   otherwise propose as easy wins. Then **The one thing to get right** and
    **Design invariants**.
 4. Preview: `preview_start`, config name `site`. **It will not necessarily be on
    4173** — if that port is held, the tool assigns another and tells you which.
@@ -53,9 +60,12 @@ preview config. Editing the sibling directory from here works fine.
    It says which — `cached in cache/` against `re-fetched` — and that line is the
    only warning you get. Every gate then passes against **whatever the site
    looked like when the cache was written**, so a build run to check a deploy
-   proves nothing without the flag. Found 2026-08-08: the cache was five days
-   stale, from before the doi removal. **After any publish here, the first run
-   over there is `--refresh`.**
+   proves nothing without the flag. Nothing fails, because a stale cache is
+   still valid HTML, and the cache is git-ignored in the *other* repo, so
+   nothing here ever mentions it. Found 2026-08-08 against a five-day-stale
+   cache. **After any publish here, the first run over there is `--refresh`.**
+   Also in `CLAUDE.md`, since it recurs after every publish and this file does
+   not survive.
 
 **A rebuild on a later day dirties `docs/` with dates alone** — `dateModified`,
 the "Last updated" line, the sitemap's `lastmod`. So "rebuild produces no diff"
@@ -66,9 +76,9 @@ that is all it is, `git checkout -- docs/` rather than committing.
 **The `SessionStart` hook cannot vouch for this file.** Its staleness test asks
 whether `scripts/` or `docs/` moved *since the notes were committed* — so a
 session that commits notes and a build together looks current regardless of what
-the notes say. That happened this session and had to be corrected in a follow-up
-commit. Read the summary above on its own merits; the hook's silence is not
-evidence. Recorded in `CLAUDE.md`.
+the notes say. That happened on 2026-08-08 and had to be corrected in a
+follow-up commit. Read the summary above on its own merits; the hook's silence
+is not evidence. Recorded in `CLAUDE.md`.
 
 ## Waiting on the user — raise these, don't decide them
 
@@ -85,9 +95,9 @@ evidence. Recorded in `CLAUDE.md`.
    crawling left *allowed*.
 2. **Whether `laguna-search` ever lands on the site.** Unblocked and still
    undecided. Work would be in **this** repo: a `make_chart.py` page plus
-   serving the index. **Note this now cuts against the exposure posture** — it
-   adds a page and a reason to be found — so it is a bigger question than it was
-   when it was last raised.
+   serving the index. **Note this cuts against the exposure posture** — it adds
+   a page and a reason to be found — so it is a bigger question than it was when
+   it was first raised.
 3. **II·182 / IV·69 — one woman or two?** The one namesake the plates do not
    settle. Marked `?` and joined nowhere. Only the scans can decide it, and if
    they do it is a line in that tool's `NAMESAKES`, **not** a change here.
@@ -102,8 +112,19 @@ evidence. Recorded in `CLAUDE.md`.
 **`778bfb9` is the last commit that moved a built page, and it is deployed and
 verified** — all six pages SHA-256-identical to the committed `docs/`, all 200,
 sitemap 5 `<loc>`, stale-identity 0, and `zenodo|10.5281|doi.org` **0 on every
-live page** while `id="p116"` is still present. `01d176d` after it touches
-notes only.
+live page** while `id="p116"` is still present. Everything after it —
+`01d176d`, `e2e5142`, `9666966` — touches documentation only. `--public` was
+re-run this session as a tree-against-build check: 6 pages,
+104 / 275 / 261 / 73 drawn, privacy gate clean, 10 JSON-LD blocks valid,
+exit 0, **no diff at all**, dates included, because it was the same day as the
+publish.
+
+**`laguna-search` is verified against the deployed pages and needs nothing until
+they move again.** All seven gates, 713 entries → 620 people, 505 names with
+break seams, 3 namesake pairs with II·182 / IV·69 still the one open
+adjudication; the validator agrees on every field and relation but for II·50's
+known unreversible period. The check is only worth anything with `--refresh` —
+step 6 above. **Re-run it after the next publish, not before.**
 
 **Two user-side actions were completed outside the repo** and are not loose
 ends: the Zenodo deposit was deleted, and the GitHub↔Zenodo link severed. Both
@@ -123,9 +144,8 @@ bracket code.
 
 ## The open thread
 
-> **How far to take de-indexing.** It is item 1 above and it is the only thing
-> the user has actually left hanging. Everything else this session touched is
-> closed.
+> **How far to take de-indexing.** It is item 1 above, and it is still the only
+> thing the user has actually left hanging. Nothing else is open.
 >
 > The reason it is not a five-minute job: the two obvious mechanisms do
 > different things, and the wrong one is the intuitive one. Read *Exposure
@@ -153,19 +173,6 @@ than trusting a number here — **the counts in this file were two sessions stal
 until 2026-08-07**, because sessions work on that tool without touching this
 repo.
 
-**Re-checked against the deployed pages on 2026-08-08 — both pass.** It parses
-the published register, and the doi session **changed the published pages** (the
-footer citation lost its "Archived at" line), so it was re-run: all seven gates
-pass, 713 entries → 620 people, 505 names with break seams, 3 namesake pairs
-with II·182 / IV·69 still the one open adjudication, and the validator agrees on
-every field and relation but for II·50's known unreversible period. Each fetched
-page came back exactly **158 bytes smaller** than the old cache — the removed
-line, and evidence the parse really saw the new markup. Nothing there needs
-re-running until the published pages move again.
-
-**It only passed because of `--refresh`.** The first run used the cache and was
-worthless as a check; see step 6 above.
-
 **Read its `ANALYSIS.md` before changing it.** It records what was wrong with
 the ChatGPT prototype, and three of those get reintroduced by someone being
 helpful: a **synthetic id** displayed as a plate number; **203 unnamed entries**
@@ -188,8 +195,7 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
 | | Effort | Notes |
 |---|---|---|
 | **Decide the de-indexing level** | **needs you** | The open thread. See *Waiting on the user* 1 |
-| **Land `laguna-search` on the site** | Session-sized, **needs you first** | Now in tension with the exposure posture — it adds a page and a reason to be found. Raise that when asking |
-| ~~Re-run `laguna-search`'s build + validator~~ | **DONE 2026-08-08** | Both pass against the deployed pages. Only meaningful with **`--refresh`** — see *Start here* step 6. Nothing to do until the published pages move again |
+| **Land `laguna-search` on the site** | Session-sized, **needs you first** | In tension with the exposure posture — it adds a page and a reason to be found. Raise that when asking |
 | **Give `laguna-search` a remote** | ~5 min, **needs you** | It has none, so the whole tool exists in one working copy under Google Drive. Publishing that repo is a visibility decision — more pointed now |
 | **II·182 / IV·69 — one woman or two?** | **needs you + the plates** | Both F., Sun, generation 4; nothing contradicts them and no relative of either is drawn on the other plate. Marked `?`, joined nowhere. The honest outcome may be *unresolvable*, as the turned-comma mark was |
 | **Confirm the 83 / 84 attribution** (Genealogy I) | Needs you + the records | 85 is firmly pinned. 83 and 84 rest on ages that do not cleanly reconcile. Published and citable, so this is the open item with a correctness edge |
@@ -202,7 +208,7 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
 
 ## Decisions already made — don't re-litigate
 
-**From this session — all set by the user, none of them provisional:**
+**Set by the user on 2026-08-08 — none of them provisional:**
 
 - **No Wikidata item, ever.** The payload is deleted. It survives in git
   history, which is fine — bibliographic metadata only. **Do not reconstruct
@@ -219,7 +225,7 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
   restoration.** Both dois now 410.
 - **Zenodo lets a record's OWNER delete it within 30 days of publishing.** The
   widely-repeated "published records are permanent" is true only *after* that
-  window. This session asserted the wrong version first; the correction is in
+  window. That session asserted the wrong version first; the correction is in
   `CLAUDE.md` and `CHANGELOG.md`.
 - **De-indexing is deferred, not declined.** Nothing was edited. See the open
   thread.
@@ -235,8 +241,8 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
   **unpublished** one is gestured at and never named. METHOD.md rule 4.
 - **The tool reads the published site, not the transcription modules.** Chosen
   2026-08-03 after being shown the trade. Cost: one unrecoverable trailing
-  period (`dotted()` is not injective) and a dependency on the register's
-  markup.
+  period (`dotted()` is not injective), a dependency on the register's markup,
+  and — as 2026-08-08 showed — a cache that must be refreshed deliberately.
 - **A person is not a plate entry.** 713 entries are 620 people. Joined only
   where Parsons cross-references them, and only after the reference is confirmed
   by name, sex and clan. **Never on a name coincidence.**
@@ -266,6 +272,9 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
 
 - **Wikidata, Zenodo and the release track**, all three. See above. These are
   the ones a helpful cold start will try to reopen.
+- **Re-running `laguna-search` against the doi removal.** Done 2026-08-08, both
+  checks pass. It becomes live again only when the published pages next move —
+  and then with `--refresh`.
 - **The `laguna-search` design pass, entirely.** Opened 2026-08-07, closed
   2026-08-08. Deployment was never part of it and remains a separate decision.
 - **The custom domain.** Closed 2026-07-31 by the user.

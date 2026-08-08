@@ -3,7 +3,51 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-08 (latest) — the edition stops advertising itself: Wikidata removed, Zenodo withdrawn from the site
+## 2026-08-08 (latest) — the finding aid is re-verified against the deployed pages, and it turns out to check a cache by default
+
+**Nothing on the site changed.** `778bfb9` is still the last commit that moved a
+built page. `--public` was re-run to check the tree against the build: 6 pages,
+104 / 275 / 261 / 73 drawn, privacy gate clean, 10 JSON-LD blocks valid, exit 0,
+and **no diff at all** — same day as the publish, so not even the dates moved.
+
+The previous handoff carried one open task: `laguna-search` parses the published
+register, the doi removal had changed the published pages, and it had not been
+re-run since. It has been now, and **both its build and its validator pass**:
+all seven gates, 713 entries (I 104 + II 275 + III 261 + IV 73) resolving to 620
+distinct people, 505 names carrying break seams with none unlawful, no research
+data in any output, and 3 namesake pairs with **II·182 / IV·69 still the one
+open adjudication**. The validator agrees with `scripts/transcription*.py` on
+every field and every relation, but for II·50's known unreversible trailing
+period. Nothing new appeared.
+
+### The reason that check nearly proved nothing
+
+**`build.py` re-parses a cache of this site, not the site, unless `--refresh` is
+passed.** The first run used four pages under its `cache/` dated five days
+before the deploy, so every gate passed against the **pre-removal markup** — a
+green build that had never seen the change it was run to verify.
+
+Three properties make this quiet rather than loud, and they are why it is
+written down:
+
+- **Nothing fails.** A stale cache is still perfectly valid HTML, so no gate has
+  anything to object to.
+- **The only signal is one word** in its first line of output: `cached in
+  cache/` against `re-fetched`.
+- **The staleness is invisible from here.** The cache lives in the other repo
+  and is git-ignored, so nothing in this repo's status, diff or build ever
+  mentions it.
+
+Re-fetched, each of the four pages came back **exactly 158 bytes smaller** than
+the old cache — the withdrawn "Archived at" line — which is the evidence the
+parse actually saw the new markup, and the reason the pass can be believed.
+
+Recorded in `CLAUDE.md` → *The published markup is now an interface*, not only
+in the handoff: it recurs after **every** publish here, and the handoff is
+overwritten each session. Merged as PR #30 (`9666966`), branch deleted on both
+sides; `main` is again the only branch.
+
+## 2026-08-08 — the edition stops advertising itself: Wikidata removed, Zenodo withdrawn from the site
 
 **Set by the user.** Two decisions, both reversals of the outreach programme
 that had run since launch: **do not create a Wikidata item**, and **remove
