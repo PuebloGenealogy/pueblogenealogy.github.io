@@ -1350,10 +1350,16 @@ ORTHOGRAPHY = [
 # ---------------------------------------------------------------------------
 # ASCII folding, for matching against other spellings
 # ---------------------------------------------------------------------------
+# The union of all four plates' characters, and identical in all four modules:
+# a fold key must not depend on which plate the name was read from. Keep them
+# in step — a character mapped here and not there is a name that cannot be
+# found by its own plate's fold().
 _FOLD = {
-    "ʼ": "", "˙": "", "˚": "", "˘": "",
-    "ă": "a", "ĕ": "e", "ĭ": "i", "Ĭ": "I", "ŏ": "o", "ŭ": "u", "ä": "a",
-    "ᶦ": "i", "ᵃ": "a", "ᵉ": "e",
+    "ʼʼ": "", "ʼ": "", "˙": "", "˚": "", "˘": "",
+    "ă": "a", "Ă": "A", "ĕ": "e", "ĭ": "i", "Ĭ": "I",
+    "ŏ": "o", "ŭ": "u", "ä": "a", "ñ": "n",
+    "ô": "o", "ó": "o", "ɪ": "i",
+    "ᶦ": "i", "ᵘ": "u", "ᵃ": "a", "ᵉ": "e",
 }
 
 

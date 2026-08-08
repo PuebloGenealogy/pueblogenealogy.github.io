@@ -93,6 +93,12 @@ CHILDREN = [(union_id, mother_id, father_id, child_id, note), ...]
 
 Also carry `PLATE_NOTES`, `CLANS`, `ORTHOGRAPHY`, `fold()` and `self_check()`.
 
+**Copy `_FOLD` verbatim from an existing module — never write a fresh one.**
+The four maps are deliberately identical (`CLAUDE.md`, *The four `_FOLD` maps
+are one map*); a per-plate map is how two names ended up unfoldable by their own
+plate. If this plate brings a character new to a *name*, add it to **all** the
+maps, not just this one.
+
 - A child whose paternity the plate does not assign gets `union_id=""` and
   `father_id=0`; it will hang off the mother's line alone.
 - A person appearing twice on the plate is stored once. The second appearance
