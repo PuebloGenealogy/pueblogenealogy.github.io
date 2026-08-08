@@ -507,6 +507,16 @@ Restructure the register freely; just expect `laguna-search` to need its parser
 updated, and run its `tools/validate.py`, which compares all 713 entries and
 every relation against `scripts/transcription*.py`.
 
+**Both of that tool's checks read a CACHE of this site by default, so running
+them to verify a publish proves nothing without `--refresh`.** `build.py` keeps
+the four fetched pages under `cache/` and re-parses them unless the flag is
+passed; every gate then passes against the site *as it was when the cache was
+written*. The only signal is one word in its first line of output — `cached in
+cache/` against `re-fetched` — and nothing fails, because a stale cache is still
+perfectly valid HTML. Found 2026-08-08, re-checking the doi removal against a
+cache five days older than the deploy. **After any publish here, the first run
+over there takes `--refresh`.**
+
 **One edit here can stop that tool's build, and it is a smaller edit than
 restructuring anything.** Added 2026-08-07. `laguna-search` marks two people
 who share a folded name, sex and clan — they sort adjacent in its alphabetical
