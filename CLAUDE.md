@@ -275,6 +275,16 @@ what it cannot do: hooks on session events are **shell commands only**, so it
 can guarantee the handoff is read but never write one. That is still
 `/wrap-session`'s job.
 
+**Its staleness test has a blind spot, and publishing walks straight into it.**
+The test asks whether `scripts/` or `docs/` moved *since the notes were last
+committed* — so committing `SESSION-NOTES.md` **in the same commit** as a build
+makes the notes look current no matter what they say. A handoff can be freshly
+committed and wrong, and that is the one case the warning cannot fire on. It
+happened on 2026-08-08: the Zenodo removal committed notes and `docs/` together,
+leaving a header describing the *previous* session with no `STALE:` to catch it.
+So when a session both publishes and hands off, **read the handoff's own summary
+before trusting it** — the hook's silence is not evidence there.
+
 **New plate:** `/transcribe-plate`. `make_chart.py` is table-agnostic: add a
 `TABLES` entry, drop the matching `PENDING` one, write
 `scripts/transcription_<n>.py` on the same schema. Counts in the page copy are
@@ -770,7 +780,14 @@ of *Exposure posture* above. What that involved, so nobody has to re-derive it:
   concluding anything), and **GitHub's side is not the durable switch**. Zenodo
   can recreate the hook while the repo is still enabled at
   `zenodo.org/account/settings/github`. If a hook ever reappears, that flag is
-  why.
+  why. **The user has since severed the GitHub↔Zenodo link**, which settles it.
+- **Do not go hunting for the webhook's access token.** The hook URL carried
+  `?access_token=…` pointing at `zenodo.org`, so it was a **Zenodo** credential
+  and never appeared in GitHub's settings; it does not appear under Zenodo →
+  Applications either, because that page lists only hand-created tokens and
+  webhook receiver tokens are minted internally. All three sections of that page
+  were empty when checked on 2026-08-08. **That is expected, not a symptom.**
+  Severing the linked account is what invalidates them.
 
 **The record itself was deleted by the user the same day**, and the way that was
 possible is worth recording, because the widely-repeated version of the rule is

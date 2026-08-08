@@ -66,12 +66,36 @@ Removed here:
   "insufficient scope" — re-read the id, don't assume the delete already
   worked. Deleting a hook from GitHub's side is also **not the durable fix**:
   Zenodo can recreate it while the repo is still enabled at
-  `zenodo.org/account/settings/github`, which is the actual switch. **Both
-  exposed tokens should be revoked** at Zenodo → Applications.
+  `zenodo.org/account/settings/github`, which is the actual switch. The user
+  severed the GitHub↔Zenodo link, which is what settles it.
+
+**The exposed tokens could not be revoked, and did not need to be — don't go
+looking for them.** The hook URL carries `?access_token=…` pointing at
+`zenodo.org`, so it is a **Zenodo** credential, not a GitHub one; it will never
+appear in GitHub's settings. It does not appear under Zenodo → Applications
+either, because that page lists only tokens a user created by hand, and webhook
+receiver tokens are minted internally by Zenodo. The user checked: all three
+sections of that page were empty. Severing the linked account is what
+invalidates them. **A session that goes hunting for these tokens will find
+nothing and conclude something is wrong. Nothing is.**
 
 Rebuild: 6 pages, 104 / 275 / 261 / 73 drawn, privacy gate clean, 10 JSON-LD
-blocks valid, exit 0. `docs/` greps clean for `zenodo`, `10.5281` and
-`doi.org`. The non-date diff is exactly the four footer citations.
+blocks valid, exit 0. The non-date diff is exactly the four footer citations.
+
+### Published — `778bfb9`, the first built-page change since `8cc4bee`
+
+All seven `/publish` gates passed. Verified live rather than assumed: every page
+200, sitemap 5 `<loc>`, **all six pages SHA-256-identical** to the committed
+`docs/`, stale-identity count 0. The check that mattered:
+`zenodo|10.5281|doi.org` returns **0 on all five live pages**, while
+`id="p116"` is still present on Genealogy II — the doi is gone from production
+and the content is not.
+
+`01d176d` then corrected the handoff header, which still described the previous
+session. Worth recording as a trap: the notes had been committed **alongside**
+`docs/`, so the `SessionStart` hook's staleness test — has `scripts/` or `docs/`
+moved since the notes were committed? — could not fire. A handoff can be both
+freshly committed and wrong, and that is exactly the case the hook cannot see.
 
 ### The release track is closed, not satisfied
 
