@@ -49,6 +49,13 @@ preview config. Editing the sibling directory from here works fine.
    first and preview **`standalone.html`**, not `index.html`, or the browser
    serves a cached ES module and you measure the previous build. **`--inline` is
    not optional** — `standalone.html` is only written when it is passed.
+6. **`build.py` reads `cache/`, not the live site, unless you pass `--refresh`.**
+   It says which — `cached in cache/` against `re-fetched` — and that line is the
+   only warning you get. Every gate then passes against **whatever the site
+   looked like when the cache was written**, so a build run to check a deploy
+   proves nothing without the flag. Found 2026-08-08: the cache was five days
+   stale, from before the doi removal. **After any publish here, the first run
+   over there is `--refresh`.**
 
 **A rebuild on a later day dirties `docs/` with dates alone** — `dateModified`,
 the "Last updated" line, the sitemap's `lastmod`. So "rebuild produces no diff"
@@ -146,11 +153,18 @@ than trusting a number here — **the counts in this file were two sessions stal
 until 2026-08-07**, because sessions work on that tool without touching this
 repo.
 
-**One thing to re-check there before anything else.** It parses the published
-register, and this session **changed the published pages** — the footer citation
-lost its "Archived at" line. That is outside the register markup it reads, so
-nothing should have broken, **but it has not been re-run since the deploy.**
-Run `python3 build.py` and `python3 tools/validate.py` before trusting it.
+**Re-checked against the deployed pages on 2026-08-08 — both pass.** It parses
+the published register, and the doi session **changed the published pages** (the
+footer citation lost its "Archived at" line), so it was re-run: all seven gates
+pass, 713 entries → 620 people, 505 names with break seams, 3 namesake pairs
+with II·182 / IV·69 still the one open adjudication, and the validator agrees on
+every field and relation but for II·50's known unreversible period. Each fetched
+page came back exactly **158 bytes smaller** than the old cache — the removed
+line, and evidence the parse really saw the new markup. Nothing there needs
+re-running until the published pages move again.
+
+**It only passed because of `--refresh`.** The first run used the cache and was
+worthless as a check; see step 6 above.
 
 **Read its `ANALYSIS.md` before changing it.** It records what was wrong with
 the ChatGPT prototype, and three of those get reintroduced by someone being
@@ -175,7 +189,7 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
 |---|---|---|
 | **Decide the de-indexing level** | **needs you** | The open thread. See *Waiting on the user* 1 |
 | **Land `laguna-search` on the site** | Session-sized, **needs you first** | Now in tension with the exposure posture — it adds a page and a reason to be found. Raise that when asking |
-| **Re-run `laguna-search`'s build + validator** | ~5 min | **Not yet done since this session's deploy.** The footer changed; the register did not. Expected to pass — confirm it |
+| ~~Re-run `laguna-search`'s build + validator~~ | **DONE 2026-08-08** | Both pass against the deployed pages. Only meaningful with **`--refresh`** — see *Start here* step 6. Nothing to do until the published pages move again |
 | **Give `laguna-search` a remote** | ~5 min, **needs you** | It has none, so the whole tool exists in one working copy under Google Drive. Publishing that repo is a visibility decision — more pointed now |
 | **II·182 / IV·69 — one woman or two?** | **needs you + the plates** | Both F., Sun, generation 4; nothing contradicts them and no relative of either is drawn on the other plate. Marked `?`, joined nowhere. The honest outcome may be *unresolvable*, as the turned-comma mark was |
 | **Confirm the 83 / 84 attribution** (Genealogy I) | Needs you + the records | 85 is firmly pinned. 83 and 84 rest on ages that do not cleanly reconcile. Published and citable, so this is the open item with a correctness edge |
