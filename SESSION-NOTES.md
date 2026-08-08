@@ -34,6 +34,11 @@ warnings over anything written here.
    4173** — if that port is held, the tool assigns another and tells you which;
    use the port it reports. **Don't call `preview_stop` when you finish** — the
    user may still be looking at it.
+5. **For the search tool**, `preview_start` config name **`laguna-search`**,
+   port 4180, serving its `dist/`. That entry is committed here but nothing
+   here builds it — run `python3 build.py` in that repo first, and preview
+   **`standalone.html`**, not `index.html`, or the browser will serve you a
+   cached ES module and you will measure the previous build.
 
 **A rebuild on a later day dirties `docs/` with dates alone** — `dateModified`,
 the "Last updated" line, the sitemap's `lastmod`. So "rebuild produces no diff"
@@ -77,7 +82,16 @@ bracket code.
 
 ## The open thread
 
-**`laguna-search` — phase 1 done, phase 2 is design.** It lives at
+> **The next session is a layout and design pass on `laguna-search`, named by
+> the user on 2026-08-07.** The work is **not in this repo** — it is
+> `src/search.css` and `src/search.js` one level up. **Start by reading that
+> tool's own `SESSION-NOTES.md` → *Next step — LAYOUT AND DESIGN***, which
+> lists seven stylesheet rules that look like preferences and are not, the
+> ES-module cache trap that has broken three verification passes, and the
+> design questions genuinely open. Nothing here needs to change for it.
+
+**`laguna-search` — phases 1, 2, 2b, 2c done; the next pass is design.** It
+lives at
 `../claude-random/Search by ChatGPT Sites - Claude Recreate/laguna-search/`,
 one level up from this repo, and is **its own git repo** with its own README,
 ANALYSIS.md and gates. **It is not deployed and is not wired into this site.**
@@ -148,7 +162,7 @@ consequence of the tool existing.
 | | Effort | Notes |
 |---|---|---|
 | **Wikidata item** | ~5 min, **needs you** | Payload at `wikidata-quickstatements.txt` is **current for four tables and ready to run**, 19 ids verified live, still a `CREATE`. Only the OAuth-logged-in batch run is left. **Send the file, don't paste it** — the separators are tabs. Record the Q-number afterwards |
-| **`laguna-search` design pass** | Session-sized | The open thread. Two-panel layout, and whether to land it on the site. URL state is done (phase 2) |
+| **`laguna-search` design pass** | Session-sized | **The named next session.** Layout and design only, in that repo's `src/`. The two-panel question is **settled** — one panel won in phase 2, don't reopen it. Deployment is a separate decision and is **not** part of this |
 | **II·182 / IV·69 — one woman or two?** | **needs you + the plates** | The one **open** namesake. Both F., Sun, generation 4; nothing contradicts them and no relative of either is drawn on the other plate, so name, sex and clan are the whole of the evidence. Marked `?` in the tool and joined nowhere. Only the plates can settle it — and if they do, it is a line in that tool's `NAMESAKES`, **not** a change to this edition |
 | **Unify the four `_FOLD` maps** | ~4 lines, needs a decision | Only `transcription_ii.py` maps `ŏ` and `Ĭ`, so `fold()` leaves diacritics in the keys for III·101 and III·16 despite its docstring. **Affects nothing published** — `fold()` is unused in the build. Touches four otherwise-immutable files, so decide rather than drive by. In `CLAUDE.md`. **New 2026-08-07:** this is now the likeliest way to trip `laguna-search`'s namesake gate — folding is what decides a name collision, so budget for adjudicating a new pair there |
 | **AMNH Digital Library** | Slow, **needs you** | Strong inbound link. Handle `2246/158` — `https://digitallibrary.amnh.org/handle/2246/158`. That is the identifier `.zenodo.json` omits from `related_identifiers`. The site 403s automated fetches; use a real browser. **Also the only route to settling the turned-comma mark** |
