@@ -52,6 +52,23 @@ apart, with different mothers. Parsons separates them herself — II·83 is
 carried over to Genealogy III as 222 and II·144 is not. Nothing here is wrong;
 it is worth knowing that the plate repeats a name within itself.
 
+### The design pass opened, and stopped at an editorial question
+
+**Nothing was changed in either repo's code** — no `src/` file, no rebuild, and
+nothing here. The pass began on the one open design question, long phonetic
+names wrapping mid-word in `laguna-search`'s 210px name column, and reached the
+decision it was blocked on: the user chose **constraining where a name may
+break** over the three width fixes (widen the column, drop Birth/Death into the
+panel, shrink the type). Those three are now closed.
+
+Recorded here because it is an **orthographic** decision, not a CSS one, and
+the same question could reach this repo. The rule drafted against the index —
+a name may break only before a consonant, and only where the material to its
+left ends in a vowel plus its own marks — is in that tool's `ANALYSIS.md` §4a
+with its evidence, including why breaking at the glottal `ʼ` fails as a general
+rule and why `Dzaaiʼd˙ | yid˙yuwe` must be rejected. **It is drafted, not
+ratified**; the session ended before the user answered.
+
 ### Counts in `SESSION-NOTES.md` had drifted two sessions
 
 It said 634 people, five gates, 65 joins; the tool is at 620 people, six gates,

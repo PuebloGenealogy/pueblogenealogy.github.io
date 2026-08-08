@@ -4,22 +4,26 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-07**, at the end of that day's work. Three things
-happened. Branch hygiene: the `2026-08-03` notes branch was merged and **every
-stale branch deleted on both sides**, which produced the squash-merge finding
-now in `CLAUDE.md`. A preview entry for the search tool went into
-`.claude/launch.json`. And the user reported apparent duplicates in
-`laguna-search`, which turned out to be correct data with its reasoning
-invisible — the fix is in that repo.
+Last updated **2026-08-07**, after a second session that day. The earlier one
+did three things: branch hygiene — the `2026-08-03` notes branch merged and
+**every stale branch deleted on both sides**, which produced the squash-merge
+finding now in `CLAUDE.md`; a preview entry for the search tool in
+`.claude/launch.json`; and the apparent-duplicates report in `laguna-search`,
+which turned out to be correct data with its reasoning invisible.
 
-**Nothing on the site changed, on any of the three.** The edition is all four
-plates and is current; **`8cc4bee` is still the last commit that moved a built
-page**, five commits back. `--public` was re-run and produced a date-only diff,
-which was reverted per the rule below.
+The later session **opened the `laguna-search` design pass and stopped at its
+first question, by design.** The user chose the approach — constrain where a
+phonetic name may break, rather than widen or shrink the column — and the rule
+was drafted and measured. **They did not ratify it before stopping.** No code
+was written in either repo.
 
-**The next session is a layout and design pass on `laguna-search`**, named by
-the user. Its first task needs a decision from you before any CSS — see
-*Waiting on the user* immediately below.
+**Nothing on the site changed, in any of this.** The edition is all four plates
+and is current; **`8cc4bee` is still the last commit that moved a built page**.
+`--public` was **not** re-run in the later session: nothing touched `scripts/`
+or `docs/`, so it could only have produced the date-only diff described below.
+
+**The next session resumes that design pass at one question** — see *Waiting on
+the user* immediately below.
 
 ---
 
@@ -91,12 +95,15 @@ Four things are blocked on a decision, not on effort. They are listed here as
 well as in the table below because a session that starts work without asking
 will produce something that has to be undone.
 
-1. **The name column's width, in `laguna-search`.** The next session's likely
-   first task. Long phonetic names wrap mid-word at ≤1120 px because that
-   breakpoint caps the column at 210 px. Three fixes, and the honest one —
-   constraining where a name may break — is an **editorial** call about
-   orthography, not a CSS one. The trade-off table is in that repo's
-   `SESSION-NOTES.md`.
+1. **Ratify the name-break rule, in `laguna-search`.** The next session's first
+   task, and now a **single question** rather than an open choice. The approach
+   is settled: on 2026-08-07 the user chose to constrain where a phonetic name
+   may break, over widening the column, dropping Birth/Death into the panel, or
+   shrinking the type — **those three are closed.** The rule is drafted and
+   measured against the index (all 73 long names get a legal seam) and sits in
+   that repo's **`ANALYSIS.md` §4a** with its evidence. **It is mine, not
+   theirs** — it asserts where a phonetic name may be divided, so it needs
+   ratifying or amending before a line of it is implemented.
 2. **II·182 / IV·69 — one woman or two?** The one namesake the plates do not
    settle. Marked `?` and joined nowhere. Only the scans can decide it, and if
    they do it is a line in that tool's `NAMESAKES`, **not** a change here.
@@ -111,7 +118,10 @@ picked up without asking.
 
 ## State
 
-**Nothing is half-finished in this repo.** `main` is clean, no open PRs.
+**Nothing is half-finished in this repo.** The one thing left open is in
+`laguna-search` and is a question for you, not unfinished code — see *Waiting
+on the user* 1. **This session's own notes may be sitting in an open PR**;
+merge it and `git pull` before doing anything else.
 **`8cc4bee` is still the last commit that changed the site**; everything after
 it is notes and changelog and touches no built page. `--public` was re-run on
 2026-08-03: 6 pages, 104 / 275 / 261 / 73 drawn, all four `self_check()`s pass,
@@ -144,13 +154,19 @@ bracket code.
 
 ## The open thread
 
-> **The next session is a layout and design pass on `laguna-search`, named by
-> the user on 2026-08-07.** The work is **not in this repo** — it is
-> `src/search.css` and `src/search.js` one level up. **Start by reading that
-> tool's own `SESSION-NOTES.md` → *Next step — LAYOUT AND DESIGN***, which
-> lists seven stylesheet rules that look like preferences and are not, the
-> ES-module cache trap that has broken three verification passes, and the
-> design questions genuinely open. Nothing here needs to change for it.
+> **The `laguna-search` design pass is open and stopped on one question.** The
+> work is **not in this repo** — it is `src/search.css` and `src/search.js` one
+> level up, and nothing here needs to change for it.
+>
+> **Resume by asking the user to ratify the break rule in that repo's
+> `ANALYSIS.md` §4a**, then implement it: seams computed in `build.py`,
+> rendered as `<wbr>`, the `name` value left clean — and **remove
+> `overflow-wrap: anywhere` from `.cell.name` in the same change**, or the
+> browser keeps breaking wherever it likes and the seams do nothing.
+>
+> Still read that tool's own `SESSION-NOTES.md` → *Next step — LAYOUT AND
+> DESIGN* first: seven stylesheet rules that look like preferences and are not,
+> and the ES-module cache trap that has broken three verification passes.
 
 **`laguna-search` — phases 1, 2, 2b, 2c done; the next pass is design.** It
 lives at
@@ -224,7 +240,7 @@ consequence of the tool existing.
 | | Effort | Notes |
 |---|---|---|
 | **Wikidata item** | ~5 min, **needs you** | Payload at `wikidata-quickstatements.txt` is **current for four tables and ready to run**, 19 ids verified live, still a `CREATE`. Only the OAuth-logged-in batch run is left. **Send the file, don't paste it** — the separators are tabs. Record the Q-number afterwards |
-| **`laguna-search` design pass** | Session-sized, **first task needs you** | **The named next session.** Layout and design only, in that repo's `src/`. Opens on the name-column width question, which is a decision before it is code — see *Waiting on the user* 1. The two-panel question is **settled**: one panel won in phase 2, don't reopen it. Deployment is separate and **not** part of this |
+| **`laguna-search` design pass** | Session-sized, **opens on one question for you** | **Open, and stopped one question in.** Layout and design only, in that repo's `src/`. Resume by ratifying the break rule in its `ANALYSIS.md` §4a — see *Waiting on the user* 1 — then implement. The two-panel question is **settled**: one panel won in phase 2. Deployment is separate and **not** part of this |
 | **Two split pairs have no gate** | Recorded, no action needed | `Kowaiʼd˙yuitsʼa` I·27 / III·66 and `Shauʼd˙yiyĕ` I·39 / II·225 fold one character apart, so the namesake gate never sees them. Correct for the reader — they sort apart and never look like duplicates — but they are unjoined judgements nothing checks. Now in that tool's **ANALYSIS.md §1.3b**, not just a handoff. **Don't loosen the namesake rule to edit distance to "fix" it** |
 | **II·182 / IV·69 — one woman or two?** | **needs you + the plates** | The one **open** namesake. Both F., Sun, generation 4; nothing contradicts them and no relative of either is drawn on the other plate, so name, sex and clan are the whole of the evidence. Marked `?` in the tool and joined nowhere. Only the plates can settle it — and if they do, it is a line in that tool's `NAMESAKES`, **not** a change to this edition. Note the honest outcome may be *unresolvable*, as the turned-comma mark was |
 | **Unify the four `_FOLD` maps** | ~4 lines, needs a decision | Only `transcription_ii.py` maps `ŏ` and `Ĭ`, so `fold()` leaves diacritics in the keys for III·101 and III·16 despite its docstring. **Affects nothing published** — `fold()` is unused in the build. Touches four otherwise-immutable files, so decide rather than drive by. In `CLAUDE.md`. **New 2026-08-07:** this is now the likeliest way to trip `laguna-search`'s namesake gate — folding is what decides a name collision, so budget for adjudicating a new pair there |
@@ -238,6 +254,17 @@ consequence of the tool existing.
 ## Decisions already made — don't re-litigate
 
 **From this session (all about `laguna-search`, none about the site):**
+
+- **Long names are fixed by constraining the break, not by resizing the
+  column** (2026-08-07, the user's choice among four). **Widening the name
+  column, dropping Birth/Death into the panel at ≤1120 px, and shrinking the
+  name's type are all closed** as answers to wrapping. The rule that replaces
+  them is drafted in `ANALYSIS.md` §4a and is **not yet ratified** — the
+  approach is the user's, the rule is not.
+- **Breaking at the glottal `ʼ` alone does not work**, though it looks right:
+  four long names carry no usable one, and in the `…itsʼă`-final names it is
+  second from last, leaving 15–17 characters on the first line. Measured; don't
+  re-derive it.
 
 - **The tool reads the published site, not the transcription modules.** The
   user chose this on 2026-08-03 after being shown the trade. The cost is one
