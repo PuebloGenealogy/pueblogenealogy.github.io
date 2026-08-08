@@ -5,20 +5,24 @@ History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
 Last updated **2026-08-08**. A short session, and **nothing on the site
-changed** — `778bfb9` is still the last commit to move a built page. It closed
-the one task the previous handoff left open: `laguna-search` was re-run against
-the deployed pages after the doi removal, and **its build and validator both
-pass**.
+changed** — `778bfb9` is still the last commit to move a built page. Two things
+happened, and the second is the one that changes this file's shape:
 
-**The finding is not that it passed — it is that it nearly didn't prove
-anything.** `build.py` re-parses a cache of this site unless `--refresh` is
-passed, and that cache was five days older than the deploy, so the first run
-green-lit the **pre-removal** markup. Recorded in `CLAUDE.md`; see *Start here*
-step 6.
+**The four `_FOLD` maps were unified**, closing a defect open since 2026-08-03.
+They had drifted, so `Dziŏ˙kwid˙yuʼă` (III·101) and `Ĭya˙ʼsi` (III·16) could not
+be folded by their own plate. All four now hold the union, byte-identical.
+Measured first: across all 2,558 string fields, **exactly those two folds
+change**, and colliding-fold counts are unchanged at 2 / 4 / 2 / 1 — so
+**`laguna-search`'s namesake gate gains no fourth pair**, which is the thing
+`CLAUDE.md` had warned this edit would trigger. `docs/` byte-identical.
 
-**De-indexing is still untouched.** `robots.txt`, `sitemap.xml` and the
-`noindex` question are exactly where the previous session left them, awaiting a
-decision. That is still the open thread.
+**De-indexing was struck by the user, not decided.** It had been the open thread
+for two sessions. It is now closed, and *nothing was edited* — `robots.txt`,
+`sitemap.xml`, the JSON-LD and the absence of `noindex` all stay as the build
+emits them. See *Decisions already made*.
+
+**So there is no open thread.** Everything left needs the user. That is stated
+plainly below rather than dressed up as work.
 
 ---
 
@@ -42,8 +46,8 @@ preview config. Editing the sibling directory from here works fine.
 | `launch.json` | `site` **and** `laguna-search` | tool only |
 
 1. **`git switch main && git pull`.**
-2. Read the top two entries of `CHANGELOG.md` — both **2026-08-08**. The lower
-   one is the exposure change and is the substantial one.
+2. Read the top **three** entries of `CHANGELOG.md` — all **2026-08-08**. The
+   lowest of the three is the exposure change and is the substantial one.
 3. Read `CLAUDE.md` — **Exposure posture** and **Release policy** first. Both
    were rewritten on 2026-08-08 and both now forbid things a cold start would
    otherwise propose as easy wins. Then **The one thing to get right** and
@@ -82,26 +86,17 @@ is not evidence. Recorded in `CLAUDE.md`.
 
 ## Waiting on the user — raise these, don't decide them
 
-1. **How far de-indexing goes.** The live one, and the reason it is a decision
-   rather than a task is in `CLAUDE.md` → *Exposure posture*. The user has said
-   they do not care whether the site is indexed and want low exposure, but
-   **"stop promoting it" and "take it out of Google" are different requests**
-   and one is close to irreversible for a citable edition. **Do not edit
-   `robots.txt`, add `noindex`, drop `sitemap.xml` or strip the JSON-LD until
-   they choose a level.** One mechanism to have ready, because the intuitive
-   choice is wrong: **`Disallow:` does not de-index** — it blocks crawling, so
-   an already-indexed URL persists as a bare link nobody can re-read.
-   **`<meta name="robots" content="noindex">` is the tool**, and it needs
-   crawling left *allowed*.
-2. **Whether `laguna-search` ever lands on the site.** Unblocked and still
+De-indexing used to be item 1 here. **It is closed**; do not re-add it.
+
+1. **Whether `laguna-search` ever lands on the site.** Unblocked and still
    undecided. Work would be in **this** repo: a `make_chart.py` page plus
    serving the index. **Note this cuts against the exposure posture** — it adds
    a page and a reason to be found — so it is a bigger question than it was when
    it was first raised.
-3. **II·182 / IV·69 — one woman or two?** The one namesake the plates do not
+2. **II·182 / IV·69 — one woman or two?** The one namesake the plates do not
    settle. Marked `?` and joined nowhere. Only the scans can decide it, and if
    they do it is a line in that tool's `NAMESAKES`, **not** a change here.
-4. **Confirm the 83 / 84 attribution on Genealogy I.** The oldest of these and
+3. **Confirm the 83 / 84 attribution on Genealogy I.** The oldest of these and
    the only one with a correctness edge, since it is published and citable.
 
 ## State
@@ -113,11 +108,19 @@ is not evidence. Recorded in `CLAUDE.md`.
 verified** — all six pages SHA-256-identical to the committed `docs/`, all 200,
 sitemap 5 `<loc>`, stale-identity 0, and `zenodo|10.5281|doi.org` **0 on every
 live page** while `id="p116"` is still present. Everything after it —
-`01d176d`, `e2e5142`, `9666966` — touches documentation only. `--public` was
-re-run this session as a tree-against-build check: 6 pages,
-104 / 275 / 261 / 73 drawn, privacy gate clean, 10 JSON-LD blocks valid,
-exit 0, **no diff at all**, dates included, because it was the same day as the
-publish.
+`01d176d`, `e2e5142`, `9666966`, `ffc519b` — touches documentation and the
+transcription modules' fold maps only. `--public` was run **twice** this
+session, before and after the `_FOLD` edit: 6 pages, 104 / 275 / 261 / 73 drawn,
+privacy gate clean, 10 JSON-LD blocks valid, exit 0, **`docs/` byte-identical
+both times**, dates included, because it was the same day as the publish.
+
+**The `_FOLD` unification is complete and needs no follow-up anywhere.** All
+four maps hash identical; all four `self_check()`s pass. The renderer never
+calls `fold()`, so nothing published moved. **`laguna-search` needs no re-run
+on account of it** — its namesake gate keys on folded names, and no fold key it
+consumes changed. `ï` and `ˑ` (U+02D1) were deliberately left out of the union:
+both occur only in Genealogy II `plate_note` prose quoting *withdrawn* readings,
+and in no name on any plate.
 
 **`laguna-search` is verified against the deployed pages and needs nothing until
 they move again.** All seven gates, 713 entries → 620 people, 505 names with
@@ -144,19 +147,26 @@ bracket code.
 
 ## The open thread
 
-> **How far to take de-indexing.** It is item 1 above, and it is still the only
-> thing the user has actually left hanging. Nothing else is open.
+> **There isn't one.** This is not a hedge — it is the state. De-indexing was
+> the last thing the user had left hanging, and they struck it. Everything
+> remaining either **needs the user** (the three items above) or is recorded as
+> deliberately-not-doing (below).
 >
-> The reason it is not a five-minute job: the two obvious mechanisms do
-> different things, and the wrong one is the intuitive one. Read *Exposure
-> posture* in `CLAUDE.md` before proposing anything, and **come with the options
-> and their costs, not with an edit already made**.
+> **Do not manufacture one.** The temptation on a cold start is to pick the
+> largest remaining table row and begin; two of the three open items are
+> decisions the user has to make, and the third needs records nobody here has.
+> **Ask which, or ask what they want to do.**
 >
-> One constraint that survives whatever they choose: **`GOOGLE_SITE_VERIFICATION`
-> must not be blanked.** Search Console ownership is how a removal request is
-> filed, so blanking the tag destroys the only mechanism for taking a page out
-> of results. Low exposure is now a *second* reason to keep it, not a reason to
-> drop it. The hard rule in `CLAUDE.md` is unchanged.
+> If pressed for the item with the most at stake, it is **confirming the
+> 83 / 84 attribution on Genealogy I** — it is published, citable, and the only
+> open item with a correctness edge. It needs the user and the records; it is
+> not startable alone.
+>
+> One constraint that outlives all of this: **`GOOGLE_SITE_VERIFICATION` must
+> not be blanked.** Search Console ownership is how a removal request is filed,
+> so blanking the tag destroys the only mechanism for taking a page out of
+> results. Low exposure is a *second* reason to keep it, not a reason to drop
+> it. The hard rule in `CLAUDE.md` is unchanged.
 
 **`laguna-search` — phases 1, 2, 2b, 2c and the design pass are all done.** It
 lives at
@@ -184,7 +194,9 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
 
 - `gate_namesakes_adjudicated` fails until every unjoined pair sharing a folded
   name, sex and clan has a hand-written verdict. **Correcting one diacritic here
-  can create a new pair.** Three today; one, II·182 / IV·69, is `?`.
+  can create a new pair.** Three today; one, II·182 / IV·69, is `?`. The
+  `_FOLD` unification was expected to create a fourth and **did not** — but that
+  was measured, not assumed, and the next name edit deserves the same check.
 - **`gate_names_break_lawfully` (gate 5)** fails when a single-word name of 14+
   characters has no legal break seam. **A vowel character new to this edition**
   would do it. It only catches the long names; a shorter one loses its seams
@@ -194,13 +206,11 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
 
 | | Effort | Notes |
 |---|---|---|
-| **Decide the de-indexing level** | **needs you** | The open thread. See *Waiting on the user* 1 |
 | **Land `laguna-search` on the site** | Session-sized, **needs you first** | In tension with the exposure posture — it adds a page and a reason to be found. Raise that when asking |
 | **Give `laguna-search` a remote** | ~5 min, **needs you** | It has none, so the whole tool exists in one working copy under Google Drive. Publishing that repo is a visibility decision — more pointed now |
 | **II·182 / IV·69 — one woman or two?** | **needs you + the plates** | Both F., Sun, generation 4; nothing contradicts them and no relative of either is drawn on the other plate. Marked `?`, joined nowhere. The honest outcome may be *unresolvable*, as the turned-comma mark was |
 | **Confirm the 83 / 84 attribution** (Genealogy I) | Needs you + the records | 85 is firmly pinned. 83 and 84 rest on ages that do not cleanly reconcile. Published and citable, so this is the open item with a correctness edge |
-| **Unify the four `_FOLD` maps** | ~4 lines, needs a decision | Only `transcription_ii.py` maps `ŏ` and `Ĭ`, so `fold()` leaves diacritics in the keys for III·101 and III·16 despite its docstring. **Affects nothing published**. Touches four otherwise-immutable files. **The likeliest way to trip `laguna-search`'s namesake gate** — budget for adjudicating a new pair |
-| **Two split pairs have no gate** | Recorded, no action needed | `Kowaiʼd˙yuitsʼa` I·27 / III·66 and `Shauʼd˙yiyĕ` I·39 / II·225 fold one character apart, so the namesake gate never sees them. In that tool's **ANALYSIS.md §1.3b**. **Don't loosen the namesake rule to edit distance to "fix" it** |
+| **Two split pairs have no gate** | Recorded, no action needed | `Kowaiʼd˙yuitsʼa` I·27 / III·66 and `Shauʼd˙yiyĕ` I·39 / II·225 fold one character apart, so the namesake gate never sees them. **The `_FOLD` unification did not change this** — neither pair's difference is one of the characters that moved. In that tool's **ANALYSIS.md §1.3b**. **Don't loosen the namesake rule to edit distance to "fix" it** |
 | **A wrapped cross-reference still miscounts its row** | Unknown; needs a design call | `row += 1` assumes one visual line. Nothing wraps today. Unguardable at build time — no font metrics. The fix is to split at the plate's own line break with `\|`, as 160, 169 and III's 155 do |
 | **Register's relation lists lack the point** | ~1 line | They read `56 Weʼdyumă` where entry titles read `56.`. One line in `rel_link`, but it changes the apparatus. **Also parsed by `laguna-search`** — harmless there, but rerun its validator |
 | **Cross-plate references are never links** | Deliberate, not a gap | No reference from one plate into another is a link, on any plate. Genealogy III's `#note-crossref` states this. **`laguna-search` resolves them internally**, which is evidence it is doable but not a reason to change the plates |
@@ -210,6 +220,15 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
 
 **Set by the user on 2026-08-08 — none of them provisional:**
 
+- **De-indexing is CLOSED, and nothing was edited.** The user struck it as
+  unimportant rather than choosing a level. `robots.txt`, `sitemap.xml`, the
+  JSON-LD and the absence of `noindex` stay as the build emits them. **This is
+  the one a cold start will re-derive**, because "the user wants low exposure"
+  reads as an argument for `robots.txt`. It is not: not promoting the edition
+  and taking it out of Google are different requests, and only the first was
+  made. The mechanism is kept in `CLAUDE.md` — **`Disallow:` does not
+  de-index**, and `noindex` needs crawling left *allowed* — so the closure is
+  cheap to hold, not so it can be reopened.
 - **No Wikidata item, ever.** The payload is deleted. It survives in git
   history, which is fine — bibliographic metadata only. **Do not reconstruct
   it**, and do not offer it as an easy win; it was the highest-return item on
@@ -227,8 +246,6 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
   widely-repeated "published records are permanent" is true only *after* that
   window. That session asserted the wrong version first; the correction is in
   `CLAUDE.md` and `CHANGELOG.md`.
-- **De-indexing is deferred, not declined.** Nothing was edited. See the open
-  thread.
 
 **Still standing from earlier sessions:**
 
@@ -257,7 +274,9 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
 - **Merged entries are not flattened into one record.** The plates disagree, and
   that is data.
 - **A calculated birth year is never shown as a recorded one.**
-- **`fold()` is the edition's, not NFKD's.**
+- **`fold()` is the edition's, not NFKD's** — and as of 2026-08-08 the **same**
+  map in all four modules. Keep them identical; a character new to a name goes
+  in all four.
 - **22's bracket runs 80, 82; 83 is 25's**, and the plate's rule is over-drawn.
 - **43's bracket carries two leaders.** `LEADER_ON_SPOUSE_ROW`.
 - **Genealogy III needs no editorial attribution, anywhere.** The plate marks
@@ -270,6 +289,11 @@ filtered out of the directory; and cross-plate identity decided by **name + sex
 
 ## Closed — do not re-raise
 
+- **De-indexing.** Struck by the user 2026-08-08. Nothing to do, nothing
+  pending, no level to choose.
+- **Unifying the four `_FOLD` maps.** Done 2026-08-08, `ffc519b`. Two folds
+  changed, no new collisions, `docs/` unmoved. The rule that replaces it —
+  *keep the four maps identical* — is in `CLAUDE.md`, not a task.
 - **Wikidata, Zenodo and the release track**, all three. See above. These are
   the ones a helpful cold start will try to reopen.
 - **Re-running `laguna-search` against the doi removal.** Done 2026-08-08, both
