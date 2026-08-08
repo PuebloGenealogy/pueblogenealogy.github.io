@@ -4,16 +4,24 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-08**. The session did two things: merged the 2026-08-07
-handoff (PR #27) and deleted its branch, and then **closed the `laguna-search`
-design pass** — the name-break rule was ratified by the user, implemented,
-measured and committed in that repo.
+Last updated **2026-08-08**, and **this is a partial refresh, not a
+`/wrap-session` handoff** — the header and this summary were corrected after
+publishing so a cold start is not misled; the sections below were updated where
+they had gone false, but the file has not been rewritten end to end.
 
-**Nothing on the site changed.** The edition is all four plates and is current;
-**`8cc4bee` is still the last commit that moved a built page**. `--public` was
-re-run as a check: 6 pages, 104 / 275 / 261 / 73 drawn, all four `self_check()`s
-pass, privacy gate clean, 10 JSON-LD blocks valid, and the only diff was dates,
-which was reverted.
+**The site changed, and it was published.** `778bfb9` is now the last commit
+that moved a built page — the first since `8cc4bee`. Merged fast-forward to
+`main` and deployed; all six pages verified live by SHA-256, all 200, sitemap
+5 `<loc>`, stale-identity count 0, `zenodo|10.5281|doi.org` **0 on every page**,
+`id="p116"` still present.
+
+**The user set a low-exposure posture and it is now in force.** Wikidata is
+removed outright, the Zenodo **deposit was deleted** by the user (both dois
+return 410 Gone at a tombstone), the webhook is gone and the GitHub↔Zenodo link
+severed. The release track is closed permanently. **De-indexing was considered
+and deliberately deferred** — `robots.txt`, `sitemap.xml` and `noindex` are
+untouched pending a separate decision. Read `CLAUDE.md` → *Exposure posture*
+before acting on any of this.
 
 **No design or editorial question is open in either repo.** See *State*.
 
