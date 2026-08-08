@@ -499,6 +499,18 @@ Restructure the register freely; just expect `laguna-search` to need its parser
 updated, and run its `tools/validate.py`, which compares all 713 entries and
 every relation against `scripts/transcription*.py`.
 
+**One edit here can stop that tool's build, and it is a smaller edit than
+restructuring anything.** Added 2026-08-07. `laguna-search` marks two people
+who share a folded name, sex and clan — they sort adjacent in its alphabetical
+list and otherwise read as a duplicate — and its `gate_namesakes_adjudicated`
+**refuses to build** until every such pair has a hand-written verdict. There
+are three today. **Correcting a single diacritic in a transcription module is
+enough to create a fourth**, because folding is what decides the collision:
+`ŏ` → `o` and `Ĭ` → `i` are exactly the kind of change the *unify the four
+`_FOLD` maps* item would make. Nothing on this site breaks — the gate is
+theirs, not ours, and it is deliberately noisy rather than silent. Just expect
+to adjudicate a pair after changing a name, and know the failure is a feature.
+
 ## Two names cannot be found by their own plate's `fold()`
 
 **Found 2026-08-03; not fixed, because it is a defect in this repo's data.**

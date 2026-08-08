@@ -3,7 +3,63 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-03 (latest) — a search tool now reads the published pages, and two things it found
+## 2026-08-07 (latest) — branch hygiene, and the search tool learns to explain a refusal
+
+**Nothing on the site changed.** `8cc4bee` is still the last commit that moved
+a built page. Everything below is either notes in this repo or work in
+`laguna-search`, which lives outside it.
+
+### Every stale branch is gone, and ancestry lied about one of them
+
+Ten remote-tracking refs were stale — GitHub auto-deletes a branch on merge —
+so `git fetch --prune` belongs *before* any cleanup, and a batch
+`git push origin --delete a b c` **fails whole** if one ref is already gone,
+which reads as a permissions problem and is not one.
+
+The finding worth keeping: **PRs here are squash-merged, so
+`git branch --no-merged` is not a test of whether a branch holds unmerged
+work.** `handoff-2026-07-29-plate-chrome` looked unmerged and is PR #13,
+squashed onto `main` as `5a37bdf`, tree `39b8487` — identical to the branch
+head `df2b1e0`, empty diff. Nothing was ever at risk. Read the PR state, not
+the ancestry. Now in `CLAUDE.md` → **Environment**.
+
+`.claude/launch.json` gained a `laguna-search` preview entry on port 4180,
+beside `site` on 4173. Inert if that folder is absent; nothing here builds it.
+
+### The search tool marks the joins it deliberately does *not* make
+
+Reported as a bug — *"the search tool shows duplicates, starting in
+alphabetical order, I, 52 is the same as III, 250"*. **The data was right.**
+I·52 is a boy of 4 and III·250 has a wife and three children in the same
+1918–19 fieldwork, so refusing to join them is correct. But the reasoning was
+nowhere on the page, and the list sorts by name, so two adjacent rows read as
+the tool repeating itself.
+
+`laguna-search` now marks such a row `≠ III · 250` while closed and gives a
+verdict plus its evidence in the panel. A pair the plates cannot settle is
+marked `?`, never `≠` — one such exists, II·182 / IV·69.
+
+**Why this belongs in the edition's changelog:** the gate that enforces it,
+`gate_namesakes_adjudicated`, finds every unjoined pair sharing a folded name,
+sex and clan and refuses to build until each is adjudicated by hand. **A change
+in *this* repo can trip it** — correcting one diacritic so two names fold alike
+is enough. That coupling is recorded in `CLAUDE.md` under *The published markup
+is now an interface*.
+
+It also found something the edition's own numbering hides: **II·83 and II·144
+are two different Lizard girls of one name on a single plate**, a generation
+apart, with different mothers. Parsons separates them herself — II·83 is
+carried over to Genealogy III as 222 and II·144 is not. Nothing here is wrong;
+it is worth knowing that the plate repeats a name within itself.
+
+### Counts in `SESSION-NOTES.md` had drifted two sessions
+
+It said 634 people, five gates, 65 joins; the tool is at 620 people, six gates,
+79 joined people across 172 entries. Sessions have worked on `laguna-search`
+without touching this repo, so its figures go stale here silently. The handoff
+now says so rather than presenting them as current.
+
+## 2026-08-03 — a search tool now reads the published pages, and two things it found
 
 **Nothing on the site changed.** `docs/` is byte-identical apart from the dates
 a rebuild always moves, and no transcription was touched. The only edits here
