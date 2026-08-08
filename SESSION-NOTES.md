@@ -4,17 +4,22 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-07**. Two things happened that day. First a short
-housekeeping session: the `2026-08-03` notes branch was merged, a preview entry
-was added for the search tool, and **every stale branch was deleted on both
-sides**. Then the user reported apparent duplicates in `laguna-search`, and the
-fix went in there. **Nothing on the site changed on either count** — the
-edition is all four plates and is current, and `8cc4bee` is still the last
-commit that moved a built page.
+Last updated **2026-08-07**, at the end of that day's work. Three things
+happened. Branch hygiene: the `2026-08-03` notes branch was merged and **every
+stale branch deleted on both sides**, which produced the squash-merge finding
+now in `CLAUDE.md`. A preview entry for the search tool went into
+`.claude/launch.json`. And the user reported apparent duplicates in
+`laguna-search`, which turned out to be correct data with its reasoning
+invisible — the fix is in that repo.
 
-The **search tool is still the open thread**. It was built on **2026-08-03**,
-outside this repo and not deployed, and in building it turned the published
-markup into something another program reads.
+**Nothing on the site changed, on any of the three.** The edition is all four
+plates and is current; **`8cc4bee` is still the last commit that moved a built
+page**, five commits back. `--public` was re-run and produced a date-only diff,
+which was reverted per the rule below.
+
+**The next session is a layout and design pass on `laguna-search`**, named by
+the user. Its first task needs a decision from you before any CSS — see
+*Waiting on the user* immediately below.
 
 ---
 
@@ -80,14 +85,14 @@ it is notes and changelog and touches no built page. `--public` was re-run on
 privacy gate clean on 6 pages, 10 JSON-LD blocks valid, and the only diff was
 dates, which was reverted.
 
-**Don't trust a tip hash in this file — run `git log --oneline -3` and
-`git branch -a`.** A handoff cannot state the commit that contains it, and the
-tool's own handoff twice sent a session to fast-forward from a branch that had
-already been deleted. If `git branch` shows a `handoff-2026-08-07-*` branch, it
-is redundant with `main` and safe to delete.
+**Run `git log --oneline -3` and `git branch -a`. Don't trust a tip hash or a
+branch name in this file.** A handoff cannot describe the commit that contains
+it, and naming a working branch guarantees the sentence rots — that happened
+three times in this repo and its sibling on 2026-08-07, once to the very
+paragraph written to warn about it. This file now names neither.
 
-**`main` is the branch; the remote had no others as of the 2026-08-07 sweep.**
-Everything else was merged and deleted;
+**`main` is the branch, and the remote had no others as of the 2026-08-07
+sweep.** Everything else was merged and deleted;
 `docs/` did not move, so the Pages redeploy served identical bytes. The one
 functional change was a `.claude/launch.json` entry named **`laguna-search`**,
 serving that tool's `dist/` on 4180 beside `site` on 4173 — inert if the
