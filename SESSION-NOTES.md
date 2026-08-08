@@ -47,6 +47,30 @@ is a valid sync check only *within* a day. `docs/` was last built on
 that is all it is, `git checkout -- docs/` rather than committing. This was
 done on 2026-08-03 and the diff was dates only.
 
+## Waiting on the user — raise these, don't decide them
+
+Four things are blocked on a decision, not on effort. They are listed here as
+well as in the table below because a session that starts work without asking
+will produce something that has to be undone.
+
+1. **The name column's width, in `laguna-search`.** The next session's likely
+   first task. Long phonetic names wrap mid-word at ≤1120 px because that
+   breakpoint caps the column at 210 px. Three fixes, and the honest one —
+   constraining where a name may break — is an **editorial** call about
+   orthography, not a CSS one. The trade-off table is in that repo's
+   `SESSION-NOTES.md`.
+2. **II·182 / IV·69 — one woman or two?** The one namesake the plates do not
+   settle. Marked `?` and joined nowhere. Only the scans can decide it, and if
+   they do it is a line in that tool's `NAMESAKES`, **not** a change here.
+3. **Whether `laguna-search` ever lands on the site.** Unchanged since phase 1
+   and **not** a consequence of the design pass finishing. Landing it is work
+   in *this* repo — a `make_chart.py` page plus serving the index.
+4. **Confirm the 83 / 84 attribution on Genealogy I.** The oldest of these and
+   the only one with a correctness edge, since it is published and citable.
+
+**Nothing here blocks anything else.** Every other item in the table can be
+picked up without asking.
+
 ## State
 
 **Nothing is half-finished in this repo.** `main` is clean, no open PRs.
@@ -162,8 +186,9 @@ consequence of the tool existing.
 | | Effort | Notes |
 |---|---|---|
 | **Wikidata item** | ~5 min, **needs you** | Payload at `wikidata-quickstatements.txt` is **current for four tables and ready to run**, 19 ids verified live, still a `CREATE`. Only the OAuth-logged-in batch run is left. **Send the file, don't paste it** — the separators are tabs. Record the Q-number afterwards |
-| **`laguna-search` design pass** | Session-sized | **The named next session.** Layout and design only, in that repo's `src/`. The two-panel question is **settled** — one panel won in phase 2, don't reopen it. Deployment is a separate decision and is **not** part of this |
-| **II·182 / IV·69 — one woman or two?** | **needs you + the plates** | The one **open** namesake. Both F., Sun, generation 4; nothing contradicts them and no relative of either is drawn on the other plate, so name, sex and clan are the whole of the evidence. Marked `?` in the tool and joined nowhere. Only the plates can settle it — and if they do, it is a line in that tool's `NAMESAKES`, **not** a change to this edition |
+| **`laguna-search` design pass** | Session-sized, **first task needs you** | **The named next session.** Layout and design only, in that repo's `src/`. Opens on the name-column width question, which is a decision before it is code — see *Waiting on the user* 1. The two-panel question is **settled**: one panel won in phase 2, don't reopen it. Deployment is separate and **not** part of this |
+| **Two split pairs have no gate** | Recorded, no action needed | `Kowaiʼd˙yuitsʼa` I·27 / III·66 and `Shauʼd˙yiyĕ` I·39 / II·225 fold one character apart, so the namesake gate never sees them. Correct for the reader — they sort apart and never look like duplicates — but they are unjoined judgements nothing checks. Now in that tool's **ANALYSIS.md §1.3b**, not just a handoff. **Don't loosen the namesake rule to edit distance to "fix" it** |
+| **II·182 / IV·69 — one woman or two?** | **needs you + the plates** | The one **open** namesake. Both F., Sun, generation 4; nothing contradicts them and no relative of either is drawn on the other plate, so name, sex and clan are the whole of the evidence. Marked `?` in the tool and joined nowhere. Only the plates can settle it — and if they do, it is a line in that tool's `NAMESAKES`, **not** a change to this edition. Note the honest outcome may be *unresolvable*, as the turned-comma mark was |
 | **Unify the four `_FOLD` maps** | ~4 lines, needs a decision | Only `transcription_ii.py` maps `ŏ` and `Ĭ`, so `fold()` leaves diacritics in the keys for III·101 and III·16 despite its docstring. **Affects nothing published** — `fold()` is unused in the build. Touches four otherwise-immutable files, so decide rather than drive by. In `CLAUDE.md`. **New 2026-08-07:** this is now the likeliest way to trip `laguna-search`'s namesake gate — folding is what decides a name collision, so budget for adjudicating a new pair there |
 | **AMNH Digital Library** | Slow, **needs you** | Strong inbound link. Handle `2246/158` — `https://digitallibrary.amnh.org/handle/2246/158`. That is the identifier `.zenodo.json` omits from `related_identifiers`. The site 403s automated fetches; use a real browser. **Also the only route to settling the turned-comma mark** |
 | **Confirm the 83 / 84 attribution** (Genealogy I) | Needs you + the records | 85 is firmly pinned. 83 and 84 rest on ages that do not cleanly reconcile. Published and citable, so this is the open item with a correctness edge |
