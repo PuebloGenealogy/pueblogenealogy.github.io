@@ -523,11 +523,14 @@ who share a folded name, sex and clan — they sort adjacent in its alphabetical
 list and otherwise read as a duplicate — and its `gate_namesakes_adjudicated`
 **refuses to build** until every such pair has a hand-written verdict. There
 are three today. **Correcting a single diacritic in a transcription module is
-enough to create a fourth**, because folding is what decides the collision:
-`ŏ` → `o` and `Ĭ` → `i` are exactly the kind of change the *unify the four
-`_FOLD` maps* item would make. Nothing on this site breaks — the gate is
-theirs, not ours, and it is deliberately noisy rather than silent. Just expect
-to adjudicate a pair after changing a name, and know the failure is a feature.
+enough to create a fourth**, because folding is what decides the collision.
+The `_FOLD` unification of 2026-08-08 was expected to be exactly such a change
+and turned out not to be — it moved two fold keys and neither collided (see
+*The four `_FOLD` maps are one map*) — but that was checked, not assumed, and
+the next name edit deserves the same check. Nothing on this site breaks either
+way: the gate is theirs, not ours, and it is deliberately noisy rather than
+silent. Expect to adjudicate a pair after changing a name, and know the failure
+is a feature.
 
 **There is now a SECOND such gate, and it fails on a different input — a
 character, not a collision.** Added 2026-08-08, when that tool's name-break
@@ -545,23 +548,31 @@ every case. Nothing on this site breaks either way; this is written down
 because the failure is in a different repo from its cause, and half of it is
 silent.
 
-## Two names cannot be found by their own plate's `fold()`
+## The four `_FOLD` maps are one map — keep them identical
 
-**Found 2026-08-03; not fixed, because it is a defect in this repo's data.**
-The four transcription modules each carry their own `_FOLD` map and they are
-**not identical**: only `transcription_ii.py` maps `ŏ` and `Ĭ`. Two names on
-other plates carry those characters, so their own plate's `fold()` leaves the
-diacritic in the key:
+**Found 2026-08-03, fixed 2026-08-08.** The four transcription modules each
+carry their own `_FOLD` map, and they used to differ: only `transcription_ii.py`
+mapped `ŏ` and `Ĭ`, so two Genealogy III names kept their diacritic in a key
+documented as "diacritic-free" — `Dziŏ˙kwid˙yuʼă` (III·101) and `Ĭya˙ʼsi`
+(III·16). All four now hold the **union** of the four maps, byte-identical.
 
-- `Dziŏ˙kwid˙yuʼă` — Genealogy III, 101
-- `Ĭya˙ʼsi` — Genealogy III, 16
+Measured before changing anything: across all 2,558 string fields in the four
+modules, **exactly those two folds change**, and the per-plate count of colliding
+folded names is unchanged (2 / 4 / 2 / 1). All four `self_check()`s pass and a
+`--public` build leaves `docs/` byte-identical, as expected — `make_chart.py`
+never calls `fold()`; the Find box keys on names and numbers directly.
 
-`fold()` is documented as a "diacritic-free lowercase key", and for these two it
-is not one. Nothing on the site uses `fold()` today, so nothing is visibly
-broken; the Find box keys on names and numbers directly. The fix is to give all
-four modules the union of the maps. It is a one-line edit per module and it
-changes no rendered output — but it touches four files that are otherwise
-immutable, so it wants a deliberate decision rather than a drive-by.
+**A new character in a name now needs adding to four maps, not one.** That is
+the cost of the fix, and it is the cheaper failure: a map that has drifted is
+silent, while four identical maps can be diffed. Two characters are deliberately
+**not** in it — `ï` and `ˑ` (U+02D1) appear only inside `plate_note` prose on
+Genealogy II, quoting readings that were *withdrawn*, and are in no name on any
+plate.
+
+Note the knock-on in `laguna-search`, which folds independently: changing a
+diacritic in a name here can create a fourth namesake collision there and stop
+its build until the pair is adjudicated. This edit did not — no fold key moved
+except those two, and neither collides.
 
 Person references in the apparatus are linked by `_p()` at each call site,
 **never by regex over the prose**. The apparatus is full of numbers that are not
@@ -839,18 +850,20 @@ What is settled:
   only mechanism for taking a page out of results. The hard rule stands
   unchanged; it now has two justifications instead of one.
 
-**What is NOT yet decided: how far de-indexing goes.** Do not act on this
-section by editing `robots.txt`, adding `noindex`, dropping `sitemap.xml`, or
-stripping the JSON-LD until the user has chosen a level. "Stop promoting it" and
-"take it out of Google" are different requests with different costs, and one of
-them is close to irreversible for a citable edition.
+**De-indexing — CLOSED 2026-08-08 by the user: it is not important, and nothing
+is to be done about it.** It was carried as the open thread for two sessions,
+awaiting a choice of level; the user struck it instead. So `robots.txt`,
+`sitemap.xml`, the JSON-LD and the absence of `noindex` all stay exactly as
+the build emits them today. **Do not re-raise it** as an obvious follow-on to
+"the user wants low exposure" — not promoting the edition and taking it out of
+Google are different requests, and only the first one was made.
 
-One mechanism worth knowing before that conversation, because the intuitive
-choice is the wrong one: **`Disallow:` in `robots.txt` does not de-index.** It
-forbids crawling, so an already-indexed URL can persist in results as a bare
-link that can no longer be re-read. **`<meta name="robots" content="noindex">`
-is the tool that removes a page** — and it requires crawling to stay *allowed*,
-so the two must not be combined.
+The mechanism is kept because it is what makes the closure cheap to hold, and
+because the intuitive move is the wrong one: **`Disallow:` in `robots.txt` does
+not de-index.** It forbids crawling, so an already-indexed URL can persist in
+results as a bare link that can no longer be re-read. **`<meta name="robots"
+content="noindex">` is the tool that removes a page** — and it requires crawling
+to stay *allowed*, so the two must not be combined. Neither is deployed here.
 
 **Outstanding:**
 - **Wikidata — REMOVED 2026-08-08 by the user. No item is to be created, and
