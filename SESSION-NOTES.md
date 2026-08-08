@@ -4,26 +4,18 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-07**, after a second session that day. The earlier one
-did three things: branch hygiene — the `2026-08-03` notes branch merged and
-**every stale branch deleted on both sides**, which produced the squash-merge
-finding now in `CLAUDE.md`; a preview entry for the search tool in
-`.claude/launch.json`; and the apparent-duplicates report in `laguna-search`,
-which turned out to be correct data with its reasoning invisible.
+Last updated **2026-08-08**. The session did two things: merged the 2026-08-07
+handoff (PR #27) and deleted its branch, and then **closed the `laguna-search`
+design pass** — the name-break rule was ratified by the user, implemented,
+measured and committed in that repo.
 
-The later session **opened the `laguna-search` design pass and stopped at its
-first question, by design.** The user chose the approach — constrain where a
-phonetic name may break, rather than widen or shrink the column — and the rule
-was drafted and measured. **They did not ratify it before stopping.** No code
-was written in either repo.
+**Nothing on the site changed.** The edition is all four plates and is current;
+**`8cc4bee` is still the last commit that moved a built page**. `--public` was
+re-run as a check: 6 pages, 104 / 275 / 261 / 73 drawn, all four `self_check()`s
+pass, privacy gate clean, 10 JSON-LD blocks valid, and the only diff was dates,
+which was reverted.
 
-**Nothing on the site changed, in any of this.** The edition is all four plates
-and is current; **`8cc4bee` is still the last commit that moved a built page**.
-`--public` was **not** re-run in the later session: nothing touched `scripts/`
-or `docs/`, so it could only have produced the date-only diff described below.
-
-**The next session resumes that design pass at one question** — see *Waiting on
-the user* immediately below.
+**No design or editorial question is open in either repo.** See *State*.
 
 ---
 
@@ -35,11 +27,11 @@ the user* immediately below.
 cd "/Users/eli/My Drive/CLAUDE - GENEALOGY TABLES - CREATED BY FABLE/pueblogenealogy.github.io" && claude
 ```
 
-**Even when the work is in `laguna-search`** — which is where it is now. That
-repo has **no `CLAUDE.md` and no `SessionStart` hook**; only a `launch.json`.
-Start a session there and you get no rules, no handoff auto-load, and no `site`
+**Even when the work is in `laguna-search`.** That repo has **no `CLAUDE.md`
+and no `SessionStart` hook**; only a `launch.json` entry lives here. Start a
+session there and you get no rules, no handoff auto-load, and no `site`
 preview config. Editing the sibling directory from here works fine and is what
-the last session did throughout.
+the last three sessions did throughout.
 
 | | here | `laguna-search` |
 |---|---|---|
@@ -51,66 +43,52 @@ the last session did throughout.
 — the hook has already put this file in context — and it answers with the
 up-next list and then **stops**, rather than starting work.
 
-To skip a turn and go straight at the blocking decision:
-
-> `resume, then let's do the laguna-search design pass — start with the name-column width question`
-
-**Whoever does that design work must read that repo's own
-`SESSION-NOTES.md` → *Next step — LAYOUT AND DESIGN* before touching the
-stylesheet**, and `ANALYSIS.md` for why the current design is as it is. With no
-`CLAUDE.md` over there, those two files are the only place its rules exist —
-seven stylesheet rules that look like preferences and are not, plus the
-ES-module cache trap that has broken three verification passes.
-
 A `SessionStart` hook (`.claude/hooks/session-start.sh`) loads this file and
 prefixes `STALE:` or `UNCOMMITTED WORK:` when either applies. Believe those
 warnings over anything written here.
 
 1. **`git switch main && git pull`.**
-2. Read the top entry of `CHANGELOG.md` — now **2026-08-07**.
+2. Read the top entry of `CHANGELOG.md` — now **2026-08-08**.
 3. Read `CLAUDE.md` — **The one thing to get right**, **Release policy**, and
    **Design invariants**. Also **The published markup is now an interface**,
-   which gained a paragraph on 2026-08-07: correcting one diacritic here can
-   stop `laguna-search`'s build, by design.
+   which gained a paragraph on 2026-08-08: there are now **two** gates in
+   `laguna-search` that one edit here can trip, and the second one is half
+   silent.
 4. Preview: `preview_start`, config name `site`. **It will not necessarily be on
    4173** — if that port is held, the tool assigns another and tells you which;
    use the port it reports. **Don't call `preview_stop` when you finish** — the
    user may still be looking at it.
 5. **For the search tool**, `preview_start` config name **`laguna-search`**,
    port 4180, serving its `dist/`. That entry is committed here but nothing
-   here builds it — run `python3 build.py` in that repo first, and preview
-   **`standalone.html`**, not `index.html`, or the browser will serve you a
-   cached ES module and you will measure the previous build.
+   here builds it — run `python3 build.py --inline` in that repo first, and
+   preview **`standalone.html`**, not `index.html`, or the browser will serve
+   you a cached ES module and you will measure the previous build. **`--inline`
+   is not optional for that**: `standalone.html` is only written when it is
+   passed, so a plain `build.py` leaves a stale one on disk.
 
 **A rebuild on a later day dirties `docs/` with dates alone** — `dateModified`,
 the "Last updated" line, the sitemap's `lastmod`. So "rebuild produces no diff"
 is a valid sync check only *within* a day. `docs/` was last built on
 **2026-07-31**; on any later date the first rebuild shows a date-only diff. If
-that is all it is, `git checkout -- docs/` rather than committing. This was
-done on 2026-08-03 and the diff was dates only.
+that is all it is, `git checkout -- docs/` rather than committing. Done again
+on 2026-08-08 and the diff was dates only. To check it is *only* dates rather
+than eyeballing it: normalise the dates out of the added and removed lines and
+diff the two sets.
 
 ## Waiting on the user — raise these, don't decide them
 
-Four things are blocked on a decision, not on effort. They are listed here as
-well as in the table below because a session that starts work without asking
-will produce something that has to be undone.
+Three things are blocked on a decision, not on effort. **One fewer than last
+session**: the name-break rule was ratified 2026-08-08 and is closed.
 
-1. **Ratify the name-break rule, in `laguna-search`.** The next session's first
-   task, and now a **single question** rather than an open choice. The approach
-   is settled: on 2026-08-07 the user chose to constrain where a phonetic name
-   may break, over widening the column, dropping Birth/Death into the panel, or
-   shrinking the type — **those three are closed.** The rule is drafted and
-   measured against the index (all 73 long names get a legal seam) and sits in
-   that repo's **`ANALYSIS.md` §4a** with its evidence. **It is mine, not
-   theirs** — it asserts where a phonetic name may be divided, so it needs
-   ratifying or amending before a line of it is implemented.
+1. **Whether `laguna-search` ever lands on the site.** This is now the live
+   one. It was previously deferred behind "finish the design pass" — that pass
+   is done, so nothing is in front of it any more. Landing it is work in
+   **this** repo: a `make_chart.py` page plus serving the index. It is still a
+   separate decision and **not** a consequence of the tool being finished.
 2. **II·182 / IV·69 — one woman or two?** The one namesake the plates do not
    settle. Marked `?` and joined nowhere. Only the scans can decide it, and if
    they do it is a line in that tool's `NAMESAKES`, **not** a change here.
-3. **Whether `laguna-search` ever lands on the site.** Unchanged since phase 1
-   and **not** a consequence of the design pass finishing. Landing it is work
-   in *this* repo — a `make_chart.py` page plus serving the index.
-4. **Confirm the 83 / 84 attribution on Genealogy I.** The oldest of these and
+3. **Confirm the 83 / 84 attribution on Genealogy I.** The oldest of these and
    the only one with a correctness edge, since it is published and citable.
 
 **Nothing here blocks anything else.** Every other item in the table can be
@@ -118,57 +96,51 @@ picked up without asking.
 
 ## State
 
-**Nothing is half-finished in this repo.** The one thing left open is in
-`laguna-search` and is a question for you, not unfinished code — see *Waiting
-on the user* 1. **This session's own notes may be sitting in an open PR**;
-merge it and `git pull` before doing anything else.
+**Nothing is half-finished, in either repo.** This one is clean on `main` with
+no open PRs; `laguna-search` is clean on its `main` with the design pass
+committed. No design question, editorial question or unreviewed change is
+outstanding anywhere.
+
 **`8cc4bee` is still the last commit that changed the site**; everything after
-it is notes and changelog and touches no built page. `--public` was re-run on
-2026-08-03: 6 pages, 104 / 275 / 261 / 73 drawn, all four `self_check()`s pass,
-privacy gate clean on 6 pages, 10 JSON-LD blocks valid, and the only diff was
-dates, which was reverted.
+it is notes and changelog and touches no built page.
 
 **Run `git log --oneline -3` and `git branch -a`. Don't trust a tip hash or a
 branch name in this file.** A handoff cannot describe the commit that contains
 it, and naming a working branch guarantees the sentence rots — that happened
-three times in this repo and its sibling on 2026-08-07, once to the very
-paragraph written to warn about it. This file now names neither.
+three times across the two repos on 2026-08-07, once to the very paragraph
+written to warn about it. This file names neither for this repo.
 
-**`main` is the branch, and the remote had no others as of the 2026-08-07
-sweep.** Everything else was merged and deleted;
-`docs/` did not move, so the Pages redeploy served identical bytes. The one
-functional change was a `.claude/launch.json` entry named **`laguna-search`**,
-serving that tool's `dist/` on 4180 beside `site` on 4173 — inert if the
-directory is absent, since nothing here builds it.
-
-That sweep produced one durable finding, now in **`CLAUDE.md` → Environment**:
-**PRs here are squash-merged, so `git branch --no-merged` reports merged work
-as unmerged** — read the PR state, not the ancestry. Nothing was at risk; the
-worked example and the two `push --delete` / prune mechanics are there.
+**One durable risk, and it is not code.** `laguna-search` **has no remote**.
+Its history — now including the whole design pass — exists in exactly one
+working copy, under Google Drive, whose sync daemon is already known to touch
+`.git` mid-write. Nothing has gone wrong. But "it is committed" means less
+there than it does here, and giving it a remote is a five-minute job nobody has
+asked for. Raise it; don't do it unasked, since publishing that repo is a
+visibility decision, not a backup decision.
 
 The 0.023px sub-pixel offset on Genealogy II's 158 group is still known,
 diagnosed and deliberately left alone. Invisible; not worth touching shared
 bracket code.
 
-**The new work is not in this repo.** See the open thread.
-
 ## The open thread
 
-> **The `laguna-search` design pass is open and stopped on one question.** The
-> work is **not in this repo** — it is `src/search.css` and `src/search.js` one
-> level up, and nothing here needs to change for it.
+> **There isn't one, and that is a real answer rather than a gap.** The thread
+> that had been open since 2026-08-07 — long names wrapping in
+> `laguna-search`'s name column — is closed: ratified, implemented, measured,
+> committed.
 >
-> **Resume by asking the user to ratify the break rule in that repo's
-> `ANALYSIS.md` §4a**, then implement it: seams computed in `build.py`,
-> rendered as `<wbr>`, the `name` value left clean — and **remove
-> `overflow-wrap: anywhere` from `.cell.name` in the same change**, or the
-> browser keeps breaking wherever it likes and the seams do nothing.
+> **The most likely next piece of work is the decision at the top of *Waiting
+> on the user*: whether the search tool lands on the site.** If the answer is
+> yes, the work is in **this** repo and not that one — a `make_chart.py` page
+> plus serving the index — and it is the first thing in a long time that would
+> move a built page. Read the **Release policy** in `CLAUDE.md` before
+> starting: publishing the site is not cutting a release, and a new page does
+> not change that.
 >
-> Still read that tool's own `SESSION-NOTES.md` → *Next step — LAYOUT AND
-> DESIGN* first: seven stylesheet rules that look like preferences and are not,
-> and the ES-module cache trap that has broken three verification passes.
+> If the answer is no or not yet, pick from the table below; the Wikidata batch
+> is the highest return for the least effort and needs only the user's login.
 
-**`laguna-search` — phases 1, 2, 2b, 2c done; the next pass is design.** It
+**`laguna-search` — phases 1, 2, 2b, 2c and the design pass are all done.** It
 lives at
 `../claude-random/Search by ChatGPT Sites - Claude Recreate/laguna-search/`,
 one level up from this repo, and is **its own git repo** with its own README,
@@ -177,17 +149,17 @@ ANALYSIS.md and gates. **It is not deployed and is not wired into this site.**
 What it is: a framework-free search over all four plates — 713 plate entries
 resolved to **620 people** — built by fetching the four published
 `genealogy-*/` pages and parsing them. No transcription module, no local data,
-nothing written back. `python3 build.py` runs **six** gates; `python3
+nothing written back. `python3 build.py` now runs **seven** gates; `python3
 tools/validate.py` compares every field and every relation against
-`scripts/transcription*.py` and they agree.
+`scripts/transcription*.py` and they agree, but for the one irreducible
+ambiguity (II·50's trailing period — `dotted()` is not injective).
 
-**Its `main` is at `fd51810`, clean, and is now its only branch.** It has no
-remote, so nothing there has been or can be pushed.
-
-**The counts in this file were two sessions stale until 2026-08-07** — they
-said 634 people, five gates, 65 joins. Sessions have worked on that tool
-without touching this repo, so its numbers drift here silently and are worth
-re-reading from its own build output rather than trusted from this paragraph.
+**Its `main` carries the design pass as of 2026-08-08 and is its only branch.**
+It has no remote, so nothing there has been or can be pushed. Read its build
+output for current counts rather than trusting a number in this paragraph —
+**the counts here were two sessions stale until 2026-08-07**, because sessions
+work on that tool without touching this repo and its numbers drift here
+silently.
 
 **Read its `ANALYSIS.md` before changing it.** It records what was wrong with
 the ChatGPT prototype the user supplied, and three of those are the kind of
@@ -208,46 +180,34 @@ own question mark), II·208's `Gaaish` against `Gaaiʼd˙yuitsʼa`, III·173's
 `Gen. I, 149`, plus a conflict where II·138 and II·139 both land on I·82 and
 neither is merged.
 
-**The joins it refuses are now marked too — 2026-08-07, `fd51810`.** The user
-read the alphabetical list and reported *"I, 52 is the same as III, 250"*. The
-data was right: I·52 is a boy of 4 and III·250 has a wife and three children in
-the same fieldwork. But the refusal was **nowhere on the page**, so two
-adjacent rows read as the tool repeating itself. A row now carries `≠ III · 250`
-while closed, and the panel gives the verdict and its evidence.
+**Its gates are the part worth knowing about, because two of them key on THIS
+repo's spelling.** Both are recorded in `CLAUDE.md` → *The published markup is
+now an interface*:
 
-**The gate is the part worth knowing about, not the three findings.**
-`gate_namesakes_adjudicated` finds every unjoined pair sharing a folded name,
-sex and clan and **fails closed both ways** — a pair with no verdict aborts the
-build, a verdict naming no pair aborts it too. That matters *here*: a new pair
-can appear without anyone touching that repo, because **this edition need only
-correct a diacritic** for one to show up. It caught two things on its first
-run — a pair the hand sweep missed on a **single plate** (II·83 / II·144), and
-a verdict that had been written against III·222, which already carries
-Parsons's own *Gen. II, 83*. Namesakes are now computed between **people**, not
-entries.
-
-One verdict is **open** and says so: II·182 / IV·69 agree on name, sex, clan and
-generation with nothing to corroborate or contradict. It is marked `?`, not
-`≠`. Do not "resolve" it from this file — settling it needs the plates.
-
-**Two decisions are the user's, and neither is urgent:** whether the two-panel
-layout is right, and whether this ever lands on the site. Landing it means a
-`make_chart.py` page plus serving the index — a separate decision, not a
-consequence of the tool existing.
+- `gate_namesakes_adjudicated` fails until every unjoined pair sharing a folded
+  name, sex and clan has a hand-written verdict. **Correcting one diacritic
+  here can create a new pair.** Three today; one, II·182 / IV·69, is `?` and
+  says so.
+- **`gate_names_break_lawfully` (gate 5, new 2026-08-08)** fails when a
+  single-word name of 14+ characters has no legal break seam. **A vowel
+  character new to this edition** would do it — that set is a literal, so an
+  unknown character reads as a consonant and the seams vanish. It only catches
+  the long names; a shorter one loses its seams **silently**.
 
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
 | **Wikidata item** | ~5 min, **needs you** | Payload at `wikidata-quickstatements.txt` is **current for four tables and ready to run**, 19 ids verified live, still a `CREATE`. Only the OAuth-logged-in batch run is left. **Send the file, don't paste it** — the separators are tabs. Record the Q-number afterwards |
-| **`laguna-search` design pass** | Session-sized, **opens on one question for you** | **Open, and stopped one question in.** Layout and design only, in that repo's `src/`. Resume by ratifying the break rule in its `ANALYSIS.md` §4a — see *Waiting on the user* 1 — then implement. The two-panel question is **settled**: one panel won in phase 2. Deployment is separate and **not** part of this |
-| **Two split pairs have no gate** | Recorded, no action needed | `Kowaiʼd˙yuitsʼa` I·27 / III·66 and `Shauʼd˙yiyĕ` I·39 / II·225 fold one character apart, so the namesake gate never sees them. Correct for the reader — they sort apart and never look like duplicates — but they are unjoined judgements nothing checks. Now in that tool's **ANALYSIS.md §1.3b**, not just a handoff. **Don't loosen the namesake rule to edit distance to "fix" it** |
+| **Land `laguna-search` on the site** | Session-sized, **needs you first** | See *Waiting on the user* 1. Now unblocked by the design pass finishing, but still a decision. A `make_chart.py` page plus serving the index. Would be the first change to a built page since `8cc4bee` |
+| **Give `laguna-search` a remote** | ~5 min, **needs you** | It has none, so the whole tool exists in one working copy under Google Drive. See *State*. Publishing that repo is a visibility decision, so ask rather than doing it |
+| **Two split pairs have no gate** | Recorded, no action needed | `Kowaiʼd˙yuitsʼa` I·27 / III·66 and `Shauʼd˙yiyĕ` I·39 / II·225 fold one character apart, so the namesake gate never sees them. Correct for the reader — they sort apart and never look like duplicates — but they are unjoined judgements nothing checks. In that tool's **ANALYSIS.md §1.3b**. **Don't loosen the namesake rule to edit distance to "fix" it** |
 | **II·182 / IV·69 — one woman or two?** | **needs you + the plates** | The one **open** namesake. Both F., Sun, generation 4; nothing contradicts them and no relative of either is drawn on the other plate, so name, sex and clan are the whole of the evidence. Marked `?` in the tool and joined nowhere. Only the plates can settle it — and if they do, it is a line in that tool's `NAMESAKES`, **not** a change to this edition. Note the honest outcome may be *unresolvable*, as the turned-comma mark was |
-| **Unify the four `_FOLD` maps** | ~4 lines, needs a decision | Only `transcription_ii.py` maps `ŏ` and `Ĭ`, so `fold()` leaves diacritics in the keys for III·101 and III·16 despite its docstring. **Affects nothing published** — `fold()` is unused in the build. Touches four otherwise-immutable files, so decide rather than drive by. In `CLAUDE.md`. **New 2026-08-07:** this is now the likeliest way to trip `laguna-search`'s namesake gate — folding is what decides a name collision, so budget for adjudicating a new pair there |
+| **Unify the four `_FOLD` maps** | ~4 lines, needs a decision | Only `transcription_ii.py` maps `ŏ` and `Ĭ`, so `fold()` leaves diacritics in the keys for III·101 and III·16 despite its docstring. **Affects nothing published** — `fold()` is unused in the build. Touches four otherwise-immutable files, so decide rather than drive by. In `CLAUDE.md`. **This is the likeliest way to trip `laguna-search`'s namesake gate** — budget for adjudicating a new pair there |
 | **AMNH Digital Library** | Slow, **needs you** | Strong inbound link. Handle `2246/158` — `https://digitallibrary.amnh.org/handle/2246/158`. That is the identifier `.zenodo.json` omits from `related_identifiers`. The site 403s automated fetches; use a real browser. **Also the only route to settling the turned-comma mark** |
 | **Confirm the 83 / 84 attribution** (Genealogy I) | Needs you + the records | 85 is firmly pinned. 83 and 84 rest on ages that do not cleanly reconcile. Published and citable, so this is the open item with a correctness edge |
 | **A wrapped cross-reference still miscounts its row** | Unknown; needs a design call | `row += 1` assumes one visual line. Nothing wraps today. Unguardable at build time — no font metrics. The fix is to split at the plate's own line break with `\|`, as 160, 169 and III's 155 do |
-| **Register's relation lists lack the point** | ~1 line | They read `56 Weʼdyumă` where entry titles read `56.`. One line in `rel_link`, but it changes the apparatus. **Now also parsed by `laguna-search`** — harmless there, but rerun its validator |
+| **Register's relation lists lack the point** | ~1 line | They read `56 Weʼdyumă` where entry titles read `56.`. One line in `rel_link`, but it changes the apparatus. **Also parsed by `laguna-search`** — harmless there, but rerun its validator |
 | **Cross-plate references are never links** | Deliberate, not a gap | No reference from one plate into another is a link, on any plate. Genealogy III's `#note-crossref` states this. Making them links would be a new feature across all four plates. **`laguna-search` now resolves them internally**, which is evidence it is doable but not a reason to change the plates |
 | **Cut the release** | **Not yet — see the policy** | Two of the four clauses met: all four plates published, editorial items on III closed. Still outstanding: `.zenodo.json` describes three plates, and the AMNH handle is absent from `related_identifiers`. **Publishing the site is not releasing it** |
 
@@ -255,16 +215,31 @@ consequence of the tool existing.
 
 **From this session (all about `laguna-search`, none about the site):**
 
-- **Long names are fixed by constraining the break, not by resizing the
-  column** (2026-08-07, the user's choice among four). **Widening the name
-  column, dropping Birth/Death into the panel at ≤1120 px, and shrinking the
-  name's type are all closed** as answers to wrapping. The rule that replaces
-  them is drafted in `ANALYSIS.md` §4a and is **not yet ratified** — the
-  approach is the user's, the rule is not.
+- **A phonetic name may break only immediately before a consonant, and only
+  where walking back over the marks `ʼ ˙ ˚ ˘ ᶦ ᵘ ᵃ ᵉ` lands on a vowel**
+  (ratified 2026-08-08, `ANALYSIS.md` §4a). **`y` is a consonant** for this
+  rule — it follows from the clusters `dy`, `d˙y`, `ty`, and reading it as a
+  vowel deletes seams. Measured over all 448 names at the real cell width: at
+  210px, 15 wrap, **0** begin a line with a mark, **0** overflow; clean from
+  150px up; no name reaches three lines; longest run between seams is 9
+  characters.
+- **Two stronger glottal rules were put to the user and rejected on measured
+  cost.** Forbidding a break in any name containing `ʼ` leaves **1 of 73** long
+  names breakable. Forbidding a break immediately *after* one strips 45 of 215
+  seams and leaves three names with none. **Neither is a fix for anything** —
+  the drafted rule already forbids a line beginning with any mark, which was
+  the actual objection. Don't re-derive these.
+- **`.cell.name` carries no `overflow-wrap`, and that is a rule.** Any value
+  hands the decision back to the browser and the `<wbr>` seams stop mattering.
+  The two are a pair and were changed together.
+- **Widening the name column, dropping Birth/Death into the panel at ≤1120px,
+  and shrinking the name's type are all closed** as answers to wrapping
+  (2026-08-07). The break rule replaced them.
 - **Breaking at the glottal `ʼ` alone does not work**, though it looks right:
   four long names carry no usable one, and in the `…itsʼă`-final names it is
-  second from last, leaving 15–17 characters on the first line. Measured; don't
-  re-derive it.
+  second from last, leaving 15–17 characters on the first line.
+
+**Still standing from earlier sessions:**
 
 - **The tool reads the published site, not the transcription modules.** The
   user chose this on 2026-08-03 after being shown the trade. The cost is one
@@ -275,18 +250,15 @@ consequence of the tool existing.
   joined only where Parsons cross-references them, and only after the reference
   is confirmed by name, sex and clan. **Never on a name coincidence** — that is
   what the prototype did — and never by trusting a printed number. The
-  fourteen joins the tool makes itself (2026-08-04) are the stated exception:
-  each rests on **relatives matching by name on both plates**, not on the name
-  alone, and each is labelled in the UI.
-- **Refusing to merge is a claim, and is shown like one** (2026-08-07). Two
-  people sharing a name, a sex and a clan get a mark on the closed row and a
-  verdict in the panel. `distinct` and `open` never share a mark — letting an
-  unsettled pair look settled is the prototype's error told backwards.
-- **`build.py` decides, `search.js` renders.** The namesake note used to be
-  computed in the browser from its own `twinKey`, a second implementation of
-  the build's rule, and it was wrong in two ways the build is not. Don't
-  reintroduce a client-side identity or namesake rule; the fold map is
-  single-sourced for exactly this reason.
+  fourteen joins the tool makes itself are the stated exception: each rests on
+  **relatives matching by name on both plates**, and each is labelled in the UI.
+- **Refusing to merge is a claim, and is shown like one.** Two people sharing a
+  name, a sex and a clan get a mark on the closed row and a verdict in the
+  panel. `distinct` and `open` never share a mark — letting an unsettled pair
+  look settled is the prototype's error told backwards.
+- **`build.py` decides, `search.js` renders.** True of namesakes and now of
+  break seams. Don't reintroduce a client-side identity, namesake or break
+  rule; the fold map is single-sourced for exactly this reason.
 - **Merged entries are not flattened into one record.** Each plate's reading
   stands; the panel shows them side by side. The plates disagree, and that is
   data.
@@ -299,9 +271,6 @@ consequence of the tool existing.
 - **The nearest-clan match for a misprint is filtering only.** The site
   publishes `sic-ring` but not the reading behind it, so `Bager` is filed under
   Badger for the filter and still **displayed as Bager**. Reported every build.
-
-**Still standing from earlier sessions:**
-
 - **22's bracket runs 80, 82; 83 is 25's, and the plate's rule is over-drawn.**
   Footnoted at `#note-overdrawn`.
 - **43's bracket carries two leaders**, hers to 124 and 45's to 126.
@@ -337,10 +306,16 @@ expensive and this is the file a session reads first:
 
 ## Closed — do not re-raise
 
+- **The `laguna-search` design pass, entirely.** Opened 2026-08-07, closed
+  2026-08-08. The name column's long-name wrapping is fixed by the break rule
+  above — ratified by the user, implemented, measured at seven widths, and
+  committed. **The two-panel question was settled in phase 2** (one panel won).
+  Deployment was never part of this pass and is a separate decision, listed
+  above as open.
 - **The custom domain. Closed by the user 2026-07-31: the edition stays on
-  `pueblogenealogy.github.io` permanently.** Not deferred this time — decided.
-  A domain is portable but survives only while someone renews it, and a lapsed
-  one is re-registered rather than merely lost, which would point every seeded
+  `pueblogenealogy.github.io` permanently.** Not deferred — decided. A domain
+  is portable but survives only while someone renews it, and a lapsed one is
+  re-registered rather than merely lost, which would point every seeded
   citation at a squatter. `github.io` cannot lapse. Full reasoning in
   `CLAUDE.md`; **don't re-derive it**, the obvious argument reaches the wrong
   answer. **The gate on seeding inbound links is lifted.**
@@ -364,3 +339,5 @@ expensive and this is the file a session reads first:
 - **A privacy sweep must assert the content is present.** Use `curl -sL` *and*
   assert something like `id="p116"` exists.
 - **`sips --cropOffset 0 0` centre-crops.** Use `1 1`. In `CLAUDE.md`.
+- **PRs here are squash-merged, so `git branch --no-merged` reports merged work
+  as unmerged.** Read the PR state, not the ancestry. In `CLAUDE.md`.
