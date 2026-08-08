@@ -25,6 +25,39 @@ the user. Its first task needs a decision from you before any CSS — see
 
 ## Start here in a new chat
 
+**Start the session in THIS directory, then type `resume`.**
+
+```bash
+cd "/Users/eli/My Drive/CLAUDE - GENEALOGY TABLES - CREATED BY FABLE/pueblogenealogy.github.io" && claude
+```
+
+**Even when the work is in `laguna-search`** — which is where it is now. That
+repo has **no `CLAUDE.md` and no `SessionStart` hook**; only a `launch.json`.
+Start a session there and you get no rules, no handoff auto-load, and no `site`
+preview config. Editing the sibling directory from here works fine and is what
+the last session did throughout.
+
+| | here | `laguna-search` |
+|---|---|---|
+| `CLAUDE.md` | yes | **none** |
+| `SessionStart` hook | yes | **none** |
+| `launch.json` | `site` **and** `laguna-search` | tool only |
+
+`resume` is a standing command defined in `CLAUDE.md`. It costs almost nothing
+— the hook has already put this file in context — and it answers with the
+up-next list and then **stops**, rather than starting work.
+
+To skip a turn and go straight at the blocking decision:
+
+> `resume, then let's do the laguna-search design pass — start with the name-column width question`
+
+**Whoever does that design work must read that repo's own
+`SESSION-NOTES.md` → *Next step — LAYOUT AND DESIGN* before touching the
+stylesheet**, and `ANALYSIS.md` for why the current design is as it is. With no
+`CLAUDE.md` over there, those two files are the only place its rules exist —
+seven stylesheet rules that look like preferences and are not, plus the
+ES-module cache trap that has broken three verification passes.
+
 A `SessionStart` hook (`.claude/hooks/session-start.sh`) loads this file and
 prefixes `STALE:` or `UNCOMMITTED WORK:` when either applies. Believe those
 warnings over anything written here.
