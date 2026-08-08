@@ -290,14 +290,12 @@ computed from data, never typed.
 | `assets/og-cover.jpg` | Social card, derived once from the plate scan (see `OG_IMAGE`) |
 | `sources/` | Source scans, in repo but not served |
 | `METHOD.md` | Editorial method — why readings are made as they are |
-| `.zenodo.json` | Metadata for the archived deposit. Read from the **tagged commit**, so it must land on `main` before a release is cut |
-| `CITATION.cff` | How to cite. Carries the concept doi plus both dois under `identifiers` |
+| `CITATION.cff` | How to cite. Carries **no doi**, deliberately — see *Release policy* |
 
-Identity is three constants at the top of `make_chart.py`: `SITE`, `REPO` and
-`DOI`. Every canonical, sitemap entry and card derives from them. `DOI` is the
-Zenodo **concept** doi, which always resolves to the newest release — never
-hard-code a version doi here, or every citation printed on the site rots at the
-next release.
+There is **no `.zenodo.json`**; it was deleted 2026-08-08 with the rest of the
+Zenodo surface. Identity is now two constants at the top of `make_chart.py`:
+`SITE` and `REPO`. Every canonical, sitemap entry and card derives from them.
+A `DOI` constant sat beside them until 2026-08-08 and must not come back.
 
 ## Layout
 
@@ -736,81 +734,116 @@ surviving copy** of the deleted v1 repo. Do not clean it up as stale.
 
 ## State
 
-Site live and indexed-submitted; Search Console and Bing both verified;
-structured data valid and guarded at build time. v1 is deleted.
+Site live; Search Console and Bing both verified; structured data valid and
+guarded at build time. v1 is deleted.
 
-**Archived at Zenodo**, concept doi `10.5281/zenodo.21637900`, first release
-`v1.0.0` (2026-07-28). The doi appears in `CITATION.cff`, the README badge, the
-**footer** citation block on every table page (`cite_html()` — the title-page
-citation was removed on 2026-07-28 and never carried the doi), and as
-`identifier` in the JSON-LD —
-`Dataset` on the table pages, `CollectionPage` on the landing page, which is
-the entity the deposit actually corresponds to. Archiving is automatic from now
-on: Zenodo's webhook is on the repo, so **cutting a GitHub release mints a new
-version doi**. `.zenodo.json` controls the record's metadata; without it Zenodo
-would title the deposit after the repo.
+### Release policy — REPLACED 2026-08-08. No release is ever cut
 
-### Release policy — set by the user 2026-07-30
+The old policy (set 2026-07-30) said: cut no releases *during active
+development*, and cut one when all four tables, the design, the transcriptions,
+the text and the citations were final. **All four are now final, so that policy
+would read as "the release is due." It is not.** It has been replaced, not
+satisfied.
 
-**During active development: commit to `main`, cut no GitHub Releases, make no
-Zenodo deposits.** The site keeps deploying from `main` as it always has;
-publishing the site and cutting a release are different acts, and only the
-second one touches Zenodo.
+**The current policy is simply: no GitHub Release, no Zenodo deposit, ever,
+unless the user says otherwise.** The site keeps deploying from `main` as it
+always has. Publishing the site and cutting a release remain different acts, and
+only the second one touches Zenodo — which is now a thing the edition does not
+do at all.
 
-**The next release happens only when all four genealogy tables, the design, the
-transcriptions, the text and the citations are finalized.** Then: one GitHub
-Release, let the webhook archive it, and the **concept doi** stays the one on the
-website.
+**Zenodo was withdrawn from the edition's public face on 2026-08-08**, as part
+of *Exposure posture* above. What that involved, so nobody has to re-derive it:
 
-The objective is to publish only stable, citation-ready editions and to avoid
-minting permanent Zenodo versions that mark nothing. **Published Zenodo records
-cannot be deleted** — every version is permanent and public — which is why
-restraint here is the correct posture and not fussiness.
+- `.zenodo.json` — **deleted**.
+- `DOI` / `DOI_URL` in `make_chart.py` — **deleted**, along with the footer
+  citation's "Archived at" line in `cite_html()` and the `identifier` field in
+  **both** JSON-LD blocks (`Dataset` on table pages, `CollectionPage` on the
+  landing page).
+- `CITATION.cff` — the `doi:` field and the whole `identifiers:` block gone.
+  This is the repo's "Cite this repository" widget, so it is the most visible
+  place a doi could reappear.
+- `README.md` — the DOI badge and the archiving paragraph gone.
+- The Zenodo **deposit webhook** on the repo — **removed**, so no future release
+  could mint a doi even if one were tagged. Two things learned deleting it:
+  **the hook id is not stable** (Zenodo replaced it mid-session, so a stale id
+  returns `Not Found` exactly as an unscoped token does — re-read the id before
+  concluding anything), and **GitHub's side is not the durable switch**. Zenodo
+  can recreate the hook while the repo is still enabled at
+  `zenodo.org/account/settings/github`. If a hook ever reappears, that flag is
+  why.
 
-Consequences a session must not "fix":
+**The record itself was deleted by the user the same day**, and the way that was
+possible is worth recording, because the widely-repeated version of the rule is
+wrong:
 
-- **The archive lags the site on purpose.** v1.0.0 archives Genealogies I and IV
-  only, so the concept doi in every page footer currently resolves to a record
-  without Genealogy II. That is the accepted cost of the policy, not a bug.
-- **`CITATION.cff` describes the newest *minted* release**, `v1.0.0` /
-  `2026-07-28` — never a planned one. It said `v1.1.0` / `2026-07-30` until this
-  policy was set, which advertised a version nobody could resolve in the widget
-  GitHub renders from that file. Do not bump it in anticipation of a tag.
-- **The abstract may describe more plates than the release contains.** That is
-  correct: the abstract describes the *work*, the version fields describe the
-  *release*.
-- **`.zenodo.json` is read from the tagged commit**, so bring it up to all four
-  tables as part of cutting the final release — not before, and not as a
-  standalone task.
-- When the release is finally cut, add its version doi to `identifiers`
-  *after* the webhook mints it. **Never guess a version doi**; the suffix is not
-  reliably sequential from v1.0.0's.
+- **Zenodo lets a record's OWNER delete it within 30 days of publishing.**
+  v1.0.0 was published 2026-07-28 and deleted 2026-08-08, 11 days in. The
+  "published Zenodo records are permanent, only support can withdraw them" claim
+  that this file carried earlier the same day is **false for the first 30 days**.
+  It is true afterwards, which is why it is the version everyone repeats.
+- **What survives is a tombstone, not the deposit.** Both dois — `…21637900`
+  (concept) and `…21637901` (v1.0.0) — now return **HTTP 410 Gone** at
+  `zenodo.org/records/21637901`; the concept doi redirects to the same page.
+  The files are gone. **The metadata is kept and displayed**: title, author,
+  year, doi, and the removal reason, which reads *"Personal data issue"* and is
+  **publicly visible to anyone following the doi**.
+- **So the residue is a citation stub, not an archived copy of the edition.**
+  Nothing points from here to it, and it no longer holds a copy of the plates.
+  A tombstone cannot be removed; that part really is permanent.
+
+**A doi reappearing anywhere in this repo is a regression, not a restoration.**
+
+### Exposure posture — set by the user 2026-08-08
+
+**The user does not want the edition promoted, and does not care whether the
+site is indexed.** This reverses the outreach programme that ran from launch
+through 2026-08-07, and it is a decision, not a mood.
+
+What is settled:
+
+- **Wikidata is removed** — no item, payload deleted. See *Outstanding*.
+- **No inbound link is seeded without asking.** The gate that the custom-domain
+  closure lifted is back. Wikipedia's *Elsie Clews Parsons* external links and
+  the AMNH Digital Library are **not** to be pursued as outreach; the AMNH
+  handle is kept only as a fact about the source.
+- **`GOOGLE_SITE_VERIFICATION` still must not be blanked**, and low exposure is
+  now a *second* reason rather than a counter-argument. Search Console ownership
+  is what a removal request runs through, so blanking the tag would remove the
+  only mechanism for taking a page out of results. The hard rule stands
+  unchanged; it now has two justifications instead of one.
+
+**What is NOT yet decided: how far de-indexing goes.** Do not act on this
+section by editing `robots.txt`, adding `noindex`, dropping `sitemap.xml`, or
+stripping the JSON-LD until the user has chosen a level. "Stop promoting it" and
+"take it out of Google" are different requests with different costs, and one of
+them is close to irreversible for a citable edition.
+
+One mechanism worth knowing before that conversation, because the intuitive
+choice is the wrong one: **`Disallow:` in `robots.txt` does not de-index.** It
+forbids crawling, so an already-indexed URL can persist in results as a bare
+link that can no longer be re-read. **`<meta name="robots" content="noindex">`
+is the tool that removes a page** — and it requires crawling to stay *allowed*,
+so the two must not be combined.
 
 **Outstanding:**
-- **Inbound links** — a fresh `*.github.io` has no authority, and no on-page
-  work substitutes. Zenodo is done and is itself the first such link. Next, by
-  effort-to-return: a **Wikidata** item (heavily crawled, feeds Knowledge Graph,
-  none of Wikipedia's conflict-of-interest friction), then the Wikipedia *Elsie
-  Clews Parsons* external links — **propose on the Talk page**, since adding a
-  link to one's own work is a COI and tends to be reverted — then the AMNH
-  Digital Library, which hosts the original.
-  **The Wikidata payload is `wikidata-quickstatements.txt`**, current for all
-  four tables and ready to run as a `CREATE` batch; only the user can run it,
-  because QuickStatements needs their OAuth login. Three things about it are
-  decisions, not defaults, and re-deriving them wastes a session: `P2093` author
-  name string rather than `P50`, which would require creating a biographical
-  item about a living person; `P144` based on → `Q51498010`, the existing item
-  for Parsons's 1923 article, so the new item joins the graph instead of
-  dangling, and reaches her authorship through it; and **no counts of
-  individuals**, which would be an uncheckable copy of numbers the site computes
-  from the transcriptions. **Never put a backslash-escaped quote in that file** —
-  QuickStatements V1 splits on tabs and strips the surrounding quote pair rather
-  than honouring an escape, so use typographic quotes inside a value.
+- **Wikidata — REMOVED 2026-08-08 by the user. No item is to be created, and
+  the payload is deleted.** This is a decision, not a deferral, and it is not
+  to be re-derived: the user does not want the edition promoted, and does not
+  care whether the site is indexed. `wikidata-quickstatements.txt` is gone from
+  the working tree — it survives in git history, which is expected and fine, as
+  it held nothing but bibliographic metadata about the edition. **Do not
+  reconstruct it**, and do not offer a Wikidata item as an "easy win"; it was
+  the highest-return inbound link on the old plan, which is exactly why a future
+  session will be tempted to propose it again.
+  The **whole inbound-links programme is under the same reconsideration** — see
+  *Exposure posture*. Do not seed any inbound link without asking.
   **The AMNH handle is `2246/158`** — `https://digitallibrary.amnh.org/handle/2246/158`,
-  found 2026-07-30. That is the identifier `.zenodo.json` omits from
-  `related_identifiers`; add it when that file is brought to four tables for the
-  release, not as a standalone edit. Note `digitallibrary.amnh.org` **403s
-  automated fetches** — use a real browser, not `WebFetch`.
+  found 2026-07-30. Kept because it is a **fact about the source**, not an
+  outreach step: it is the only route to a better scan than the one that cannot
+  settle the turned-comma mark. (It used to be recorded as the identifier
+  `.zenodo.json` omitted from `related_identifiers`; that file no longer
+  exists.) Note `digitallibrary.amnh.org`
+  **403s automated fetches** — use a real browser, not `WebFetch`.
 - **Custom domain — CLOSED 2026-07-31 by the user. The edition stays on
   `pueblogenealogy.github.io` permanently.** This is a decision, not another
   deferral, and it is **not to be re-opened** — it had been carried as "deferred,
@@ -831,22 +864,21 @@ Consequences a session must not "fix":
   attention of its editor, **GitHub's institutional durability beats the
   editor's own**, and that is the whole of the argument.
   Consequences: `SITE` in `make_chart.py` never changes; no `CNAME` file is ever
-  added to this repo; the Search Console and Bing properties stay as verified;
-  and **inbound links may now be seeded freely** — the "decide before seeding
-  any inbound link" gate that used to sit on Wikidata and AMNH is **lifted**.
-- **No release is outstanding, and that is still deliberate.** v1.1.0 was
-  prepared and then **cancelled** by the release policy above: no GitHub
-  Releases and no Zenodo deposits during active development. **All four plates
-  are now published** (2026-07-31), and **Genealogy III's two editorial items
-  are both closed** — same day, later session: the cross-reference footnote is
-  written and **deployed** (`#note-crossref`, verified live by SHA-256), and
-  the turned-comma mark is settled as unresolvable from this scan. So **two**
-  of the policy's four clauses are met.
-  The other two are not: `.zenodo.json` still describes three plates, and the
-  AMNH handle is still absent from its `related_identifiers`. **Publishing the site
-  is not releasing it.** Do not read "the last plate is up" as "cut the tag";
-  when it is finally wanted, `.zenodo.json` must already be on `main` and
-  current for all four tables, because Zenodo reads it from the tagged commit.
+  added to this repo; and the Search Console and Bing properties stay as
+  verified — see *Exposure posture* for a second, stronger reason they must.
+  This closure once also lifted the gate on seeding inbound links. **That
+  sentence is withdrawn as of 2026-08-08**: the gate is back and harder, because
+  the user has since asked for low exposure. Nothing else about the domain
+  decision changes — durability against portability is untouched by it.
+- **No release is outstanding, and after 2026-08-08 none ever will be.** v1.1.0
+  was prepared and cancelled in 2026-07; the whole release track is now closed
+  by the *Release policy* above. **All four plates are published** (2026-07-31)
+  and **Genealogy III's two editorial items are both closed** — the
+  cross-reference footnote is written and **deployed** (`#note-crossref`,
+  verified live by SHA-256), and the turned-comma mark is settled as
+  unresolvable from this scan. Under the old policy that would have made the
+  release due; it does not, because the policy changed. **Publishing the site is
+  not releasing it, and releasing it is no longer on the table.**
 - **Genealogy II is published and its reading is closed.** The user re-checked
   their full list on 2026-07-30 and reported **no remaining placement errors**.
   Everything they had flagged is resolved: **31, 32 and 97** via

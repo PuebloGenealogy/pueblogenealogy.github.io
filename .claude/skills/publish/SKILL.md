@@ -163,28 +163,25 @@ Then refresh `SESSION-NOTES.md` if the open thread moved. It is a rolling
 handoff, not a history — overwrite it rather than appending.
 
 **Publishing is not releasing, and this procedure never releases.** Pushing to
-`main` deploys the site and stops there. Cutting a **GitHub release** is a
-separate act with an irreversible side effect: Zenodo's webhook is on this repo,
-so a release mints a new version doi and a new archived deposit, and **published
-Zenodo records cannot be deleted**.
+`main` deploys the site and stops there.
 
-**There is a standing release policy — read it in `CLAUDE.md` before tagging
-anything.** In short: during active development, commit to `main` and cut **no
-GitHub Releases and no Zenodo deposits**. The next release comes only when all
-four genealogy tables, the design, the transcriptions, the text and the
-citations are final.
+**No release is to be cut, and no archive is advertised.** As of 2026-08-08 the
+user has withdrawn the Zenodo deposit from the edition's public face and asked
+for low exposure: `.zenodo.json` is deleted, the doi is gone from
+`make_chart.py`, `CITATION.cff` and the README, and the deposit webhook is
+being removed. Read `CLAUDE.md` → *Exposure posture* before doing anything that
+would reverse this.
 
-Two consequences that will look like problems and are not:
+What that means for this procedure:
 
-- **The archive lags the site deliberately.** The concept doi resolves to
-  v1.0.0, which holds Genealogies I and IV only. Do not tag to close that gap.
-- **`CITATION.cff` names the newest release that exists**, not the state of
-  `main`. Its abstract describing more plates than the release contains is
-  correct — abstract describes the work, version fields describe the release.
-
-When the release finally *is* wanted, `.zenodo.json` must already be on `main`
-and current for all four tables — Zenodo reads it from the tagged commit, not
-from `main`'s tip — and the concept doi in `make_chart.py` never changes.
+- **Do not tag, and do not offer to.** The old policy said "release when all
+  four tables are final"; all four *are* final, so a session reading only that
+  sentence would conclude the release is due. It is not.
+- **The v1.0.0 deposit at Zenodo was deleted** by its owner on 2026-08-08,
+  inside Zenodo's 30-day owner-deletion window. Both dois now return 410 Gone at
+  a tombstone. Nothing in the repo points at it; this is not a loose end.
+- **If a doi reappears** in `make_chart.py`, `CITATION.cff` or the README, that
+  is a regression, not a restoration.
 
 ## If Pages serves the wrong thing
 

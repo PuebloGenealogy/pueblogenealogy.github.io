@@ -137,8 +137,9 @@ bracket code.
 > starting: publishing the site is not cutting a release, and a new page does
 > not change that.
 >
-> If the answer is no or not yet, pick from the table below; the Wikidata batch
-> is the highest return for the least effort and needs only the user's login.
+> If the answer is no or not yet, pick from the table below. **Not the
+> Wikidata batch — that was removed on 2026-08-08 and is not an option any
+> more.** See *Exposure posture* in `CLAUDE.md`.
 
 **`laguna-search` — phases 1, 2, 2b, 2c and the design pass are all done.** It
 lives at
@@ -198,18 +199,18 @@ now an interface*:
 
 | | Effort | Notes |
 |---|---|---|
-| **Wikidata item** | ~5 min, **needs you** | Payload at `wikidata-quickstatements.txt` is **current for four tables and ready to run**, 19 ids verified live, still a `CREATE`. Only the OAuth-logged-in batch run is left. **Send the file, don't paste it** — the separators are tabs. Record the Q-number afterwards |
+| ~~Wikidata item~~ | **Removed 2026-08-08** | Deleted by the user's decision, payload and all. Not deferred — **don't re-propose it**, and don't reconstruct the file from git history. `CLAUDE.md` → *Exposure posture* |
 | **Land `laguna-search` on the site** | Session-sized, **needs you first** | See *Waiting on the user* 1. Now unblocked by the design pass finishing, but still a decision. A `make_chart.py` page plus serving the index. Would be the first change to a built page since `8cc4bee` |
 | **Give `laguna-search` a remote** | ~5 min, **needs you** | It has none, so the whole tool exists in one working copy under Google Drive. See *State*. Publishing that repo is a visibility decision, so ask rather than doing it |
 | **Two split pairs have no gate** | Recorded, no action needed | `Kowaiʼd˙yuitsʼa` I·27 / III·66 and `Shauʼd˙yiyĕ` I·39 / II·225 fold one character apart, so the namesake gate never sees them. Correct for the reader — they sort apart and never look like duplicates — but they are unjoined judgements nothing checks. In that tool's **ANALYSIS.md §1.3b**. **Don't loosen the namesake rule to edit distance to "fix" it** |
 | **II·182 / IV·69 — one woman or two?** | **needs you + the plates** | The one **open** namesake. Both F., Sun, generation 4; nothing contradicts them and no relative of either is drawn on the other plate, so name, sex and clan are the whole of the evidence. Marked `?` in the tool and joined nowhere. Only the plates can settle it — and if they do, it is a line in that tool's `NAMESAKES`, **not** a change to this edition. Note the honest outcome may be *unresolvable*, as the turned-comma mark was |
 | **Unify the four `_FOLD` maps** | ~4 lines, needs a decision | Only `transcription_ii.py` maps `ŏ` and `Ĭ`, so `fold()` leaves diacritics in the keys for III·101 and III·16 despite its docstring. **Affects nothing published** — `fold()` is unused in the build. Touches four otherwise-immutable files, so decide rather than drive by. In `CLAUDE.md`. **This is the likeliest way to trip `laguna-search`'s namesake gate** — budget for adjudicating a new pair there |
-| **AMNH Digital Library** | Slow, **needs you** | Strong inbound link. Handle `2246/158` — `https://digitallibrary.amnh.org/handle/2246/158`. That is the identifier `.zenodo.json` omits from `related_identifiers`. The site 403s automated fetches; use a real browser. **Also the only route to settling the turned-comma mark** |
+| **AMNH Digital Library** | Slow, **needs you** | **No longer an outreach item** — inbound links are off, see `CLAUDE.md` → *Exposure posture*. Kept only because handle `2246/158` (`https://digitallibrary.amnh.org/handle/2246/158`) is **the only route to settling the turned-comma mark**, which needs a better scan than this one. The site 403s automated fetches; use a real browser |
 | **Confirm the 83 / 84 attribution** (Genealogy I) | Needs you + the records | 85 is firmly pinned. 83 and 84 rest on ages that do not cleanly reconcile. Published and citable, so this is the open item with a correctness edge |
 | **A wrapped cross-reference still miscounts its row** | Unknown; needs a design call | `row += 1` assumes one visual line. Nothing wraps today. Unguardable at build time — no font metrics. The fix is to split at the plate's own line break with `\|`, as 160, 169 and III's 155 do |
 | **Register's relation lists lack the point** | ~1 line | They read `56 Weʼdyumă` where entry titles read `56.`. One line in `rel_link`, but it changes the apparatus. **Also parsed by `laguna-search`** — harmless there, but rerun its validator |
 | **Cross-plate references are never links** | Deliberate, not a gap | No reference from one plate into another is a link, on any plate. Genealogy III's `#note-crossref` states this. Making them links would be a new feature across all four plates. **`laguna-search` now resolves them internally**, which is evidence it is doable but not a reason to change the plates |
-| **Cut the release** | **Not yet — see the policy** | Two of the four clauses met: all four plates published, editorial items on III closed. Still outstanding: `.zenodo.json` describes three plates, and the AMNH handle is absent from `related_identifiers`. **Publishing the site is not releasing it** |
+| ~~Cut the release~~ | **Closed 2026-08-08** | No release is ever cut and no Zenodo deposit is ever made. The whole release track was withdrawn with the archive. `CLAUDE.md` → *Release policy*. **Don't re-propose it because all four plates are final** — that was the old policy's trigger and the old policy is gone |
 
 ## Decisions already made — don't re-litigate
 
@@ -298,8 +299,12 @@ now an interface*:
 Two are repeated here **on purpose**, because acting on either wrongly is
 expensive and this is the file a session reads first:
 
-- **Publishing the site is not cutting a release.** Zenodo's webhook is on this
-  repo; a GitHub release mints a permanent version doi that cannot be deleted.
+- **No release is ever cut, and the edition carries no doi.** Zenodo was
+  withdrawn on 2026-08-08: the deposit **deleted** by the user (inside Zenodo's
+  30-day owner window), the webhook removed, the GitHub link severed. Both dois
+  return **410 Gone**. **A doi reappearing in this repo is a regression** — and
+  now also an unresolvable link. `CLAUDE.md` → *Release policy* and *Exposure
+  posture*.
 - **Research evidence never enters the repo** — not `plate_note`, not a commit
   message, not a changelog entry. A **published** source is quoted and cited; an
   **unpublished** one is gestured at and never named. METHOD.md rule 4.

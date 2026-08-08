@@ -457,14 +457,13 @@ def print_zoom(n_gens):
 SITE = "https://pueblogenealogy.github.io"
 REPO = "https://github.com/PuebloGenealogy/pueblogenealogy.github.io"
 
-# The Zenodo CONCEPT doi, not a per-release one: it always resolves to the
-# newest archived version, so a citation printed on this page keeps working
-# when a later release adds Tables 2 and 3. The v1.0.0 version doi
-# (10.5281/zenodo.21637901) is recorded in CITATION.cff for anyone pinning a
-# snapshot; it deliberately does not appear here, where the reader wants the
-# edition rather than one frozen state of it.
-DOI = "10.5281/zenodo.21637900"
-DOI_URL = f"https://doi.org/{DOI}"
+# There is deliberately no DOI constant here. The edition carried the Zenodo
+# concept doi from launch until 2026-08-08, when the user withdrew the archive
+# from the site: no deposit is advertised, the webhook is off, and no release
+# is cut. The v1.0.0 deposit was deleted by its owner the same day (Zenodo
+# allows this within 30 days of publishing); both dois now return 410 Gone at a
+# tombstone that keeps the metadata. Re-adding a doi to this file is how the
+# archive would come back. See CLAUDE.md -> Exposure posture first.
 
 # The social preview card. A 1200x630 band of the real Table 1 plate, derived
 # once from sources/parsons-1923-table-1.jpg and committed at assets/og-cover.jpg
@@ -2909,8 +2908,7 @@ def cite_html(spec, today):
        vol.&nbsp;19, pt.&nbsp;5 (1923), pp.&nbsp;133&ndash;292, {spec['plate']}.</p>
     <p>Digital transcription: {esc(AUTHOR)},
        <em>Laguna Genealogies: A Digital Edition</em>, {today.year},
-       {canonical}. CC&nbsp;BY&nbsp;4.0.
-       Archived at <a href="{DOI_URL}">doi:{DOI}</a>.</p>
+       {canonical}. CC&nbsp;BY&nbsp;4.0.</p>
   </blockquote>
   <p>To cite one person&rsquo;s line, use its number&rsquo;s link:
      <a href="#p{root_id}">{canonical}#p{root_id}</a> is person {root_id}.<span id="copy-mount"></span></p>"""
@@ -2927,10 +2925,10 @@ def jsonld_chart(spec, description, today):
         "description": description,
         "url": canonical,
         "creator": {"@type": "Person", "name": AUTHOR},
-        # A bare URL string, deliberately: Google's Dataset guidance names
-        # identifier for exactly this, and a string cannot trip the nested
-        # @type rules that have twice rejected valid schema.org here.
-        "identifier": DOI_URL,
+        # No "identifier": it held the Zenodo doi until 2026-08-08. The field
+        # is optional to Google's Dataset guidance and the build's own
+        # check_structured_data() does not require it, so dropping it costs
+        # nothing and keeps the archive unadvertised.
         "license": "https://creativecommons.org/licenses/by/4.0/",
         "isBasedOn": {"@type": "CreativeWork", "name": "Laguna Genealogies",
                       "author": {"@type": "Person", "name": "Elsie Clews Parsons"},
@@ -3056,9 +3054,9 @@ def jsonld_site(built, today):
         "url": SITE + "/",
         "description": SITE_DESCRIPTION,
         "creator": {"@type": "Person", "name": AUTHOR},
-        # The deposit covers the whole edition, so this page -- which is the
-        # edition, not one table -- is where the doi is most precisely true.
-        "identifier": DOI_URL,
+        # No "identifier" -- see jsonld_chart. This page carried the doi most
+        # precisely of any, since the deposit covered the whole edition; that
+        # is exactly why it is the one that had to lose it.
         "license": "https://creativecommons.org/licenses/by/4.0/",
         "dateModified": today.isoformat(),
         "image": OG_IMAGE,

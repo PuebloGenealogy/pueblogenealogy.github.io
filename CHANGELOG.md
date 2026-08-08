@@ -3,7 +3,97 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-08 (latest) — the name-break rule is ratified, and a second gate now depends on this edition's spelling
+## 2026-08-08 (latest) — the edition stops advertising itself: Wikidata removed, Zenodo withdrawn from the site
+
+**Set by the user.** Two decisions, both reversals of the outreach programme
+that had run since launch: **do not create a Wikidata item**, and **remove
+Zenodo entirely**. The stated reason is low exposure — indexing is explicitly
+not wanted. De-indexing itself was considered and **deferred**: `robots.txt`,
+`sitemap.xml` and the `noindex` question are untouched, by choice, and the
+posture is recorded in `CLAUDE.md` → *Exposure posture*.
+
+### Wikidata
+
+`wikidata-quickstatements.txt` deleted. The plan and its three
+non-obvious decisions (`P2093` over `P50`, `P144` → `Q51498010`, no counts) are
+gone from `CLAUDE.md`; the removal is recorded as a **decision** in both
+`CLAUDE.md` and `SESSION-NOTES.md`, because it was the highest-return item on
+the old plan and would otherwise be re-proposed as an easy win. The file
+survives in git history, which is expected — it held bibliographic metadata
+only.
+
+A sentence in the custom-domain closure said inbound links "may now be seeded
+freely." **Withdrawn.** The gate is back and harder. Nothing else about the
+domain decision changed.
+
+### Zenodo — removed, including the deposit
+
+**The record was deleted by the user, and the rule everyone repeats is wrong.**
+This session first told the user that published Zenodo records cannot be deleted
+by their owner and that only support can withdraw them to a tombstone. **False
+for the first 30 days:** Zenodo lets a record's owner delete it within 30 days
+of publishing. v1.0.0 was published 2026-07-28 and deleted 2026-08-08, 11 days
+in. The permanence claim is true *after* that window, which is why it circulates
+without the qualifier — and why it was stated here without one.
+
+What survives is a **tombstone, not the deposit**. Both dois — `…21637900`
+(concept) and `…21637901` (v1.0.0) — return **HTTP 410 Gone** at
+`zenodo.org/records/21637901`, the concept doi redirecting to the same page. The
+files are gone. The metadata is kept and shown: title, author, year, doi, and
+the removal reason, which reads *"Personal data issue"* and is **publicly
+visible to anyone following the doi**. A tombstone cannot itself be removed, so
+that part is genuinely permanent — but it is a citation stub, not an archived
+copy of the plates.
+
+The GitHub↔Zenodo link was also severed by the user, which is the switch that
+stops the webhook being recreated.
+
+Removed here:
+
+- `.zenodo.json` — deleted.
+- `make_chart.py` — the `DOI` / `DOI_URL` constants, the "Archived at" line in
+  `cite_html()`, and the `identifier` field in **both** JSON-LD blocks. The
+  build's `check_structured_data()` never required `identifier`, so this cost
+  nothing: still **10 JSON-LD blocks valid**.
+- `CITATION.cff` — the `doi:` field and the whole `identifiers:` block.
+- `README.md` — the DOI badge and the archiving paragraph.
+- The **deposit webhook** on the repo — **deleted**; `gh api ... hooks` now
+  returns 0. It took two attempts, and the reason is worth keeping:
+  **the hook id is not stable.** The id read at the start of the session
+  (`657954912`) was `Not Found` by the time the delete ran, because Zenodo had
+  replaced the hook with a new one (`663134025`) carrying a **fresh access
+  token**. A `Not Found` here means "stale id" at least as often as it means
+  "insufficient scope" — re-read the id, don't assume the delete already
+  worked. Deleting a hook from GitHub's side is also **not the durable fix**:
+  Zenodo can recreate it while the repo is still enabled at
+  `zenodo.org/account/settings/github`, which is the actual switch. **Both
+  exposed tokens should be revoked** at Zenodo → Applications.
+
+Rebuild: 6 pages, 104 / 275 / 261 / 73 drawn, privacy gate clean, 10 JSON-LD
+blocks valid, exit 0. `docs/` greps clean for `zenodo`, `10.5281` and
+`doi.org`. The non-date diff is exactly the four footer citations.
+
+### The release track is closed, not satisfied
+
+The old policy said "cut a release when all four tables, the design, the
+transcriptions, the text and the citations are final." **All four are final**,
+so a session reading only that sentence would conclude the release is due. It
+is **replaced**: no GitHub Release, no Zenodo deposit, ever, unless the user
+says otherwise. Restated in `CLAUDE.md`, `SESSION-NOTES.md` and the `/publish`
+skill, since that skill carried the old trigger in full.
+
+### A stale scope claim survived in `CITATION.cff`
+
+Found while stripping the doi from it. Its abstract said **"Three of the four
+plates are edited here, 452 individuals"** and **"Table 3 is not yet edited."**
+Both false since 2026-07-31. This is the fifth instance of the failure
+`CLAUDE.md` already warns about, and it evaded the earlier sweeps for the same
+reason `SITE_DESCRIPTION` did: it states scope **positively**, so it contains
+none of the hedging vocabulary a "not yet"/"in preparation" grep looks for —
+except in the one clause that does, which nobody had grepped this file for.
+Rewritten to four plates / 713 individuals with each table's counts.
+
+## 2026-08-08 — the name-break rule is ratified, and a second gate now depends on this edition's spelling
 
 **Nothing on the site changed.** `8cc4bee` is still the last commit that moved
 a built page. `--public` was re-run to check the tree against the build: 6
