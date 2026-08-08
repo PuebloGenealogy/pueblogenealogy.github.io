@@ -511,6 +511,22 @@ enough to create a fourth**, because folding is what decides the collision:
 theirs, not ours, and it is deliberately noisy rather than silent. Just expect
 to adjudicate a pair after changing a name, and know the failure is a feature.
 
+**There is now a SECOND such gate, and it fails on a different input — a
+character, not a collision.** Added 2026-08-08, when that tool's name-break
+rule was ratified. It decides where a phonetic name may be divided by walking
+back over the marks to a **vowel**, and its `NAME_VOWELS` is a literal set. So
+a **vowel character new to this edition** is read as a consonant over there,
+the walk-back never lands, and that name's break seams silently vanish. Its
+**gate 5** then refuses to build — but only for a single-word name of **14+
+characters**. A shorter name loses its seams and fails nothing.
+
+The consequence for a session working here: a character new to a name needs
+classifying in **two** places in that repo — the `FOLD` map in `src/search.js`
+and `NAME_VOWELS` in `build.py` — and only the first has a gate that catches
+every case. Nothing on this site breaks either way; this is written down
+because the failure is in a different repo from its cause, and half of it is
+silent.
+
 ## Two names cannot be found by their own plate's `fold()`
 
 **Found 2026-08-03; not fixed, because it is a defect in this repo's data.**

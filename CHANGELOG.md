@@ -3,7 +3,59 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-07 (latest) — branch hygiene, and the search tool learns to explain a refusal
+## 2026-08-08 (latest) — the name-break rule is ratified, and a second gate now depends on this edition's spelling
+
+**Nothing on the site changed.** `8cc4bee` is still the last commit that moved
+a built page. `--public` was re-run to check the tree against the build: 6
+pages, 104 / 275 / 261 / 73 drawn, privacy gate clean, 10 JSON-LD blocks
+valid, and the only diff was dates, which was reverted.
+
+The 2026-08-07 handoff merged as PR #27 (`218c91f`), its branch deleted on both
+sides. `main` is again the only branch.
+
+### The long-name wrapping question is closed
+
+The design pass that had been open since 2026-08-07 is finished. The rule the
+previous session drafted was **ratified and implemented**, in `laguna-search`
+(`3e673bc`); nothing in this repo changed.
+
+The rule: *a name may break only immediately before a consonant, and only
+where walking back over the marks `ʼ ˙ ˚ ˘ ᶦ ᵘ ᵃ ᵉ` lands on a vowel.* `y` is a
+consonant, which follows from the clusters `dy`, `d˙y`, `ty`. Seams are
+computed in that tool's `build.py`, published beside each person, and rendered
+as `<wbr>`; `overflow-wrap: anywhere` came off its name cell in the same
+change, because left in it overrides the seams and nothing improves.
+
+Two stronger readings were put to the user and **rejected on measured cost**,
+and are recorded so neither is re-proposed: forbidding a break in any name
+containing `ʼ` leaves **1 of 73** long names breakable, and forbidding a break
+immediately *after* one strips 45 of 215 seams and leaves three names with
+none. Neither needed a rule change — the drafted rule already forbids a line
+beginning with any mark, which is what the reader had actually objected to.
+
+### Why that is in this changelog: a second gate now keys on our spelling
+
+`CLAUDE.md` already records that correcting **one diacritic here** can trip
+`laguna-search`'s namesake gate, because folding decides a name collision.
+There is now a **second** gate of the same kind, and it fails on a different
+input.
+
+That tool's new **gate 5** refuses to build when a single-word name of 14+
+characters has no legal seam. The realistic way this repo causes that is **a
+vowel character new to the edition** — its `NAME_VOWELS` set is a literal, so
+a character it has never been told about is treated as a consonant, the
+walk-back never lands on a vowel, and the name's seams vanish.
+
+**The gate only catches the long ones.** A name under 14 characters that loses
+all its seams this way fails nothing and simply wraps as it used to. So a new
+character in a name needs classifying in **two** places over there — the
+`FOLD` map in `src/search.js` and `NAME_VOWELS` in `build.py` — and only the
+first of those has a gate that catches every case.
+
+Nothing here is wrong and nothing here needs changing. This is recorded
+because the failure is in a different repo from its cause.
+
+## 2026-08-07 — branch hygiene, and the search tool learns to explain a refusal
 
 **Nothing on the site changed.** `8cc4bee` is still the last commit that moved
 a built page. Everything below is either notes in this repo or work in
