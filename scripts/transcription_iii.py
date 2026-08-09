@@ -187,29 +187,65 @@ where the plate prints the person twice -- 152 and 153 differ between their two
 occurrences, which is recorded in their plate_note and is a finding about the
 plate, not an unresolved reading.
 
-THE SECOND SORT IS REAL. SETTLED 2026-08-08, FOR 156 AND 157 ONLY.
+THE SECOND SORT IS REAL, AND ALL FIVE INSTANCES ARE NOW SETTLED. 2026-08-08.
 At 154, 156, 157, 228 and 242 a mark reads as a reversed comma rather than the
 U+02BC used everywhere else. The plate scan could not resolve it -- see the
-closed record below -- but the user PHOTOGRAPHED lines 156-159 and the
-photograph decides it. 156 and 157 now carry U+02BD, MODIFIER LETTER REVERSED
-COMMA. 154, 228 AND 242 REMAIN U+02BC, unphotographed and therefore unverified.
+closed record below -- but the user PHOTOGRAPHED the lines and the photographs
+decide it. ALL FIVE now carry U+02BD, MODIFIER LETTER REVERSED COMMA:
+
+  154  Yaʼdôkyʽ        156  Pʽĕʼnitsʼaʼyo      157  Dziotyʽ
+  228  Awieʽ           242  Shipʼaʼpʽ
 
 Note the earlier description of 156 was WRONG about position: its odd mark is
 the FIRST one, after the P, not a final one. Its other three marks are ordinary
-U+02BC. So the name is `Pʽĕʼnitsʼaʼyo`, and 157 is `Dziotyʽ`.
+U+02BC. Everywhere else the odd mark IS the final one.
 
 HOW IT WAS DECIDED, so a later session need not re-derive it. Each mark was
 flood-filled at NATIVE resolution -- no upscaling enters the measurement, which
 is what invalidated the earlier attempt -- and reduced to three numbers: the
 mark's height in rows, the horizontal centroid of its bottom third minus that of
-its top third, and its ink mass top third / bottom third.
+its top third, and its ink mass top third / bottom third. Heights are only
+comparable WITHIN one photograph; the drift and the mass are not.
 
+  first photograph, lines 156-159
   156 after P   50 rows   drift +3.0 px RIGHT   ink 339 / 212   questioned
   157 final     54 rows   drift +5.6 px RIGHT   ink 433 / 317   questioned
   156 after e   77 rows   drift -21.3 px LEFT   ink 512 / 220   known U+02BC
   156 after s   70 rows   drift -7.9 px LEFT    ink 582 / 195   known U+02BC
   156 after a   78 rows   drift -21.5 px LEFT   ink 564 / 291   known U+02BC
   159 in witsʼa 69 rows   drift -9.0 px LEFT    ink 523 / 179   the control
+
+  IMG_3041, lines 154-159 -- carries 154 AND replicates 156 and 157
+  154 final     28 rows   drift +3.7 px RIGHT   ink 116 /  70   questioned
+  154 after Ya  37 rows   drift -8.4 px LEFT    ink 131 / 103   known U+02BC
+  156 after P   23 rows   drift +2.4 px RIGHT   ink  64 /  38   replication
+  157 final     24 rows   drift +3.2 px RIGHT   ink  90 /  65   replication
+  156 after s   31 rows   drift -3.2 px LEFT    ink 124 /  50   known U+02BC
+  159 in witsʼa 31 rows   drift -4.1 px LEFT    ink 120 /  51   the control
+
+  IMG_3039, lines 242-244 -- 242 carries BOTH sorts in one word
+  242 final     49 rows   drift +4.5 px RIGHT   ink 368 / 303   questioned
+  242 after Ship 66 rows  drift -8.0 px LEFT    ink 547 / 267   known U+02BC
+  242 after a   70 rows   drift -21.0 px LEFT   ink 477 / 334   known U+02BC
+
+  IMG_3038, lines 227-229 -- 228, and NO control in frame
+  228 final     58 rows   drift +6.0 px RIGHT   ink 545 / 411   questioned
+
+228 IS THE ONE WITH A CAVEAT, and it does not change the answer. Neither 227 nor
+229 contains an apostrophe, so nothing in its frame is a control. The two
+discriminators that decide it are scale-free and both place it with the
+questioned group: the tail sweeps RIGHT, and it is TOP-HEAVY, so the mark is a
+mirror rather than a rotation. Its height normalised against the period in its
+own photograph is 1.45, inside the questioned band rather than the control band
+-- but that normalisation is not tight across photographs, so treat it as
+corroboration and not as proof.
+
+TWO THINGS THE SECOND ROUND ADDED. 156 and 157 REPLICATE from an independent
+photograph at roughly half the pixel scale, so the method is not living at the
+edge of the resolution. And the failure mode is worth naming: the first crop box
+for 159 in IMG_3041 caught the `s` of `wits` and read +8.9 px RIGHT. That was a
+bad box, not a finding. The flood fill will measure whatever blob it is given --
+LOOK AT THE CROP before believing a number.
 
 Three findings, and the third is what makes it certain rather than probable:
 
@@ -239,9 +275,8 @@ That remains true. sources/parsons-1923-table-3.jpg is 3770 x 5503, a ninth of
 Table 1's pixel count. DO NOT RE-CROP IT -- what settled this was a new
 photograph, not a bigger magnification of the old one.
 
-STILL OPEN: 154, 228 and 242, which the photograph does not cover. A photograph
-of those three lines, read the same way, would settle them; until then they stay
-U+02BC. 159 is the control to shoot alongside them.
+NOTHING IS OPEN. All five are photographed and measured. Do not re-open this on
+the strength of a crop of the scan.
 
 CROSS-REFERENCES -- AUDITED 2026-07-31
 --------------------------------------
@@ -480,7 +515,7 @@ _P += [(i, 5, "", "", "", "", "Turkey", "", "", "", "name printed as a dash; no 
 _P += [
     (152, 5, "M", "Dzaiʼgai",              "", "",   "Lizard",         "",        "", "See Gen. I, 98", "printed twice; drawn with issue under 68+69. THE TWO OCCURRENCES ARE SPELLED DIFFERENTLY: under 68+69 the plate prints Dzaiʼgai, under 243+244 it prints Dzai˙ʼy˙ai. The first is recorded here. Re-zoom both before publishing"),
     (153, 5, "F", "Shumaiʼ",               "", "30", "Badger",         "",        "", "See Gen. I, 97", "printed twice; her second line reads 'For her descendants, see above'. THE TWO OCCURRENCES ARE SPELLED DIFFERENTLY: under 68+69 the plate prints Shumaiʼ with no age and 'See Gen. I, 97', under 243+244 Shu˙măĭʼ with the age 30 and 'See Gen. I, 9'. The first is recorded here"),
-    (154, 5, "M", "Yaʼdôkyʼ",              "", "",   "Lizard",         "d.",      "", "", ""),
+    (154, 5, "M", "Yaʼdôkyʽ",              "", "",   "Lizard",         "d.",      "", "", ""),
     (155, 5, "",  "Yoʼsiro",               "", "",   "Chaparral Cock", "d. 1914", "",
      "For first husband and descendants, see Gen. | II, 126, 158, 160 | For third husband and descendant, see Gen. | I, 8, 90",
      "no sex printed; the cross-reference is set over four lines, split here at the plate's own breaks"),
@@ -564,7 +599,7 @@ _P += [
     (226, 6, "M", "Watye",                 "", "5",  "Water",          "", "", "", ""),
     # ---- block 1, generation 7 -------------------------------------------
     (227, 7, "F", "Shawityi",              "", "6",  "Oak", "", "", "", ""),
-    (228, 7, "M", "Awieʼ",                 "", "4",  "Oak", "", "", "", ""),
+    (228, 7, "M", "Awieʽ",                 "", "4",  "Oak", "", "", "", ""),
     (229, 7, "M", "Yoreni",                "", "1",  "Oak", "", "", "", ""),
     # ---- block 2, generation 2 (the plate indents this block) -------------
     (230, 2, "F", "",                      "", "",   "Parrot", "", "", "", "name printed as a dash"),
@@ -581,7 +616,7 @@ _P += [
     (239, 4, "F", "",                      "", "",   "Water",  "", "", "", "name printed as a dash; no issue recorded"),
     (240, 4, "F", "Yo˙nimaitsʼă",          "", "48", "Parrot", "", "", "", ""),
     (241, 4, "M", "Tsaauʼs˙diyai", "Jefferson", "51", "Turkey", "", "", "", "English name printed in parentheses on the plate"),
-    (242, 4, "M", "Shipʼaʼpʼ",             "", "",   "Parrot", "", "", "", "a full point is printed after the clan"),
+    (242, 4, "M", "Shipʼaʼpʽ",             "", "",   "Parrot", "", "", "", "a full point is printed after the clan"),
     (243, 4, "M", "Dziwishpirăiʼ",         "", "70", "Parrot", "", "", "See Gen. I, 79", "the plate prints no point after the age"),
     (244, 4, "F", "Tsa˙tsʼiʼ",             "", "",   "Badger", "d. in 1905", "", "See Gen. I, 78", ""),
     (245, 4, "M", "Dolivio",               "", "",   "Parrot", "", "", "", ""),
@@ -821,7 +856,7 @@ ORTHOGRAPHY = [
     ("ĕ", "U+0115", "e with breve", ""),
     ("ĭ", "U+012D", "i with breve", ""),
     ("ŭ", "U+016D", "u with breve", "in 112 Kaaigŭrŭr, 198 Dyăiʼtsdyămŭr"),
-    ("ô", "U+00F4", "o with circumflex", "in 154 Yaʼdôkyʼ"),
+    ("ô", "U+00F4", "o with circumflex", "in 154 Yaʼdôkyʽ"),
     ("ó", "U+00F3", "o with acute", "in 158 Góa˙ʼtyʼiăi"),
     ("ñ", "U+00F1", "n with tilde", "in Zuñi"),
     ("ᶦ", "U+1DA6", "superscript i", ""),
