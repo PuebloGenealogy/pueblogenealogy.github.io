@@ -2331,6 +2331,28 @@ if(form&&input&&datalist){
   });
 }
 
+/* The plate region is tabindex="0" so a keyboard reader can pan the wide chart
+   with the arrow keys, and so "Skip to chart" has somewhere to land. WebKit
+   also focuses a tabindex region when it is CLICKED, and then routes the wheel
+   to whatever holds focus -- and this region scrolls in x only. So a click
+   anywhere on the plate, including the inert space between names, left every
+   later wheel gesture panning sideways with the page refusing to move until a
+   reload. Reported 2026-08-09; Blink does not do this, so the preview cannot
+   reproduce it.
+   The attribute is dropped for the one task in which a pointer press would
+   consume it and put straight back, so the region is focusable at every moment
+   a keyboard can reach it -- Tab, the skip link and the arrow keys are all
+   unaffected. Pointer focus is the whole of what is given up.
+   Note what this deliberately does NOT do: blur on click. By the time focus
+   has landed the gesture is already routed, and blurring would also fight the
+   card, whose close returns focus to the a.num it was opened from. */
+var plateRegion=$("#plate");
+if(plateRegion)plateRegion.addEventListener("pointerdown",function(){
+  if(doc.activeElement===plateRegion)return;
+  plateRegion.removeAttribute("tabindex");
+  setTimeout(function(){plateRegion.setAttribute("tabindex","0")},0);
+});
+
 /* fragment insurance: a #r{n} link must open the register's disclosure, and
    hash navigation dismisses the person card. */
 function openDetailsFor(hash){
