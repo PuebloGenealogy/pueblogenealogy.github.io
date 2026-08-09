@@ -511,7 +511,10 @@ Two consequences that are not obvious:
 None of this constrains the edition's design — it constrains **silent** change.
 Restructure the register freely; just expect `laguna-search` to need its parser
 updated, and run its `tools/validate.py`, which compares all 713 entries and
-every relation against `scripts/transcription*.py`.
+every relation against `scripts/transcription*.py`. **It does not check that
+tool's fold map** — its own docstrings claimed otherwise until 2026-08-08 and
+were wrong; the map's only guard is its gate 3, below. Don't assume a check
+exists because a comment says so.
 
 **Both of that tool's checks read a CACHE of this site by default, so running
 them to verify a publish proves nothing without `--refresh`.** `build.py` keeps
@@ -799,6 +802,19 @@ proof. Found 2026-08-07 sweeping stale branches:
 `handoff-2026-07-29-plate-chrome` looked unmerged and is PR #13, squashed onto
 `main` as `5a37bdf`, tree `39b8487` — **identical** to the branch head
 `df2b1e0`, empty diff. Nothing was ever at risk.
+
+**The same mechanic has a second face, and that one IS dangerous: a stale open
+PR can become a REVERT.** Branch new work off a branch that has not merged yet,
+squash-merge the new work, and the old PR's content lands on `main` inside your
+squash — leaving the old PR open, contributing nothing, and now proposing to
+*undo* everything committed after it. Found 2026-08-08: PR #33 held the
+previous session's handoff branch, PR #34 was branched from it, and after #34
+and #35 merged, #33 would have deleted all five U+02BD readings and reverted the
+font subset. It was **closed, not merged**.
+`gh pr list --state open` is what surfaces it — run it when wrapping a session,
+not only when tidying branches. The check that settles it is
+`git diff origin/main origin/<branch>`, and the thing to read is the
+**direction**: deletions there mean the branch is *behind* `main`, not ahead.
 
 Two mechanics from the same sweep. GitHub **auto-deletes a branch on merge**,
 so remote-tracking refs here go stale in bulk — ten did — and
