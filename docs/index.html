@@ -893,6 +893,11 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
 .contents .pending{padding:var(--s4) var(--s2)}
 .contents .pending .c-title{color:var(--muted)}
 .pending-tag{font-style:italic;font-size:var(--t-base)}
+/* The finding aid is ruled into the contents list without being one of its
+   items -- a plate's rule comes from .contents li, so this row carries its
+   own. Everything else it needs (block display, padding, hover, focus) it
+   already gets from .contents a. */
+.c-across{border-block-end:1px solid var(--rule-faint)}
 .prose{max-width:var(--measure);margin:0 auto;
   padding:var(--s6) var(--s5) var(--s7);font-size:var(--t-prose);line-height:1.7;
   color:var(--muted);text-wrap:pretty}
@@ -957,6 +962,10 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
       <span class="c-stats">73 individuals &middot; four generations &middot; 14 marriages &middot; 58 parent&ndash;child links</span>
     </a></li>
   </ol>
+  <a class="c-across" href="search/">
+    <span class="c-title">Search the whole edition</span>
+    <span class="c-stats">All 713 entries, every plate &middot; by name, person number or clan</span>
+  </a>
 </nav>
 </main>
 <div class="prose">
