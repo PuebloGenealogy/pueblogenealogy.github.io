@@ -615,6 +615,35 @@ footer{max-width:var(--measure-wide);margin:0 auto;
 .app-sec{break-inside:avoid}
 footer h2{margin:var(--s6) 0 var(--s3)}
 footer h2:first-child,.app-sec h2:first-child{margin-block-start:0}
+/* Editorial notes, Provenance and Citation fold away; The record and
+   Navigating this chart do not. The split is what each section is FOR: the
+   first two orient a reader who has just arrived at the plate, the other three
+   are reference material consulted once and then in the way.
+
+   Same disclosure the landing page's FAQ and the register above already use --
+   the marker, the sizes and the hover are deliberately identical, because a
+   third idiom for "this opens" is a cost with no reader on the other end of
+   it. The <h2> lives INSIDE the summary so the heading outline survives the
+   fold; a screen reader still finds five headings in the apparatus.
+
+   Two things this must not break, both already solved elsewhere and reused
+   rather than rebuilt: a deep link into a folded section (#note-misprint,
+   #note-paternity, #note-crossref) is opened by openDetailsFor(), the same
+   fragment insurance the register's disclosure relies on; and the offprint
+   carries every section whatever the reader left folded -- see @media print. */
+.app-d > summary{cursor:pointer;list-style:none;padding:var(--s3) 0;
+  display:flex;gap:var(--s3);align-items:baseline}
+.app-d > summary::-webkit-details-marker{display:none}
+.app-d > summary::before{content:"+";color:var(--muted);
+  font-variant-numeric:tabular-nums}
+.app-d[open] > summary::before{content:"\2013"}
+.app-d > summary h2{margin:0}
+.app-d > summary:hover h2{color:var(--accent)}
+.app-d > summary:focus-visible{outline:2px solid var(--accent-strong);
+  outline-offset:.2rem}
+/* The fold is the section's own top edge, so the heading's block margin would
+   double the gap the grid already sets. */
+.app-sec > .app-d{margin:0}
 footer ul{margin:.3rem 0;padding-left:1.2rem}
 footer li{margin:.25rem 0}
 /* An apparatus note that something on the chart links to. Same scroll-margin
@@ -829,6 +858,17 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
     content:" (" attr(href) ")";font-size:.9em}
   .line:target,.line.is-selected,.reg:target{
     background:none;box-shadow:none;outline:none}
+  /* The offprint carries the WHOLE apparatus, whatever the reader left folded
+     -- a printed edition with its citation collapsed away is not an edition.
+     ::details-content does it with no script on a current engine; the
+     beforeprint handler in UI_JS is the same guarantee for the rest, and is
+     what a reader printing an older browser gets. Belt and braces on purpose:
+     this is the one place where the fold silently losing content would leave
+     no trace on screen to notice it by. */
+  .app-d::details-content{content-visibility:visible!important;
+    block-size:auto!important;opacity:1!important}
+  .app-d > summary{padding:0}
+  .app-d > summary::before{display:none}
   /* The offprint is black on white. The clan gold prints as a weak grey, and
      the colour was never carrying information a reader could not get from the
      word itself, so it flattens here rather than degrading. */
@@ -844,9 +884,9 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
 <a class="skip" href="#register-sec">Skip past chart to the register</a>
 <header class="masthead">
   <a class="wordmark" href="../">Laguna Genealogies</a>
-  <a class="mast-btn" href="../search/"><span class="nav-word">Search</span><svg class="mast-glyph" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><circle cx="6.75" cy="6.75" r="4.75" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.4 10.4 14.4 14.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></a>
   <nav aria-label="Tables"><a href="../genealogy-i/"><span class="nav-word">Genealogy </span>I</a><a href="../genealogy-ii/"><span class="nav-word">Genealogy </span>II</a><a href="../genealogy-iii/"><span class="nav-word">Genealogy </span>III</a><a href="../genealogy-iv/" aria-current="page"><span class="nav-word">Genealogy </span>IV</a></nav>
   <span class="mast-right">
+    <a class="mast-btn" href="../search/"><span class="nav-word">Search</span><svg class="mast-glyph" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><circle cx="6.75" cy="6.75" r="4.75" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.4 10.4 14.4 14.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></a>
     <!-- Bare "Theme" in the markup: the server cannot know which palette the
          reader will resolve to, and applyTheme() names it on the first tick.
          It must not say Auto -- there is no Auto state, and this label is what
@@ -926,7 +966,8 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
 </ul>
     </section>
     <section class="app-sec">
-      <h2>Editorial notes</h2>
+      <details class="app-d">
+        <summary><h2>Editorial notes</h2></summary>
       <ul>
     <li>Clan membership is matrilineal: every sibling group carries its mother's clan.
         That rule was used to verify the bracket readings against the plate.</li>
@@ -953,9 +994,11 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
         register below the chart are editorial apparatus of this edition, not
         part of the plate.</li>
 </ul>
+      </details>
     </section>
     <section class="app-sec">
-  <h2>Provenance</h2>
+  <details class="app-d">
+    <summary><h2>Provenance</h2></summary>
   <ul>
     <li>This is a transcription of a plate in an existing published source. The
         1923 publication is in the public domain in the United States.</li>
@@ -969,10 +1012,12 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
         <a href="../fonts/OFL.txt">SIL Open Font License</a>, so the phonetic
         diacritics render the same everywhere.</li>
   </ul>
+  </details>
     </section>
     <section class="app-sec">
-      <h2>Citation</h2>
-  <blockquote class="cite-block" id="cite-text">
+      <details class="app-d">
+        <summary><h2>Citation</h2></summary>
+      <blockquote class="cite-block" id="cite-text">
     <p>Elsie Clews Parsons, &ldquo;Laguna Genealogies,&rdquo;
        <em>Anthropological Papers of the American Museum of Natural History</em>,
        vol.&nbsp;19, pt.&nbsp;5 (1923), pp.&nbsp;133&ndash;292, Table 4.</p>
@@ -982,6 +1027,7 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
   </blockquote>
   <p>To cite one person&rsquo;s line, use its number&rsquo;s link:
      <a href="#p1">https://pueblogenealogy.github.io/genealogy-iv/#p1</a> is person 1.<span id="copy-mount"></span></p>
+      </details>
     </section>
   </div>
   <p class="updated">Last updated
@@ -1106,6 +1152,23 @@ addEventListener("hashchange",function(){
   }
 });
 openDetailsFor(location.hash);
+
+/* print insurance: the offprint carries every apparatus section, whatever the
+   reader left folded. The print stylesheet does this on its own where
+   ::details-content is supported; this covers the engines where it is not.
+   It restores exactly what it opened, so a reader's own folds survive the
+   print dialog -- reopening all five would be a change they never made. */
+var printOpened=[];
+addEventListener("beforeprint",function(){
+  printOpened=[];
+  doc.querySelectorAll(".app-d").forEach(function(d){
+    if(!d.open){d.open=true;printOpened.push(d)}
+  });
+});
+addEventListener("afterprint",function(){
+  printOpened.forEach(function(d){d.open=false});
+  printOpened=[];
+});
 
 /* copy citation */
 var citeText=$("#cite-text"),copyMount=$("#copy-mount");

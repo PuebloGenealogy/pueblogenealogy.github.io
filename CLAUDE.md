@@ -451,6 +451,36 @@ not CSS multicolumn — multicolumn will break a heading away from the list it
 introduces. This is also what puts the footer on the same left edge as the
 register above it.
 
+**Three of its five sections fold, and two deliberately do not.** *Editorial
+notes*, *Provenance* and *Citation* are `<details class="app-d">`, closed by
+default (added 2026-08-09 at the user's request); *The record* and *Navigating
+this chart* stay open, because they orient a reader who has just arrived at the
+plate while the other three are consulted once. **Do not fold *Navigating this
+chart* later** — see *There is no on-page chart key*: it is the only place `+`,
+`F.`/`M.` and the leader rule are decoded, and hiding it behind a disclosure
+re-opens by other means the defect that removing the key was meant to close.
+The disclosure is the **same
+idiom the landing page's FAQ and the register already use** — marker, sizes and
+hover identical on purpose. The `<h2>` sits **inside the `<summary>`**, so the
+apparatus still has five headings for a screen reader; `cite_html()` therefore
+no longer emits its own.
+
+Two things this must not break, both already solved and reused rather than
+rebuilt:
+
+- **A deep link into a folded section** — `#note-misprint`, `#note-paternity`,
+  `#note-crossref` — is opened by `openDetailsFor()`, the fragment insurance the
+  register's disclosure already relied on. Verified on load, on same-page click
+  and across pages; `:target` still lights the note. **A new footer note that a
+  reader can be sent to needs no new code, but it does need an `id`** — the
+  insurance keys on `getElementById`.
+- **The offprint carries every section, whatever the reader left folded.** A
+  printed edition with its citation collapsed away is not an edition. Two
+  mechanisms on purpose: `::details-content` in the print stylesheet (no script,
+  current engines only) and a `beforeprint` handler that opens what is closed
+  and **restores it on `afterprint`** — reopening all five would be a change the
+  reader never made.
+
 The misprint ring is an **`outline`**, never a border or padding: a border
 widens the row and throws the sibling bracket off its `mother_row`. The
 annotation is a separate row counted with `row += 1`, exactly as a
@@ -611,7 +641,7 @@ from and how to refresh it.
 overwritten by the next re-vendor exactly as `docs/` is by the next build.
 
 `write_search()` deliberately does the least it can — it wraps, never rewrites.
-Three things are injected, and each is there because the vendored file cannot
+Four things are injected, and each is there because the vendored file cannot
 supply it:
 
 - **The subset font.** `search.css` declares **no `@font-face` at all**, and
@@ -628,29 +658,50 @@ supply it:
   cannot collide with the widget, which is scoped `.laguna-search`. It sets
   `--lg-sticky-top`, the widget's documented hook for "the host page has a bar
   this tall" — without it the widget's sticky filter header rests underneath it.
-- **A theme bridge.** This site stores the palette under **`lg-theme`**, the
-  widget under **`laguna-theme`**, and *both drive `html[data-theme]`*. Left
-  alone, a reader who chose Dark on a chart page is handed the system preference
-  at `/search/`, and the same in reverse. Neither key can simply be renamed: one
-  is in vendored bytes, the other in every page this build writes. The bridge
-  runs in `<head>`, after the vendored inline script and before the module
-  mounts, and a `MutationObserver` carries a choice made here back out — without
-  it the bridge is one-way. **The durable fix is a `storageKey` option in the
-  widget**; ask for one before adding a second patch of this shape.
+- **The theme key.** One line — `THEME_KEY_DECL`, `window.LAGUNA_THEME_KEY =
+  "lg-theme"` — and it is the **only** injection that does not go in at
+  `</head>`. It is spliced in **after the charset meta**, because it has to
+  precede the vendored blocking script that reads it, and nothing should come
+  between the document and the declaration that decodes it. `write_search()`
+  **aborts the build** if that meta is missing rather than emit a page whose
+  palette silently detaches.
 
-**The masthead's Search link sits beside the WORDMARK, and that is measured.**
-At 375px the bar is two rows — wordmark alone on the first, pills and Theme
-sharing the second with **359px of usable width against 360px of content**. Put
-Search in `.mast-right` and that row wraps: three rows, **109px → 157px**,
-permanently sticky, a fifth of a phone viewport. The wordmark's row has ~160px
-spare, so Search rides there for free — measured 49px at 1280 and 109px at 375,
-both identical to the site without it. **Do not tidy it into `.mast-right`, and
-do not buy the row back by shaving gaps**: 44px is `--tap`, the floor, and this
-bar already has a 2.9px-overrun comment recording what living on a thin margin
-costs. Below 26rem the label is hidden by the **same `.nav-word` rule the pills
-use**, and an inline SVG magnifier takes its place — drawn, not typed, because
-U+2315 is missing from the UI stack and U+1F50D is an emoji, and this bar has no
-embedded face.
+  This site stores the palette under **`lg-theme`** and the widget's own default
+  is **`laguna-theme`**, and *both drive `html[data-theme]`* — so two keys means
+  a reader who chose Dark on a chart page is handed the system preference at
+  `/search/`, and the same in reverse. **Since 2026-08-09 the widget takes the
+  key as configuration** (`laguna-search` `9974d55`), so there is one key and
+  nothing to synchronise. The option is read in two places, which is why there
+  is a global as well as a `mountSearch({ storageKey })` argument: `themeToggle()`
+  runs at mount and can be passed one, but the pre-paint script runs before any
+  module loads and can only read a global. Precedence is option → global →
+  `"laguna-theme"`, verified all three ways in the browser.
+
+  **Until that day this was a bridge** that mirrored the two keys and carried
+  changes back with a `MutationObserver`. **Do not reintroduce one.** A second
+  key is the defect, not the starting condition — if the widget ever needs
+  another host-side value, ask for an option before writing a patch of that
+  shape.
+
+**The masthead's Search link sits in `.mast-right` beside Theme — moved there by
+the user 2026-08-09, and it costs a row on a phone.** That cost was measured
+before the move and again after, and both agree: **1280px unchanged at 49px, one
+row; 375px 109px → 157px, three rows**, permanently sticky, a fifth of an 812px
+viewport. The pills and Theme already fill their row to **360px against 359px of
+usable width**, so Search cannot join it — it wraps to a third. It rode beside
+the **wordmark** until this change for exactly that reason, and that row still
+has ~160px spare if it is ever moved back.
+
+**Do not buy the row back by shaving gaps.** `--tap` is `2rem`, and **`2.75rem`
+under `(pointer:coarse)`** — so the floor on the phone, which is the only place
+the row is scarce, is 44px and there is nothing to reclaim. This bar already has
+a 2.9px-overrun comment recording what living on a thin margin costs. Search
+measures 32px beside Theme and the pills on a desktop pointer and 44px on a
+coarse one, matching them exactly; that is the check to re-run if `.mast-btn`
+ever changes. Below 26rem the label is hidden by the **same `.nav-word` rule the
+pills use**, and an inline SVG magnifier takes its place — drawn, not typed,
+because U+2315 is missing from the UI stack and U+1F50D is an emoji, and this
+bar has no embedded face.
 
 **`/search/` is deliberately absent from `sitemap.xml`.** The page ships
 `<meta name="robots" content="noindex">`, and advertising it in a sitemap while

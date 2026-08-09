@@ -3,7 +3,109 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-09 (latest) — the cross-plate search page ships at /search/
+## 2026-08-09 (latest) — Search moves right; three apparatus sections fold
+
+Both at the user's request.
+
+### Search sits in `.mast-right` beside Theme
+
+**It costs a row on a phone, and the cost is the one that was predicted.**
+Measured before and after, and they agree: **1280px unchanged at 49px / 1 row;
+375px 109px → 157px / 3 rows**, permanently sticky, a fifth of an 812px
+viewport. The pills and Theme already fill their row to 360px against 359px of
+usable width, so Search cannot join it and wraps to a third. It rode beside the
+wordmark until now for exactly that reason; that row still has ~160px spare if
+it is ever moved back.
+
+The gaps were **not** shaved to buy the row back — 44px is `--tap`. Search
+measures 32px beside Theme and the pills on a desktop pointer (`--tap` is
+`2rem`) and 44px on a coarse one, matching them exactly. Below 26rem the same
+`.nav-word` rule the pills use hides the label and the SVG magnifier stands in,
+unchanged.
+
+### Editorial notes, Provenance and Citation fold
+
+`<details class="app-d">`, closed by default. *The record* and *Navigating this
+chart* stay open — they orient a reader who has just arrived at the plate, while
+the other three are reference material consulted once. The footer goes from
+~2.2k px to **945px** with all three folded.
+
+Same disclosure the landing page's FAQ and the register already use — marker,
+sizes and hover deliberately identical, because a third idiom for "this opens"
+is a cost with no reader on the other end of it. The `<h2>` sits **inside the
+`<summary>`**, so the apparatus still exposes five headings; `cite_html()` no
+longer emits its own.
+
+**Two things that would have broken silently, both verified:**
+
+*Deep links into a folded section.* `#note-misprint`, `#note-paternity` and
+`#note-crossref` are all inside *Editorial notes*. `openDetailsFor()` — the
+fragment insurance the register's disclosure already relied on — opens the fold
+and finishes the jump, with no new code. Checked on load, on same-page click
+(the `sic` ring at I·76) and across pages (I → `../genealogy-ii/#note-crossref`);
+`:target` still lights the note in all three.
+
+*The offprint.* A printed edition with its citation collapsed away is not an
+edition. Two mechanisms: `::details-content` in the print stylesheet, which
+needs no script but only works on a current engine, and a `beforeprint` handler
+that opens what is closed and **restores it on `afterprint`** — reopening all
+five would be a change the reader never made. Verified by dispatching both
+events: `[open, closed, closed]` → all open → back to `[open, closed, closed]`.
+
+The copy-citation button still mounts while Citation is folded — `#cite-text`
+and `#copy-mount` are in the DOM either way.
+
+### Not due: the search index
+
+`laguna-search` builds its index by parsing these pages, so the Gate 8 test is
+a diff, not a memory. Filtering all four table pages' diff for `.reg`,
+`.reg-rel`, `.num`, `.xref` and `sic-ring` gives **0**. The whole diff is 68
+added / 5 removed lines per page, and the five removals are the moved Search
+link and the four headings that went inside a `<summary>`.
+
+## 2026-08-09 — the theme bridge is retired for a widget option
+
+The `storageKey` option asked for below now exists, so the bridge that mirrored
+two localStorage keys and carried changes back with a `MutationObserver` is
+**deleted**. In its place is one line, `THEME_KEY_DECL`:
+
+```html
+<script>window.LAGUNA_THEME_KEY="lg-theme"</script>
+```
+
+Two keys was the defect, not the starting condition. Pointed at the key this
+site already uses, the widget writes it directly and there is nothing to keep
+in step.
+
+**In `laguna-search`** (`9974d55`, private repo): `mountSearch({ storageKey })`,
+`storage-key=""` on `<laguna-search>`, and `themeStorageKey()` resolving
+**option → `globalThis.LAGUNA_THEME_KEY` → `"laguna-theme"`**. The palette is
+applied in two places and only one can be handed an option — `themeToggle()`
+runs at mount, but `THEME_BOOT` is a blocking script in `<head>` that runs
+before any module loads — which is why the key also has a global. A page that
+sets neither behaves exactly as before.
+
+**Where the line goes is not free.** It is spliced in after the charset meta,
+not at `</head>` with the other three injections, because it must precede the
+vendored script that reads it; putting it at `</head>` leaves the pre-paint read
+looking at the wrong key and the flash comes back. `write_search()` now aborts
+if that meta is missing rather than emit a page whose palette silently detaches.
+
+**Verified in the browser**, OS set to dark so a stored choice is
+distinguishable from the system default. Light chosen on a chart page →
+`/search/` renders light with `lg-theme` the only key present; Dark chosen on
+`/search/` → `lg-theme` written, chart page renders dark. Default path checked
+all three ways: no global and no option stores `laguna-theme`, the global gives
+`lg-theme`, an explicit `storageKey` beats both. Fonts still `loaded`,
+`.cell.name` still computes `Laguna Serif`, no console errors.
+
+The re-vendor was run with **`--refresh`**, and its index came back identical to
+the vendored one apart from `meta.generated` — which is the proof the published
+register has not moved. All seven of that project's gates pass. The four table
+pages and the landing page are **byte-identical**; `docs/search/` is the whole
+of the diff.
+
+## 2026-08-09 — the cross-plate search page ships at /search/
 
 **Published**, `6a882ee` (PR #39). Verified live by SHA-256 across all seven
 pages; sitemap 5 locs against the build's 7, which is correct.
@@ -42,6 +144,9 @@ vendored inline script and before the module mounts, and a `MutationObserver`
 carries a choice made here back out. Tested both directions. **The durable fix
 is a `storageKey` option in the widget** — ask for one before adding a second
 patch of this shape.
+
+*(Superseded the same day — the option was written and the bridge deleted. See
+the entry above.)*
 
 ### The masthead position is measured, not chosen
 

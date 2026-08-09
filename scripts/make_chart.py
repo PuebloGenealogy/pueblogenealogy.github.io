@@ -1852,6 +1852,35 @@ footer{max-width:var(--measure-wide);margin:0 auto;
 .app-sec{break-inside:avoid}
 footer h2{margin:var(--s6) 0 var(--s3)}
 footer h2:first-child,.app-sec h2:first-child{margin-block-start:0}
+/* Editorial notes, Provenance and Citation fold away; The record and
+   Navigating this chart do not. The split is what each section is FOR: the
+   first two orient a reader who has just arrived at the plate, the other three
+   are reference material consulted once and then in the way.
+
+   Same disclosure the landing page's FAQ and the register above already use --
+   the marker, the sizes and the hover are deliberately identical, because a
+   third idiom for "this opens" is a cost with no reader on the other end of
+   it. The <h2> lives INSIDE the summary so the heading outline survives the
+   fold; a screen reader still finds five headings in the apparatus.
+
+   Two things this must not break, both already solved elsewhere and reused
+   rather than rebuilt: a deep link into a folded section (#note-misprint,
+   #note-paternity, #note-crossref) is opened by openDetailsFor(), the same
+   fragment insurance the register's disclosure relies on; and the offprint
+   carries every section whatever the reader left folded -- see @media print. */
+.app-d > summary{cursor:pointer;list-style:none;padding:var(--s3) 0;
+  display:flex;gap:var(--s3);align-items:baseline}
+.app-d > summary::-webkit-details-marker{display:none}
+.app-d > summary::before{content:"+";color:var(--muted);
+  font-variant-numeric:tabular-nums}
+.app-d[open] > summary::before{content:"\\2013"}
+.app-d > summary h2{margin:0}
+.app-d > summary:hover h2{color:var(--accent)}
+.app-d > summary:focus-visible{outline:2px solid var(--accent-strong);
+  outline-offset:.2rem}
+/* The fold is the section's own top edge, so the heading's block margin would
+   double the gap the grid already sets. */
+.app-sec > .app-d{margin:0}
 footer ul{margin:.3rem 0;padding-left:1.2rem}
 footer li{margin:.25rem 0}
 /* An apparatus note that something on the chart links to. Same scroll-margin
@@ -2066,6 +2095,17 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
     content:" (" attr(href) ")";font-size:.9em}
   .line:target,.line.is-selected,.reg:target{
     background:none;box-shadow:none;outline:none}
+  /* The offprint carries the WHOLE apparatus, whatever the reader left folded
+     -- a printed edition with its citation collapsed away is not an edition.
+     ::details-content does it with no script on a current engine; the
+     beforeprint handler in UI_JS is the same guarantee for the rest, and is
+     what a reader printing an older browser gets. Belt and braces on purpose:
+     this is the one place where the fold silently losing content would leave
+     no trace on screen to notice it by. */
+  .app-d::details-content{content-visibility:visible!important;
+    block-size:auto!important;opacity:1!important}
+  .app-d > summary{padding:0}
+  .app-d > summary::before{display:none}
   /* The offprint is black on white. The clan gold prints as a weak grey, and
      the colour was never carrying information a reader could not get from the
      word itself, so it flattens here rather than degrading. */
@@ -2312,6 +2352,23 @@ addEventListener("hashchange",function(){
   }
 });
 openDetailsFor(location.hash);
+
+/* print insurance: the offprint carries every apparatus section, whatever the
+   reader left folded. The print stylesheet does this on its own where
+   ::details-content is supported; this covers the engines where it is not.
+   It restores exactly what it opened, so a reader's own folds survive the
+   print dialog -- reopening all five would be a change they never made. */
+var printOpened=[];
+addEventListener("beforeprint",function(){
+  printOpened=[];
+  doc.querySelectorAll(".app-d").forEach(function(d){
+    if(!d.open){d.open=true;printOpened.push(d)}
+  });
+});
+addEventListener("afterprint",function(){
+  printOpened.forEach(function(d){d.open=false});
+  printOpened=[];
+});
 
 /* copy citation */
 var citeText=$("#cite-text"),copyMount=$("#copy-mount");
@@ -2691,25 +2748,27 @@ def masthead_html(tables, current_slug, prefix, home):
     # screen reader reading the group. It is a link rather than a button so it
     # works with the script dead, unlike Theme.
     #
-    # It sits beside the WORDMARK, and that position is measured, not chosen.
-    # At 375px the bar is two rows: the wordmark alone on the first, the pills
-    # and Theme sharing the second with 359px of usable width against 360px of
-    # content -- one pixel over. Put Search in mast-right and that row wraps,
-    # taking the bar to three rows and 157px, a fifth of a phone viewport,
-    # permanently sticky. The wordmark's row has ~160px spare, so Search rides
-    # there for free: measured 109px, byte-for-byte the height of the published
-    # bar without it.
+    # It sits in mast-right beside Theme, which is where the user asked for it
+    # on 2026-08-09. That position has a KNOWN COST and it is not a guess: at
+    # 375px the pills and Theme already fill their row to 360px against 359px
+    # of usable width, so adding Search wraps the bar to a third row. Measured
+    # after the move -- 1280px unchanged at 49px, 375px 109px -> 157px,
+    # permanently sticky, a fifth of an 812px viewport. It rode beside the
+    # wordmark until this change precisely to avoid that, and the wordmark's
+    # row still has the spare width if it is ever moved back.
     #
-    # Do not "tidy" it back into mast-right, and do not buy the row back by
-    # shaving gaps -- 44px is --tap, the floor, and this file's own history
-    # (the 2.9px overrun comment above) is the argument against living on a
-    # 3px margin. Its label wears .nav-word so the SAME ≤26rem rule hides it,
-    # reused rather than reinvented; the accessible name stays "Search".
+    # Do NOT try to buy the row back by shaving gaps: 44px is --tap, the floor,
+    # and this file's own history (the 2.9px overrun comment above) is the
+    # argument against living on a 3px margin. Its label wears .nav-word so the
+    # SAME ≤26rem rule hides it, reused rather than reinvented; below that width
+    # the glyph alone stands in and the accessible name stays "Search".
+    search = (f'<a class="mast-btn" href="{prefix}search/">'
+              f'<span class="nav-word">Search</span>{SEARCH_GLYPH}</a>')
     return f"""<header class="masthead">
   {mark}
-  <a class="mast-btn" href="{prefix}search/"><span class="nav-word">Search</span>{SEARCH_GLYPH}</a>
   <nav aria-label="Tables">{links}</nav>
   <span class="mast-right">
+    {search}
     <!-- Bare "Theme" in the markup: the server cannot know which palette the
          reader will resolve to, and applyTheme() names it on the first tick.
          It must not say Auto -- there is no Auto state, and this label is what
@@ -2947,11 +3006,15 @@ def register_html(persons, unions, ku, km, drawn, paternity=None):
 
 
 def cite_html(spec, today):
-    """The recommended two-part citation, generated so it can never go stale."""
+    """
+    The recommended two-part citation, generated so it can never go stale.
+
+    The <h2> is the caller's, not this function's: since 2026-08-09 the section
+    is a disclosure and the heading lives inside its <summary>.
+    """
     canonical = f"{SITE}/{spec['slug']}/"
     root_id = spec["roots"][0]
-    return f"""<h2>Citation</h2>
-  <blockquote class="cite-block" id="cite-text">
+    return f"""<blockquote class="cite-block" id="cite-text">
     <p>Elsie Clews Parsons, &ldquo;Laguna Genealogies,&rdquo;
        <em>Anthropological Papers of the American Museum of Natural History</em>,
        vol.&nbsp;19, pt.&nbsp;5 (1923), pp.&nbsp;133&ndash;292, {spec['plate']}.</p>
@@ -3152,7 +3215,8 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
 {jsonld_chart(spec, description, today)}
 {jsonld_breadcrumb(spec)}"""
         provenance = f"""    <section class="app-sec">
-  <h2>Provenance</h2>
+  <details class="app-d">
+    <summary><h2>Provenance</h2></summary>
   <ul>
     <li>This is a transcription of a plate in an existing published source. The
         1923 publication is in the public domain in the United States.</li>
@@ -3166,13 +3230,15 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
         <a href="../fonts/OFL.txt">SIL Open Font License</a>, so the phonetic
         diacritics render the same everywhere.</li>
   </ul>
+  </details>
     </section>"""
         mast = masthead_html(tables, spec["slug"], "../", "../")
         canon_attr = f' data-canonical="{canonical}"'
     else:
         head_extra = '<meta name="robots" content="noindex,nofollow">'
         provenance = """    <section class="app-sec">
-  <h2>This is the private build</h2>
+  <details class="app-d">
+    <summary><h2>This is the private build</h2></summary>
   <ul>
     <li>Generated from <code>data/parsons_genealogy_I.xlsx</code>, so it may show
         English names and census matches. It is git-ignored and must not be published.</li>
@@ -3180,6 +3246,7 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
     <li>The public page is built separately with <code>--public</code>, from
         <code>scripts/transcription.py</code>, which has no research columns.</li>
   </ul>
+  </details>
     </section>"""
         mast = masthead_html(tables, spec["slug"], f"{SITE}/", f"{SITE}/")
         canon_attr = ""
@@ -3250,12 +3317,17 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
       <ul>{navigating_html(spec)}</ul>
     </section>
     <section class="app-sec">
-      <h2>Editorial notes</h2>
+      <details class="app-d">
+        <summary><h2>Editorial notes</h2></summary>
       <ul>{READING_COMMON.format(blocks=blocks_note(spec))}{spec["notes"]}{APPARATUS_NOTE}</ul>
+      </details>
     </section>
 {provenance}
     <section class="app-sec">
+      <details class="app-d">
+        <summary><h2>Citation</h2></summary>
       {cite_html(spec, today)}
+      </details>
     </section>
   </div>
   <p class="updated">Last updated
@@ -3306,29 +3378,28 @@ LANDING_CSS_EXTRA = """
 
 
 # The two projects store the reader's palette under different keys -- this site
-# under "lg-theme", the widget under "laguna-theme" -- and both drive the same
-# html[data-theme]. Left alone, a reader who chose Dark on a chart page arrives
-# at /search/ and is handed the system preference instead, and the same in
-# reverse. Neither key can simply be renamed: one is in vendored bytes, the
-# other is in every page this build writes.
+# under "lg-theme", the widget's own default being "laguna-theme" -- and both
+# drive the same html[data-theme]. Left alone, a reader who chose Dark on a
+# chart page arrives at /search/ and is handed the system preference instead,
+# and the same in reverse.
 #
-# So the host bridges them. It runs in <head>, AFTER the vendored inline script
-# that reads "laguna-theme" and BEFORE the module that mounts the widget, which
-# is the only window where the correction is invisible. The observer is what
-# carries a choice made here back out to the chart pages; without it the bridge
-# would be one-way.
+# From 2026-08-09 the widget takes the key as configuration, so there is one
+# key and nothing to synchronise. This line is the whole of it: it declares the
+# key the widget's two halves read -- `THEME_BOOT`, the blocking script that
+# applies the palette before first paint, and `themeToggle()`, which writes it
+# at mount. Both fall back to "laguna-theme" when it is unset, so the vendored
+# page still works on its own.
 #
-# The durable fix is a storageKey option in the widget, which would delete all
-# of this. Ask for one before adding a second patch of this shape.
-THEME_BRIDGE = (
-    '(function(){var K="lg-theme",L="laguna-theme",d=document.documentElement;'
-    'function g(k){try{return localStorage.getItem(k)}catch(e){return null}}'
-    'function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}'
-    'var t=g(K);if(t&&g(L)!==t){s(L,t);d.dataset.theme=t}'
-    'new MutationObserver(function(){var n=d.dataset.theme;'
-    'if(n&&g(K)!==n){s(K,n);s(L,n)}})'
-    '.observe(d,{attributes:true,attributeFilter:["data-theme"]})})();'
-)
+# It must be injected AHEAD of the vendored boot script; everything else this
+# function adds goes in at </head>, and putting this there too would leave the
+# pre-paint read looking at the wrong key. It is spliced in after the charset
+# meta rather than after `<head>` itself, so nothing comes between the document
+# and the declaration that decodes it.
+#
+# This replaced a bridge that mirrored the two keys and carried changes back
+# with a MutationObserver. Don't reintroduce one: a second key is the defect,
+# not the starting condition.
+THEME_KEY_DECL = '<script>window.LAGUNA_THEME_KEY="lg-theme"</script>'
 
 
 def write_search(tables):
@@ -3337,7 +3408,7 @@ def write_search(tables):
 
     That directory is another project's build output (vendor/search/SOURCE.md),
     so this function does the least it can to it: it never rewrites the widget,
-    only wraps it. Three things are added, and each is here because the vendored
+    only wraps it. Four things are added, and each is here because the vendored
     file cannot supply it.
 
     1. THE FONT. `search.css` declares no @font-face at all, and every name it
@@ -3361,6 +3432,12 @@ def write_search(tables):
     3. `--lg-sticky-top`. The widget's filter header is sticky; the token is its
        documented hook for "the host page has a bar this tall". Set it or the
        header comes to rest underneath ours.
+
+    4. THE THEME KEY. One line, `THEME_KEY_DECL`, and it goes in at the top of
+       <head> rather than at the bottom with the rest -- see the note there.
+       Without it the widget stores the palette under its own key while every
+       other page here stores it under "lg-theme", and a reader's choice is
+       dropped in whichever direction they crossed the boundary.
 
     Returns False if the vendored files are missing, which fails the build. That
     is deliberate: METHOD.md's *Identity across plates* describes this page in
@@ -3418,10 +3495,16 @@ def write_search(tables):
 """
 
     html = (SEARCH_DIR / "index.html").read_text(encoding="utf-8")
+    charset = '<meta charset="utf-8">'
+    if charset not in html:
+        print("ABORTED: vendor/search/index.html has no charset meta to anchor "
+              "the theme key to; the palette would not survive /search/")
+        return False
+    html = html.replace(charset, f"{charset}\n{THEME_KEY_DECL}", 1)
     html = html.replace(
         "</head>",
         f'<link rel="canonical" href="{SITE}/search/">\n'
-        f"<style>{host_css}</style>\n<script>{THEME_BRIDGE}</script>\n</head>", 1)
+        f"<style>{host_css}</style>\n</head>", 1)
     html = html.replace("<body>", f"<body>\n{bar}", 1)
     (out / "index.html").write_text(html, encoding="utf-8")
 

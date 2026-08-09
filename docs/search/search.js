@@ -1225,6 +1225,11 @@ class PersonList {
  * @param {boolean} [options.themeToggle] draw a light/dark button, default true
  * @param {boolean} [options.urlState]    read and write the query string,
  *                                        default true
+ * @param {string}  [options.storageKey]  localStorage key for the palette,
+ *                                        default globalThis.LAGUNA_THEME_KEY
+ *                                        or "laguna-theme". Set it to the host
+ *                                        page's own key so one choice serves
+ *                                        both controls
  * @returns {{ node: Element, destroy: () => void }}
  */
 export function mountSearch(host, options = {}) {
@@ -1400,7 +1405,7 @@ export function mountSearch(host, options = {}) {
   addEventListener("keydown", onSlash);
 
   /* -- assembly ---------------------------------------------------------- */
-  if (options.themeToggle !== false) root.append(themeToggle());
+  if (options.themeToggle !== false) root.append(themeToggle(options.storageKey));
 
   if (options.chrome !== false) {
     root.append(el("header", { class: "intro" },
@@ -1476,6 +1481,28 @@ function clearButton(input, label, after) {
   return button;
 }
 
+export const DEFAULT_THEME_KEY = "laguna-theme";
+
+/**
+ * Which localStorage key holds the reader's palette.
+ *
+ * A host page that has its own light/dark control already stores a choice
+ * under its own key, and both it and this widget drive `html[data-theme]` --
+ * so two keys means the reader's choice is silently dropped at the boundary,
+ * in whichever direction they crossed it. Pointing this widget at the host's
+ * key is the whole fix; there is nothing to synchronise once there is one key.
+ *
+ * `mountSearch({ storageKey })` is the API. The global is for the blocking
+ * script that applies the palette before first paint, which runs long before
+ * any mount call and cannot be passed an option -- see THEME_BOOT in build.py.
+ * A host sets the global once in <head> and both halves agree.
+ */
+function themeStorageKey(explicit) {
+  if (explicit) return explicit;
+  const global = typeof globalThis !== "undefined" && globalThis.LAGUNA_THEME_KEY;
+  return global || DEFAULT_THEME_KEY;
+}
+
 /**
  * Light/dark toggle with no Auto state, matching the edition's own control:
  * an untouched page follows the OS, and once pressed the button always names
@@ -1484,10 +1511,11 @@ function clearButton(input, label, after) {
  * The stored choice is applied by a blocking script in the page head, before
  * first paint; this only keeps the button honest afterwards.
  */
-function themeToggle() {
+function themeToggle(storageKey) {
+  const key = themeStorageKey(storageKey);
   const root = document.documentElement;
   let stored = null;
-  try { stored = localStorage.getItem("laguna-theme"); } catch { /* blocked */ }
+  try { stored = localStorage.getItem(key); } catch { /* blocked */ }
   if (stored) root.dataset.theme = stored;
 
   const isDark = () => (root.dataset.theme
@@ -1501,7 +1529,7 @@ function themeToggle() {
   };
   button.addEventListener("click", () => {
     root.dataset.theme = isDark() ? "light" : "dark";
-    try { localStorage.setItem("laguna-theme", root.dataset.theme); } catch { /* blocked */ }
+    try { localStorage.setItem(key, root.dataset.theme); } catch { /* blocked */ }
     paint();
   });
   paint();
@@ -1531,6 +1559,7 @@ if (typeof customElements !== "undefined" && !customElements.get("laguna-search"
         chrome: this.getAttribute("chrome") !== "false",
         themeToggle: this.getAttribute("theme-toggle") !== "false",
         urlState: this.getAttribute("url-state") !== "false",
+        storageKey: this.getAttribute("storage-key") || undefined,
       });
     }
 
