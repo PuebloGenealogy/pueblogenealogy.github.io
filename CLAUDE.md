@@ -315,6 +315,24 @@ leaving a header describing the *previous* session with no `STALE:` to catch it.
 So when a session both publishes and hands off, **read the handoff's own summary
 before trusting it** — the hook's silence is not evidence there.
 
+**A handoff's claims about what is PUSHED are the least reliable thing in it,
+and the error runs in the direction nobody expects.** `/wrap-session` writes the
+notes before the branch is pushed and the PR opened, so the notes describe the
+repo one step behind itself — and the failure is not a stale *warning*, it is a
+handoff that **understates what is already done**. On 2026-08-09 the notes said
+the branch was unpushed with no open PRs and that `laguna-search`'s paired
+commit was unpushed; all three were wrong, PR #41 was open, and both remotes
+already had the work. A session acting on that would have re-pushed or, worse,
+tried to "rescue" published work. **Never take a publication state from the
+handoff.** Two commands settle it and they are cheap:
+
+```bash
+gh pr list --state open
+git rev-list --left-right --count origin/main...HEAD
+```
+
+Do the same in the other repo before concluding a paired commit is unpushed.
+
 **New plate:** `/transcribe-plate`. `make_chart.py` is table-agnostic: add a
 `TABLES` entry, drop the matching `PENDING` one, write
 `scripts/transcription_<n>.py` on the same schema. Counts in the page copy are
@@ -731,6 +749,21 @@ plate's data changes. **The test for whether it is due is a diff, not a
 memory**: filter the publish's diff of a table page for register-bearing markup
 and count. It was 0 on 2026-08-09 — only the masthead moved — which is how that
 gate was correctly skipped on the day it was written.
+
+**Running `--refresh` after a publish is a separate obligation from
+re-vendoring, and it is the one that is never optional.** Gate 8 asks whether
+the *index* is stale; the `--refresh` run is what stops that tool's gates
+passing against a cache of the site as it was. Run it after every publish, then
+decide the re-vendor from the diff above — not from the run's output, which will
+look busy either way. On 2026-08-09 it was run post-publish, all seven of its
+gates passed, and **all three vendored files came back byte-identical**, so
+nothing was re-vendored.
+
+**Do not take a re-vendor decision on `meta.generated`.** It is **date-granular**
+(`"2026-08-09"`, not a timestamp), so a same-day rebuild is byte-identical and a
+next-day one differs by that one field and nothing else. A handoff reading
+"identical apart from `meta.generated`" is recording the clock moving, not the
+index drifting.
 
 ## The four `_FOLD` maps are one map — keep them identical
 

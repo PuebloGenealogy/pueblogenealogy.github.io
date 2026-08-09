@@ -39,6 +39,31 @@ the same 16px as the two open ones, all five on the same left edge in a
 532px + 532px grid, and an opened *Citation* rendering its block, its per-person
 link and the copy button with no duplicated heading.
 
+### The post-publish `--refresh` was run, and nothing is due from it
+
+`python3 build.py --refresh` in the `laguna-search` checkout, after the push.
+First line reads **`4 table pages, re-fetched`** — the word that says the gates
+ran against the published site and not `cache/`. All seven pass: 713 entries
+(I 104 + II 275 + III 261 + IV 73) all with relations, index internally
+consistent, every search key folds to ASCII, 505 names carry lawful break seams,
+no research data in any output, all search tests pass. Identity resolution
+unmoved — **79 people on more than one plate → 620 distinct**, 14 inferred
+joins, 3 unresolved cross-references, 3 misprints filed. The namesake gate still
+reports **3 pairs, 1 open** (`II-182 / IV-69`); no name changed, so no fourth
+pair was created.
+
+**No re-vendor is due, and this is the useful part: all three files came back
+byte-identical to `vendor/search/`** — `index.html`, `search.js` and
+`search-index.json`, hashes compared, `laguna-search`'s working tree clean.
+
+**`meta.generated` is date-granular** (`"2026-08-09"`, not a timestamp), so a
+same-day rebuild is byte-identical and a next-day one differs by that single
+field alone. The previous handoff's "identical apart from `meta.generated`" is
+therefore what a re-vendor decision must **not** be taken on: a one-field date
+diff is the clock moving, not the index going stale. The test for a real
+re-vendor is unchanged — did `.reg`, `.reg-rel`, `.num`, `.xref` or `sic-ring`
+change shape.
+
 ## 2026-08-09 — Search moves right; three apparatus sections fold
 
 Both at the user's request.

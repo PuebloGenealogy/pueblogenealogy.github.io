@@ -4,25 +4,42 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-09**. **Everything is published.** `main` is `3dfa06b`
-plus this handoff; the live site matches `docs/` by SHA-256 on all seven pages.
+Last updated **2026-08-09**. **Everything is published and nothing is
+half-finished.** The live site matches `docs/` by SHA-256 on all seven pages.
+
+## Start here in a new chat
+
+1. This file.
+2. `CHANGELOG.md`'s newest entry — the publish, and the two things it taught.
+3. Only if you are touching the search page or the footer: `CLAUDE.md` →
+   *The search page is vendored, not generated here* and the footer apparatus
+   paragraph.
+
+Preview: `preview_start`, config name `site`, serves `docs/` on
+`http://localhost:4173`. **If a screenshot comes back blank, read `innerWidth`
+first** — a zero-sized viewport, not a scroll bug. See `CLAUDE.md` → *Preview*.
 
 ## State
 
 PR #41 squash-merged as **`3dfa06b`** — one theme storage key, Search beside
-Theme, three folding apparatus sections. Branch deleted. Verified live: seven
-pages OK by hash, plus `search.js` and `search-index.json`; sitemap 5 `<loc>`
-against a build count of 7 (correct — `404.html` and the `noindex` search page
-are deliberately absent); `LAGUNA_THEME_KEY="lg-theme"` present in the deployed
-`/search/`; zero stale-identity strings on `/`.
+Theme, three folding apparatus sections. Branch merged and deleted; no open PRs.
+Verified live: seven pages OK by hash, plus `search.js` and
+`search-index.json`; sitemap 5 `<loc>` against a build count of 7 (correct —
+`404.html` and the `noindex` search page are deliberately absent);
+`LAGUNA_THEME_KEY="lg-theme"` present in the deployed `/search/`; zero
+stale-identity strings on `/`.
 
-`laguna-search` `9974d55` is on its remote — checked, not assumed. The two repos
-are in step and `vendor/search/SOURCE.md` names a fetchable commit.
+**The post-publish `--refresh` is done.** `build.py --refresh` in the
+`laguna-search` checkout re-fetched (not cached), all seven of its gates pass,
+and all three vendored files came back **byte-identical** — no re-vendor due,
+and that repo's tree is clean at `9974d55`, which is on its remote. The two
+repos are in step and `vendor/search/SOURCE.md` names a fetchable commit.
 
 All four plates published, all 713 entries, no reading question open on any
 plate. Working tree clean; a `--public` rebuild leaves `docs/` byte-identical.
 
-**No open thread.** The publish that had been carried for a session is done.
+**No open thread.** The publish that had been carried for a session is done, and
+nothing was left behind it.
 
 ## Other things that could be picked up
 
@@ -34,6 +51,9 @@ plate. Working tree clean; a `--public` rebuild leaves `docs/` byte-identical.
 
 ## Two things this session learned the hard way
 
+Both are now in `CLAUDE.md`, which is the durable copy; they are restated here
+only because acting on either one costs a turn.
+
 1. **Don't trust a handoff's publication claims — check the remotes.** The last
    one said the branch was unpushed with no open PRs, and said `laguna-search`
    was unpushed. All three were wrong: PR #41 was already open and both repos
@@ -41,12 +61,14 @@ plate. Working tree clean; a `--public` rebuild leaves `docs/` byte-identical.
    can describe a state one step behind the repo, and the `SessionStart`
    staleness hook cannot catch it. `gh pr list --state open` and
    `git rev-list --left-right --count origin/main...HEAD` settle it in one turn.
+   **This file is subject to the same failure** — see *State* above, and verify
+   it rather than believing it.
 2. **A blank screenshot is a zero-sized viewport, not a scroll bug.** The pane
-   reported `innerWidth`/`innerHeight` of 0. Now recorded in `CLAUDE.md` beside
-   *Preview*, with the workaround: explicit `resize_window` to `1280x900` (the
-   `desktop` preset alone did not fix it), and `translateY` to bring something
-   below the fold into a scroll-0 capture. That is what finally let the folded
-   footer be *seen* rather than only measured — and it looked right.
+   reported `innerWidth`/`innerHeight` of 0. The workaround: explicit
+   `resize_window` to `1280x900` (the `desktop` preset alone did not fix it),
+   and `translateY` to bring something below the fold into a scroll-0 capture.
+   That is what finally let the folded footer be *seen* rather than only
+   measured — and it looked right.
 
 ## Before touching the search page
 
@@ -58,11 +80,14 @@ plate. Working tree clean; a `--public` rebuild leaves `docs/` byte-identical.
    so it sees an effectively empty page. Drop the injection and the page keeps
    working, silently substituting.
 3. **The leak sweep never opens `search.js` or `search-index.json`.** Both were
-   hand-checked clean on 2026-08-09 and have not changed since. Re-check by hand
-   on the next re-vendor.
-4. **`--refresh` is not optional** on the first `build.py` run over there after
-   a publish, or its gates pass against a cache of the site as it was. **One is
-   due now** if anything is run in that repo — this session pushed.
+   hand-checked clean on 2026-08-09 and are byte-identical to the current
+   `laguna-search` output, so that check still holds. Redo it on the next
+   re-vendor.
+4. **`--refresh` after a publish, always** — done for this one. It is a separate
+   obligation from re-vendoring: it stops that tool's gates passing against a
+   cache of the site as it was. **Decide a re-vendor from the register-markup
+   diff, never from `meta.generated`**, which is date-granular and will differ
+   by that one field on any later day.
 
 ## Decisions already made — don't re-litigate
 
