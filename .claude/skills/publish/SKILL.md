@@ -24,10 +24,13 @@ fix below:
 for f in scripts/transcription*.py; do printf '%-28s ' "$f"; python3 "$f" | tail -1; done
 ```
 
-Every line must end `all structural checks pass`. There are **three** modules
-today — `transcription.py` (Table 1), `transcription_ii.py` (Table 2) and
-`transcription_iv.py` (Table 4) — and the loop picks up Table 3's the day it
-exists.
+Every line must end `all structural checks pass`. There are **four** modules —
+`transcription.py` (Table 1), `transcription_ii.py` (Table 2),
+`transcription_iii.py` (Table 3) and `transcription_iv.py` (Table 4) — which is
+all of them; Parsons published four plates. The loop is still derived rather
+than listed, because a hardcoded list is what let Table 2 go unchecked between
+2026-07-30 and the fix. This sentence said "three, and the loop picks up Table
+3's the day it exists" until 2026-08-09, four sessions after Table 3 shipped.
 
 These verify matrilineal clan descent across every union, which is what catches
 a misread bracket. A failure here means a reading is wrong — fix the

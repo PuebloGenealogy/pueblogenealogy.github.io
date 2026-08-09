@@ -3,7 +3,108 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-08 (latest) — the remaining three marks are settled; III·154, 228 and 242 become U+02BD
+## 2026-08-09 (latest) — the cross-plate search page ships at /search/
+
+The `laguna-search` finding aid is now part of this site. Its `dist/` is
+vendored into `vendor/search/` and `write_search()` in `make_chart.py` turns it
+into `docs/search/`, so `docs/` stays generated and the page goes through the
+same gates as every other. The tool's own repo stays **private**; only its build
+output is published.
+
+### What the wrapper adds, and why each is not optional
+
+**The font.** `search.css` declares **no `@font-face` at all**, and every name
+it shows is Americanist phonetic. The same subset the rest of the site inlines
+is injected and prepended to the widget's `--lg-serif` stack. Verified: all
+**89** distinct characters in the index are in the subset, both faces report
+`loaded`, and `span.cell.name` computes `Laguna Serif`.
+
+**Nothing downstream guards this.** `subset_font.py`'s coverage check reads the
+*text* of built pages, and the names arrive from `search-index.json` at runtime
+— so they appear in no HTML file and that check sees an effectively empty page.
+Drop the injection and the page keeps working, silently substituting.
+
+**A way back.** The widget draws a title block and no navigation; a reader
+landing on `/search/` had no route into the edition. The bar is scoped
+`.lg-host-bar`, built from the widget's own `--lg-*` tokens so it follows the
+theme, and it sets `--lg-sticky-top`, which is that project's documented hook
+for "the host page has a bar this tall".
+
+**A theme bridge.** This site stores the palette under `lg-theme`, the widget
+under `laguna-theme`, and **both drive `html[data-theme]`** — so a reader who
+chose Dark on a chart page was handed the system preference at `/search/`, and
+the same in reverse. Neither key can be renamed: one is in vendored bytes, the
+other in every page this build writes. The bridge runs in `<head>`, after the
+vendored inline script and before the module mounts, and a `MutationObserver`
+carries a choice made here back out. Tested both directions. **The durable fix
+is a `storageKey` option in the widget** — ask for one before adding a second
+patch of this shape.
+
+### The masthead position is measured, not chosen
+
+Search sits beside the **wordmark**. In `.mast-right` it takes the phone bar
+from two rows to three — **109px → 157px**, permanently sticky, a fifth of an
+812px viewport — because at 375px that row has 359px of usable width against
+360px of content. One pixel. The wordmark's row has ~160px spare, so Search
+rides there for free.
+
+Measured against the published site at the same widths: **1280px → 49px / 1
+row**, **375px → 109px / 2 rows**, both identical. At 365px both live and local
+give 157px / 3 rows, which is pre-existing and not from this change.
+
+Do not tidy it back into `.mast-right`, and do not buy the row back by shaving
+gaps: 44px is `--tap`, the floor, and this file already records a 2.9px overrun
+from living on a thin margin. Below 26rem the label is hidden by the **same**
+`.nav-word` rule the pills use and an inline SVG magnifier takes its place —
+drawn, not typed, because U+2315 is missing from the UI stack and U+1F50D is an
+emoji, and this bar has no embedded face.
+
+### Two gate facts worth keeping
+
+**`/search/` is deliberately absent from `sitemap.xml`.** The page ships
+`robots=noindex`, and advertising a page in a sitemap while asking robots to
+skip it is a contradictory signal, not a stronger one.
+
+**`check_published_pages()` globs `*.html` only**, so it never opens `search.js`
+or `search-index.json`. `leak_report()` was run over both by hand before
+committing — both clean. The allowlist gained the finding aid's own
+boundary sentence, verbatim from that project's list; note it does **not** make
+today's build pass, because in `index.html` the sentence lives in the script.
+It is there for the day the script is inlined.
+
+### METHOD.md — *Identity across plates*
+
+Landed in the same commit, because it describes the page in the present tense.
+It records the rule that only the plates may say two entries are one person, and
+sets out all **fourteen** cross-plate joins.
+
+**Two of the fourteen are Parsons's own**, stated through a second husband
+rather than by name — I·12 = II·19 and II·163 = III·16 — so the edition's own
+unattested count is **twelve**, and every one of those is a family joined as a
+family: seven across II/IV, three siblings across II/III, a couple across II/III.
+Eight rest on an identical spelling, four on names the plates spell differently.
+The three namesake pairs deliberately **not** joined are listed with verdicts,
+including II·182 / IV·69, which stays **open**.
+
+Checked rather than copied: I·73 / II·160 / III·155 really are one woman (`F`,
+`Yo˙ʼs˙iro`, Chaparral Cock, `d. 1914`; III·155 records no sex); age matches on
+**three** of the five II·147–151 children, not all five. `laguna-search`'s README
+says nine joins rest on an exact name match — counting its tuples it is
+**eight**, uncorrected there.
+
+### Two stale counts in `/publish`
+
+Gate 6 claimed the sitemap is "one fewer than the page count — 4 against 5". It
+is now **5 against 7**, and a stale number there reads as a failed publish.
+Gate 1 said there were "three modules today, and the loop picks up Table 3's the
+day it exists" — four sessions after Table 3 shipped. Both corrected; both loops
+were already derived, which is why neither ever failed.
+
+**Gate 8 added** for the re-vendor loop, with `--refresh` spelled out as
+non-optional: without it that build re-parses a cache of this site *as it was
+before the push*, and every gate passes against the old pages.
+
+## 2026-08-08 — the remaining three marks are settled; III·154, 228 and 242 become U+02BD
 
 **Published**, `5441abc` (PR #35). Three more photographs — IMG_3041 (lines
 154–159), IMG_3039 (242–244), IMG_3038 (227–229) — close the last reading
