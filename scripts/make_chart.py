@@ -3356,6 +3356,11 @@ LANDING_CSS_EXTRA = """
 .contents .pending{padding:var(--s4) var(--s2)}
 .contents .pending .c-title{color:var(--muted)}
 .pending-tag{font-style:italic;font-size:var(--t-base)}
+/* The finding aid is ruled into the contents list without being one of its
+   items -- a plate's rule comes from .contents li, so this row carries its
+   own. Everything else it needs (block display, padding, hover, focus) it
+   already gets from .contents a. */
+.c-across{border-block-end:1px solid var(--rule-faint)}
 .prose{max-width:var(--measure);margin:0 auto;
   padding:var(--s6) var(--s5) var(--s7);font-size:var(--t-prose);line-height:1.7;
   color:var(--muted);text-wrap:pretty}
@@ -3583,6 +3588,21 @@ def write_site(today, built):
             '    </li>\n')
     rows = "".join(rows)
 
+    # The finding aid, below the plates and outside the <ol>. It is not a fifth
+    # plate: the list is the edition's plates in Parsons's order, and numbering
+    # /search/ among them would say it is one. Counted from the built tables, so
+    # it cannot go stale -- and never given a plate count in words, which is the
+    # shape of claim that outlived its truth in SITE_DESCRIPTION. "entries", not
+    # "people": the four plates draw 713 entries for rather fewer individuals,
+    # and the search page is where that distinction is set out.
+    entries = sum(st["persons"] for _, st in built)
+    across = (
+        '  <a class="c-across" href="search/">\n'
+        '    <span class="c-title">Search the whole edition</span>\n'
+        f'    <span class="c-stats">All {entries} entries, every plate '
+        '&middot; by name, person number or clan</span>\n'
+        '  </a>\n')
+
     tables = [(TABLES[k]["numeral"], TABLES[k]["slug"]) for k in sorted(TABLES)]
     landing = f"""<!doctype html>
 <html lang="en">
@@ -3618,7 +3638,7 @@ def write_site(today, built):
 <nav class="contents" aria-label="Contents">
   <ol>
 {rows}  </ol>
-</nav>
+{across}</nav>
 </main>
 <div class="prose">
   <h2>What this is</h2>
