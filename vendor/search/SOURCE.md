@@ -6,7 +6,7 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `6bd5dab` |
+| Vendored from | `dist/`, at `9974d55` |
 | Vendored on | 2026-08-09 |
 
 ## What is here, and what is not

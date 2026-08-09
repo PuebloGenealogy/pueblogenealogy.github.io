@@ -3306,29 +3306,28 @@ LANDING_CSS_EXTRA = """
 
 
 # The two projects store the reader's palette under different keys -- this site
-# under "lg-theme", the widget under "laguna-theme" -- and both drive the same
-# html[data-theme]. Left alone, a reader who chose Dark on a chart page arrives
-# at /search/ and is handed the system preference instead, and the same in
-# reverse. Neither key can simply be renamed: one is in vendored bytes, the
-# other is in every page this build writes.
+# under "lg-theme", the widget's own default being "laguna-theme" -- and both
+# drive the same html[data-theme]. Left alone, a reader who chose Dark on a
+# chart page arrives at /search/ and is handed the system preference instead,
+# and the same in reverse.
 #
-# So the host bridges them. It runs in <head>, AFTER the vendored inline script
-# that reads "laguna-theme" and BEFORE the module that mounts the widget, which
-# is the only window where the correction is invisible. The observer is what
-# carries a choice made here back out to the chart pages; without it the bridge
-# would be one-way.
+# From 2026-08-09 the widget takes the key as configuration, so there is one
+# key and nothing to synchronise. This line is the whole of it: it declares the
+# key the widget's two halves read -- `THEME_BOOT`, the blocking script that
+# applies the palette before first paint, and `themeToggle()`, which writes it
+# at mount. Both fall back to "laguna-theme" when it is unset, so the vendored
+# page still works on its own.
 #
-# The durable fix is a storageKey option in the widget, which would delete all
-# of this. Ask for one before adding a second patch of this shape.
-THEME_BRIDGE = (
-    '(function(){var K="lg-theme",L="laguna-theme",d=document.documentElement;'
-    'function g(k){try{return localStorage.getItem(k)}catch(e){return null}}'
-    'function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}'
-    'var t=g(K);if(t&&g(L)!==t){s(L,t);d.dataset.theme=t}'
-    'new MutationObserver(function(){var n=d.dataset.theme;'
-    'if(n&&g(K)!==n){s(K,n);s(L,n)}})'
-    '.observe(d,{attributes:true,attributeFilter:["data-theme"]})})();'
-)
+# It must be injected AHEAD of the vendored boot script; everything else this
+# function adds goes in at </head>, and putting this there too would leave the
+# pre-paint read looking at the wrong key. It is spliced in after the charset
+# meta rather than after `<head>` itself, so nothing comes between the document
+# and the declaration that decodes it.
+#
+# This replaced a bridge that mirrored the two keys and carried changes back
+# with a MutationObserver. Don't reintroduce one: a second key is the defect,
+# not the starting condition.
+THEME_KEY_DECL = '<script>window.LAGUNA_THEME_KEY="lg-theme"</script>'
 
 
 def write_search(tables):
@@ -3337,7 +3336,7 @@ def write_search(tables):
 
     That directory is another project's build output (vendor/search/SOURCE.md),
     so this function does the least it can to it: it never rewrites the widget,
-    only wraps it. Three things are added, and each is here because the vendored
+    only wraps it. Four things are added, and each is here because the vendored
     file cannot supply it.
 
     1. THE FONT. `search.css` declares no @font-face at all, and every name it
@@ -3361,6 +3360,12 @@ def write_search(tables):
     3. `--lg-sticky-top`. The widget's filter header is sticky; the token is its
        documented hook for "the host page has a bar this tall". Set it or the
        header comes to rest underneath ours.
+
+    4. THE THEME KEY. One line, `THEME_KEY_DECL`, and it goes in at the top of
+       <head> rather than at the bottom with the rest -- see the note there.
+       Without it the widget stores the palette under its own key while every
+       other page here stores it under "lg-theme", and a reader's choice is
+       dropped in whichever direction they crossed the boundary.
 
     Returns False if the vendored files are missing, which fails the build. That
     is deliberate: METHOD.md's *Identity across plates* describes this page in
@@ -3418,10 +3423,16 @@ def write_search(tables):
 """
 
     html = (SEARCH_DIR / "index.html").read_text(encoding="utf-8")
+    charset = '<meta charset="utf-8">'
+    if charset not in html:
+        print("ABORTED: vendor/search/index.html has no charset meta to anchor "
+              "the theme key to; the palette would not survive /search/")
+        return False
+    html = html.replace(charset, f"{charset}\n{THEME_KEY_DECL}", 1)
     html = html.replace(
         "</head>",
         f'<link rel="canonical" href="{SITE}/search/">\n'
-        f"<style>{host_css}</style>\n<script>{THEME_BRIDGE}</script>\n</head>", 1)
+        f"<style>{host_css}</style>\n</head>", 1)
     html = html.replace("<body>", f"<body>\n{bar}", 1)
     (out / "index.html").write_text(html, encoding="utf-8")
 

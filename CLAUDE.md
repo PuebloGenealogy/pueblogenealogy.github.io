@@ -611,7 +611,7 @@ from and how to refresh it.
 overwritten by the next re-vendor exactly as `docs/` is by the next build.
 
 `write_search()` deliberately does the least it can — it wraps, never rewrites.
-Three things are injected, and each is there because the vendored file cannot
+Four things are injected, and each is there because the vendored file cannot
 supply it:
 
 - **The subset font.** `search.css` declares **no `@font-face` at all**, and
@@ -628,15 +628,30 @@ supply it:
   cannot collide with the widget, which is scoped `.laguna-search`. It sets
   `--lg-sticky-top`, the widget's documented hook for "the host page has a bar
   this tall" — without it the widget's sticky filter header rests underneath it.
-- **A theme bridge.** This site stores the palette under **`lg-theme`**, the
-  widget under **`laguna-theme`**, and *both drive `html[data-theme]`*. Left
-  alone, a reader who chose Dark on a chart page is handed the system preference
-  at `/search/`, and the same in reverse. Neither key can simply be renamed: one
-  is in vendored bytes, the other in every page this build writes. The bridge
-  runs in `<head>`, after the vendored inline script and before the module
-  mounts, and a `MutationObserver` carries a choice made here back out — without
-  it the bridge is one-way. **The durable fix is a `storageKey` option in the
-  widget**; ask for one before adding a second patch of this shape.
+- **The theme key.** One line — `THEME_KEY_DECL`, `window.LAGUNA_THEME_KEY =
+  "lg-theme"` — and it is the **only** injection that does not go in at
+  `</head>`. It is spliced in **after the charset meta**, because it has to
+  precede the vendored blocking script that reads it, and nothing should come
+  between the document and the declaration that decodes it. `write_search()`
+  **aborts the build** if that meta is missing rather than emit a page whose
+  palette silently detaches.
+
+  This site stores the palette under **`lg-theme`** and the widget's own default
+  is **`laguna-theme`**, and *both drive `html[data-theme]`* — so two keys means
+  a reader who chose Dark on a chart page is handed the system preference at
+  `/search/`, and the same in reverse. **Since 2026-08-09 the widget takes the
+  key as configuration** (`laguna-search` `9974d55`), so there is one key and
+  nothing to synchronise. The option is read in two places, which is why there
+  is a global as well as a `mountSearch({ storageKey })` argument: `themeToggle()`
+  runs at mount and can be passed one, but the pre-paint script runs before any
+  module loads and can only read a global. Precedence is option → global →
+  `"laguna-theme"`, verified all three ways in the browser.
+
+  **Until that day this was a bridge** that mirrored the two keys and carried
+  changes back with a `MutationObserver`. **Do not reintroduce one.** A second
+  key is the defect, not the starting condition — if the widget ever needs
+  another host-side value, ask for an option before writing a patch of that
+  shape.
 
 **The masthead's Search link sits beside the WORDMARK, and that is measured.**
 At 375px the bar is two rows — wordmark alone on the first, pills and Theme

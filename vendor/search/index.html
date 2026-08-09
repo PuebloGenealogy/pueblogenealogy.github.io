@@ -9,7 +9,7 @@
 <meta name="description" content="Find a person in the four published Laguna genealogy tables by table and number, or by name across all four.">
 <script>
 try {
-  var t = localStorage.getItem("laguna-theme");
+  var t = localStorage.getItem(window.LAGUNA_THEME_KEY || "laguna-theme");
   if (t) document.documentElement.dataset.theme = t;
 } catch (e) {}
 </script>

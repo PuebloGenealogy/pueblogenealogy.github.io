@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>window.LAGUNA_THEME_KEY="lg-theme"</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>Search the Tables &middot; Laguna Genealogies</title>
@@ -9,7 +10,7 @@
 <meta name="description" content="Find a person in the four published Laguna genealogy tables by table and number, or by name across all four.">
 <script>
 try {
-  var t = localStorage.getItem("laguna-theme");
+  var t = localStorage.getItem(window.LAGUNA_THEME_KEY || "laguna-theme");
   if (t) document.documentElement.dataset.theme = t;
 } catch (e) {}
 </script>
@@ -1235,7 +1236,6 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 }
 @media print{.lg-host-bar{display:none}}
 </style>
-<script>(function(){var K="lg-theme",L="laguna-theme",d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}var t=g(K);if(t&&g(L)!==t){s(L,t);d.dataset.theme=t}new MutationObserver(function(){var n=d.dataset.theme;if(n&&g(K)!==n){s(K,n);s(L,n)}}).observe(d,{attributes:true,attributeFilter:["data-theme"]})})();</script>
 </head>
 <body>
 <header class="lg-host-bar"><a class="lg-hb-mark" href="../">Laguna Genealogies</a><nav aria-label="Tables"><a href="../genealogy-i/"><span class="lg-hb-word">Genealogy </span>I</a><a href="../genealogy-ii/"><span class="lg-hb-word">Genealogy </span>II</a><a href="../genealogy-iii/"><span class="lg-hb-word">Genealogy </span>III</a><a href="../genealogy-iv/"><span class="lg-hb-word">Genealogy </span>IV</a></nav></header>

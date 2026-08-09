@@ -3,7 +3,49 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-09 (latest) — the cross-plate search page ships at /search/
+## 2026-08-09 (latest) — the theme bridge is retired for a widget option
+
+The `storageKey` option asked for below now exists, so the bridge that mirrored
+two localStorage keys and carried changes back with a `MutationObserver` is
+**deleted**. In its place is one line, `THEME_KEY_DECL`:
+
+```html
+<script>window.LAGUNA_THEME_KEY="lg-theme"</script>
+```
+
+Two keys was the defect, not the starting condition. Pointed at the key this
+site already uses, the widget writes it directly and there is nothing to keep
+in step.
+
+**In `laguna-search`** (`9974d55`, private repo): `mountSearch({ storageKey })`,
+`storage-key=""` on `<laguna-search>`, and `themeStorageKey()` resolving
+**option → `globalThis.LAGUNA_THEME_KEY` → `"laguna-theme"`**. The palette is
+applied in two places and only one can be handed an option — `themeToggle()`
+runs at mount, but `THEME_BOOT` is a blocking script in `<head>` that runs
+before any module loads — which is why the key also has a global. A page that
+sets neither behaves exactly as before.
+
+**Where the line goes is not free.** It is spliced in after the charset meta,
+not at `</head>` with the other three injections, because it must precede the
+vendored script that reads it; putting it at `</head>` leaves the pre-paint read
+looking at the wrong key and the flash comes back. `write_search()` now aborts
+if that meta is missing rather than emit a page whose palette silently detaches.
+
+**Verified in the browser**, OS set to dark so a stored choice is
+distinguishable from the system default. Light chosen on a chart page →
+`/search/` renders light with `lg-theme` the only key present; Dark chosen on
+`/search/` → `lg-theme` written, chart page renders dark. Default path checked
+all three ways: no global and no option stores `laguna-theme`, the global gives
+`lg-theme`, an explicit `storageKey` beats both. Fonts still `loaded`,
+`.cell.name` still computes `Laguna Serif`, no console errors.
+
+The re-vendor was run with **`--refresh`**, and its index came back identical to
+the vendored one apart from `meta.generated` — which is the proof the published
+register has not moved. All seven of that project's gates pass. The four table
+pages and the landing page are **byte-identical**; `docs/search/` is the whole
+of the diff.
+
+## 2026-08-09 — the cross-plate search page ships at /search/
 
 **Published**, `6a882ee` (PR #39). Verified live by SHA-256 across all seven
 pages; sitemap 5 locs against the build's 7, which is correct.
@@ -42,6 +84,9 @@ vendored inline script and before the module mounts, and a `MutationObserver`
 carries a choice made here back out. Tested both directions. **The durable fix
 is a `storageKey` option in the widget** — ask for one before adding a second
 patch of this shape.
+
+*(Superseded the same day — the option was written and the bridge deleted. See
+the entry above.)*
 
 ### The masthead position is measured, not chosen
 
