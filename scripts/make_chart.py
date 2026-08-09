@@ -1852,6 +1852,35 @@ footer{max-width:var(--measure-wide);margin:0 auto;
 .app-sec{break-inside:avoid}
 footer h2{margin:var(--s6) 0 var(--s3)}
 footer h2:first-child,.app-sec h2:first-child{margin-block-start:0}
+/* Editorial notes, Provenance and Citation fold away; The record and
+   Navigating this chart do not. The split is what each section is FOR: the
+   first two orient a reader who has just arrived at the plate, the other three
+   are reference material consulted once and then in the way.
+
+   Same disclosure the landing page's FAQ and the register above already use --
+   the marker, the sizes and the hover are deliberately identical, because a
+   third idiom for "this opens" is a cost with no reader on the other end of
+   it. The <h2> lives INSIDE the summary so the heading outline survives the
+   fold; a screen reader still finds five headings in the apparatus.
+
+   Two things this must not break, both already solved elsewhere and reused
+   rather than rebuilt: a deep link into a folded section (#note-misprint,
+   #note-paternity, #note-crossref) is opened by openDetailsFor(), the same
+   fragment insurance the register's disclosure relies on; and the offprint
+   carries every section whatever the reader left folded -- see @media print. */
+.app-d > summary{cursor:pointer;list-style:none;padding:var(--s3) 0;
+  display:flex;gap:var(--s3);align-items:baseline}
+.app-d > summary::-webkit-details-marker{display:none}
+.app-d > summary::before{content:"+";color:var(--muted);
+  font-variant-numeric:tabular-nums}
+.app-d[open] > summary::before{content:"\\2013"}
+.app-d > summary h2{margin:0}
+.app-d > summary:hover h2{color:var(--accent)}
+.app-d > summary:focus-visible{outline:2px solid var(--accent-strong);
+  outline-offset:.2rem}
+/* The fold is the section's own top edge, so the heading's block margin would
+   double the gap the grid already sets. */
+.app-sec > .app-d{margin:0}
 footer ul{margin:.3rem 0;padding-left:1.2rem}
 footer li{margin:.25rem 0}
 /* An apparatus note that something on the chart links to. Same scroll-margin
@@ -2066,6 +2095,17 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
     content:" (" attr(href) ")";font-size:.9em}
   .line:target,.line.is-selected,.reg:target{
     background:none;box-shadow:none;outline:none}
+  /* The offprint carries the WHOLE apparatus, whatever the reader left folded
+     -- a printed edition with its citation collapsed away is not an edition.
+     ::details-content does it with no script on a current engine; the
+     beforeprint handler in UI_JS is the same guarantee for the rest, and is
+     what a reader printing an older browser gets. Belt and braces on purpose:
+     this is the one place where the fold silently losing content would leave
+     no trace on screen to notice it by. */
+  .app-d::details-content{content-visibility:visible!important;
+    block-size:auto!important;opacity:1!important}
+  .app-d > summary{padding:0}
+  .app-d > summary::before{display:none}
   /* The offprint is black on white. The clan gold prints as a weak grey, and
      the colour was never carrying information a reader could not get from the
      word itself, so it flattens here rather than degrading. */
@@ -2312,6 +2352,23 @@ addEventListener("hashchange",function(){
   }
 });
 openDetailsFor(location.hash);
+
+/* print insurance: the offprint carries every apparatus section, whatever the
+   reader left folded. The print stylesheet does this on its own where
+   ::details-content is supported; this covers the engines where it is not.
+   It restores exactly what it opened, so a reader's own folds survive the
+   print dialog -- reopening all five would be a change they never made. */
+var printOpened=[];
+addEventListener("beforeprint",function(){
+  printOpened=[];
+  doc.querySelectorAll(".app-d").forEach(function(d){
+    if(!d.open){d.open=true;printOpened.push(d)}
+  });
+});
+addEventListener("afterprint",function(){
+  printOpened.forEach(function(d){d.open=false});
+  printOpened=[];
+});
 
 /* copy citation */
 var citeText=$("#cite-text"),copyMount=$("#copy-mount");
@@ -2691,25 +2748,27 @@ def masthead_html(tables, current_slug, prefix, home):
     # screen reader reading the group. It is a link rather than a button so it
     # works with the script dead, unlike Theme.
     #
-    # It sits beside the WORDMARK, and that position is measured, not chosen.
-    # At 375px the bar is two rows: the wordmark alone on the first, the pills
-    # and Theme sharing the second with 359px of usable width against 360px of
-    # content -- one pixel over. Put Search in mast-right and that row wraps,
-    # taking the bar to three rows and 157px, a fifth of a phone viewport,
-    # permanently sticky. The wordmark's row has ~160px spare, so Search rides
-    # there for free: measured 109px, byte-for-byte the height of the published
-    # bar without it.
+    # It sits in mast-right beside Theme, which is where the user asked for it
+    # on 2026-08-09. That position has a KNOWN COST and it is not a guess: at
+    # 375px the pills and Theme already fill their row to 360px against 359px
+    # of usable width, so adding Search wraps the bar to a third row. Measured
+    # after the move -- 1280px unchanged at 49px, 375px 109px -> 157px,
+    # permanently sticky, a fifth of an 812px viewport. It rode beside the
+    # wordmark until this change precisely to avoid that, and the wordmark's
+    # row still has the spare width if it is ever moved back.
     #
-    # Do not "tidy" it back into mast-right, and do not buy the row back by
-    # shaving gaps -- 44px is --tap, the floor, and this file's own history
-    # (the 2.9px overrun comment above) is the argument against living on a
-    # 3px margin. Its label wears .nav-word so the SAME ≤26rem rule hides it,
-    # reused rather than reinvented; the accessible name stays "Search".
+    # Do NOT try to buy the row back by shaving gaps: 44px is --tap, the floor,
+    # and this file's own history (the 2.9px overrun comment above) is the
+    # argument against living on a 3px margin. Its label wears .nav-word so the
+    # SAME ≤26rem rule hides it, reused rather than reinvented; below that width
+    # the glyph alone stands in and the accessible name stays "Search".
+    search = (f'<a class="mast-btn" href="{prefix}search/">'
+              f'<span class="nav-word">Search</span>{SEARCH_GLYPH}</a>')
     return f"""<header class="masthead">
   {mark}
-  <a class="mast-btn" href="{prefix}search/"><span class="nav-word">Search</span>{SEARCH_GLYPH}</a>
   <nav aria-label="Tables">{links}</nav>
   <span class="mast-right">
+    {search}
     <!-- Bare "Theme" in the markup: the server cannot know which palette the
          reader will resolve to, and applyTheme() names it on the first tick.
          It must not say Auto -- there is no Auto state, and this label is what
@@ -2947,11 +3006,15 @@ def register_html(persons, unions, ku, km, drawn, paternity=None):
 
 
 def cite_html(spec, today):
-    """The recommended two-part citation, generated so it can never go stale."""
+    """
+    The recommended two-part citation, generated so it can never go stale.
+
+    The <h2> is the caller's, not this function's: since 2026-08-09 the section
+    is a disclosure and the heading lives inside its <summary>.
+    """
     canonical = f"{SITE}/{spec['slug']}/"
     root_id = spec["roots"][0]
-    return f"""<h2>Citation</h2>
-  <blockquote class="cite-block" id="cite-text">
+    return f"""<blockquote class="cite-block" id="cite-text">
     <p>Elsie Clews Parsons, &ldquo;Laguna Genealogies,&rdquo;
        <em>Anthropological Papers of the American Museum of Natural History</em>,
        vol.&nbsp;19, pt.&nbsp;5 (1923), pp.&nbsp;133&ndash;292, {spec['plate']}.</p>
@@ -3152,7 +3215,8 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
 {jsonld_chart(spec, description, today)}
 {jsonld_breadcrumb(spec)}"""
         provenance = f"""    <section class="app-sec">
-  <h2>Provenance</h2>
+  <details class="app-d">
+    <summary><h2>Provenance</h2></summary>
   <ul>
     <li>This is a transcription of a plate in an existing published source. The
         1923 publication is in the public domain in the United States.</li>
@@ -3166,13 +3230,15 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
         <a href="../fonts/OFL.txt">SIL Open Font License</a>, so the phonetic
         diacritics render the same everywhere.</li>
   </ul>
+  </details>
     </section>"""
         mast = masthead_html(tables, spec["slug"], "../", "../")
         canon_attr = f' data-canonical="{canonical}"'
     else:
         head_extra = '<meta name="robots" content="noindex,nofollow">'
         provenance = """    <section class="app-sec">
-  <h2>This is the private build</h2>
+  <details class="app-d">
+    <summary><h2>This is the private build</h2></summary>
   <ul>
     <li>Generated from <code>data/parsons_genealogy_I.xlsx</code>, so it may show
         English names and census matches. It is git-ignored and must not be published.</li>
@@ -3180,6 +3246,7 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
     <li>The public page is built separately with <code>--public</code>, from
         <code>scripts/transcription.py</code>, which has no research columns.</li>
   </ul>
+  </details>
     </section>"""
         mast = masthead_html(tables, spec["slug"], f"{SITE}/", f"{SITE}/")
         canon_attr = ""
@@ -3250,12 +3317,17 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
       <ul>{navigating_html(spec)}</ul>
     </section>
     <section class="app-sec">
-      <h2>Editorial notes</h2>
+      <details class="app-d">
+        <summary><h2>Editorial notes</h2></summary>
       <ul>{READING_COMMON.format(blocks=blocks_note(spec))}{spec["notes"]}{APPARATUS_NOTE}</ul>
+      </details>
     </section>
 {provenance}
     <section class="app-sec">
+      <details class="app-d">
+        <summary><h2>Citation</h2></summary>
       {cite_html(spec, today)}
+      </details>
     </section>
   </div>
   <p class="updated">Last updated

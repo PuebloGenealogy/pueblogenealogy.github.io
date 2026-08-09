@@ -86,7 +86,12 @@ memory: filter the publish's diff of a table page for `.reg`, `.reg-rel`,
 
 ## Decisions already made — don't re-litigate
 
-- **The masthead's Search link sits beside the wordmark.** Measured, not
+- **SUPERSEDED 2026-08-09 — the user moved Search into `.mast-right` beside
+  Theme.** The phone bar is now three rows / 157px, exactly the cost recorded
+  below; 1280px is unchanged at 49px. The entry is kept because the rest of it
+  still stands: don't shave gaps to buy the row back, and the wordmark's row is
+  where it goes if it is ever moved back. See `CLAUDE.md`.
+- ~~**The masthead's Search link sits beside the wordmark.**~~ Measured, not
   chosen: in `.mast-right` it takes the phone bar from two rows to three,
   109px → 157px. Don't tidy it, and don't shave gaps to buy the row back —
   44px is `--tap`.

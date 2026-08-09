@@ -451,6 +451,32 @@ not CSS multicolumn — multicolumn will break a heading away from the list it
 introduces. This is also what puts the footer on the same left edge as the
 register above it.
 
+**Three of its five sections fold, and two deliberately do not.** *Editorial
+notes*, *Provenance* and *Citation* are `<details class="app-d">`, closed by
+default (added 2026-08-09 at the user's request); *The record* and *Navigating
+this chart* stay open, because they orient a reader who has just arrived at the
+plate while the other three are consulted once. The disclosure is the **same
+idiom the landing page's FAQ and the register already use** — marker, sizes and
+hover identical on purpose. The `<h2>` sits **inside the `<summary>`**, so the
+apparatus still has five headings for a screen reader; `cite_html()` therefore
+no longer emits its own.
+
+Two things this must not break, both already solved and reused rather than
+rebuilt:
+
+- **A deep link into a folded section** — `#note-misprint`, `#note-paternity`,
+  `#note-crossref` — is opened by `openDetailsFor()`, the fragment insurance the
+  register's disclosure already relied on. Verified on load, on same-page click
+  and across pages; `:target` still lights the note. **A new footer note that a
+  reader can be sent to needs no new code, but it does need an `id`** — the
+  insurance keys on `getElementById`.
+- **The offprint carries every section, whatever the reader left folded.** A
+  printed edition with its citation collapsed away is not an edition. Two
+  mechanisms on purpose: `::details-content` in the print stylesheet (no script,
+  current engines only) and a `beforeprint` handler that opens what is closed
+  and **restores it on `afterprint`** — reopening all five would be a change the
+  reader never made.
+
 The misprint ring is an **`outline`**, never a border or padding: a border
 widens the row and throws the sibling bracket off its `mother_row`. The
 annotation is a separate row counted with `row += 1`, exactly as a
@@ -653,19 +679,23 @@ supply it:
   another host-side value, ask for an option before writing a patch of that
   shape.
 
-**The masthead's Search link sits beside the WORDMARK, and that is measured.**
-At 375px the bar is two rows — wordmark alone on the first, pills and Theme
-sharing the second with **359px of usable width against 360px of content**. Put
-Search in `.mast-right` and that row wraps: three rows, **109px → 157px**,
-permanently sticky, a fifth of a phone viewport. The wordmark's row has ~160px
-spare, so Search rides there for free — measured 49px at 1280 and 109px at 375,
-both identical to the site without it. **Do not tidy it into `.mast-right`, and
-do not buy the row back by shaving gaps**: 44px is `--tap`, the floor, and this
-bar already has a 2.9px-overrun comment recording what living on a thin margin
-costs. Below 26rem the label is hidden by the **same `.nav-word` rule the pills
-use**, and an inline SVG magnifier takes its place — drawn, not typed, because
-U+2315 is missing from the UI stack and U+1F50D is an emoji, and this bar has no
-embedded face.
+**The masthead's Search link sits in `.mast-right` beside Theme — moved there by
+the user 2026-08-09, and it costs a row on a phone.** That cost was measured
+before the move and again after, and both agree: **1280px unchanged at 49px, one
+row; 375px 109px → 157px, three rows**, permanently sticky, a fifth of an 812px
+viewport. The pills and Theme already fill their row to **360px against 359px of
+usable width**, so Search cannot join it — it wraps to a third. It rode beside
+the **wordmark** until this change for exactly that reason, and that row still
+has ~160px spare if it is ever moved back.
+
+**Do not buy the row back by shaving gaps**: 44px is `--tap`, the floor, and
+this bar already has a 2.9px-overrun comment recording what living on a thin
+margin costs. Below 26rem the label is hidden by the **same `.nav-word` rule the
+pills use**, and an inline SVG magnifier takes its place — drawn, not typed,
+because U+2315 is missing from the UI stack and U+1F50D is an emoji, and this
+bar has no embedded face. `--tap` is `2rem`, so Search measures 32px beside
+Theme and the pills on a desktop pointer and 44px on a coarse one; it matches
+them exactly, which is the check to re-run if `.mast-btn` ever changes.
 
 **`/search/` is deliberately absent from `sitemap.xml`.** The page ships
 `<meta name="robots" content="noindex">`, and advertising it in a sitemap while
