@@ -3,7 +3,90 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-08 (latest) — the four `_FOLD` maps become one map, and de-indexing is struck rather than decided
+## 2026-08-08 (latest) — a photograph settles the second sort at III·156 and III·157
+
+**Published**, `ebd8738` (PR #34). The first commit to move a built page since
+`778bfb9`.
+
+The turned-comma question had been closed since 2026-07-31 as *unanswerable from
+this scan* — a mark on `sources/parsons-1923-table-3.jpg` is about ten pixels of
+ink, and at 20× the questioned mark and a known U+02BC are the same amorphous
+blob. **The user photographed lines 156–159 and the photograph decides it.**
+
+### What the plate prints
+
+At **156** — the first mark, after the P, *not* a final one as the old note
+said — and at **157** (final), Parsons prints a mark that is the **mirror** of
+the U+02BC used elsewhere, and a physically **smaller sort**. Both now read
+**U+02BD, MODIFIER LETTER REVERSED COMMA**: `Pʽĕʼnitsʼaʼyo` and `Dziotyʽ`.
+
+### How it was decided, so nobody re-derives it
+
+Each mark was flood-filled at **native resolution** — no upscaling enters the
+measurement, which is what invalidated the earlier attempt — and reduced to
+three numbers: height in rows, the horizontal centroid of the bottom third minus
+that of the top third, and ink mass top third / bottom third.
+
+| mark | height | drift | ink top / bottom | |
+|---|---|---|---|---|
+| 156 after P | 50 rows | **+3.0 px right** | 339 / 212 | questioned |
+| 157 final | 54 rows | **+5.6 px right** | 433 / 317 | questioned |
+| 156 after ĕ | 77 rows | −21.3 px left | 512 / 220 | known U+02BC |
+| 156 after s | 70 rows | −7.9 px left | 582 / 195 | known U+02BC |
+| 156 after a | 78 rows | −21.5 px left | 564 / 291 | known U+02BC |
+| 159 in `witsʼa` | 69 rows | −9.0 px left | 523 / 179 | the control |
+
+Three findings, the third being what makes it certain rather than probable:
+
+1. Every known U+02BC sweeps its tail **down-left**; both questioned marks sweep
+   **down-right**. No exceptions either way.
+2. **Both sorts are top-heavy**, so the questioned mark is not the apostrophe
+   rotated 180° — it is the apostrophe **mirrored**. That is what picks U+02BD
+   over U+02BB: U+02BB and U+2018 are bulb-at-*bottom*, measured off the Times
+   outlines as mass 1488 top / 4863 bottom.
+3. The questioned sort is **smaller** — 50 and 54 rows against 69–78. A different
+   piece of type, not the same sort worn or over-inked.
+
+And the cleanest evidence needs no control from another line at all: **156
+contains both sorts inside one word**, mark 1 against marks 2–4. The positions
+also read as Boas-school notation — `Pʽ` an aspirated stop, `Dziotyʽ` a
+word-final aspirated stop, the U+02BC marks glottalisation — which corroborates
+without being evidence on its own.
+
+### Still open
+
+**154, 228 and 242 are not covered by the photograph and stay U+02BC.** A
+photograph of those three lines, read the same way, would settle them; 159 is the
+control to shoot alongside them. **Do not re-crop the scan** — what settled this
+was a new photograph, not a bigger magnification of the old one, and that limit
+is unchanged.
+
+### Consequences, measured rather than assumed
+
+- `ʽ` added to **all four** `_FOLD` maps, which stay byte-identical.
+- **Zero of 713 folded names change**, and the per-plate colliding-fold counts
+  are unchanged at 2 / 4 / 2 / 1 — so `laguna-search`'s namesake gate gains no
+  fourth pair. Its own `FOLD` in `src/search.js` does **not** yet know U+02BD, so
+  these two names sort with the raw character in the key over there until it is
+  added. Its `NAME_VOWELS` gate is unaffected; this is not a vowel.
+- `subset_font.py` was re-run **before** the build, as it must be. Its coverage
+  report gives Table 3's new characters as `óôʽ`, and U+02BD is in both faces —
+  confirmed from the cmap, and again from the faces inlined into the **live**
+  page (129 chars each).
+- The five other pages differ **only** in the inlined font: zero non-font changed
+  lines. The Genealogy III page is identical once the two names are masked.
+- A second `--public` after the commit reproduced `docs/` byte-identically, which
+  is the font/pages sync check passing.
+- Verified live by SHA-256: all six pages `OK`, sitemap 5 `<loc>`, and the live
+  Genealogy III page carries five occurrences of each new reading and none of the
+  old.
+
+**PR #34 also carried `b256e8a`**, the previous session's handoff-close commit,
+which had never reached `main` — the branch it sat on looked merged because PR
+#32 had been squashed. Nothing was at risk, but note that the squash means one
+commit on `main` holds two sessions' work.
+
+## 2026-08-08 — the four `_FOLD` maps become one map, and de-indexing is struck rather than decided
 
 **Nothing on the site changed.** `778bfb9` is still the last commit that moved a
 built page. `--public` was run twice, before and after the edit: 6 pages,

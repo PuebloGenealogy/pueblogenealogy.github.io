@@ -4,25 +4,40 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-08**. A short session, and **nothing on the site
-changed** — `778bfb9` is still the last commit to move a built page. Two things
-happened, and the second is the one that changes this file's shape:
+Last updated **2026-08-08**, and this header covers **two** sessions — read both
+paragraphs. The site **has** moved: `ebd8738` (PR #34) is now the last commit to
+touch a built page, superseding `778bfb9`.
 
-**The four `_FOLD` maps were unified**, closing a defect open since 2026-08-03.
-They had drifted, so `Dziŏ˙kwid˙yuʼă` (III·101) and `Ĭya˙ʼsi` (III·16) could not
-be folded by their own plate. All four now hold the union, byte-identical.
-Measured first: across all 2,558 string fields, **exactly those two folds
-change**, and colliding-fold counts are unchanged at 2 / 4 / 2 / 1 — so
-**`laguna-search`'s namesake gate gains no fourth pair**, which is the thing
-`CLAUDE.md` had warned this edit would trigger. `docs/` byte-identical.
+**A photograph settled the second sort at III·156 and III·157, and they are
+PUBLISHED.** The user photographed lines 156–159; measured at native resolution,
+every known U+02BC sweeps its tail down-left and both questioned marks sweep
+down-right, both sorts are top-heavy (so it is a mirror, not a rotation, which
+picks U+02BD over U+02BB), and the questioned sort is a smaller piece of type.
+156 carries both sorts inside one word. They now read `Pʽĕʼnitsʼaʼyo` and
+`Dziotyʽ`. Full measurements in `CHANGELOG.md` and in
+`transcription_iii.py`'s docstring — **don't re-derive them.**
 
-**De-indexing was struck by the user, not decided.** It had been the open thread
-for two sessions. It is now closed, and *nothing was edited* — `robots.txt`,
-`sitemap.xml`, the JSON-LD and the absence of `noindex` all stay as the build
-emits them. See *Decisions already made*.
+**THE OPEN THREAD IS 154, 228 AND 242.** The photograph does not cover them, so
+they stay U+02BC. A photograph of those three lines, with **159 alongside as the
+control**, settles them by the same method. **Do not re-crop the scan** — the
+ten-pixel limit that closed this on 2026-07-31 is unchanged; a new photograph is
+what moved it, not more magnification.
 
-**So there is no open thread.** Everything left needs the user. That is stated
-plainly below rather than dressed up as work.
+Two things carried over from the session before it, both still true:
+**the four `_FOLD` maps were unified** (they had drifted; all four now hold the
+union, byte-identical — `ʽ` has since been added to all four), and
+**de-indexing was struck by the user, not decided** — nothing was edited, and
+`robots.txt`, `sitemap.xml`, the JSON-LD and the absence of `noindex` all stay
+as the build emits them. See *Decisions already made*.
+
+Everything else left needs the user. That is stated plainly below rather than
+dressed up as work.
+
+**One mechanical note.** PR #34's squash also carried `b256e8a`, the previous
+session's handoff-close commit, which had never reached `main` — its branch
+looked merged because PR #32 had been squashed. Nothing was at risk; it is
+recorded because a `resume` in this session reported that branch as holding
+nothing unpublished, and that was wrong.
 
 ---
 

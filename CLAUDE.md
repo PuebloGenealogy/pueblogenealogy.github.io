@@ -721,6 +721,22 @@ to catch "58+59" links those too.
   which is a closure, not an open thread. Table 3 is 3770 × 5503, a ninth of
   Table 1's pixel count, so the same test is decidable on Table 1 and not here.
   Settling such a question needs a **better scan**, not a bigger crop.
+- **And a phone photograph of the page IS that better scan.** Added 2026-08-08.
+  The turned-comma question was carried for a week as needing AMNH; what settled
+  it was the user photographing lines 156–159. A mark that is ten pixels of ink
+  on `sources/parsons-1923-table-3.jpg` is **fifty** in a close photograph, which
+  is past the floor by a factor of five. So when a glyph question is stuck,
+  **ask for a photograph before reaching for an institutional scan** — it is
+  hours rather than weeks, and it worked.
+  **Measure it, don't look at it.** Three numbers per mark, taken at native
+  resolution so no upscaling enters the measurement: height in rows, the
+  horizontal centroid of the bottom third minus the top third, and ink mass top
+  versus bottom. That is what distinguished the two sorts, and it is also what
+  distinguishes a **mirror** from a **rotation** — both sorts being top-heavy is
+  what picked U+02BD over U+02BB. Eyeballing a 6× crop had produced the right
+  hunch and no evidence. The method and the numbers are in
+  `transcription_iii.py`'s docstring; **154, 228 and 242 are still open**, and
+  159 is the control to photograph alongside them.
 - Google's structured-data validator is **stricter than schema.org** — valid
   schema.org has been rejected twice here. `check_structured_data()` guards the
   rules we have been told about, not all of them; a Search Console report
@@ -879,8 +895,10 @@ to stay *allowed*, so the two must not be combined. Neither is deployed here.
   *Exposure posture*. Do not seed any inbound link without asking.
   **The AMNH handle is `2246/158`** — `https://digitallibrary.amnh.org/handle/2246/158`,
   found 2026-07-30. Kept because it is a **fact about the source**, not an
-  outreach step: it is the only route to a better scan than the one that cannot
-  settle the turned-comma mark. (It used to be recorded as the identifier
+  outreach step: it is the institutional route to a better scan. It is **no
+  longer the only route, and no longer the first one to try** — a photograph of
+  the page settled 156 and 157 on 2026-08-08 after the scan could not, so ask
+  for a photograph first. (It used to be recorded as the identifier
   `.zenodo.json` omitted from `related_identifiers`; that file no longer
   exists.) Note `digitallibrary.amnh.org`
   **403s automated fetches** — use a real browser, not `WebFetch`.
@@ -915,8 +933,10 @@ to stay *allowed*, so the two must not be combined. Neither is deployed here.
   by the *Release policy* above. **All four plates are published** (2026-07-31)
   and **Genealogy III's two editorial items are both closed** — the
   cross-reference footnote is written and **deployed** (`#note-crossref`,
-  verified live by SHA-256), and the turned-comma mark is settled as
-  unresolvable from this scan. Under the old policy that would have made the
+  verified live by SHA-256), and the turned-comma mark is **settled at 156 and
+  157**, which read U+02BD and are published (`ebd8738`, PR #34, 2026-08-08);
+  154, 228 and 242 stay U+02BC until they are photographed, which is the one
+  reading question still open on any plate. Under the old policy that would have made the
   release due; it does not, because the policy changed. **Publishing the site is
   not releasing it, and releasing it is no longer on the table.**
 - **Genealogy II is published and its reading is closed.** The user re-checked
