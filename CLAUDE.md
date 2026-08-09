@@ -16,8 +16,10 @@ plate's 274 numbers, 61 marriages, 214 parent–child links, **6 generations**,
 three descent blocks. **Genealogy III** (Table 3) — 261 individuals, 72
 marriages, 192 parent–child links, **7 generations**, two descent blocks, the
 second indented. **Genealogy IV** (Table 4) — 73 individuals, 14 marriages,
-58 parent–child links, 4 generations. `--public` builds **6 pages** and the live
-site serves all of them; `PENDING` is empty.
+58 parent–child links, 4 generations. `--public` builds **7 pages** and the live
+site serves all of them; `PENDING` is empty. The seventh is **`/search/`**, added
+2026-08-09 — not a plate, and the reason several counts here are 7 against a
+sitemap of 5. See *The search page is vendored, not generated here*.
 
 **The edition is now the whole of the genealogical material Parsons published**,
 which changes what a stale scope claim costs: any sentence saying a plate is "in
@@ -176,16 +178,30 @@ Enforced structurally, and must stay that way:
     `<style>` blocks are excluded (the stylesheet ships `.census{}` rules);
     scripts are not. It **fails closed**: reword an allowlisted phrase and the
     build stops until the new wording is allowlisted. `RESEARCH_PROSE_ALLOWED`
-    holds **two kinds** of entry, and the distinction matters — three FAQ
-    sentences that *state* the privacy boundary, and (added 2026-07-30) one
+    holds **three kinds** of entry, and the distinctions matter — three FAQ
+    sentences that *state* the privacy boundary; (added 2026-07-30) one
     quotation from **Parsons's own 1923 text**, in Genealogy II's
     `note-paternity`, where her word "widow" is the source speaking and not
-    research escaping. **Allowlist the exact phrase; never loosen the
+    research escaping; and (added 2026-08-09) one sentence from the **vendored
+    search page**, stating the same boundary in that project's words. The third
+    is copied **verbatim from `laguna-search`'s own allowlist**, and the two
+    lists must stay in step: it runs this same gate over everything it writes,
+    so a phrase either project rewords stops one build or the other.
+    **Allowlist the exact phrase; never loosen the
     pattern** — and keep the phrase off a source-line break, since the check is
     an exact substring replace against the rendered HTML
 - `check_published_pages()` sweeps **every** `.html` in `docs/`. The per-table
   check only ever saw table pages, so the landing page — the one carrying the
-  FAQ — went unchecked entirely until 2026-07-28
+  FAQ — went unchecked entirely until 2026-07-28.
+  **`.html` is the whole of it, and since 2026-08-09 that is a real gap rather
+  than a tidy scope.** `docs/search/` ships a 59 KB `search.js` and a 315 KB
+  `search-index.json` that this sweep never opens. Both are clean — checked by
+  hand at publish — but nothing re-checks them on a later build. Run
+  `leak_report()` over them by hand whenever `vendor/search/` is re-vendored.
+  Note the third allowlist entry above exists **because of this gap, not
+  despite it**: the sentence it covers lives in `search.js` today, so deleting
+  the entry changes nothing until the day that script is inlined. Do not delete
+  it on the evidence that it does nothing
 
 The gate protects `docs/` only. It cannot see a code comment, a changelog entry
 or a handoff note, and all of those are committed and public. Research evidence
@@ -227,8 +243,10 @@ python3 scripts/make_chart.py --public    # the published build -> docs/
 ```
 
 `--public` must end `N JSON-LD blocks valid` and **exit 0**. It exits 1 on
-invalid structured data, a research-data leak, or **any person in `PERSONS` that
-the page does not draw**. That last gate was added 2026-07-30: an undrawn person
+invalid structured data, a research-data leak, **any person in `PERSONS` that
+the page does not draw**, or an incomplete `vendor/search/` (added 2026-08-09 —
+METHOD.md describes `/search/` in the present tense, so a build that silently
+omitted it would ship a document describing a 404). That last gate was added 2026-07-30: an undrawn person
 used to be a console warning and a status line, which is how seven of Genealogy
 II's went unnoticed for a whole session — nothing fails, the page just quietly
 holds fewer people than the plate. The private build still only warns, because a
@@ -474,14 +492,22 @@ leaves that browser with an unstyled clan.
 ## The published markup is now an interface, not just a rendering
 
 **Added 2026-08-03.** A separate finding aid — `laguna-search`, outside this
-repo and not deployed — builds its whole index by fetching the four
+repo — builds its whole index by fetching the four
 `genealogy-*/` pages and parsing them. It reads no transcription module. Since
 2026-08-08 it has a remote of its own: **`PuebloGenealogy/laguna-search`,
 private**, chosen by the user so the tool stops living in a single working copy
 without adding public surface. **Private is a decision, not a default** —
 private → public is a click, public → private un-forks and un-indexes nothing.
 Its working copy is still the one under `claude-random/`; the remote is a
-backstop, not a relocation. So
+backstop, not a relocation.
+
+**Since 2026-08-09 its OUTPUT is deployed here, at `/search/`, while the repo
+itself stays private** — see *The search page is vendored, not generated here*.
+That does not soften anything below. It sharpens it: this page is no longer
+only a tool someone else runs, it is a page on this site, so a register change
+that breaks the parser now breaks something the edition serves.
+
+So
 some of what `make_chart.py` emits is now **consumed by something other than a
 browser**, and changing it silently breaks a reader elsewhere:
 
@@ -571,6 +597,77 @@ entered five Genealogy III names, all of them 5–13 characters.
 
 Nothing on this site breaks either way; this is written down because the failure
 is in a different repo from its cause, and half of it is silent.
+
+## The search page is vendored, not generated here
+
+**Added 2026-08-09**, `6a882ee` (PR #39). `/search/` is the only page on this
+site whose content `make_chart.py` did not write. `laguna-search`'s `dist/` is
+copied into **`vendor/search/`** (three files — `index.html`, `search.js`,
+`search-index.json`; its CSS is already inlined), and **`write_search()`** turns
+that into `docs/search/`. `vendor/search/SOURCE.md` records the commit it came
+from and how to refresh it.
+
+**Both directories are generated. Do not hand-edit either.** `vendor/search/` is
+overwritten by the next re-vendor exactly as `docs/` is by the next build.
+
+`write_search()` deliberately does the least it can — it wraps, never rewrites.
+Three things are injected, and each is there because the vendored file cannot
+supply it:
+
+- **The subset font.** `search.css` declares **no `@font-face` at all**, and
+  every name it shows is phonetic. **Nothing downstream can catch a regression
+  here**: `subset_font.py`'s coverage check reads the *text* of built pages, and
+  the names arrive from `search-index.json` at runtime, so they appear in no
+  HTML file and that check sees an effectively empty page. Drop the injection
+  and the page keeps working, silently substituting. Verified at publish: all 89
+  distinct characters in the index are in the subset, both faces `loaded`,
+  `span.cell.name` computes `Laguna Serif`.
+- **A host bar.** The widget draws a title block and no navigation, so a reader
+  landing on `/search/` had no route into the edition. Scoped `.lg-host-bar` and
+  built from the widget's own `--lg-*` tokens, so it follows the theme and
+  cannot collide with the widget, which is scoped `.laguna-search`. It sets
+  `--lg-sticky-top`, the widget's documented hook for "the host page has a bar
+  this tall" — without it the widget's sticky filter header rests underneath it.
+- **A theme bridge.** This site stores the palette under **`lg-theme`**, the
+  widget under **`laguna-theme`**, and *both drive `html[data-theme]`*. Left
+  alone, a reader who chose Dark on a chart page is handed the system preference
+  at `/search/`, and the same in reverse. Neither key can simply be renamed: one
+  is in vendored bytes, the other in every page this build writes. The bridge
+  runs in `<head>`, after the vendored inline script and before the module
+  mounts, and a `MutationObserver` carries a choice made here back out — without
+  it the bridge is one-way. **The durable fix is a `storageKey` option in the
+  widget**; ask for one before adding a second patch of this shape.
+
+**The masthead's Search link sits beside the WORDMARK, and that is measured.**
+At 375px the bar is two rows — wordmark alone on the first, pills and Theme
+sharing the second with **359px of usable width against 360px of content**. Put
+Search in `.mast-right` and that row wraps: three rows, **109px → 157px**,
+permanently sticky, a fifth of a phone viewport. The wordmark's row has ~160px
+spare, so Search rides there for free — measured 49px at 1280 and 109px at 375,
+both identical to the site without it. **Do not tidy it into `.mast-right`, and
+do not buy the row back by shaving gaps**: 44px is `--tap`, the floor, and this
+bar already has a 2.9px-overrun comment recording what living on a thin margin
+costs. Below 26rem the label is hidden by the **same `.nav-word` rule the pills
+use**, and an inline SVG magnifier takes its place — drawn, not typed, because
+U+2315 is missing from the UI stack and U+1F50D is an emoji, and this bar has no
+embedded face.
+
+**`/search/` is deliberately absent from `sitemap.xml`.** The page ships
+`<meta name="robots" content="noindex">`, and advertising it in a sitemap while
+asking robots to skip it is a contradictory signal, not a stronger one. This is
+consistent with *Exposure posture* and is **not** a de-indexing measure — that
+question is closed and stays closed. If the meta is ever dropped, add the path
+to `write_site()` in the same commit.
+
+**The re-vendor loop is `/publish` Gate 8, and `--refresh` is not optional.**
+The index is built by fetching *these* pages, so it goes stale the moment the
+register's markup moves — and nothing here can detect that, because a stale
+index is still valid JSON that renders a working page. Run it when a `.reg`,
+`.reg-rel`, `.num`, `.xref` or `sic-ring` changes shape, and always when a
+plate's data changes. **The test for whether it is due is a diff, not a
+memory**: filter the publish's diff of a table page for register-bearing markup
+and count. It was 0 on 2026-08-09 — only the masthead moved — which is how that
+gate was correctly skipped on the day it was written.
 
 ## The four `_FOLD` maps are one map — keep them identical
 
@@ -721,6 +818,24 @@ to catch "58+59" links those too.
   spouse with no leader had no recorded issue. 85/86/87 is Table 1's 83–85 shape
   and still needs no attribution, because 86's leader is on her own line and 87
   has none. Don't reach for the attribution machinery on this plate.
+- **There is a SECOND kind of editorial claim now, and it is about identity, not
+  paternity.** Added 2026-08-09 with `/search/`, and set out in METHOD.md's
+  *Identity across plates*. Searching by name across four independent numberings
+  means deciding whether two entries are two records of one person: the plates
+  carry 713 entries and **620 people**, 79 drawn more than once, of which
+  Parsons cross-references **65**. The other **14** are listed one by one — and
+  **two of those are hers**, stated through a second husband rather than by
+  name, so the edition's own unattested count is **twelve**. Every one is a
+  family joined as a family, never a lone name; a shared name joins nothing,
+  which is what the three adjudicated namesake pairs exist to say, one of them
+  still **open**.
+  **This changes nothing in the chart or the register**, and that is the point:
+  the joins live on the search page and in its index, and every unprinted one
+  carries a ringed **NOT PRINTED** marker and quotes nothing. Rule 1 of
+  *Editorial attribution* holds unchanged — the chart never carries it. **Rule 4
+  holds in its stronger form**: the evidence is the plates themselves, so it is
+  quoted in full, and **no identification here rests on external documentary
+  research, nor may one ever**.
 - **English names in parentheses are plate data**, not research additions —
   person 90 "Heʼsa (Hazel)" on Table 1, and the Johnsons and Mana on Table 4.
 - **`d.`** means the person had already died when Parsons recorded the

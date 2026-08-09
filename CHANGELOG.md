@@ -5,6 +5,9 @@ Newest first.
 
 ## 2026-08-09 (latest) — the cross-plate search page ships at /search/
 
+**Published**, `6a882ee` (PR #39). Verified live by SHA-256 across all seven
+pages; sitemap 5 locs against the build's 7, which is correct.
+
 The `laguna-search` finding aid is now part of this site. Its `dist/` is
 vendored into `vendor/search/` and `write_search()` in `make_chart.py` turns it
 into `docs/search/`, so `docs/` stays generated and the page goes through the
