@@ -8,20 +8,21 @@ Last updated **2026-08-08**, and this header covers **two** sessions — read bo
 paragraphs. The site **has** moved: `ebd8738` (PR #34) is now the last commit to
 touch a built page, superseding `778bfb9`.
 
-**A photograph settled the second sort at III·156 and III·157, and they are
-PUBLISHED.** The user photographed lines 156–159; measured at native resolution,
-every known U+02BC sweeps its tail down-left and both questioned marks sweep
-down-right, both sorts are top-heavy (so it is a mirror, not a rotation, which
-picks U+02BD over U+02BB), and the questioned sort is a smaller piece of type.
-156 carries both sorts inside one word. They now read `Pʽĕʼnitsʼaʼyo` and
-`Dziotyʽ`. Full measurements in `CHANGELOG.md` and in
-`transcription_iii.py`'s docstring — **don't re-derive them.**
+**Photographs settled the second sort at ALL FIVE instances, and every one is
+PUBLISHED.** `ebd8738` (PR #34) took 156 and 157; `5441abc` (PR #35) took 154,
+228 and 242. They now read `Yaʼdôkyʽ`, `Pʽĕʼnitsʼaʼyo`, `Dziotyʽ`, `Awieʽ` and
+`Shipʼaʼpʽ` — all U+02BD, MODIFIER LETTER REVERSED COMMA.
 
-**THE OPEN THREAD IS 154, 228 AND 242.** The photograph does not cover them, so
-they stay U+02BC. A photograph of those three lines, with **159 alongside as the
-control**, settles them by the same method. **Do not re-crop the scan** — the
-ten-pixel limit that closed this on 2026-07-31 is unchanged; a new photograph is
-what moved it, not more magnification.
+Measured at native resolution: every known U+02BC sweeps its tail down-left and
+every questioned mark sweeps down-right; both sorts are top-heavy, so it is a
+**mirror, not a rotation**, which is what picks U+02BD over U+02BB. 156 and 242
+each carry both sorts **inside one word**. Full measurements are in
+`CHANGELOG.md` and `transcription_iii.py`'s docstring — **don't re-derive them,
+and don't re-crop the scan.** The ten-pixel limit that closed this on 2026-07-31
+is unchanged; a photograph is what moved it, not more magnification.
+
+**So there is no open thread, and no reading question is open on any plate.**
+Everything left needs the user.
 
 Two things carried over from the session before it, both still true:
 **the four `_FOLD` maps were unified** (they had drifted; all four now hold the

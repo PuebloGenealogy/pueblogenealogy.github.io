@@ -3,7 +3,70 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-08 (latest) — a photograph settles the second sort at III·156 and III·157
+## 2026-08-08 (latest) — the remaining three marks are settled; III·154, 228 and 242 become U+02BD
+
+**Published**, `5441abc` (PR #35). Three more photographs — IMG_3041 (lines
+154–159), IMG_3039 (242–244), IMG_3038 (227–229) — close the last reading
+question on any plate. **All five instances now carry U+02BD**: 154 `Yaʼdôkyʽ`,
+156 `Pʽĕʼnitsʼaʼyo`, 157 `Dziotyʽ`, 228 `Awieʽ`, 242 `Shipʼaʼpʽ`.
+
+Method unchanged from the entry below. **Heights compare only within a
+photograph**; the drift and the mass do not.
+
+| photograph | mark | height | drift | ink t/b | |
+|---|---|---|---|---|---|
+| 3041 | 154 final | 28 rows | **+3.7 px right** | 116 / 70 | questioned |
+| 3041 | 154 after `Ya` | 37 rows | −8.4 px left | 131 / 103 | known U+02BC |
+| 3041 | 156 after P | 23 rows | **+2.4 px right** | 64 / 38 | replication |
+| 3041 | 157 final | 24 rows | **+3.2 px right** | 90 / 65 | replication |
+| 3041 | 156 after s | 31 rows | −3.2 px left | 124 / 50 | known U+02BC |
+| 3041 | 159 in `witsʼa` | 31 rows | −4.1 px left | 120 / 51 | the control |
+| 3039 | 242 final | 49 rows | **+4.5 px right** | 368 / 303 | questioned |
+| 3039 | 242 after `Ship` | 66 rows | −8.0 px left | 547 / 267 | known U+02BC |
+| 3039 | 242 after `a` | 70 rows | −21.0 px left | 477 / 334 | known U+02BC |
+| 3038 | 228 final | 58 rows | **+6.0 px right** | 545 / 411 | questioned |
+
+**242 is the strongest of the three** — like 156 it carries both sorts inside one
+word, so it needs no control from another line. **154** has its own control in
+`Yaʼ`.
+
+**228 is the one with a caveat, and it does not change the answer.** Neither 227
+nor 229 contains an apostrophe, so nothing in its frame is a control. The two
+discriminators that decide it are scale-free and both place it with the
+questioned group: the tail sweeps right, and it is top-heavy, so a mirror rather
+than a rotation. Its height normalised against the period in its own photograph
+is 1.45, inside the questioned band rather than the control band — but that
+normalisation is **not tight across photographs**, so it is corroboration, not
+proof.
+
+### Two things this round added
+
+**156 and 157 replicate from an independent photograph** at roughly half the
+pixel scale (+2.4 and +3.2 against controls at −3.2 and −4.1). The method is not
+living at the edge of the resolution.
+
+**The failure mode has a name now.** The first crop box for 159 in IMG_3041
+caught the `s` of `wits` and read **+8.9 px right** — which would have made a
+known U+02BC look like the questioned sort. It was a bad box, not a finding; re-
+cut, it reads −4.1. The flood fill measures whatever blob it is handed, so
+**look at the crop before believing a number**. This is recorded in
+`transcription_iii.py`'s docstring as well.
+
+### Why no font changed
+
+`subset_font.py` was **deliberately not re-run**, and this is the case the rule
+about it is for. U+02BD entered the subset with 156 and 157, so the data gains
+no new character; re-running would only write a fresh `head.modified` and dirty
+every page. The coverage check it ends with was run **directly** instead — 27
+distinct non-ASCII characters across the 6 built pages, all present in both
+faces — and the diff confirms the reasoning: only the Genealogy III page and the
+module moved, no `woff2`, no other page.
+
+Folds unchanged: 0 of 713 folded names move; colliding-fold counts stay at
+2 / 4 / 2 / 1. Verified live by SHA-256, all six pages `OK`, sitemap 5 `<loc>`,
+five occurrences of each new reading and **zero** of any old one.
+
+## 2026-08-08 — a photograph settles the second sort at III·156 and III·157
 
 **Published**, `ebd8738` (PR #34). The first commit to move a built page since
 `778bfb9`.

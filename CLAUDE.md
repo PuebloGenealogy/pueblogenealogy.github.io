@@ -735,8 +735,15 @@ to catch "58+59" links those too.
   distinguishes a **mirror** from a **rotation** — both sorts being top-heavy is
   what picked U+02BD over U+02BB. Eyeballing a 6× crop had produced the right
   hunch and no evidence. The method and the numbers are in
-  `transcription_iii.py`'s docstring; **154, 228 and 242 are still open**, and
-  159 is the control to photograph alongside them.
+  `transcription_iii.py`'s docstring. **All five instances are settled** — 154,
+  156, 157, 228 and 242, published `5441abc` — so do not re-open it.
+  **Two refinements from the second round, and they generalise.** *Heights
+  compare only WITHIN one photograph*; the drift and the ink mass do not, so
+  lead with those two and treat height as corroboration. And *look at the crop
+  before believing a number* — the first crop box for the 159 control caught the
+  `s` of `wits` and reported a known U+02BC as the questioned sort. The flood
+  fill measures whatever blob it is handed, and a wrong box fails silently by
+  producing a perfectly plausible number.
 - Google's structured-data validator is **stricter than schema.org** — valid
   schema.org has been rejected twice here. `check_structured_data()` guards the
   rules we have been told about, not all of them; a Search Console report
@@ -933,10 +940,10 @@ to stay *allowed*, so the two must not be combined. Neither is deployed here.
   by the *Release policy* above. **All four plates are published** (2026-07-31)
   and **Genealogy III's two editorial items are both closed** — the
   cross-reference footnote is written and **deployed** (`#note-crossref`,
-  verified live by SHA-256), and the turned-comma mark is **settled at 156 and
-  157**, which read U+02BD and are published (`ebd8738`, PR #34, 2026-08-08);
-  154, 228 and 242 stay U+02BC until they are photographed, which is the one
-  reading question still open on any plate. Under the old policy that would have made the
+  verified live by SHA-256), and the second sort is **settled at all five
+  instances** — 154, 156, 157, 228 and 242 read U+02BD and are published
+  (`ebd8738` PR #34, then `5441abc` PR #35, both 2026-08-08). **There is no
+  reading question open on any plate.** Under the old policy that would have made the
   release due; it does not, because the policy changed. **Publishing the site is
   not releasing it, and releasing it is no longer on the table.**
 - **Genealogy II is published and its reading is closed.** The user re-checked
