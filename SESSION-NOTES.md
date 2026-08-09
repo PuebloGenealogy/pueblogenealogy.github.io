@@ -66,11 +66,11 @@ no longer exists in one working copy under Google Drive.
 cd "/Users/eli/My Drive/CLAUDE - GENEALOGY TABLES - CREATED BY FABLE/pueblogenealogy.github.io" && claude
 ```
 
-**Even when the work is in `laguna-search`** — which, this time, it is. That
-repo has **no `CLAUDE.md` and no `SessionStart` hook**; only a `launch.json`
-entry lives here. Start a session there and you get no rules, no handoff
-auto-load, and no `site` preview config. Editing the sibling directory from
-here works fine.
+**Even when the work is in `laguna-search`.** That repo has **no `CLAUDE.md` and
+no `SessionStart` hook** — verified 2026-08-08; it carries its own
+`.claude/launch.json` and nothing else. Start a session there and you get no
+rules, no handoff auto-load, and no `site` preview config. Editing the sibling
+directory from here works fine, and that is how every session has done it.
 
 | | here | `laguna-search` |
 |---|---|---|
@@ -80,9 +80,11 @@ here works fine.
 
 1. **`git switch main && git pull`.**
 2. Read the top **two** entries of `CHANGELOG.md`, both **2026-08-08** — they
-   are the U+02BD reading, first the three marks and then the two. Everything
-   below them is settled history. The **fifth** entry down, *the edition stops
-   advertising itself*, is the one that constrains what you may propose.
+   are the U+02BD reading, first the three marks and then the two. The top one
+   also carries the `laguna-search` follow-through and the stale-PR mechanic.
+   Everything below them is settled history. The **fifth** entry down, *the
+   edition stops advertising itself*, is the one that constrains what you may
+   propose.
 3. Read `CLAUDE.md` — **Exposure posture** and **Release policy** first. Both
    forbid things a cold start would otherwise propose as easy wins. Then
    **The one thing to get right** and **Design invariants**.
@@ -90,10 +92,16 @@ here works fine.
    4173** — if that port is held, the tool assigns another and tells you which.
    **Don't call `preview_stop` when you finish** — the user may still be looking.
 5. **For the search tool**, `preview_start` config name **`laguna-search`**,
-   port 4180, serving its `dist/`. Run `python3 build.py --inline` in that repo
-   first and preview **`standalone.html`**, not `index.html`, or the browser
-   serves a cached ES module and you measure the previous build. **`--inline` is
-   not optional** — `standalone.html` is only written when it is passed.
+   nominally port 4180, serving its `dist/`. **It reassigns the port the same
+   way `site` does** — on 2026-08-08 it landed on 55490 because 4180 was held;
+   read the port out of the `preview_start` result rather than typing 4180.
+   Run `python3 build.py --inline` in that repo first and preview
+   **`standalone.html`**, not `index.html`, or the browser serves a cached ES
+   module and you measure the previous build. **`--inline` is not optional** —
+   `standalone.html` is only written when it is passed. Its results list is
+   windowed, so a row you have filtered to may not be in the DOM until the page
+   is scrolled; the match **count** updates immediately and is the cheaper
+   thing to assert on.
 6. **`build.py` reads `cache/`, not the live site, unless you pass `--refresh`.**
    It says which — `cached in cache/` against `re-fetched` — and that line is the
    only warning you get. Every gate then passes against **whatever the site
