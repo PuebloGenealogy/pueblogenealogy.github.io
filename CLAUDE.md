@@ -541,12 +541,27 @@ the walk-back never lands, and that name's break seams silently vanish. Its
 **gate 5** then refuses to build — but only for a single-word name of **14+
 characters**. A shorter name loses its seams and fails nothing.
 
-The consequence for a session working here: a character new to a name needs
-classifying in **two** places in that repo — the `FOLD` map in `src/search.js`
-and `NAME_VOWELS` in `build.py` — and only the first has a gate that catches
-every case. Nothing on this site breaks either way; this is written down
-because the failure is in a different repo from its cause, and half of it is
-silent.
+**The literal set is not always `NAME_VOWELS`, and 2026-08-08 hit the other
+one.** Beside it sits **`NAME_MARKS`** (`build.py`, currently `"ʼ˙˚˘" "ᶦᵘᵃᵉ"`) —
+the marks the walk-back steps *over*. A new **modifier mark** belongs there, not
+in `NAME_VOWELS`, and it will not be caught by being non-alphabetic: U+02BD and
+U+02BC are both category **Lm**, so `.isalpha()` is `True` and an unlisted mark
+is read as a **consonant**. That is exactly why `ʼ` is listed explicitly.
+
+So a character new to a name needs classifying in **three** places in that
+repo — the `FOLD` map in `src/search.js`, and then **either** `NAME_VOWELS`
+**or** `NAME_MARKS` in `build.py` depending on what it is.
+
+**Only the `FOLD` one has a gate that catches every case, and it is loud.**
+That is `gate_keys_are_folded` — **gate 3** — which aborts the build with *"add
+it to the FOLD map in src/search.js"* for any search key still holding a
+non-`[a-z0-9]` character. The mark classification has only gate 5, which fires
+for a single-word name of **14+ characters**; a shorter name loses its seams and
+fails nothing. Verified against that repo's source on 2026-08-08, when U+02BD
+entered five Genealogy III names, all of them 5–13 characters.
+
+Nothing on this site breaks either way; this is written down because the failure
+is in a different repo from its cause, and half of it is silent.
 
 ## The four `_FOLD` maps are one map — keep them identical
 
@@ -564,7 +579,10 @@ never calls `fold()`; the Find box keys on names and numbers directly.
 
 **A new character in a name now needs adding to four maps, not one.** That is
 the cost of the fix, and it is the cheaper failure: a map that has drifted is
-silent, while four identical maps can be diffed. Two characters are deliberately
+silent, while four identical maps can be diffed. **This has already been paid
+once**: `ʽ` U+02BD went into all four on 2026-08-08 when the second sort was
+read on Genealogy III. It folds to `""`, exactly as `ʼ` does, so **no folded
+name moved** — 0 of 713, with colliding-fold counts held at 2 / 4 / 2 / 1. Two characters are deliberately
 **not** in it — `ï` and `ˑ` (U+02D1) appear only inside `plate_note` prose on
 Genealogy II, quoting readings that were *withdrawn*, and are in no name on any
 plate.
@@ -987,7 +1005,9 @@ pushes the mother's line down with `line_pad` — a margin *inside* the block. T
 node's top stays where it belongs, so a node-to-node measurement reads 0px while
 the name itself sits a row lower and the stub points at empty space. That is how
 "all 55 brackets on their mother's line, max 0.016px" was reported for a page
-that had one a full 24.8px out (person 169, still open).
+that had one a full 24.8px out — person 169, **since fixed** by
+`SECOND_VISIT_OMITTED`, and named here for the measuring mistake, not as an open
+defect.
 
 **Check the built file, not only the rendered page.** A DOM read in the browser
 happens after the page's own script has run, so it cannot see what the HTML

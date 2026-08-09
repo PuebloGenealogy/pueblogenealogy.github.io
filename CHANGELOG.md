@@ -66,6 +66,26 @@ Folds unchanged: 0 of 713 folded names move; colliding-fold counts stay at
 2 / 4 / 2 / 1. Verified live by SHA-256, all six pages `OK`, sitemap 5 `<loc>`,
 five occurrences of each new reading and **zero** of any old one.
 
+### A stale PR had become a revert, and this is a general mechanic
+
+Found while wrapping the session. **PR #33 was still open**, holding the
+previous session's handoff branch `handoff-2026-08-08-fold-unify`. Its own
+commit `b256e8a` had already reached `main` **inside PR #34's squash** — PR #34
+was branched from it, so squashing #34 carried #33's content along.
+
+That left #33 open with nothing to contribute and everything to take away.
+Diffing it against `main` showed it would have **deleted all five U+02BD
+readings** and reverted the font subset — a merge button that silently undoes a
+published day's work. It is now **closed, not merged**, and the branch deleted.
+
+The general shape, worth recognising next time: **branching new work off an
+unmerged branch and squash-merging the new work makes the old PR a revert.**
+`gh pr list --state open` is what catches it, and the check that settles it is
+`git diff origin/main origin/<branch>` — read the *direction*. Deletions there
+mean the branch is behind `main`, not ahead of it. This is a second face of the
+squash-merge trap already recorded in `CLAUDE.md` under *Environment*: ancestry
+is not a reliable guide to what a branch holds once squashes are involved.
+
 ## 2026-08-08 — a photograph settles the second sort at III·156 and III·157
 
 **Published**, `ebd8738` (PR #34). The first commit to move a built page since
