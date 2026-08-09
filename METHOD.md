@@ -155,6 +155,122 @@ Four rules govern all of this, and a future attribution must meet all four:
    phrase in `RESEARCH_PROSE_ALLOWED`, never to loosen the pattern — the gate
    must keep failing closed on every other use of the word.
 
+## Identity across plates
+
+The four plates are four independent numberings. A person drawn on more than one
+of them therefore has more than one number, and nothing in a number says so —
+Genealogy I's 73, Genealogy II's 160 and Genealogy III's 155 are one woman, and
+only Parsons's cross-references say it.
+
+**In the charts and the register, the edition carries exactly what she prints.**
+A cross-reference row is transcribed where the plate sets one and nowhere else,
+and no two entries are merged: the plate is four documents, and the edition
+reproduces four documents. Nothing in this section changes that, and the rule
+below does not apply to any chart page.
+
+The **search** page is where identity has to be decided, because searching by
+name across four plates means answering whether two entries are two records of
+one person or two people. The four plates carry **713 entries** and **620
+people**: 79 are drawn more than once. Parsons cross-references **65** of them
+herself. The remaining **14** are set out below.
+
+### The rule
+
+**An entry is a plate entry, and only the plates may say that two of them are
+one person.** Two entries are joined where a printed cross-reference resolves —
+and a printed reference is confirmed against the entry it lands on by name, sex
+and clan before it is followed, never trusted for its number, which is displaced
+on three of the four plates. Where a reference will not resolve it is
+**reported, not guessed**: three do not resolve today and each is named on the
+page. Two entries from the same plate are two people. A shared name is not
+evidence and never joins anything — see *Namesakes* below.
+
+### The fourteen
+
+Of these, **two are Parsons's own** and are listed here only because she states
+them through a person's second husband rather than by name, so no automatic
+match on names finds them:
+
+| Entries | Evidence |
+|---|---|
+| I·12 = II·19 | I·12 prints *"For second husband and offspring see Gen. II, 21, 74"*; II·19 is the woman whose second husband is 21 |
+| II·163 = III·16 | II·163 prints *"For second husband and descendants, see Gen. III, 14, 49-55, 135-141"*; III·16 is the woman married to 14 with exactly those children |
+
+**The other twelve the plates do not print.** They are the edition's own, and
+every one of them is a family joined as a family — never a lone name:
+
+| Entries | Evidence |
+|---|---|
+| II·123 = IV·17 | father. Same name, clan, sex and age, and the same wife by name |
+| II·122 = IV·18 | mother. Spelt `Dzaid˙yuwiʼ` on II and `Dzaidʼyuwiʼ` on IV; same clan, sex and age, and the same husband |
+| II·147–151 = IV·54–58 | their five children. Same clan and sex throughout, same name, the same two parents by name on both plates, and the same age on three of the five |
+| II·229 = III·227 | one of three siblings. Same name, clan, sex and age, and the same two parents by name |
+| II·231 = III·229 | the second. Same name, clan, sex and age, and the same two parents by name |
+| II·230 = III·228 | the third. Spelt `Awie˙` on II and `Awieʽ` on III; same clan, sex and age, and the same two parents by name |
+| II·174 = III·52 | husband. Spelt `Shta˙ʼyăi` on II and `Shta˙ʼy˙ăi` on III; same sex, and the same wife |
+| II·175 = III·51 | his wife. Spelt `Kio˙ʼd˙yiăi` on II and `Kio˙ʼtyʼiăi` on III; same clan and sex, and the same husband |
+
+Eight rest on a name the two plates spell identically. **Four do not** — the
+plates differ in their diacritics, and only the diacritic-free search key
+matches. Those four are listed by hand for that reason: a rule keyed on the
+printed name would have collapsed the five children while leaving their mother
+standing as two women, which is the shape of error this whole section exists to
+prevent.
+
+### What governs them
+
+The four rules of *Editorial attribution* above govern these too. Two of them
+apply with no change and two need saying differently:
+
+1. **The chart never carries it.** Unchanged, and stronger here: no chart page,
+   register entry or person card is affected by any join. The identifications
+   exist on the search page and in its index, and nowhere else in the edition.
+2. **Declared as data, outside the transcription module.** Unchanged in
+   substance, different in place: the map is `INFERRED_IDENTITIES` in the
+   finding aid's `build.py`, one line per decision with its evidence beside it.
+   It is a list and not a rule, so any single join can be withdrawn by deleting
+   its line. `scripts/transcription*.py` still holds the plate and only the
+   plate.
+3. **Every row it produces is marked.** A join the plates do not print carries a
+   ringed **NOT PRINTED** marker wherever it appears, and says it is identified
+   by the edition rather than by Parsons. In the index it carries
+   `"source": "inferred"` and **quotes nothing**, because there is nothing
+   printed to quote; a printed join quotes the plate's own words. A regression
+   test asserts both, so an inferred join cannot come to look like Parsons's.
+4. **A published source is cited.** The evidence here is the plates themselves,
+   which are published, so it is quoted in full above and on the page. **No
+   identification in this edition rests on external documentary research**, and
+   none may: the joins are made from names, clans, sexes, ages and relatives as
+   printed, and census or civil records are not evidence a reader could check
+   against the source this edition transcribes. That boundary is *What is
+   published* below, and it is not weakened by the search page — the finding aid
+   reads the published pages and nothing else, and runs the same leak gate over
+   everything it writes.
+
+### Namesakes: the joins deliberately not made
+
+The search results sort by name, so two people who share one land next to each
+other and read as a duplicate. Leaving that unexplained would be its own
+assertion, so every such pair is adjudicated by hand and the finding is shown on
+the row. There are three, and the verdicts are not interchangeable:
+
+| Pair | Verdict | Finding |
+|---|---|---|
+| I·52 / III·250 | distinct | One is a boy of 4; the other has a wife and three children, in the same 1918–19 fieldwork |
+| II·83 / II·144 | distinct | Two Lizard girls of one name **on one plate**, a generation apart, with different mothers. Parsons separates them herself: II·83 goes over to Genealogy III as 222, II·144 does not |
+| II·182 / IV·69 | **open** | Nothing contradicts them, and no relative of either is drawn on the other plate. Name, sex and clan are the whole of the evidence, which is not enough |
+
+**An open pair is shown as open.** It is not joined, and it is not given a
+settled pair's calm — the two verdicts carry different marks in different
+colours, at the row and at the note. Agreeing on a name, a sex and a clan is
+precisely the inference this edition refuses; a pair where that is all there is
+stays two entries and says why.
+
+Seven further cross-plate name collisions exist — I·87/II·23, I·13 and I·96
+against III·37, II·12/IV·68, II·73/III·166, I·41/II·209, I·57/IV·7 — and none is
+adjudicated, because each disagrees on sex or on clan and so is never a namesake
+under the rule. The reader sees the difference in the row itself.
+
 ## Verification
 
 Four structural checks run on every build (`self_check()`), and the workbook will

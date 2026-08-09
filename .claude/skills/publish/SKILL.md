@@ -24,10 +24,13 @@ fix below:
 for f in scripts/transcription*.py; do printf '%-28s ' "$f"; python3 "$f" | tail -1; done
 ```
 
-Every line must end `all structural checks pass`. There are **three** modules
-today — `transcription.py` (Table 1), `transcription_ii.py` (Table 2) and
-`transcription_iv.py` (Table 4) — and the loop picks up Table 3's the day it
-exists.
+Every line must end `all structural checks pass`. There are **four** modules —
+`transcription.py` (Table 1), `transcription_ii.py` (Table 2),
+`transcription_iii.py` (Table 3) and `transcription_iv.py` (Table 4) — which is
+all of them; Parsons published four plates. The loop is still derived rather
+than listed, because a hardcoded list is what let Table 2 go unchecked between
+2026-07-30 and the fix. This sentence said "three, and the loop picks up Table
+3's the day it exists" until 2026-08-09, four sessions after Table 3 shipped.
 
 These verify matrilineal clan descent across every union, which is what catches
 a misread bracket. A failure here means a reading is wrong — fix the
@@ -125,11 +128,17 @@ Cross-check the sitemap:
 curl -s https://pueblogenealogy.github.io/sitemap.xml | grep -c '<loc>'
 ```
 
-This is **one fewer than the page count `--public` reports** — 4 against 5
+This is **two fewer than the page count `--public` reports** — 5 against 7
 today. That is correct, not a discrepancy: the build counts every `.html` in
-`docs/`, and `404.html` is deliberately absent from the sitemap. The number to
+`docs/`, and two of them are deliberately absent from the sitemap — `404.html`,
+and `search/index.html`, which ships `<meta name="robots" content="noindex">`
+and must not be advertised in a sitemap that contradicts it. The number to
 expect is **the landing page plus one per transcribed plate**. If it ever equals
-the build's count, the 404 page has leaked into the sitemap.
+the build's count, the 404 page or the search page has leaked into the sitemap.
+
+It was *one* fewer until 2026-08-09, when the search page shipped. Recompute
+this sentence when a page is added that is not a plate; the count is not
+derived, and a stale number here reads as a failed publish.
 
 **Verify the deploy by hash, not by the Pages API** — it misreports the deployed
 commit, which cost a session in 2026-07-30:
@@ -182,6 +191,35 @@ What that means for this procedure:
   a tombstone. Nothing in the repo points at it; this is not a loose end.
 - **If a doi reappears** in `make_chart.py`, `CITATION.cff` or the README, that
   is a regression, not a restoration.
+
+## Gate 8 — the search index, if the register moved
+
+`docs/search/` is built from `vendor/search/`, which is another project's output
+built by **fetching these pages and parsing them** (`vendor/search/SOURCE.md`).
+So the index goes stale the moment this build changes the register's markup —
+and nothing here can detect that, because a stale index is still valid JSON and
+still renders a perfectly working page.
+
+Skip this gate when the publish changed only prose, styling or the chart. Run it
+when a `.reg` entry, a `.reg-rel`, a `.num`, an `.xref` or a `sic-ring` changed
+shape, and **always** when a plate's data changed.
+
+In the `laguna-search` checkout:
+
+```bash
+python3 build.py --refresh
+```
+
+**`--refresh` is not optional here.** Without it that build re-parses its own
+`cache/`, which still holds this site *as it was before the push*, so every one
+of its gates passes against the old pages and reports success. The only tell is
+one word in its first line — `re-fetched` against `cached in cache/`.
+
+Expect its namesake gate to fail if a name changed: that is the gate working,
+and the pair needs a hand-written verdict before it will build. Then re-vendor
+the three files, update the commit hash and date in `vendor/search/SOURCE.md`,
+rebuild here, and publish again — the search page is part of this site now, so
+it goes through the same gates as everything else.
 
 ## If Pages serves the wrong thing
 

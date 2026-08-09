@@ -38,6 +38,10 @@ OUT = ROOT / "build" / "genealogy-i-private.html"
 
 DOCS = ROOT / "docs"
 FONT_DIR = ROOT / "vendor" / "gentium"
+# The finding aid's build output, copied in rather than generated here. See
+# vendor/search/SOURCE.md for where it comes from and how to refresh it, and
+# write_search() below for what this build does to it on the way to docs/.
+SEARCH_DIR = ROOT / "vendor" / "search"
 
 # The misprint annotation, one row under the line it annotates. Table-agnostic:
 # the note it points at is the plate note, whose id every table that declares a
@@ -1469,6 +1473,17 @@ a.wordmark:focus-visible{color:var(--accent)}
 .mast-btn{font:inherit;letter-spacing:inherit;text-transform:uppercase;
   color:var(--muted);background:none;border:1px solid var(--rule-faint);
   border-radius:2px;cursor:pointer}
+/* Search is an <a> wearing the button shape -- the rule above was written for
+   <button>, which has no underline to clear. */
+a.mast-btn{text-decoration:none}
+/* The glyph is the narrow-screen half of the Search label; above the
+   breakpoint the word carries it and the glyph would be a second mark saying
+   the same thing. Pills fall back to a --tap square there, and so does this. */
+.mast-glyph{display:none}
+@media (max-width:26rem){
+  .mast-glyph{display:block}
+  a.mast-btn{min-width:var(--tap);justify-content:center}
+}
 .mast-btn:hover{color:var(--ink);border-color:var(--rule)}
 .mast-btn:focus-visible{color:var(--ink);border-color:var(--rule)}
 
@@ -2635,6 +2650,20 @@ doc.addEventListener("click",function(e){
 })();""")
 
 
+# Drawn, not typed. A magnifier character (U+2315, U+1F50D) is either missing
+# from the UI stack or an emoji, and this bar is set in system-ui -- there is no
+# embedded face to guarantee either. currentColor keeps it on the same hover and
+# focus transitions as the label it replaces.
+SEARCH_GLYPH = (
+    '<svg class="mast-glyph" viewBox="0 0 16 16" width="14" height="14" '
+    'aria-hidden="true" focusable="false">'
+    '<circle cx="6.75" cy="6.75" r="4.75" fill="none" stroke="currentColor" '
+    'stroke-width="1.6"/>'
+    '<path d="M10.4 10.4 14.4 14.4" stroke="currentColor" stroke-width="1.6" '
+    'stroke-linecap="round"/></svg>'
+)
+
+
 def masthead_html(tables, current_slug, prefix, home):
     """
     The sticky site bar -- the guaranteed carrier of identity and the way home
@@ -2657,8 +2686,28 @@ def masthead_html(tables, current_slug, prefix, home):
         + (' aria-current="page"' if slug == current_slug else "")
         + f'><span class="nav-word">Genealogy </span>{numeral}</a>'
         for numeral, slug in tables)
+    # Search is NOT in the Tables nav, which is a list of plates -- the search
+    # page is not a fifth plate, and putting it there would say it was to a
+    # screen reader reading the group. It is a link rather than a button so it
+    # works with the script dead, unlike Theme.
+    #
+    # It sits beside the WORDMARK, and that position is measured, not chosen.
+    # At 375px the bar is two rows: the wordmark alone on the first, the pills
+    # and Theme sharing the second with 359px of usable width against 360px of
+    # content -- one pixel over. Put Search in mast-right and that row wraps,
+    # taking the bar to three rows and 157px, a fifth of a phone viewport,
+    # permanently sticky. The wordmark's row has ~160px spare, so Search rides
+    # there for free: measured 109px, byte-for-byte the height of the published
+    # bar without it.
+    #
+    # Do not "tidy" it back into mast-right, and do not buy the row back by
+    # shaving gaps -- 44px is --tap, the floor, and this file's own history
+    # (the 2.9px overrun comment above) is the argument against living on a
+    # 3px margin. Its label wears .nav-word so the SAME ≤26rem rule hides it,
+    # reused rather than reinvented; the accessible name stays "Search".
     return f"""<header class="masthead">
   {mark}
+  <a class="mast-btn" href="{prefix}search/"><span class="nav-word">Search</span>{SEARCH_GLYPH}</a>
   <nav aria-label="Tables">{links}</nav>
   <span class="mast-right">
     <!-- Bare "Theme" in the markup: the server cannot know which palette the
@@ -3256,6 +3305,131 @@ LANDING_CSS_EXTRA = """
 """
 
 
+# The two projects store the reader's palette under different keys -- this site
+# under "lg-theme", the widget under "laguna-theme" -- and both drive the same
+# html[data-theme]. Left alone, a reader who chose Dark on a chart page arrives
+# at /search/ and is handed the system preference instead, and the same in
+# reverse. Neither key can simply be renamed: one is in vendored bytes, the
+# other is in every page this build writes.
+#
+# So the host bridges them. It runs in <head>, AFTER the vendored inline script
+# that reads "laguna-theme" and BEFORE the module that mounts the widget, which
+# is the only window where the correction is invisible. The observer is what
+# carries a choice made here back out to the chart pages; without it the bridge
+# would be one-way.
+#
+# The durable fix is a storageKey option in the widget, which would delete all
+# of this. Ask for one before adding a second patch of this shape.
+THEME_BRIDGE = (
+    '(function(){var K="lg-theme",L="laguna-theme",d=document.documentElement;'
+    'function g(k){try{return localStorage.getItem(k)}catch(e){return null}}'
+    'function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}'
+    'var t=g(K);if(t&&g(L)!==t){s(L,t);d.dataset.theme=t}'
+    'new MutationObserver(function(){var n=d.dataset.theme;'
+    'if(n&&g(K)!==n){s(K,n);s(L,n)}})'
+    '.observe(d,{attributes:true,attributeFilter:["data-theme"]})})();'
+)
+
+
+def write_search(tables):
+    """
+    docs/search/ -- the cross-plate finding aid, from vendor/search/.
+
+    That directory is another project's build output (vendor/search/SOURCE.md),
+    so this function does the least it can to it: it never rewrites the widget,
+    only wraps it. Three things are added, and each is here because the vendored
+    file cannot supply it.
+
+    1. THE FONT. `search.css` declares no @font-face at all, and every name it
+       shows is Americanist phonetic -- `ʼ` `˙` `ᶦ` `ᵘ` `ᵃ` `ʽ`. The rest of the
+       site inlines the subset for exactly this reason, so the same faces are
+       injected and prepended to the widget's own `--lg-serif` stack.
+
+       Nothing downstream can catch a regression here. subset_font.py's
+       coverage check reads the TEXT of built pages, and the names arrive from
+       search-index.json at runtime, so they appear in no HTML file and that
+       check sees an empty page. If this injection is ever dropped, the page
+       keeps working and silently substitutes.
+
+    2. A WAY BACK. The widget draws a title block and no navigation -- it was
+       built to be mounted in a host page that already had some. Without this a
+       reader who lands on /search/ from a link has no route into the edition.
+       The bar is scoped `.lg-host-bar` and built from the widget's own
+       `--lg-*` tokens, so it follows the theme toggle and cannot collide with
+       the widget, which is scoped `.laguna-search`.
+
+    3. `--lg-sticky-top`. The widget's filter header is sticky; the token is its
+       documented hook for "the host page has a bar this tall". Set it or the
+       header comes to rest underneath ours.
+
+    Returns False if the vendored files are missing, which fails the build. That
+    is deliberate: METHOD.md's *Identity across plates* describes this page in
+    the present tense, so an edition that ships without it is describing
+    something that 404s.
+    """
+    need = ("index.html", "search.js", "search-index.json")
+    missing = [n for n in need if not (SEARCH_DIR / n).exists()]
+    if missing:
+        print(f"ABORTED: vendor/search/ incomplete -- missing {', '.join(missing)}")
+        print("  See vendor/search/SOURCE.md; the search page cannot be built.")
+        return False
+
+    out = DOCS / "search"
+    out.mkdir(parents=True, exist_ok=True)
+    for name in ("search.js", "search-index.json"):
+        shutil.copyfile(SEARCH_DIR / name, out / name)
+
+    links = "".join(
+        f'<a href="../{slug}/"><span class="lg-hb-word">Genealogy </span>{numeral}</a>'
+        for numeral, slug in tables)
+    bar = (
+        '<header class="lg-host-bar">'
+        '<a class="lg-hb-mark" href="../">Laguna Genealogies</a>'
+        f'<nav aria-label="Tables">{links}</nav>'
+        "</header>")
+
+    # --lg-serif is a stack, not a family: prepending keeps every fallback the
+    # widget chose. Georgia stays the second choice, as it is here.
+    host_css = f"""{font_css()}:root{{
+  --lg-serif:'Laguna Serif',Georgia,"Iowan Old Style","Times New Roman",serif;
+  --lg-host-bar-h:calc(var(--lg-tap) + 12px);
+  --lg-sticky-top:var(--lg-host-bar-h);
+}}
+.lg-host-bar{{position:sticky;inset-block-start:0;z-index:40;
+  display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;
+  min-height:var(--lg-host-bar-h);padding:6px 16px;
+  background:var(--lg-paper);border-block-end:1px solid var(--lg-rule);
+  font:400 13px/1.2 system-ui,sans-serif;letter-spacing:.08em}}
+.lg-host-bar a{{display:inline-flex;align-items:center;min-height:var(--lg-tap);
+  padding-inline:8px;text-decoration:none;text-transform:uppercase}}
+.lg-hb-mark{{color:var(--lg-ink);font-weight:600;letter-spacing:.14em}}
+.lg-hb-mark:hover,.lg-hb-mark:focus-visible{{color:var(--lg-accent)}}
+.lg-host-bar nav{{display:flex;flex-wrap:wrap;gap:4px}}
+.lg-host-bar nav a{{justify-content:center;gap:.3em;color:var(--lg-muted);
+  border:1px solid var(--lg-rule);border-radius:2px;white-space:nowrap}}
+.lg-host-bar nav a:hover,.lg-host-bar nav a:focus-visible{{color:var(--lg-ink);
+  border-color:var(--lg-rule-strong)}}
+@media (max-width:26rem){{
+  .lg-hb-word{{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+    overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}}
+  .lg-host-bar nav a{{min-width:var(--lg-tap)}}
+}}
+@media print{{.lg-host-bar{{display:none}}}}
+"""
+
+    html = (SEARCH_DIR / "index.html").read_text(encoding="utf-8")
+    html = html.replace(
+        "</head>",
+        f'<link rel="canonical" href="{SITE}/search/">\n'
+        f"<style>{host_css}</style>\n<script>{THEME_BRIDGE}</script>\n</head>", 1)
+    html = html.replace("<body>", f"<body>\n{bar}", 1)
+    (out / "index.html").write_text(html, encoding="utf-8")
+
+    kb = (out / "search-index.json").stat().st_size // 1024
+    print(f"  search page written -- docs/search/, index {kb} KB")
+    return True
+
+
 def write_site(today, built):
     """
     The files around the chart: landing page, robots.txt, sitemap.xml, .nojekyll,
@@ -3284,6 +3458,10 @@ def write_site(today, built):
     )
 
     stamp = today.isoformat()
+    # /search/ is deliberately absent. The vendored page ships
+    # <meta name="robots" content="noindex">, and a sitemap entry for a page
+    # that asks not to be indexed is a contradictory signal, not a stronger
+    # one. If that meta is ever dropped, add the path here in the same commit.
     paths = ["/"] + [f"/{spec['slug']}/" for spec, _ in built]
     urls = "".join(
         f"\n  <url><loc>{SITE}{path}</loc><lastmod>{stamp}</lastmod></url>"
@@ -3492,6 +3670,20 @@ RESEARCH_PROSE_ALLOWED = (
     # on every other use of the word, and it must not cross a source-line break
     # -- the check is an exact substring replace against the rendered HTML.
     "by the widow, not by the sister of the deceased or his brothers",
+    # A THIRD KIND, added 2026-08-09 with the search page. This is the finding
+    # aid stating the boundary in its own words -- the same category as the
+    # three FAQ phrases above, arriving from vendor/search/ rather than from a
+    # template here. It is allowlisted VERBATIM from that project's own
+    # RESEARCH_PROSE_ALLOWED, and the two lists must stay in step: it runs this
+    # same gate over everything it writes, so a phrase either project rewords
+    # stops one build or the other.
+    #
+    # Note where the sentence actually lives. In `index.html` it does not --
+    # it sits in `search.js`, which check_published_pages() never opens,
+    # because that sweep globs *.html only. So this entry is what keeps the
+    # gate honest if the script is ever inlined, not what makes today's build
+    # pass. Don't delete it on the evidence that removing it changes nothing.
+    "No census matches and no identifications of living people appear here",
 )
 
 
@@ -3666,6 +3858,12 @@ def main():
         _, stats = build_table(spec, public=True, today=today)
         built.append((spec, stats))
     write_site(today=today, built=built)
+
+    # Before the sweep, so docs/search/index.html is swept like any other page.
+    # It is the one page here whose prose this build did not write.
+    if not write_search([(TABLES[k]["numeral"], TABLES[k]["slug"])
+                         for k in sorted(TABLES)]):
+        return 1
 
     # Sweep every published page before anything else passes judgement on it.
     if not check_published_pages():
