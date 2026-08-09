@@ -217,6 +217,17 @@ a.wordmark:focus-visible{color:var(--accent)}
 .mast-btn{font:inherit;letter-spacing:inherit;text-transform:uppercase;
   color:var(--muted);background:none;border:1px solid var(--rule-faint);
   border-radius:2px;cursor:pointer}
+/* Search is an <a> wearing the button shape -- the rule above was written for
+   <button>, which has no underline to clear. */
+a.mast-btn{text-decoration:none}
+/* The glyph is the narrow-screen half of the Search label; above the
+   breakpoint the word carries it and the glyph would be a second mark saying
+   the same thing. Pills fall back to a --tap square there, and so does this. */
+.mast-glyph{display:none}
+@media (max-width:26rem){
+  .mast-glyph{display:block}
+  a.mast-btn{min-width:var(--tap);justify-content:center}
+}
 .mast-btn:hover{color:var(--ink);border-color:var(--rule)}
 .mast-btn:focus-visible{color:var(--ink);border-color:var(--rule)}
 
@@ -845,6 +856,7 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
 <body>
 <header class="masthead">
   <a class="wordmark" href="/">Laguna Genealogies</a>
+  <a class="mast-btn" href="/search/"><span class="nav-word">Search</span><svg class="mast-glyph" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><circle cx="6.75" cy="6.75" r="4.75" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.4 10.4 14.4 14.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></a>
   <nav aria-label="Tables"><a href="/genealogy-i/"><span class="nav-word">Genealogy </span>I</a><a href="/genealogy-ii/"><span class="nav-word">Genealogy </span>II</a><a href="/genealogy-iii/"><span class="nav-word">Genealogy </span>III</a><a href="/genealogy-iv/"><span class="nav-word">Genealogy </span>IV</a></nav>
   <span class="mast-right">
     <!-- Bare "Theme" in the markup: the server cannot know which palette the

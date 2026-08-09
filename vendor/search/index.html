@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Search the Tables &middot; Laguna Genealogies</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Find a person in the four published Laguna genealogy tables by table and number, or by name across all four.">
+<script>
+try {
+  var t = localStorage.getItem("laguna-theme");
+  if (t) document.documentElement.dataset.theme = t;
+} catch (e) {}
+</script>
+<style>
+/**
+ * laguna-search — stylesheet.
+ *
+ * Everything is scoped under `.laguna-search` so the widget can be dropped
+ * into a page that already has its own styles. The only global rules are the
+ * palette tokens on :root and a `box-sizing` reset inside the widget.
+ *
+ * The palette is the published edition's own — same token names, same values,
+ * light and dark — so this drops onto the site later without a recolour. The
+ * reference's bronze (#74430e) becomes --accent (#7A5C1E light / #DBB970
+ * dark), which is the gold the site already uses for interactive chrome.
+ *
+ * Contrast on --paper: --muted 6.15:1 light / 6.73:1 dark, --accent 5.86:1 /
+ * 9.53:1, --sic 5.0:1 / 7.7:1. All clear 4.5:1 both ways.
+ *
+ * There is ONE list. The filter header sticks to the top of the viewport and
+ * the rows flow down the page — no inner scroller, so there is no
+ * scroll-within-scroll on a phone and no `max-height` to undo for print.
+ */
+
+:root {
+  --lg-paper: #FAF8F4;
+  --lg-panel: #FFFDF9;
+  --lg-sunk: #F2EFE8;
+  --lg-ink: #1C1A17;
+  --lg-muted: #635D53;
+  --lg-rule: #C4BFB4;
+  --lg-rule-strong: #A9A296;
+  --lg-accent: #7A5C1E;
+  --lg-accent-strong: #5C450F;
+  --lg-accent-wash: rgba(122, 92, 30, 0.09);
+  --lg-on-accent: #FFFDF9;
+  --lg-sic: #B3261E;
+  --lg-shadow: rgba(40, 33, 26, 0.10);
+
+  --lg-tap: 44px;
+  --lg-radius: 6px;
+
+  /* The filter header is two lines: a heading line and a control line. Both
+     are named because `Table · #` heads a column with no control under it and
+     has to be lifted onto the heading line by exactly their sum. */
+  --lg-head-control: 32px;
+  --lg-head-gap: 4px;
+  --lg-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+
+  /* Where the sticky filter header comes to rest. A host page with its own
+     fixed bar sets this to the bar's height; nothing else reads it. */
+  --lg-sticky-top: 0px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --lg-paper: #191713;
+    --lg-panel: #221F1B;
+    --lg-sunk: #1F1D19;
+    --lg-ink: #E9E6DF;
+    --lg-muted: #A49E93;
+    --lg-rule: #423F38;
+    --lg-rule-strong: #5E5951;
+    --lg-accent: #DBB970;
+    --lg-accent-strong: #EFD59A;
+    --lg-accent-wash: rgba(219, 185, 112, 0.13);
+    --lg-on-accent: #191713;
+    --lg-sic: #FF8A80;
+    --lg-shadow: rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* The reader's explicit choice outranks the OS in both directions. */
+:root[data-theme="light"] {
+  --lg-paper: #FAF8F4; --lg-panel: #FFFDF9; --lg-sunk: #F2EFE8;
+  --lg-ink: #1C1A17; --lg-muted: #635D53;
+  --lg-rule: #C4BFB4; --lg-rule-strong: #A9A296;
+  --lg-accent: #7A5C1E; --lg-accent-strong: #5C450F;
+  --lg-accent-wash: rgba(122, 92, 30, 0.09); --lg-on-accent: #FFFDF9;
+  --lg-sic: #B3261E; --lg-shadow: rgba(40, 33, 26, 0.10);
+}
+
+:root[data-theme="dark"] {
+  --lg-paper: #191713; --lg-panel: #221F1B; --lg-sunk: #1F1D19;
+  --lg-ink: #E9E6DF; --lg-muted: #A49E93;
+  --lg-rule: #423F38; --lg-rule-strong: #5E5951;
+  --lg-accent: #DBB970; --lg-accent-strong: #EFD59A;
+  --lg-accent-wash: rgba(219, 185, 112, 0.13); --lg-on-accent: #191713;
+  --lg-sic: #FF8A80; --lg-shadow: rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-contrast: more) {
+  :root { --lg-muted: var(--lg-ink); --lg-rule: var(--lg-rule-strong); }
+}
+
+/* Standalone use. Harmless when the widget is embedded — a host page that
+   sets its own body background overrides these by cascade order. */
+html { background: var(--lg-paper); -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
+
+.laguna-search,
+.laguna-search *,
+.laguna-search *::before,
+.laguna-search *::after { box-sizing: border-box; }
+
+.laguna-search {
+  width: min(1296px, 100% - 2rem);
+  margin: 0 auto;
+  padding: 1.1rem 0 2.1rem;
+  color: var(--lg-ink);
+  font-family: var(--lg-serif);
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.laguna-search button,
+.laguna-search input,
+.laguna-search select { font: inherit; color: inherit; }
+
+.laguna-search a { color: inherit; text-decoration: none; }
+
+.laguna-search :focus-visible {
+  outline: 2px solid var(--lg-accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.laguna-search .offscreen {
+  position: fixed; left: -9999px; width: 1px; height: 1px; opacity: 0;
+}
+
+/* `hidden` is a statement about the element, not a style preference, so it
+   outranks the `display: grid`/`flex` that .list and .empty carry. Without
+   this the empty-state panel shows through underneath every populated list. */
+.laguna-search [hidden] { display: none !important; }
+
+/* ------------------------------------------------------------- title block */
+
+.laguna-search .theme-bar { display: flex; justify-content: flex-end; }
+
+.laguna-search .theme {
+  min-height: 34px;
+  border: 1px solid var(--lg-rule);
+  border-radius: 999px;
+  padding: 0 0.9rem;
+  background: var(--lg-panel);
+  color: var(--lg-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.laguna-search .theme:hover { border-color: var(--lg-accent); color: var(--lg-accent); }
+
+.laguna-search .intro { text-align: center; }
+
+.laguna-search .kicker {
+  margin: 0 0 0.45rem;
+  color: var(--lg-accent);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
+
+.laguna-search h1 {
+  margin: 0;
+  font-size: clamp(2.1rem, 5vw, 4rem);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.laguna-search .rule {
+  display: block;
+  width: min(452px, 58vw);
+  height: 7px;
+  margin: 1.4rem auto;
+  border-top: 2px solid var(--lg-accent);
+  border-bottom: 1px solid var(--lg-accent);
+}
+
+.laguna-search .lede {
+  margin: 0 0 1.3rem;
+  font-size: clamp(1.02rem, 2vw, 1.45rem);
+}
+
+/* -------------------------------------------------------------------- card */
+
+.laguna-search .card {
+  margin-top: 1.05rem;
+  border: 1px solid var(--lg-rule);
+  border-radius: 7px;
+  background: var(--lg-panel);
+  box-shadow: 0 2px 5px var(--lg-shadow);
+}
+
+/* --------------------------------------------------------------- searching */
+
+/*
+ * Two controls, one list. The name box searches all four plates; the table
+ * toggles and the number box find a person by the number Parsons printed.
+ * Both write to the same state, so there is no second result list and nothing
+ * to keep in step.
+ */
+.laguna-search .card.search {
+  display: grid;
+  grid-template-columns: 1.08fr 1fr;
+  margin-top: 0;
+  padding: 1.35rem 1.5rem;
+}
+
+.laguna-search .search-half { min-width: 0; padding: 0 1.7rem; }
+.laguna-search .search-half:first-child { border-right: 1px solid var(--lg-rule); }
+
+.laguna-search h2 {
+  margin: 0;
+  color: var(--lg-accent);
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.laguna-search .controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.05rem;
+}
+
+.laguna-search .table-field { flex: 1 1 auto; min-width: 270px; }
+
+.laguna-search .control-label {
+  display: block;
+  margin-bottom: 0.55rem;
+  font-size: 0.93rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.laguna-search .number-field .control-label { text-align: center; }
+
+.laguna-search .table-buttons { display: flex; gap: 0.5rem; }
+
+.laguna-search .table-buttons button {
+  width: 74px;
+  height: 52px;
+  border: 1px solid var(--lg-rule-strong);
+  border-radius: 4px;
+  background: var(--lg-sunk);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 150ms ease;
+}
+.laguna-search .table-buttons button:hover { border-color: var(--lg-accent); }
+.laguna-search .table-buttons button.selected {
+  border-color: var(--lg-accent-strong);
+  background: var(--lg-accent);
+  color: var(--lg-on-accent);
+  box-shadow: 0 2px 3px var(--lg-shadow);
+}
+
+.laguna-search .clearable { position: relative; display: flex; align-items: center; }
+
+.laguna-search .number-field input {
+  width: 98px;
+  height: 52px;
+  border: 1px solid var(--lg-rule-strong);
+  border-radius: 4px;
+  padding: 0 2.1rem 0 0.6rem;
+  background: var(--lg-sunk);
+  text-align: center;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+}
+
+.laguna-search .name-field {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  border: 1px solid var(--lg-rule-strong);
+  border-radius: 4px;
+  background: var(--lg-sunk);
+}
+
+.laguna-search .name-field input {
+  width: 100%;
+  min-width: 0;
+  height: 50px;
+  border: 0;
+  padding: 0 0.6rem 0 1.1rem;
+  background: transparent;
+  font-size: 1.05rem;
+}
+
+.laguna-search .number-field input:focus,
+.laguna-search .name-field input:focus { outline: 0; }
+
+.laguna-search .number-field input:focus-visible,
+.laguna-search .name-field:focus-within {
+  border-color: var(--lg-accent);
+  box-shadow: 0 0 0 2px var(--lg-accent-wash);
+}
+
+.laguna-search .search-icon {
+  position: relative;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-left: 0.9rem;
+  border: 3px solid var(--lg-muted);
+  border-radius: 50%;
+}
+.laguna-search .search-icon::after {
+  content: "";
+  position: absolute;
+  right: -7px;
+  bottom: -4px;
+  width: 9px;
+  height: 3px;
+  background: var(--lg-muted);
+  transform: rotate(45deg);
+  transform-origin: left center;
+}
+
+.laguna-search .clear-x {
+  position: absolute;
+  right: 4px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--lg-muted);
+  font-family: system-ui, sans-serif;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.laguna-search .clear-x:hover { background: var(--lg-accent-wash); color: var(--lg-accent); }
+.laguna-search .clearable input:placeholder-shown + .clear-x { display: none; }
+
+.laguna-search .note {
+  margin: 1rem 0 0;
+  color: var(--lg-muted);
+  font-size: 0.82rem;
+}
+/* Which tables are selected. Ink, not accent: --accent means interactive
+   everywhere else here, and this is a status the reader cannot press. */
+.laguna-search .hint { color: var(--lg-ink); }
+
+/* ------------------------------------------------------------ section head */
+
+.laguna-search .card.people { padding: 1.3rem 1.3rem 1.2rem; }
+
+.laguna-search .section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0 0.5rem 0.9rem;
+}
+
+.laguna-search .section-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.laguna-search .count { margin: 0; color: var(--lg-muted); font-size: 0.84rem; }
+
+.laguna-search .sub {
+  max-width: 48ch;
+  margin: 0.35rem 0 0;
+  color: var(--lg-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.laguna-search .link-button {
+  min-height: var(--lg-tap);
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-bottom: 1px solid var(--lg-rule-strong);
+  padding: 0 0 2px;
+  background: transparent;
+  color: var(--lg-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.laguna-search .link-button:hover { color: var(--lg-accent); border-color: var(--lg-accent); }
+
+/* --------------------------------------------------------------- the grid */
+
+/*
+ * One grid definition, shared by the filter header and every row, so a column
+ * cannot drift between the two. The reference declared it twice.
+ */
+.laguna-search .head,
+.laguna-search .row-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, auto) 44px;
+  align-items: center;
+}
+
+.laguna-search .grid {
+  min-width: 0;
+  display: grid;
+  /* The Sex column is 124px because that is what its own control needs: the
+     select must show "Not recorded" plus the native chevron without
+     clipping. Narrow the column and the control overflows into Birth. */
+  grid-template-columns:
+    minmax(180px, 260px) 124px 84px 84px minmax(92px, 116px);
+  align-items: center;
+  column-gap: 0.75rem;
+}
+
+/* The header follows the reader down the page: with one list there is nothing
+   else holding the column names on screen, and the rows run to 634. */
+.laguna-search .head {
+  position: sticky;
+  top: var(--lg-sticky-top);
+  z-index: 5;
+  align-items: end;
+  margin-bottom: 0.8rem;
+  border: 1px solid var(--lg-rule);
+  border-radius: var(--lg-radius);
+  padding: 0.7rem 0;
+  background: var(--lg-sunk);
+}
+
+/* Bottom-aligned, not centred: the controls are the row the eye reads across,
+   so they sit on one line whatever height the heading above each one happens
+   to be. `.grid` itself is shared with every row and is left alone. */
+.laguna-search .head-grid { padding: 0 1.1rem; align-items: end; }
+
+.laguna-search .field {
+  min-width: 0;
+  display: grid;
+  gap: var(--lg-head-gap);
+}
+
+/* Name and Table · # head a column with no filter control under it. Bottom
+   alignment would drop them onto the control line, a row below every other
+   heading. Name is inside the grid, so `start` puts it on the heading line;
+   Table · # is a sibling of the grid and aligns to the grid's box rather than
+   its content, so it is lifted off the control line by the control instead. */
+.laguna-search .field-name { align-self: start; }
+.laguna-search .head-ref {
+  align-self: end;
+  margin-bottom: calc(var(--lg-head-control) + var(--lg-head-gap));
+}
+
+/* Heads the chip column on the right of each row, and sorts by it. It does not
+   choose a table — that is the search bar, the only copy of that state. */
+.laguna-search .head-ref {
+  width: 100%;
+  justify-content: flex-end;
+  padding-right: 0.25rem;
+  text-align: right;
+}
+
+/*
+ * A column heading is either a plain label or a sort button, and the two have
+ * to occupy the same height or the controls below them stop lining up: the
+ * fields are centred in the header row, so a short label lifts its own control
+ * by half the difference. Sex and Clan drifted 3.3px above Birth and Death.
+ * Keep this in step with `.sort`'s height.
+ */
+.laguna-search .field-label {
+  min-height: 22px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--lg-muted);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.laguna-search .head input,
+.laguna-search .head select {
+  width: 100%;
+  min-width: 0;
+  height: var(--lg-head-control);
+  border: 1px solid var(--lg-rule-strong);
+  border-radius: 4px;
+  padding: 0 0.4rem;
+  background: var(--lg-panel);
+  color: var(--lg-ink);
+  font-size: 0.78rem;
+}
+.laguna-search .head input:focus-visible,
+.laguna-search .head select:focus-visible {
+  border-color: var(--lg-accent);
+  box-shadow: 0 0 0 2px var(--lg-accent-wash);
+}
+
+/* Wide enough for "Not recorded" plus the native chevron, so no option label
+   is ever clipped — the reference's SEX control was sized to its own summary
+   and cut its longest option. */
+.laguna-search .field-sex select { min-width: 124px; }
+
+/* -------------------------------------------------------------- sort heads */
+
+.laguna-search .sort {
+  min-width: 0;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--lg-muted);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.laguna-search .sort:hover,
+.laguna-search .sort.active { color: var(--lg-ink); }
+
+.laguna-search .sort-icon { display: grid; gap: 2px; }
+
+.laguna-search .tri {
+  width: 0;
+  height: 0;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  opacity: 0.38;
+}
+.laguna-search .tri.up { border-bottom: 6px solid currentColor; }
+.laguna-search .tri.down { border-top: 6px solid currentColor; }
+.laguna-search .tri.on { color: var(--lg-accent); opacity: 1; }
+
+/* --------------------------------------------------------- checkbox filter */
+
+.laguna-search .cbf { position: relative; width: fit-content; max-width: 100%; }
+
+.laguna-search .cbf summary {
+  min-width: 96px;
+  max-width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 1px solid var(--lg-rule-strong);
+  border-radius: 4px;
+  padding: 0 0.5rem;
+  background: var(--lg-panel);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  cursor: pointer;
+  list-style: none;
+}
+.laguna-search .cbf summary::-webkit-details-marker { display: none; }
+
+.laguna-search .cbf-text { overflow: hidden; text-overflow: ellipsis; }
+
+.laguna-search .cbf summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  margin-top: -3px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg);
+}
+.laguna-search .cbf[open] summary::after { margin-top: 3px; transform: rotate(225deg); }
+
+.laguna-search .cbf[open] summary,
+.laguna-search .cbf-on summary { border-color: var(--lg-accent); }
+.laguna-search .cbf-on summary { color: var(--lg-accent); }
+
+/* Clan is the last column in the header, so the menu hangs from its right
+   edge — anchored left it would open past the card on a narrow window. */
+.laguna-search .cbf-menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  right: 0;
+  width: max-content;
+  min-width: 100%;
+  max-width: min(300px, calc(100vw - 2rem));
+  max-height: 290px;
+  overflow-y: auto;
+  border: 1px solid var(--lg-rule-strong);
+  border-radius: 5px;
+  padding: 6px;
+  background: var(--lg-panel);
+  box-shadow: 0 8px 22px var(--lg-shadow);
+}
+
+.laguna-search .cbf-group {
+  margin: 6px 8px 2px;
+  color: var(--lg-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.laguna-search .cbf-group:empty {
+  height: 1px;
+  margin: 6px 8px;
+  padding: 0;
+  background: var(--lg-rule);
+}
+
+.laguna-search .cbf-option {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 0.84rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.laguna-search .cbf-option:hover { background: var(--lg-accent-wash); }
+.laguna-search .cbf-option input {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--lg-accent);
+}
+
+/* -------------------------------------------------------------------- rows */
+
+/*
+ * One table, not 634 cards. The rows sit flush inside a single ruled box and
+ * are separated by a hairline — no gap, no per-row border, no per-row radius.
+ * A register is read down a column, and a gap between every person breaks the
+ * column into cards that have to be re-found one at a time.
+ */
+.laguna-search .list {
+  display: grid;
+  overflow: hidden;                 /* clips the first and last row's corners */
+  border: 1px solid var(--lg-rule);
+  border-radius: var(--lg-radius);
+  background: var(--lg-sunk);
+}
+
+.laguna-search .row { background: transparent; }
+.laguna-search .row + .row { border-top: 1px solid var(--lg-rule); }
+.laguna-search .row.open { background: var(--lg-panel); }
+
+.laguna-search .row-summary {
+  width: 100%;
+  min-height: 56px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+.laguna-search .row-summary:hover { background: var(--lg-accent-wash); }
+.laguna-search .row-summary:focus-visible { outline-offset: -3px; }
+
+/* The row's own inset. Scoped to the row: unscoped it also landed on
+   `.head-grid` — later in the file and at equal specificity, so it quietly
+   beat that rule's `padding: 0` and padded the filter header by 8.8px top and
+   bottom, which is what knocked `Table · #` off the heading line. */
+.laguna-search .row-summary .grid { padding: 0.55rem 1.1rem; }
+
+.laguna-search .cell { min-width: 0; color: var(--lg-muted); font-size: 0.98rem; }
+
+/* NO `overflow-wrap` here, and that is a rule rather than an omission.
+   This cell used to carry `anywhere`, which let the browser divide a name at
+   any character — `Dzaăityʼid˙yuwits` / `ʼă`, a line beginning with a mark
+   that belongs to the vowel above it. A name is a transcription, so where it
+   may be divided is an editorial question. It is answered in `build.py`,
+   published as `<wbr>` seams, and was ratified 2026-08-08 (ANALYSIS.md 4a).
+
+   Putting `overflow-wrap` back — at any value — hands that decision to the
+   browser again and the seams stop mattering. The two are a pair. No
+   fallback is needed to keep a name inside this 210px column: the longest run
+   between seams is 9 characters, measured across all 448 names. */
+.laguna-search .cell.name {
+  color: var(--lg-ink);
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.12;
+}
+.laguna-search .alt { color: var(--lg-muted); font-weight: 400; font-size: 1rem; }
+.laguna-search .unnamed { color: var(--lg-muted); font-weight: 400; }
+
+/* The mark that says another row holds this name. It sits ON the closed row
+   because that is where the apparent duplicate is met — an explanation behind
+   a disclosure arrives after the reader has already concluded the tool
+   repeats itself.
+
+   `white-space: nowrap` matters: the mark and the row it points at are one
+   token, and a wrap between "≠" and "II · 144" reads as two separate things.
+   It kept the mark whole when the name cell was `overflow-wrap: anywhere`;
+   that declaration is gone (see above), but the `nowrap` stays — the mark is
+   still an inline-flex box holding a space and a `·`, either of which is an
+   ordinary break opportunity that no seam rule reaches.
+
+   The address stays at every width. Hiding it on a phone was tried and
+   reverted: it leaves a bare "≠" whose only explanation is a `title`, and a
+   touch device has no hover to reveal one. The name cell has room for it at
+   375px, and if a longer name ever crowds it the mark wraps to the next line
+   rather than overflowing. */
+.laguna-search .namesake-mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.22rem;
+  margin-left: 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  padding: 0 0.32rem;
+  color: var(--lg-muted);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  vertical-align: 0.28em;      /* rides the name's cap height, not its baseline */
+  cursor: help;
+}
+.laguna-search .namesake-mark.is-open { color: var(--lg-sic); }
+.laguna-search .namesake-who { font-weight: 400; letter-spacing: 0.02em; }
+
+/* A calculated year is set apart from a recorded one — it is arithmetic on a
+   recorded age, not a reading of the plate. */
+.laguna-search .cell.birth.is-est { font-style: italic; opacity: 0.85; }
+
+.laguna-search .ref {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  padding-right: 0.25rem;
+}
+
+.laguna-search .ref-text {
+  color: var(--lg-accent);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.laguna-search .ref-text b { font-weight: 400; }
+
+/* Several chips where a person is drawn on several plates. */
+.laguna-search .ref-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.5rem;
+}
+.laguna-search .ref.multi .ref-text::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 0.72em;
+  margin-left: 0.5rem;
+  background: var(--lg-rule-strong);
+  vertical-align: -0.05em;
+}
+.laguna-search .ref.multi .ref-text:last-child::after { display: none; }
+
+.laguna-search .chev { display: grid; place-items: center; height: 54px; }
+.laguna-search .chev > span {
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin-bottom: 5px;
+  border-right: 2px solid var(--lg-accent);
+  border-bottom: 2px solid var(--lg-accent);
+  transform: rotate(45deg);
+  transition: 180ms ease;
+}
+.laguna-search .row.open .chev > span {
+  margin-bottom: -3px;
+  transform: rotate(225deg);
+}
+
+/* ------------------------------------------------------------------ detail */
+
+.laguna-search .detail {
+  border-top: 1px solid var(--lg-rule);
+  padding: 0.9rem 1.4rem 1.25rem;
+}
+
+.laguna-search .detail-head {
+  margin: 0 0 0.8rem;
+  width: max-content;
+  border-bottom: 1px solid var(--lg-accent);
+  padding: 0 3px 4px;
+  color: var(--lg-accent);
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* One column per plate the person is drawn on. They are not merged: each
+   plate's own reading stands, and they differ — different spellings of the
+   name, sometimes a different age. */
+.laguna-search .detail-columns.multi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1.1rem;
+}
+.laguna-search .detail-columns.multi .detail-col + .detail-col {
+  border-left: 1px solid var(--lg-rule);
+  padding-left: 1.1rem;
+}
+/* A plate column is about 300px, so the fields stack in two columns here
+   whatever the viewport — the page-wide four-column form leaves the value
+   track around 55px, narrow enough to break a name mid-glyph. */
+.laguna-search .detail-columns.multi .detail-fields {
+  grid-template-columns: 78px minmax(0, 1fr);
+}
+
+/* The evidence for joining the entries. Merging is a claim, so it is shown. */
+.laguna-search .joined {
+  margin-top: 1rem;
+  border-top: 1px solid var(--lg-rule);
+  padding-top: 0.8rem;
+  color: var(--lg-muted);
+  font-size: 0.82rem;
+}
+.laguna-search .joined ul { margin: 0.35rem 0 0; padding-left: 1.1rem; }
+.laguna-search .joined li { margin-bottom: 0.25rem; }
+.laguna-search .joined q { color: var(--lg-ink); font-style: italic; }
+.laguna-search .shifted { color: var(--lg-sic); }
+.laguna-search .evidence { opacity: 0.85; }
+
+/* An identification made here rather than by the edition. It carries the same
+   ringed marker the misprints use, because it is the same kind of statement:
+   this is the tool speaking, not the plate. */
+.laguna-search .inferred-mark {
+  display: inline-block;
+  margin-right: 0.35rem;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  padding: 0 4px;
+  color: var(--lg-sic);
+  font-size: 0.62rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.laguna-search .badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  margin-bottom: 0.8rem;
+  border: 1px solid var(--lg-accent);
+  border-radius: 4px;
+  padding: 0 0.85rem;
+  background: var(--lg-accent-wash);
+  color: var(--lg-accent);
+  line-height: 1;
+  transition: 150ms ease;
+}
+.laguna-search .badge:hover { background: var(--lg-accent); color: var(--lg-on-accent); }
+.laguna-search .ext { margin-left: 0.45rem; font-size: 0.82em; font-weight: 700; }
+
+.laguna-search .detail-fields {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) 88px minmax(0, 1fr);
+  gap: 0.45rem 0.9rem;
+  margin: 0 0 0.9rem;
+}
+.laguna-search .detail-fields dt { color: var(--lg-muted); }
+.laguna-search .detail-fields dd {
+  min-width: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  /* `anywhere` also shrinks the intrinsic width to one character, which in a
+     narrow multi-plate column sets a phonetic name one glyph per line.
+     `break-word` breaks only when a word genuinely cannot fit. */
+  overflow-wrap: break-word;
+}
+
+.laguna-search .copy {
+  flex: 0 0 auto;
+  min-height: 28px;
+  border: 1px solid var(--lg-accent);
+  border-radius: 3px;
+  padding: 0 0.5rem;
+  background: var(--lg-accent-wash);
+  color: var(--lg-accent);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.laguna-search .copy:hover { background: var(--lg-accent); color: var(--lg-on-accent); }
+
+.laguna-search .sic,
+.laguna-search .est {
+  flex: 0 0 auto;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  padding: 0 4px;
+  font-size: 0.62rem;
+  font-style: normal;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: help;
+}
+.laguna-search .sic { color: var(--lg-sic); }
+.laguna-search .est { color: var(--lg-muted); }
+
+.laguna-search .detail-note {
+  margin: 0 0 0.6rem;
+  color: var(--lg-ink);
+  font-size: 0.92rem;
+}
+.laguna-search .note-label {
+  display: block;
+  color: var(--lg-muted);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.laguna-search .detail-note q { font-style: italic; }
+.laguna-search .twin-link { color: var(--lg-accent); text-decoration: underline; }
+
+/* A pair the plates settle reads as settled; an open one does not. The two
+   must not look alike — merging on a shared name is what this tool refuses to
+   do, and letting an unsettled pair borrow the settled one's calm is the same
+   error in a quieter voice. */
+.laguna-search .namesake-note { border-left: 2px solid var(--lg-rule); padding-left: 0.7rem; }
+.laguna-search .namesake-note.is-open { border-left-color: var(--lg-sic); }
+
+.laguna-search .detail-source {
+  margin: 0.9rem 0 0;
+  color: var(--lg-muted);
+  font-size: 0.8rem;
+}
+.laguna-search .detail-source a { color: var(--lg-accent); text-decoration: underline; }
+
+/* ----------------------------------------------------------- relationships */
+
+.laguna-search .rel-list {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+  border-top: 1px solid var(--lg-rule);
+  padding-top: 0.85rem;
+}
+
+.laguna-search .rel-row {
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  gap: 0.45rem;
+  align-items: start;
+}
+
+.laguna-search .rel-label {
+  padding-top: 5px;
+  color: var(--lg-muted);
+  line-height: 1.2;
+}
+
+.laguna-search .rel-links { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+.laguna-search .rel-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  min-width: 0;
+  border: 1px solid var(--lg-rule-strong);
+  border-radius: 3px;
+  padding: 4px 8px;
+  background: var(--lg-sunk);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  transition: 150ms ease;
+}
+.laguna-search .rel-link:hover {
+  border-color: var(--lg-accent);
+  background: var(--lg-accent);
+  color: var(--lg-on-accent);
+}
+.laguna-search .rel-number { color: var(--lg-accent); font-size: 0.82em; font-weight: 700; }
+.laguna-search .rel-link:hover .rel-number { color: inherit; }
+
+.laguna-search .dagger {
+  margin-left: 3px;
+  color: var(--lg-sic);
+  font-size: 0.85em;
+  text-decoration: none;
+}
+
+/* ------------------------------------------------------------------- empty */
+
+.laguna-search .empty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  border: 1px solid var(--lg-rule);
+  border-radius: var(--lg-radius);
+  padding: 1.2rem 1.4rem;
+  color: var(--lg-muted);
+}
+
+.laguna-search .sentinel { height: 1px; }
+
+/* ------------------------------------------------------------------ footer */
+
+.laguna-search .foot {
+  margin-top: 1.6rem;
+  padding: 1.2rem 0.5rem 0;
+  border-top: 1px solid var(--lg-rule);
+  color: var(--lg-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+.laguna-search .foot p { margin: 0 0 0.5rem; }
+.laguna-search .foot cite { font-style: italic; }
+.laguna-search .foot-note {
+  max-width: 62ch;
+  margin-inline: auto;
+  font-size: 0.78rem;
+}
+
+/* ------------------------------------------------------------- narrow: lap */
+
+@media (max-width: 1120px) {
+  .laguna-search .card.search { grid-template-columns: 1fr; gap: 1.4rem; }
+  .laguna-search .search-half:first-child {
+    border-right: 0;
+    border-bottom: 1px solid var(--lg-rule);
+    padding-bottom: 1.4rem;
+  }
+  .laguna-search .head,
+  .laguna-search .row-summary {
+    grid-template-columns: minmax(0, 1fr) minmax(128px, auto) 40px;
+  }
+  .laguna-search .grid {
+    grid-template-columns: minmax(140px, 210px) 124px 74px 74px minmax(80px, 100px);
+    column-gap: 0.55rem;
+  }
+  .laguna-search .head-grid,
+  .laguna-search .grid { padding-inline: 0.85rem; }
+  .laguna-search .detail-fields { grid-template-columns: 88px minmax(0, 1fr); }
+}
+
+/* ---------------------------------------------------------- narrow: tablet */
+
+@media (max-width: 860px) {
+  .laguna-search { width: min(100% - 1.4rem, 1296px); }
+  .laguna-search .card.search { padding: 1.2rem 1rem; }
+  .laguna-search .search-half { padding-inline: 0; }
+  .laguna-search .controls { flex-wrap: wrap; }
+  .laguna-search .table-field { min-width: 100%; }
+  .laguna-search .table-buttons button { flex: 1; width: auto; }
+  .laguna-search .number-field { flex: 1; }
+  .laguna-search .number-field input { width: 100%; }
+  .laguna-search .name-field { flex-basis: 100%; }
+
+  /* The header stops pretending to be columns and becomes a filter panel;
+     the row keeps its own compact two-line layout below. A panel this tall
+     must NOT stick — pinned to a phone viewport it would cover the rows it
+     filters. Sticky is for the one-line column header only. */
+  .laguna-search .head {
+    position: static;
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+    padding: 0.7rem;
+  }
+  .laguna-search .head-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem 0.7rem;
+    padding: 0;
+  }
+  .laguna-search .field-name { grid-column: 1 / -1; }
+  .laguna-search .head-ref,
+  .laguna-search .head-spacer { display: none; }
+  .laguna-search .head input,
+  .laguna-search .head select,
+  .laguna-search .cbf summary { height: var(--lg-tap); font-size: 0.95rem; }
+  .laguna-search .cbf-option { min-height: var(--lg-tap); font-size: 0.95rem; }
+
+  /* Every control reaches the touch floor. Each of these ships a fixed or
+     smaller height for the mouse layout, so `height` has to be released
+     before `min-height` can do anything. */
+  .laguna-search .sort,
+  .laguna-search .clear-x,
+  .laguna-search .copy,
+  .laguna-search .theme { height: auto; min-height: var(--lg-tap); }
+  .laguna-search .clear-x { width: var(--lg-tap); }
+
+  /* `.sort` grows to the 44px tap floor here and a plain label does not, so
+     matching their heights would pad the panel out by ~58px at 375px — and
+     this panel is already tall enough that it cannot be sticky. Sit the text
+     of both on the bottom edge instead: the boxes still differ, the printed
+     line does not, and the panel keeps its height. */
+  .laguna-search .field-label,
+  .laguna-search .sort { align-items: end; }
+  /* And with the text bottom-aligned, the heading no longer needs to be held
+     open to `.sort`'s height — that is the desktop rule, and here it only
+     makes the panel taller. */
+  .laguna-search .field-label { min-height: 0; }
+
+  /* Below this width the header stops being columns while the row keeps its
+     own compact layout, so the two must be addressed separately — they share
+     `.grid` above precisely because they DO align at wider widths. */
+  .laguna-search .row-summary { grid-template-columns: 1fr auto; }
+  .laguna-search .row-summary .grid {
+    grid-column: 1 / -1;
+    grid-template-columns: 46px minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.3rem 0.8rem;
+    padding: 0.85rem 0.95rem 0.5rem;
+  }
+  .laguna-search .cell.name { grid-column: 1 / -1; font-size: 1.25rem; }
+  .laguna-search .cell.sex { grid-column: 1; grid-row: 2; }
+  .laguna-search .cell.birth { grid-column: 2; grid-row: 2; }
+  .laguna-search .cell.death { grid-column: 3; grid-row: 2; }
+  .laguna-search .cell.clan { grid-column: 2 / -1; grid-row: 3; }
+  .laguna-search .cell.birth:not(:empty)::before { content: "Birth "; opacity: 0.7; }
+  .laguna-search .cell.death:not(:empty)::before { content: "Death "; opacity: 0.7; }
+  .laguna-search .ref {
+    grid-column: 1 / 2;
+    justify-content: flex-start;
+    padding: 0 0 0.8rem 0.95rem;
+  }
+  .laguna-search .chev { min-width: var(--lg-tap); align-self: end; }
+
+  .laguna-search .rel-row { grid-template-columns: 1fr; gap: 0.3rem; }
+  .laguna-search .rel-label { padding-top: 0; }
+  .laguna-search .rel-link { min-height: var(--lg-tap); align-items: center; }
+  .laguna-search .empty { align-items: flex-start; flex-direction: column; }
+  .laguna-search .section-head { align-items: flex-start; }
+  .laguna-search .section-actions { align-items: flex-start; flex-direction: column; gap: 0.3rem; }
+}
+
+/* ---------------------------------------------------------- narrow: phone */
+
+@media (max-width: 480px) {
+  .laguna-search { width: calc(100% - 0.9rem); padding-top: 0.9rem; }
+  .laguna-search h1 { font-size: clamp(1.8rem, 11.5vw, 2.5rem); letter-spacing: 0.05em; }
+  .laguna-search .rule { width: min(82vw, 320px); margin-block: 1rem; }
+  .laguna-search .lede { font-size: 1rem; }
+  .laguna-search .card.people { padding: 1rem 0.7rem; }
+  .laguna-search .head-grid { grid-template-columns: 1fr; }
+  .laguna-search .row-summary .grid {
+    grid-template-columns: 42px minmax(0, 1fr) minmax(0, 1fr);
+    padding: 0.8rem 0.7rem 0.45rem;
+  }
+  /* Birth and Death are blank for most people at this width, so a clan held
+     in column 2 hangs indented under nothing. Give it the full row. */
+  .laguna-search .cell.clan { grid-column: 1 / -1; }
+  .laguna-search .cell.name { font-size: 1.15rem; }
+  .laguna-search .cell { font-size: 0.9rem; }
+  .laguna-search .detail { padding: 0.8rem 0.75rem 1rem; }
+  .laguna-search .detail-fields { grid-template-columns: 78px minmax(0, 1fr); }
+}
+
+/* ------------------------------------------------------------------- print */
+
+@media print {
+  .laguna-search .theme-bar,
+  .laguna-search .card.search,
+  .laguna-search .chev { display: none; }
+  /* The header is a control panel, not a caption: sticky is meaningless on
+     paper and the filters cannot be operated there. */
+  .laguna-search .head { display: none; }
+  .laguna-search .card { box-shadow: none; }
+  .laguna-search .row { break-inside: avoid; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .laguna-search *,
+  .laguna-search *::before,
+  .laguna-search *::after { animation: none !important; transition: none !important; }
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="module">
+import { mountSearch } from "./search.js";
+mountSearch(document.getElementById("app"), {
+  data: await (await fetch("./search-index.json")).json(),
+});
+</script>
+</body>
+</html>
