@@ -279,6 +279,18 @@ macOS substituted silently.
 **Preview:** `preview_start`, config name `site` — serves `docs/` on
 `http://localhost:4173`. Loop: edit `make_chart.py` → rerun `--public` → reload.
 
+**A blank screenshot means a zero-sized viewport, not a scroll bug.** The
+browser pane can come up reporting `innerWidth`/`innerHeight` of **0**, which
+captures nothing; because scrolling a zero-height viewport changes nothing
+either, it presents as "screenshots work at scroll 0 and nowhere else". Read
+`innerWidth` before believing anything you see, and fix it with `resize_window`
+at an **explicit** `1280x900` — the `desktop` preset alone did not restore it
+(2026-08-09, which is why the folded footer shipped measured but unseen).
+Screenshots capture at scroll 0 regardless, so to see something further down,
+translate it into view — `document.body.style.transform = 'translateY(-Npx)'` —
+rather than scrolling. That is an inspection-only DOM edit; it changes nothing
+in `docs/`, and a reload discards it.
+
 **Publish:** `/publish` — gated build, privacy check, push, live verification.
 
 **Finish a session:** `/wrap-session` — backfills `CHANGELOG.md`, rewrites

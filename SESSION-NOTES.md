@@ -4,75 +4,49 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-09**. **Nothing from this session is live.** The last
-commit on `main` is still `bc73e6d`; two commits sit on an unpushed branch.
+Last updated **2026-08-09**. **Everything is published.** `main` is `3dfa06b`
+plus this handoff; the live site matches `docs/` by SHA-256 on all seven pages.
 
-## State — read this before trusting anything else
+## State
 
-**Two commits are finished, verified and NOT published**, on branch
-`search-theme-storagekey`:
+PR #41 squash-merged as **`3dfa06b`** — one theme storage key, Search beside
+Theme, three folding apparatus sections. Branch deleted. Verified live: seven
+pages OK by hash, plus `search.js` and `search-index.json`; sitemap 5 `<loc>`
+against a build count of 7 (correct — `404.html` and the `noindex` search page
+are deliberately absent); `LAGUNA_THEME_KEY="lg-theme"` present in the deployed
+`/search/`; zero stale-identity strings on `/`.
 
-| | |
-|---|---|
-| `291e4dc` | the theme bridge retired for the widget's own `storageKey` |
-| `b9fa181` | Search moved beside Theme; Editorial notes / Provenance / Citation fold |
+`laguna-search` `9974d55` is on its remote — checked, not assumed. The two repos
+are in step and `vendor/search/SOURCE.md` names a fetchable commit.
 
-**And a third commit is unpushed in the OTHER repo** — `laguna-search`
-`9974d55`, which `vendor/search/SOURCE.md` names. The two are a pair: this
-branch vendors that commit's `dist/`. Pushing one without the other leaves the
-recorded provenance pointing at a commit nobody else can fetch.
+All four plates published, all 713 entries, no reading question open on any
+plate. Working tree clean; a `--public` rebuild leaves `docs/` byte-identical.
 
-Working tree clean, no open PRs, and a `--public` rebuild leaves `docs/`
-byte-identical to what is committed. All four plates published, all 713
-entries, no reading question open on any plate.
-
-## Start here in a new chat
-
-1. This file.
-2. `CHANGELOG.md`'s two newest 2026-08-09 entries — the detail for both commits.
-3. `CLAUDE.md` → *The search page is vendored, not generated here* (the theme
-   key), the masthead paragraph, and the footer apparatus paragraph. All three
-   were rewritten this session; the first two previously said the opposite.
-
-Preview: `preview_start`, config name `site`, serves `docs/` on
-`http://localhost:4173`.
-
-## The open thread
-
-**Decide whether to publish, and if so publish both repos together.**
-
-`/publish` for this branch. The `laguna-search` push is separate and manual —
-its remote is `PuebloGenealogy/laguna-search`, private.
-
-Two things settled during the work, so nobody re-checks them:
-
-- **Gate 8 is NOT due.** The test is a diff, not a memory: filtering all four
-  table pages' diff for `.reg`, `.reg-rel`, `.num`, `.xref` and `sic-ring`
-  gives **0**. The whole diff is 68 added / 5 removed lines per page, and the
-  removals are the moved Search link plus four headings that went inside a
-  `<summary>`. The index was rebuilt anyway with `--refresh` and came back
-  identical apart from `meta.generated`.
-- **The hand leak check is done.** `leak_report()` was run over
-  `docs/search/search.js` and `search-index.json` — the two files
-  `check_published_pages()` never opens, because it globs `*.html`. Both clean.
-  Redo it only on the next re-vendor.
-
-**One gap in this session's verification, and it is the only thing an eye would
-catch that a measurement did not.** Screenshots came back blank at any scroll
-position other than 0, so **the folded footer was never seen, only measured** —
-marker glyph, heading sizes against the two unfolded sections, cursor, grid
-columns, left edge against the register, fold heights. The masthead *was* seen,
-at 375px and 1280px. If the footer's appearance matters before it ships, open
-the preview and scroll to it.
+**No open thread.** The publish that had been carried for a session is done.
 
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
-| Publish the branch + push `laguna-search` | small | The open thread. Both, or neither |
 | Correct `laguna-search`'s README: eight name-match joins, not nine | tiny, other repo | Its `INFERRED_IDENTITIES` tuples are the authority; METHOD.md already says eight |
 | Link `/search/` from the landing page's contents list | small | Additive. The masthead reaches it from every page, so this is not a gap |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — that is what settled the second sort. `digitallibrary.amnh.org` 403s automated fetches |
+
+## Two things this session learned the hard way
+
+1. **Don't trust a handoff's publication claims — check the remotes.** The last
+   one said the branch was unpushed with no open PRs, and said `laguna-search`
+   was unpushed. All three were wrong: PR #41 was already open and both repos
+   were pushed. `/wrap-session` writes the notes *before* the push, so the notes
+   can describe a state one step behind the repo, and the `SessionStart`
+   staleness hook cannot catch it. `gh pr list --state open` and
+   `git rev-list --left-right --count origin/main...HEAD` settle it in one turn.
+2. **A blank screenshot is a zero-sized viewport, not a scroll bug.** The pane
+   reported `innerWidth`/`innerHeight` of 0. Now recorded in `CLAUDE.md` beside
+   *Preview*, with the workaround: explicit `resize_window` to `1280x900` (the
+   `desktop` preset alone did not fix it), and `translateY` to bring something
+   below the fold into a scroll-0 capture. That is what finally let the folded
+   footer be *seen* rather than only measured — and it looked right.
 
 ## Before touching the search page
 
@@ -83,10 +57,12 @@ the preview and scroll to it.
    reads the *text* of built pages, and the names arrive from JSON at runtime,
    so it sees an effectively empty page. Drop the injection and the page keeps
    working, silently substituting.
-3. **The leak sweep never opens `search.js` or `search-index.json`.** Re-check
-   by hand whenever `vendor/search/` is re-vendored.
-4. **`--refresh` is not optional** on the first `build.py` run after a publish,
-   or its gates pass against a cache of the site as it was before the push.
+3. **The leak sweep never opens `search.js` or `search-index.json`.** Both were
+   hand-checked clean on 2026-08-09 and have not changed since. Re-check by hand
+   on the next re-vendor.
+4. **`--refresh` is not optional** on the first `build.py` run over there after
+   a publish, or its gates pass against a cache of the site as it was. **One is
+   due now** if anything is run in that repo — this session pushed.
 
 ## Decisions already made — don't re-litigate
 

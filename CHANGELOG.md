@@ -3,7 +3,43 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-09 (latest) — Search moves right; three apparatus sections fold
+## 2026-08-09 (latest) — Published: one theme key, Search beside Theme, three folding sections
+
+The two entries below went live. PR #41 squash-merged as **`3dfa06b`**, tree
+identical to the branch head `a076a50`. All seven pages verified by SHA-256
+against `docs/`, plus `search.js` and `search-index.json`; sitemap 5 `<loc>`
+against a build count of 7, which is correct — `404.html` and the `noindex`
+search page are deliberately absent. `LAGUNA_THEME_KEY="lg-theme"` confirmed in
+the deployed `/search/`. Gate 8 not run: the register markup did not move.
+
+**Two things the handoff got wrong, both in the same direction — it understated
+what was already done.** It said the branch was unpushed and there were no open
+PRs; in fact the branch was pushed and **PR #41 was already open**, created
+after the notes were written. It also said `laguna-search` `9974d55` was
+unpushed; it was already on `PuebloGenealogy/laguna-search`, so the
+"push both or neither" constraint was satisfied before this session started and
+`vendor/search/SOURCE.md` never named an unfetchable commit. `/wrap-session`
+writes the notes before the push, so a handoff can describe the state one step
+behind the repo. **Check `gh pr list --state open` and the remote refs rather
+than trusting the handoff's publication claims** — the SessionStart staleness
+hook cannot catch this, since committing the notes alongside the work makes them
+look current.
+
+**The blank screenshots had a cause, and it was not the scroll position.** Last
+session recorded that the preview returned blank images at any scroll offset
+other than 0, which is why the folded footer was measured but never seen. The
+browser pane was reporting **`innerWidth`/`innerHeight` of 0** — a zero-sized
+viewport captures nothing, and scrolling a zero-height viewport is what made it
+look scroll-dependent. `resize_window` to an explicit `1280x900` fixes it; the
+`desktop` preset alone did not. Screenshots still only capture at scroll 0, so
+to see something further down the page, translate it into view —
+`document.body.style.transform = 'translateY(-Npx)'` — rather than scrolling.
+The footer was then seen: three folded sections with `+` markers, headings at
+the same 16px as the two open ones, all five on the same left edge in a
+532px + 532px grid, and an opened *Citation* rendering its block, its per-person
+link and the copy button with no duplicated heading.
+
+## 2026-08-09 — Search moves right; three apparatus sections fold
 
 Both at the user's request.
 
