@@ -187,38 +187,61 @@ where the plate prints the person twice -- 152 and 153 differ between their two
 occurrences, which is recorded in their plate_note and is a finding about the
 plate, not an unresolved reading.
 
-ONE GLYPH WAS OPEN, and it is now closed AS UNANSWERABLE FROM THIS SCAN.
-At 154, 156, 157, 228 and 242 the final mark reads as a TURNED comma (opening
-quote) rather than the U+02BC used everywhere else -- five instances, enough
-that it might be a distinct sort rather than print noise. ALL FIVE REMAIN
-U+02BC.
+THE SECOND SORT IS REAL. SETTLED 2026-08-08, FOR 156 AND 157 ONLY.
+At 154, 156, 157, 228 and 242 a mark reads as a reversed comma rather than the
+U+02BC used everywhere else. The plate scan could not resolve it -- see the
+closed record below -- but the user PHOTOGRAPHED lines 156-159 and the
+photograph decides it. 156 and 157 now carry U+02BD, MODIFIER LETTER REVERSED
+COMMA. 154, 228 AND 242 REMAIN U+02BC, unphotographed and therefore unverified.
 
-The 20x test this paragraph used to ask for WAS RUN, 2026-07-31, on 157
-(`Dziotyʼ`, questioned) against 159 (`Kyiwisdyuwitsʼa`, a known U+02BC two
-lines below it in the same block of type) -- native crops at x 2452/2524,
-y 3460/3509, magnified 20x. THE RESULT IS A NEGATIVE ONE AND IT CLOSES THE
-QUESTION RATHER THAN ANSWERING IT:
+Note the earlier description of 156 was WRONG about position: its odd mark is
+the FIRST one, after the P, not a final one. Its other three marks are ordinary
+U+02BC. So the name is `Pʽĕʼnitsʼaʼyo`, and 157 is `Dziotyʽ`.
 
-  A mark on this plate is about TEN PIXELS of ink. At 20x the questioned mark
-  and the known U+02BC are the SAME AMORPHOUS BLOB -- there is no letterform
-  left to compare. The apparent difference between them, which is quite
-  convincing at 6x-8x, is the UPSCALER INVENTING AN EDGE, not ink on paper.
-  Magnifying further returns scanner noise.
+HOW IT WAS DECIDED, so a later session need not re-derive it. Each mark was
+flood-filled at NATIVE resolution -- no upscaling enters the measurement, which
+is what invalidated the earlier attempt -- and reduced to three numbers: the
+mark's height in rows, the horizontal centroid of its bottom third minus that of
+its top third, and its ink mass top third / bottom third.
 
-So the difference cannot be confirmed OR denied from sources/parsons-1923-
-table-3.jpg, at any magnification. This is a property of the scan, not of the
-reading: 3770 x 5503 is a ninth of Table 1's pixel count, which is why the same
-test is decidable there and not here.
+  156 after P   50 rows   drift +3.0 px RIGHT   ink 339 / 212   questioned
+  157 final     54 rows   drift +5.6 px RIGHT   ink 433 / 317   questioned
+  156 after e   77 rows   drift -21.3 px LEFT   ink 512 / 220   known U+02BC
+  156 after s   70 rows   drift -7.9 px LEFT    ink 582 / 195   known U+02BC
+  156 after a   78 rows   drift -21.5 px LEFT   ink 564 / 291   known U+02BC
+  159 in witsʼa 69 rows   drift -9.0 px LEFT    ink 523 / 179   the control
 
-DO NOT RE-CROP THIS. The five stay U+02BC, and the reason is now "checked, and
-this scan cannot resolve it", not "not yet checked". The only thing that would
-settle it is a HIGHER-RESOLUTION SCAN of Table 3 -- the AMNH Digital Library
-holds the original, handle 2246/158. If one is ever obtained, 154, 156, 157,
-228 and 242 are the five to look at, and 159 is the control.
+Three findings, and the third is what makes it certain rather than probable:
 
-Not done: 154, 228 and 242 were never individually magnified. That is
-deliberate and costs nothing -- the limit demonstrated on 157 is a property of
-the scan and applies to every mark on the plate equally.
+  1. Every known U+02BC sweeps its tail down-LEFT; both questioned marks sweep
+     down-RIGHT. No exceptions either way.
+  2. BOTH sorts are top-heavy, so the questioned mark is not the apostrophe
+     rotated 180 degrees -- it is the apostrophe MIRRORED. That is what picks
+     U+02BD over U+02BB: U+02BB and U+2018 are bulb-at-BOTTOM (measured off the
+     Times outlines as mass 1488 top / 4863 bottom), which top-heaviness rules
+     out.
+  3. The questioned sort is physically SMALLER -- 50 and 54 rows against 69-78.
+     A different piece of type, not the same sort worn or over-inked.
+
+And the cleanest evidence needs no control from another line at all: 156
+contains BOTH sorts inside one word, mark 1 against marks 2-4.
+
+The positions also read as Boas-school notation, which corroborates without
+being evidence on its own: `Pʽ` is an aspirated stop, `Dziotyʽ` a word-final
+aspirated stop, and the U+02BC marks are glottalisation.
+
+CLOSED RECORD -- why the SCAN cannot do this, kept so nobody re-crops it.
+The 20x test was run 2026-07-31 on 157 against 159, native crops at x 2452/2524,
+y 3460/3509. A mark on the scan is about TEN PIXELS of ink; at 20x the
+questioned mark and the known U+02BC are the same amorphous blob, and the
+difference that looks convincing at 6x-8x is the upscaler inventing an edge.
+That remains true. sources/parsons-1923-table-3.jpg is 3770 x 5503, a ninth of
+Table 1's pixel count. DO NOT RE-CROP IT -- what settled this was a new
+photograph, not a bigger magnification of the old one.
+
+STILL OPEN: 154, 228 and 242, which the photograph does not cover. A photograph
+of those three lines, read the same way, would settle them; until then they stay
+U+02BC. 159 is the control to shoot alongside them.
 
 CROSS-REFERENCES -- AUDITED 2026-07-31
 --------------------------------------
@@ -461,8 +484,8 @@ _P += [
     (155, 5, "",  "Yoʼsiro",               "", "",   "Chaparral Cock", "d. 1914", "",
      "For first husband and descendants, see Gen. | II, 126, 158, 160 | For third husband and descendant, see Gen. | I, 8, 90",
      "no sex printed; the cross-reference is set over four lines, split here at the plate's own breaks"),
-    (156, 5, "M", "Pʼĕʼnitsʼaʼyo",         "", "",   "Lizard",         "",        "", "", ""),
-    (157, 5, "M", "Dziotyʼ",               "", "",   "Lizard",         "",        "", "", ""),
+    (156, 5, "M", "Pʽĕʼnitsʼaʼyo",         "", "",   "Lizard",         "",        "", "", ""),
+    (157, 5, "M", "Dziotyʽ",               "", "",   "Lizard",         "",        "", "", ""),
     (158, 5, "M", "Góa˙ʼtyʼiăi",           "", "",   "Lizard",         "",        "", "", ""),
     (159, 5, "F", "Kyiwisdyuwitsʼa",       "", "",   "Lizard",         "d. at 45","", "", ""),
     (160, 5, "M", "Oshare",                "", "",   "Parrot",         "",        "", "", ""),
@@ -811,7 +834,7 @@ ORTHOGRAPHY = [
 # in step — a character mapped here and not there is a name that cannot be
 # found by its own plate's fold().
 _FOLD = {
-    "ʼʼ": "", "ʼ": "", "˙": "", "˚": "", "˘": "",
+    "ʼʼ": "", "ʼ": "", "ʽ": "", "˙": "", "˚": "", "˘": "",
     "ă": "a", "Ă": "A", "ĕ": "e", "ĭ": "i", "Ĭ": "I",
     "ŏ": "o", "ŭ": "u", "ä": "a", "ñ": "n",
     "ô": "o", "ó": "o", "ɪ": "i",

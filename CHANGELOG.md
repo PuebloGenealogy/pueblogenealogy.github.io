@@ -3,7 +3,74 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-08 (latest) — the finding aid is re-verified against the deployed pages, and it turns out to check a cache by default
+## 2026-08-08 (latest) — the four `_FOLD` maps become one map, and de-indexing is struck rather than decided
+
+**Nothing on the site changed.** `778bfb9` is still the last commit that moved a
+built page. `--public` was run twice, before and after the edit: 6 pages,
+104 / 275 / 261 / 73 drawn, privacy gate clean, 10 JSON-LD blocks valid, exit 0,
+**`docs/` byte-identical both times** — same day as the publish, so not even the
+dates moved.
+
+### The maps
+
+The four transcription modules each carried their own `_FOLD` map and they had
+drifted apart. Only `transcription_ii.py` mapped `ŏ` and `Ĭ`, so two Genealogy
+III names kept a diacritic in a key whose docstring promises a **diacritic-free**
+one: `Dziŏ˙kwid˙yuʼă` (III·101) folded to `dziŏkwidyua`, and `Ĭya˙ʼsi` (III·16)
+to `ĭyasi`. All four modules now hold the **union** of the four maps, verified
+byte-identical by hashing the sorted items.
+
+**The measurement is the point of this entry**, because the edit touches four
+files that are otherwise immutable and a future session will want to know what
+was checked rather than re-checking it:
+
+- Across all **2,558** string fields in the four modules, **exactly those two
+  folds change**. Nothing else in any module folds differently.
+- The per-plate count of **colliding folded names is unchanged** — 2 / 4 / 2 / 1.
+  This was the thing worth knowing: `laguna-search`'s
+  `gate_namesakes_adjudicated` refuses to build on an unadjudicated pair, and
+  `CLAUDE.md` had flagged this exact edit as the likeliest way to trip it. It
+  did not. No fourth pair exists and that tool needs no attention.
+- All four `self_check()`s pass. The renderer never calls `fold()`, which is why
+  `docs/` does not move.
+
+**`ï` and `ˑ` (U+02D1) are deliberately excluded from the union.** Both survive
+`fold()` — U+02D1 is a modifier letter, so `isalnum()` keeps it — but both occur
+**only inside Genealogy II `plate_note` prose** at 142, 163 and 190, quoting
+readings that were *withdrawn*. Neither is in a name on any plate. Folding a
+character the edition does not use in a name would be scope creep on a rejected
+reading.
+
+The fix has a cost and it is now the documented one: **a character new to a name
+needs adding in four places, not one.** That is the cheaper failure — a drifted
+map is silent, whereas four maps that are supposed to be identical can be
+diffed — but only if it is written down, so `CLAUDE.md`'s *Two names cannot be
+found by their own plate's `fold()`* is rewritten as *The four `_FOLD` maps are
+one map — keep them identical*, and `/transcribe-plate` now tells a new plate to
+copy `_FOLD` verbatim instead of writing a fresh one. The `laguna-search`
+namesake note is corrected too: it had named this edit as a likely trigger, and
+now records that it was **checked** rather than assumed.
+
+### De-indexing
+
+**Struck by the user, not answered.** It had been the open thread for two
+sessions, waiting on a choice of level. The user's instruction was that it is
+unimportant, so `robots.txt`, `sitemap.xml`, the JSON-LD and the absence of
+`noindex` all stay exactly as the build emits them.
+
+Recorded in `CLAUDE.md` → *Exposure posture* as **closed**, replacing the "what
+is NOT yet decided" paragraph. The mechanism is kept as a footnote —
+**`Disallow:` in `robots.txt` does not de-index**, and `noindex` requires
+crawling to stay allowed — because the closure is easier to hold against a
+future session that reads "the user wants low exposure" and reaches for
+`robots.txt` as the obvious follow-on. It is not one: not promoting the edition
+and taking it out of Google are different requests, and only the first was made.
+
+Merged as PR #32 (`ffc519b`), squashed; branch deleted both sides and the stale
+remote-tracking ref pruned, so `main` is again the only branch. Tree identity
+confirmed — branch head `c1adfcb` and the squash both carry tree `075355f`.
+
+## 2026-08-08 — the finding aid is re-verified against the deployed pages, and it turns out to check a cache by default
 
 **Nothing on the site changed.** `778bfb9` is still the last commit that moved a
 built page. `--public` was re-run to check the tree against the build: 6 pages,

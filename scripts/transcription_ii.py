@@ -1355,7 +1355,7 @@ ORTHOGRAPHY = [
 # in step — a character mapped here and not there is a name that cannot be
 # found by its own plate's fold().
 _FOLD = {
-    "ʼʼ": "", "ʼ": "", "˙": "", "˚": "", "˘": "",
+    "ʼʼ": "", "ʼ": "", "ʽ": "", "˙": "", "˚": "", "˘": "",
     "ă": "a", "Ă": "A", "ĕ": "e", "ĭ": "i", "Ĭ": "I",
     "ŏ": "o", "ŭ": "u", "ä": "a", "ñ": "n",
     "ô": "o", "ó": "o", "ɪ": "i",
