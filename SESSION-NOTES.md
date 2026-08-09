@@ -27,42 +27,30 @@ photograph before reaching for an institutional scan.*
 
 **No reading question is open on any plate.**
 
+**The follow-through in `laguna-search` is also done.** It was taught U+02BD
+(`cb7b3f2`), a false claim in two of its docstrings was corrected (`6bd5dab`),
+and it **now has a remote** — `PuebloGenealogy/laguna-search`, **private**,
+all 15 commits pushed. It is verified against the live site with `--refresh`,
+not the cache. That closes the last durable risk this handoff carried: the tool
+no longer exists in one working copy under Google Drive.
+
 ---
 
 ## The open thread
 
-> **`laguna-search` will not build until it is told about U+02BD.** This is the
-> one concrete, unblocked piece of work, and it was created by this session's
-> publish.
+> **There isn't one.** The thread this file opened with — teaching
+> `laguna-search` about U+02BD — **is done**, and so is giving that repo a
+> remote. Everything remaining needs the user.
 >
-> Its **gate 3** (`gate_keys_are_folded` in `build.py`) **aborts the build**
-> with *"add it to the FOLD map in src/search.js"* the moment it re-fetches a
-> page containing `ʽ`. Verified by reading that code, not assumed. So the
-> failure is **loud**, which is the good case.
+> **Do not manufacture one.** The temptation on a cold start is to take the
+> largest row in the table below and begin; every row there either needs a
+> decision from the user or needs records nobody here has. **Ask which, or ask
+> what they want to do.**
 >
-> **Two edits, both in that repo, and the second is the one that would be
-> missed:**
->
-> 1. **`FOLD` in `src/search.js`** — add `"ʽ": ""`, exactly as this repo's four
->    `_FOLD` maps have it. `build.py` parses that literal out of `search.js`, so
->    the browser and the build cannot disagree; there is only one place to edit.
-> 2. **`NAME_MARKS` in `build.py`** (line ~381, currently `"ʼ˙˚˘" "ᶦᵘᵃᵉ"`) —
->    add `ʽ` there too. `'ʽ'.isalpha()` is `True`, so without it the name-break
->    walk-back reads the mark as a **consonant**. In these five names `ʽ` is
->    always word-final or followed by a vowel, so **no seam actually looks
->    affected** — but that is luck, not design, and gate 5 only fires on
->    single-word names of 14+ characters, so the general failure is silent.
->    All five names here are 5–13 characters.
->
-> **Then re-run it with `--refresh`.** The published pages moved, so the cached
-> copy is stale — and its checks read `cache/` by default, so a run without the
-> flag proves nothing. `python3 build.py --refresh`, then
-> `python3 tools/validate.py`.
->
-> **Expect the namesake gate to stay at three pairs.** Folding here did not
-> change: 0 of 713 folded names moved and the colliding-fold counts held at
-> 2 / 4 / 2 / 1. That was measured both times. But that tool folds
-> *independently*, so confirm rather than assume.
+> If pressed for the item with the most at stake, it is **confirming the
+> 83 / 84 attribution on Genealogy I** — published, citable, and the only open
+> item with a correctness edge. It needs the user and the records; it is not
+> startable alone.
 >
 > One constraint that outlives all of this: **`GOOGLE_SITE_VERIFICATION` must
 > not be blanked.** Search Console ownership is how a removal request is filed,
@@ -111,9 +99,10 @@ here works fine.
    only warning you get. Every gate then passes against **whatever the site
    looked like when the cache was written**, so a build run to check a deploy
    proves nothing without the flag. Nothing fails, because a stale cache is
-   still valid HTML. **The cache is stale right now**, since the pages moved
-   twice today. Also in `CLAUDE.md`, since it recurs after every publish and
-   this file does not survive.
+   still valid HTML. **The cache is CURRENT as of 2026-08-08** — it was
+   refreshed against the live site after the second publish — so it goes stale
+   the next time `docs/` moves, not before. Also in `CLAUDE.md`, since it
+   recurs after every publish and this file does not survive.
 
 **A rebuild on a later day dirties `docs/` with dates alone** — `dateModified`,
 the "Last updated" line, the sitemap's `lastmod`. So "rebuild produces no diff"
@@ -130,10 +119,19 @@ above on its own merits; the hook's silence is not evidence.
 
 ## State
 
-**Nothing is half-finished here.** `main` is clean, no open PRs, no branches but
-`main`. `laguna-search` is clean on its own `main` at `3e673bc` — but see *The
-open thread*: it will not build against the current site until it is told about
-U+02BD.
+**Nothing is half-finished, in either repo.** `main` is clean, no open PRs, no
+branches but `main`. **`laguna-search` is clean at `6bd5dab`, and it now has a
+remote** — `PuebloGenealogy/laguna-search`, private, `main` tracking
+`origin/main`, all 15 commits pushed.
+
+**It knows about U+02BD and is verified against the live site**, not the cache:
+`build.py --refresh` passes all seven gates (713 entries → 620 people; gate 3
+every key folds to plain ASCII; gate 4 still **3** namesake pairs with only
+II·182 / IV·69 open, so no fourth pair; gate 5 still 505 names with break
+seams), and `tools/validate.py` agrees on all 713 entries — every field and
+relation — but for II·50's known irreversible trailing period. End to end in
+the browser, typing `dzioty` filters 620 people to 1 and the row renders
+`Dziotyʽ M. Lizard III · 157`.
 
 **`5441abc` is the last commit that moved a built page, and it is deployed and
 verified** — all six pages SHA-256-identical to the committed `docs/`, all 200,
@@ -163,11 +161,20 @@ dois now return **410 Gone** at a tombstone. **Do not go looking for webhook
 access tokens to revoke** — they are Zenodo-internal and invisible by design;
 `CLAUDE.md` says why, and an empty Applications page is the expected result.
 
-**One durable risk, and it is not code.** `laguna-search` **has no remote**. Its
-history exists in exactly one working copy, under Google Drive, whose sync
-daemon is known to touch `.git` mid-write. Nothing has gone wrong. Raise it;
-don't do it unasked, since publishing that repo is a visibility decision — and
-under the current posture, more clearly so than before.
+**That durable risk is CLOSED. `laguna-search` now has a remote** —
+`PuebloGenealogy/laguna-search`, **private**, all 15 commits pushed, `main`
+tracking `origin/main`. It no longer lives in a single working copy under
+Google Drive.
+
+**Private was chosen deliberately and is the thing not to undo casually.** It
+buys the durability without adding public surface, which is what the exposure
+posture asks for; and the asymmetry matters — private → public is a click,
+while public → private does not un-fork or un-index anything. The history was
+swept before the push: every match for research vocabulary across all 15
+commits is either the tool's **own** leak-detection machinery (`LEAK_MARKERS`,
+the `RESEARCH_PROSE` pattern) or the footer sentence *stating* the privacy
+boundary, plus Python's `enumerate(`. Its `.gitignore` already refuses
+`*.xlsx`, `*.csv`, `dist/` and `cache/`, and none of those are tracked.
 
 The 0.023px sub-pixel offset on Genealogy II's 158 group is still known,
 diagnosed and deliberately left alone. Invisible; not worth touching shared
@@ -192,9 +199,7 @@ De-indexing used to be item 1 here. **It is closed**; do not re-add it.
 
 | | Effort | Notes |
 |---|---|---|
-| **Teach `laguna-search` U+02BD, then `--refresh`** | ~15 min | **The open thread.** Two edits — `FOLD` in `src/search.js`, `NAME_MARKS` in `build.py` — then `build.py --refresh` and `tools/validate.py`. Gate 3 aborts until the first one is done |
 | **Land `laguna-search` on the site** | Session-sized, **needs you first** | In tension with the exposure posture — it adds a page and a reason to be found. Raise that when asking |
-| **Give `laguna-search` a remote** | ~5 min, **needs you** | It has none, so the whole tool exists in one working copy under Google Drive. Publishing that repo is a visibility decision — more pointed now |
 | **II·182 / IV·69 — one woman or two?** | **needs you + the plates** | Both F., Sun, generation 4; nothing contradicts them and no relative of either is drawn on the other plate. Marked `?`, joined nowhere. The honest outcome may be *unresolvable* |
 | **Confirm the 83 / 84 attribution** (Genealogy I) | Needs you + the records | 85 is firmly pinned. 83 and 84 rest on ages that do not cleanly reconcile. Published and citable, so this is the open item with a correctness edge |
 | **Two split pairs have no gate** | Recorded, no action needed | `Kowaiʼd˙yuitsʼa` I·27 / III·66 and `Shauʼd˙yiyĕ` I·39 / II·225 fold one character apart, so the namesake gate never sees them. **Neither the `_FOLD` unification nor the U+02BD edit changed this.** In that tool's **ANALYSIS.md §1.3b**. **Don't loosen the namesake rule to edit distance to "fix" it** |
@@ -275,6 +280,20 @@ De-indexing used to be item 1 here. **It is closed**; do not re-add it.
 
 ## Closed — do not re-raise
 
+- **Teaching `laguna-search` U+02BD.** Done 2026-08-08, `cb7b3f2`: `FOLD` in
+  `src/search.js`, `NAME_MARKS` in `build.py`, plus the II-230 = III-228
+  adjudication which quoted the old spelling. No search key moved — all five
+  names keep `yadoky`, `penitsayo`, `dzioty`, `awie`, `shipap`.
+- **The claim that `tools/validate.py` re-checks the fold map.** It never did.
+  Corrected 2026-08-08, `6bd5dab`, in both places it was stated. **Gate 3 is
+  the only guard, and it is stronger** — it aborts on any key outside
+  `[a-z0-9]`. The comparison the docstring promised was done once by hand and
+  recorded there: the edition's only extra key is the redundant `"ʼʼ"`, and
+  across all 533 name and alt-name strings the two maps agree on every fold.
+- **Giving `laguna-search` a remote.** Done 2026-08-08 —
+  `PuebloGenealogy/laguna-search`, **private**, by the user's decision. Private
+  is not a default to undo: it buys the durability without public surface, and
+  private → public is a click while public → private un-forks nothing.
 - **The second sort on Genealogy III, at all five instances.** 154, 156, 157,
   228 and 242 read U+02BD, published `ebd8738` and `5441abc`. Photographed and
   measured; **do not re-open it on the strength of a crop of the scan.** 228 is
