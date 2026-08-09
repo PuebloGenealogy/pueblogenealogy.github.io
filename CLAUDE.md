@@ -475,7 +475,13 @@ leaves that browser with an unstyled clan.
 
 **Added 2026-08-03.** A separate finding aid — `laguna-search`, outside this
 repo and not deployed — builds its whole index by fetching the four
-`genealogy-*/` pages and parsing them. It reads no transcription module. So
+`genealogy-*/` pages and parsing them. It reads no transcription module. Since
+2026-08-08 it has a remote of its own: **`PuebloGenealogy/laguna-search`,
+private**, chosen by the user so the tool stops living in a single working copy
+without adding public surface. **Private is a decision, not a default** —
+private → public is a click, public → private un-forks and un-indexes nothing.
+Its working copy is still the one under `claude-random/`; the remote is a
+backstop, not a relocation. So
 some of what `make_chart.py` emits is now **consumed by something other than a
 browser**, and changing it silently breaks a reader elsewhere:
 

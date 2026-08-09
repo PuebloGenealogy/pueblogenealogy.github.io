@@ -66,6 +66,44 @@ Folds unchanged: 0 of 713 folded names move; colliding-fold counts stay at
 2 / 4 / 2 / 1. Verified live by SHA-256, all six pages `OK`, sitemap 5 `<loc>`,
 five occurrences of each new reading and **zero** of any old one.
 
+### The follow-through in `laguna-search`
+
+Done the same day, in that repo, so the edition and its finding aid do not
+drift apart:
+
+- **It was taught U+02BD** (`cb7b3f2`). Three edits, and the middle one is the
+  one that would have been missed. `FOLD` in `src/search.js` gains `"ʽ": ""` —
+  **no search key moves**, since it folds away exactly as `ʼ` does and all five
+  names keep `yadoky`, `penitsayo`, `dzioty`, `awie`, `shipap`. `NAME_MARKS` in
+  `build.py` gains `ʽ`, which is the silent half: like `ʼ` it is category **Lm**,
+  so `.isalpha()` is `True` and an unlisted mark is read as a **consonant**
+  rather than stepped over. And the hand-written `II-230 = III-228` adjudication
+  quoted III's spelling as `"Awieʼ"`; nothing derived it, so nothing would have
+  caught it drifting.
+- **A false claim in two of its docstrings was corrected** (`6bd5dab`). Both
+  `fold_map()` in `build.py` and the comment above the literal in
+  `src/search.js` said `tools/validate.py` re-checks the fold map against the
+  edition. **It never has** — that tool compares the published pages against the
+  transcription modules, field by field and relation by relation, and never
+  reads the map. This was the worst kind of stale comment: it described a safety
+  net that does not exist. The real guard is **gate 3**, which is stronger and
+  needs nothing external. The comparison the docstring promised was done once by
+  hand and recorded: the edition's only extra key is the redundant `"ʼʼ"`, and
+  across all **533** name and alt-name strings the two maps agree on every fold.
+- **It was given a remote** — `PuebloGenealogy/laguna-search`, **private**, by
+  the user's decision, all 15 commits pushed. That closes a durable risk the
+  handoff had carried for sessions: the tool existed in exactly one working copy
+  under Google Drive. The history was swept first, and every match for research
+  vocabulary across all 15 commits is either the tool's **own** leak-detection
+  machinery or the footer sentence *stating* the privacy boundary.
+
+Verified against the live site rather than the cache — `re-fetched`, not
+`cached in cache/`: all seven gates pass, **gate 4 still 3 namesake pairs**
+with only II·182 / IV·69 open, gate 5 still 505 names with break seams, and
+`tools/validate.py` agrees on all 713 entries but for II·50's known
+irreversible trailing period. End to end in the browser, typing `dzioty`
+filters 620 people to 1 and the row renders `Dziotyʽ M. Lizard III · 157`.
+
 ### A stale PR had become a revert, and this is a general mechanic
 
 Found while wrapping the session. **PR #33 was still open**, holding the
