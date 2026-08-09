@@ -3,7 +3,64 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-09 (latest) — Published: one theme key, Search beside Theme, three folding sections
+## 2026-08-09 (latest) — A link to /search/, and a Safari scroll bug that is NOT fixed
+
+**Unmerged. All of this sits on a branch behind an open PR, deliberately.**
+Pages deploys from `main`/`docs`, so merging is publishing, and half of this is
+unverified. Nothing below is live.
+
+**The landing page now links `/search/`.** A fifth row in the contents block,
+ruled in with the plates but **outside the `<ol>`** — `.contents ol li` still
+counts 4, so a screen reader hears the edition's four plates and then a link,
+not a five-item list. Measured flush with them: left offset 0.00px, identical
+width, same padding, same 17px title, its own `--rule-faint` rule (a plate's
+rule comes from `.contents li`, which this row is not). `.c-across` in
+`LANDING_CSS_EXTRA` is one declaration; everything else it needs it inherits
+from `.contents a`. The count is computed — `sum(st["persons"] for _, st in
+built)` — and the copy carries **no plate count in words**, deliberately: that
+is the shape of claim that outlived its truth in `SITE_DESCRIPTION`. The word
+is **entries**, not people; the search page's own line reads "620 people, drawn
+713 times", and the landing page must not contradict it. Verified at 1280 and
+375: link resolves, target renders 120 rows, dark palette carries across, no
+horizontal overflow. Gate 8 not triggered — register markup diff is 0 lines.
+
+**The Safari bug is open, and two attempts failed.** Reported: scrolling inside
+a table stops, vertical dies while sideways panning still works, and a reload is
+needed. Refined by the user to *"when I click anywhere on the table"* — including
+the inert space between names, where a click runs no JS at all.
+
+*Attempt 1, reverted.* `.scroll` computes **`overflow-y: auto`** though only
+`overflow-x` is authored — the overflow-propagation rule turns a `visible` axis
+into `auto` whenever the other one scrolls, so the plate is a vertical scroll
+container with **zero range** (`scrollHeight` == `clientHeight`, both 6164 on
+Genealogy II). Pinning it looked right and did nothing, because the axis that
+consumes the gesture is the **horizontal** one. Two things worth keeping from
+it: written `overflow-y:clip` **computes to `hidden`** here (the propagation
+rule runs both ways), and the change was measurably inert —
+`clientW/scrollW/clientH/scrollH` unchanged at 1250/2504/6164/6164. Reverted
+rather than kept, so that no published page carries a 20-line comment
+explaining a fix that fixed nothing.
+
+*Attempt 2, on the branch, unverified.* The region is `tabindex="0"` — for
+arrow-key panning and as the "Skip to chart" target. WebKit focuses a tabindex
+region **on click** and then routes the wheel to whatever holds focus; this
+region scrolls in x only. So a `pointerdown` handler drops the attribute for the
+one task in which the press would consume it and restores it on the next,
+leaving the region focusable at every moment a keyboard can reach it. Verified
+in Chromium with real clicks: a click on inert space leaves focus on `BODY`, a
+click on person 1's line still opens the card and selects `p1`, and `tabindex`
+is back either way. **That is not evidence the bug is fixed.** Blink does not
+route the wheel this way, so the preview cannot reproduce the symptom and
+therefore cannot demonstrate the cure — the same asymmetry as the font-
+substitution case, where the measurement available is not the measurement
+needed.
+
+**A durable lesson, now in `CLAUDE.md`: the preview is Chromium, so it cannot
+settle a WebKit question.** Two fixes were shipped this session against
+inferences the preview was structurally unable to test, and the first was wrong.
+When a report names Safari, the browser that must confirm it is the user's.
+
+## 2026-08-09 — Published: one theme key, Search beside Theme, three folding sections
 
 The two entries below went live. PR #41 squash-merged as **`3dfa06b`**, tree
 identical to the branch head `a076a50`. All seven pages verified by SHA-256
