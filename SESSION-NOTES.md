@@ -79,11 +79,19 @@ locked*, which points at Safari's popover handling and needs a different fix.
 **If it turns out to be wrong, close PR #43 and drop the branch.** Nothing else
 is riding on it.
 
+**PR #43 stays parked — decided by the user 2026-08-09.** Not rebased, not
+closed: the branch is what the Safari test build comes from when the freeze next
+appears. It is safe to leave open *because the search link reached `main` by
+cherry-pick* — the branch is ahead by the scroll fix alone and proposes no
+deletions, so the stale-PR-becomes-a-revert mechanic in `CLAUDE.md` →
+*Environment* does not apply here. **Re-check that with `git diff` before
+branching anything new off `main`**, since it stops being true the moment the
+branch falls behind.
+
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
-| Decide about PR #43 | small, **needs you** | Park, rebase to hold only the scroll fix, or close. Leaving a stale open PR is how a later squash becomes a revert — `CLAUDE.md` → *Environment* |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — that is what settled the second sort. `digitallibrary.amnh.org` 403s automated fetches |
 
 ## Before touching the search page
