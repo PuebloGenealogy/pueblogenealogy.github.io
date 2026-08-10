@@ -288,12 +288,29 @@ engine under test. Say which of the two you measured. This cost two fixes on
 unable to test, and **the first was simply wrong** — see the changelog's scroll
 entry. The same asymmetry as font substitution: the measurement available is not
 the measurement needed, so reason from the mechanism and then **ask the user to
-confirm on the browser that has it**. Two WebKit facts learned there, both cheap
-to re-lose: `.scroll` computes `overflow-y:auto` though only `overflow-x` is
-authored (the propagation rule promotes a `visible` axis whenever the other
-scrolls, and a written `clip` computes to `hidden` for the same reason), and
-WebKit focuses a `tabindex` region **on click**, then routes the wheel to
-whatever holds focus.
+confirm on the browser that has it**. Three WebKit facts learned there, all
+cheap to re-lose: `.scroll` computes `overflow-y:auto` though only `overflow-x`
+is authored (the propagation rule promotes a `visible` axis whenever the other
+scrolls, and a written `clip` computes to `hidden` for the same reason); WebKit
+focuses a `tabindex` region **on click**, then routes the wheel to whatever
+holds focus; and — the expensive one — **WebKit quantises a line box to a whole
+pixel while keeping a margin at LayoutUnit precision**. See *A row's height is
+stated* below.
+
+**Better than reasoning at a browser you cannot run: make the page measure
+itself in the one the reader has.** On 2026-08-10 two rounds of mechanism-first
+reasoning produced two wrong answers, and a throwaway `docs/_diag.html` — one
+page that loaded each plate in an iframe and printed a DOM tally, the row-box
+heights and every bracket sorted by offset — named the cause from a single
+screenshot. Three things made it work, and all three are worth copying:
+**report a DOM tally** so a disagreeing count proves the harness wrong before
+you trust its numbers (they matched exactly, which is what licensed believing
+the rest); **sort the offenders by magnitude**, not by map order, or the four
+the user actually named stay buried under "and 19 more"; and **delete it after**
+— it lives in `docs/`, so the build sweeps it and counts it as an extra
+published page. Note it tripped the leak gate on its first build, because a
+function in it was named `census`: the gate deleted the file and exited 1, which
+is the gate working, not a false positive.
 
 **And confirmation from the user is only evidence if you know which build they
 were on.** The scroll freeze was reported clear on 2026-08-09 — **on the live
@@ -558,6 +575,36 @@ has no font metrics with which to guard it — so split a long reference at the
 plate's own line break with `|`, the row separator (see persons 160 and 169),
 rather than letting CSS decide where the row count goes wrong.
 
+**A row's height is STATED, not inferred from its line box — `height:var(--lh)`
+on `.line` and `.sic-row`, `min-height` on `.xref`.** Added 2026-08-10, and it
+is the other half of the invariant above: `line-height` alone does not carry it.
+Every vertical offset in the chart is a multiple of `--lh` expressed as a
+**margin** — `.kids{margin-top:calc(var(--lh) * N)}`, and the same calc from
+`line_pad`. A margin is a length, so an engine keeps it to LayoutUnit precision:
+**24.796875px**. A **line box is not a length**, and **WebKit quantises it to a
+whole pixel**. Measured in Safari 26.3: every row box **24.000px** against a
+declared line-height of 24.799999px, so each row of offset lost **0.796875px**
+and it accumulated down the tree — **69 of 141 brackets off their mother's
+line**, worst −20.016px (25 × 0.797) at III·21 → 74. The sign says where the
+mismatch sat: **positive** on a `.kids` group, **negative** on a `line_pad` push
+inside the block. Chromium reported 24.797px for both and was clean at 0.003px,
+which is why this survived from launch to 2026-08-10 with nobody seeing it here.
+A bracket off its mother's line asserts a different genealogy, so this is a
+reading error wearing a styling error's clothes — **do not "simplify" these back
+to `line-height` alone.** `.xref` keeps `min-height` and not `height` on purpose:
+it is the one row type that is `white-space:normal`, so capping it at one row
+would make a wrapped reference *overlap* the row below rather than merely
+mis-budget it. Wrapping is still the unsolved case described just above.
+
+This is also what a reader sees as a **break in the leader rule**: at III·113 →
+204 the error is one row, 0.797px, and 204 is an **only child**, so
+`:only-child::after` draws no bracket vertical to bridge the step. There are 29
+only-child groups across the four plates (I 5, II 5, III 15, IV 4) and they are
+the only places a sub-pixel row error is visible at all — everywhere else the
+bracket's vertical covers it. Reported as "a break in the line", diagnosed twice
+as a horizontal paint seam, and it was neither: **a 1px overlap on the abutting
+rules fixed nothing and was reverted.** The gap was vertical.
+
 **Three colours on a table page are not `--ink`**, and a fourth needs the same
 evidence: `--sic` on the misprint annotation, `--muted-fixed` on the statistics
 line, and **`--clan`** on the clan field (added 2026-07-28). `--clan` is *not*
@@ -786,7 +833,24 @@ index is still valid JSON that renders a working page. Run it when a `.reg`,
 plate's data changes. **The test for whether it is due is a diff, not a
 memory**: filter the publish's diff of a table page for register-bearing markup
 and count. It was 0 on 2026-08-09 — only the masthead moved — which is how that
-gate was correctly skipped on the day it was written.
+gate was correctly skipped on the day it was written. It was **4, on Genealogy
+IV alone**, on 2026-08-10, and the re-vendor was due; the other three plates
+were 0 that day even though every one of them changed, because the change was
+CSS. **The diff is per page, and one plate is enough.**
+
+**When it IS due, decide from the `relationships` diff, and expect two of the
+three files to be identical.** On 2026-08-10 `index.html` and `search.js` came
+back **byte-identical** and only `search-index.json` moved — in
+`meta.generated` (ignore it, it is date-granular) and four `relationships`
+entries. Worth knowing what that tool had been publishing: 6's issue as **two
+groups labelled by husband**, `Children (with 5)` and `Children (with 7)`, which
+stated the split claim more explicitly than the chart ever did. A data error
+here is louder over there.
+
+**And run `leak_report()` by hand over the three vendored files every time.**
+`check_published_pages()` only opens `.html`, so `search.js` (61 KB) and
+`search-index.json` (314 KB) are never swept by the build. Done 2026-08-10, all
+three clean.
 
 **Running `--refresh` after a publish is a separate obligation from
 re-vendoring, and it is the one that is never optional.** Gate 8 asks whether
@@ -887,6 +951,17 @@ to catch "58+59" links those too.
   column drift, and both were true — drift measures *columns*. The check that
   finds it is **"is any node's first `.line` displaced from that node's top?"**,
   in the browser, over every `.node`. Run it on any new plate.
+  **Genealogy IV's 5 / +6 / +7 looks exactly like this shape and is NOT it** —
+  do not reach for `LEADER_ON_SPOUSE_ROW` there. 6 has two husbands and the
+  block prints three lines, so the third shape is the natural guess; but the
+  plate draws **one** vertical spanning 19 and 20 with a **single** leader
+  entering at 19's row from 6's line, and **7's line carries no rule at all**.
+  Both children are 5+6's and 6's second marriage has no recorded issue — the
+  85/86/87 shape, where a spouse with no leader had none. The transcription had
+  split it into two unions and the chart drew two brackets, asserting a
+  paternity Parsons does not state; corrected 2026-08-10. **The reusable
+  lesson is the diagnostic order**: count the leaders entering the vertical
+  before counting the lines in the block.
 - **An id addresses a person; `plate_number` is what prints.** There are now two
   reasons they differ, and they are not the same reason. A **misprint** (Table 1)
   shows the plate's wrong number, ringed in `--sic` with an annotation row,
@@ -1248,6 +1323,16 @@ to stay *allowed*, so the two must not be combined. Neither is deployed here.
   reading question open on any plate.** Under the old policy that would have made the
   release due; it does not, because the policy changed. **Publishing the site is
   not releasing it, and releasing it is no longer on the table.**
+  **"No reading question open" is not "the readings have all been checked", and
+  2026-08-10 proved the difference.** Genealogy IV shipped on 2026-07-31 with
+  20 attached to the wrong marriage, and it survived four self-checks, every
+  publish gate and ten days of the plate being live. Nothing structural could
+  see it: 19 and 20 are both Bear, exactly like their mother, so clan descent
+  cannot discriminate; the counts close either way. **Placement is unverified
+  wherever the user has not personally read it against the scan** — which is
+  true of II (checked 2026-07-30) and now of IV's 5/6/7, and is not known to be
+  true of the rest. Treat a report of a "misaligned" or "broken" bracket as
+  possibly a data error, not automatically a rendering one.
 - **Genealogy II is published and its reading is closed.** The user re-checked
   their full list on 2026-07-30 and reported **no remaining placement errors**.
   Everything they had flagged is resolved: **31, 32 and 97** via
@@ -1292,6 +1377,27 @@ the name itself sits a row lower and the stub points at empty space. That is how
 that had one a full 24.8px out — person 169, **since fixed** by
 `SECOND_VISIT_OMITTED`, and named here for the measuring mistake, not as an open
 defect.
+
+**And derive the expected leader from the TRANSCRIPTION, never from the DOM.**
+The same defect has a second disguise, found 2026-08-10. An audit that matches
+each bracket to the **nearest** `.lead-line` and measures the gap reports 0.00px
+for a bracket hanging off the *wrong row* — the nearest line is whichever one it
+landed on, so the check is circular and passes on exactly the case it exists to
+catch. It reported all four plates clean while Genealogy IV drew 20 as 6+7's
+child. The audit that works reads `_GROUPS`, takes the union's mother (or the
+`LEADER_ON_SPOUSE_ROW` spouse), finds `#p{first_child}`, walks up to its
+`.kids`, and asserts the bracket starts on **that named person's** line. 426
+checks across four plates, and it is cheap.
+
+**Under CSS `zoom`, never mix `getComputedStyle` with `getBoundingClientRect`.**
+The plate scale control is `zoom`, and computed styles come back **unzoomed**
+while rects come back **zoomed**. Adding a pseudo-element's computed `top` to an
+element's rect therefore fabricates a constant error of exactly
+`v − v × zoom` — with `top:12.4px` that is 1.86px at 85% and 3.72px at 70%, and
+it looks precisely like a real misalignment that gets worse as you zoom out. It
+cost an hour on 2026-08-10 and nearly convicted the Scale control. Measure
+alignment from **element rects only**. The honest test that Scale is innocent is
+that the error **normalised to rows** is identical at 100%, 85% and 70%.
 
 **Check the built file, not only the rendered page.** A DOM read in the browser
 happens after the page's own script has run, so it cannot see what the HTML

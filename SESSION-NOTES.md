@@ -4,17 +4,17 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-09**. The `/search/` link is **published and verified
-live**. One thing is deliberately parked, unmerged: the Safari scroll fix.
+Last updated **2026-08-10**. Two publishes today, both verified live. A
+placement error on Genealogy IV was found and corrected; every bracket on every
+plate was misaligned in Safari and now is not.
 
 ## Start here in a new chat
 
 1. This file.
-2. `CHANGELOG.md`'s newest entry — the split publish, and why the scroll fix
-   stayed behind.
-3. Only if you are touching the plate's scroll behaviour: `CLAUDE.md` →
-   *Preview*, which records why this preview cannot settle a Safari question,
-   plus the two WebKit facts it cost to learn.
+2. `CHANGELOG.md`'s newest entry — the IV·20 correction and the WebKit row-box
+   fix, including the two wrong turns taken first.
+3. Only if you are touching row heights, brackets or anything a reader sees in
+   Safari: `CLAUDE.md` → *A row's height is stated* and *Preview*.
 
 Preview: `preview_start`, config name `site`, serves `docs/` on
 `http://localhost:4173`. **If a screenshot comes back blank, read `innerWidth`
@@ -22,140 +22,105 @@ first** — a zero-sized viewport, not a scroll bug. See `CLAUDE.md` → *Previe
 
 ## State
 
-**`main` is at `c41e1ae`, clean, and the deployed build is `5495819`** — the
-landing page's contents block carries the `.c-across` row to `/search/`. It
-reached `main` as a **cherry-pick of `59328e2`**, not by merging PR #43; the two
-commits after it are records only (`42b0cbc`, `8348730`, then the wrap as PR #44
-→ `c41e1ae`), so nothing in `docs/` has moved since the deploy. All seven pages
-verified by SHA-256 against `docs/`; sitemap 5 `<loc>` against a build count of
-7 (correct); identity grep 0; both `/search/` links serving. A `--public`
-rebuild on `main` leaves `docs/` byte-identical, so `scripts/` and `docs/`
-agree.
+**`main` is at `c362028`, clean, level with `origin/main`, and that is the
+deployed build.** Verified live by SHA-256: all seven pages plus
+`search/search-index.json`, every path 200, sitemap 5 `<loc>` against a build
+count of 7 (correct), identity grep 0. A `--public` rebuild reproduces `docs/`
+byte-identical, so `scripts/` and `docs/` agree.
 
-**PR #43 is still open, still a draft, and holds one commit's worth of code —
-`938b8e8`, the unverified Safari scroll fix.** The search link it also carries
-is already on `main` by cherry-pick, so on `scripts/` and `docs/` the branch is
-purely **additive**: +22 lines in `make_chart.py`, +22 in each table page, no
-deletions.
+**`laguna-search` is clean at `44e3d7b`**, level with its origin, and its
+`dist/` is what `vendor/search/` now holds. Its post-publish `--refresh` is done
+(`re-fetched`, all seven gates pass). Namesake gate unchanged at **3 pairs, 1
+open** (`II-182 / IV-69`) — correcting 20's father moved no fold collision.
 
-**But it is BEHIND `main` on `CHANGELOG.md` and `SESSION-NOTES.md`, and merging
-it as-is would revert them** to their state before this session's records were
-written. That is the stale-PR-becomes-a-revert mechanic in `CLAUDE.md` →
-*Environment*, in miniature, and it appeared *after* the branch was parked —
-`main` moved, the branch did not. It is harmless while the PR sits unmerged.
-Before ever merging it, bring `main` into the branch first, then read the
-direction of the diff — deletions mean behind:
+**Nothing is half-finished.** `docs/_diag.html`, the throwaway self-measuring
+diagnostic, is deleted; the method it proved is written into `CLAUDE.md` →
+*Preview* and should be rebuilt from there rather than recovered from git.
 
-```bash
-git diff --stat main origin/handoff-2026-08-09-search-link-safari-scroll
-```
+All four plates published, 713 entries, no reading question open.
 
-**`laguna-search` is clean at `44e3d7b`** and its post-publish `--refresh` is
-done — `re-fetched`, all seven gates pass, all three vendored files
-byte-identical, no re-vendor due. Its namesake gate still reports 3 pairs, 1
-open (`II-182 / IV-69`).
+## The open thread — bracket placement on I and III has never been read against the scan
 
-All four plates published, all 713 entries, no reading question open on any
-plate.
+**This is new, and it is the lesson of 2026-08-10.** Genealogy IV shipped on
+2026-07-31 with person 20 attached to the wrong marriage, and it survived four
+`self_check()`s, every publish gate, and ten days live. The plate draws **one**
+vertical over 19 and 20 with a **single** leader from 6's line; the
+transcription had split it into two unions, so the chart asserted a paternity
+Parsons does not state.
 
-## The open thread — the Safari scroll freeze, now known to be intermittent
+**Nothing structural can find the next one.** 19 and 20 are both Bear, exactly
+like their mother, so clan descent cannot discriminate; the counts close either
+way. `CLAUDE.md` is explicit that `self_check()` cannot see whether a person is
+attached to the right parents.
 
-**Do not treat `938b8e8` as a fix. Do not merge it on the evidence below.**
+What has been checked by a human against the scan: **Genealogy II** (the user's
+full list, 2026-07-30) and **Genealogy IV's 5/6/7** (2026-08-10). **Genealogy I
+and Genealogy III have not been.** III is the largest and most intricate — 261
+people, seven generations, two descent blocks, 72 unions.
 
-The user reported the freeze "seems fixed for now" — **on the live site, which
-does not carry `938b8e8`**. So the symptom cleared on a build with no fix in it.
-That establishes one thing and refutes nothing: **the freeze is intermittent**,
-so its absence is not evidence for the focus hypothesis, and the commit is
-exactly as unverified as when it was written.
+The method that worked, and it is cheap:
 
-**The symptom, in the user's words:** scrolling with the mouse wheel inside a
-table stops, and a reload is needed. Vertical dies while sideways panning still
-works; it follows **a click anywhere on the table**, including the inert space
-between names. Safari.
+- Crop the **bracket-column strip** at native resolution — 260–320px wide, so
+  the vertical and every stub entering it are the only things in frame. Never
+  read structure off a downscale.
+- **Count the leaders entering each vertical before counting the lines in the
+  block.** One leader means one group however many `+` lines sit above it. That
+  single question is what IV·20 turned on.
+- A spouse whose line carries **no rule** had no recorded issue.
 
-**What is established, by measurement** (unchanged — see `CLAUDE.md` →
-*Preview*): `.scroll` computes `overflow-y:auto` though only `overflow-x` is
-authored, so the plate is a vertical scroll container with zero range; pinning
-that axis was measurably inert and was **reverted, not shipped**; the region is
-`tabindex="0"`, and focus is the only click-persistent state on it, which is
-what `938b8e8` acts on.
+The automated half is already done and passes: a data-driven audit that reads
+`_GROUPS`, takes each union's mother (or its `LEADER_ON_SPOUSE_ROW` spouse), and
+asserts the bracket starts on that named person's line — 426 checks, all four
+plates, clean. **It cannot catch a group whose data and rendering agree with
+each other and disagree with the plate**, which is the whole remaining risk.
 
-**What would actually settle it, and it needs the user:** the next time the
-plate freezes in Safari, be on a **branch build** — not the live site — and try
-the fix there. Ask the same diagnostic either way: **does clicking the prose
-below the plate free it?** That answer separates *the plate is eating the
-gesture* (focus — what `938b8e8` addresses) from *the document itself is
-locked*, which points at Safari's popover handling and needs a different fix.
-
-**If it turns out to be wrong, close PR #43 and drop the branch.** Nothing else
-is riding on it.
-
-**PR #43 stays parked — decided by the user 2026-08-09.** Not rebased, not
-closed: the branch is what the Safari test build comes from when the freeze next
-appears. Parked is safe; **merging it without first bringing `main` into it is
-not** — see *State* for the two files it is now behind on. Nothing on `main`
-depends on the branch: the CLAUDE.md paragraph on the Chromium/WebKit asymmetry
-and the record of both scroll attempts were carried over during the wrap, so if
-the branch is eventually closed unmerged, nothing measured is lost with it.
+**Needs the user for adjudication.** Their reading wins on placement; present
+the crop and the evidence, do not change a transcription unilaterally.
 
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
+| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and still parked. `938b8e8` on PR #43 is **unverified** — the freeze was last reported clear on the *live* site, which carries no fix, so it is intermittent and its absence proves nothing. Next time it freezes, be on a **branch build** and ask: **does clicking the prose below the plate free it?** That separates *the plate eats the gesture* (focus, what the commit addresses) from *the document is locked* (needs a different fix) |
+| **PR #43 is drifting further** | small, decide when merging | Open, DRAFT, parked deliberately. It was 256 insertions / 228 deletions against `main` **before** today's two commits; the deletions mean it is **behind**, and merging as-is would revert records. It now also collides directly — it carries +22 lines in `make_chart.py`, the file today's row-height fix changed. If you ever merge it: bring `main` in **first**, then re-measure the direction. Parking it costs nothing |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — that is what settled the second sort. `digitallibrary.amnh.org` 403s automated fetches |
-
-## Before touching the search page
-
-1. **`vendor/search/` and `docs/search/` are BOTH generated.** Hand-edit either
-   and the change is gone on the next re-vendor or build, silently.
-2. **The font injection has no downstream guard.** `search.css` declares no
-   `@font-face`; `write_search()` supplies it. `subset_font.py`'s coverage check
-   reads the *text* of built pages, and the names arrive from JSON at runtime,
-   so it sees an effectively empty page. Drop the injection and the page keeps
-   working, silently substituting.
-3. **The leak sweep never opens `search.js` or `search-index.json`.** Both were
-   hand-checked clean on 2026-08-09 and are byte-identical to the current
-   `laguna-search` output, so that check still holds. Redo it on the next
-   re-vendor.
-4. **`--refresh` after a publish, always** — done for this one. It is a separate
-   obligation from re-vendoring: it stops that tool's gates passing against a
-   cache of the site as it was. **Decide a re-vendor from the register-markup
-   diff, never from `meta.generated`**, which is date-granular and will differ
-   by that one field on any later day. That diff was **0** for this publish —
-   only the landing page and `404.html` moved.
 
 ## Decisions already made — don't re-litigate
 
-- **The `/search/` link sits outside the contents `<ol>`**, not as a fifth
-  numbered plate — the list is the edition's plates in Parsons's order. Its
-  count is computed, and it says **entries**, not people: the search page's own
-  line reads "620 people, drawn 713 times".
-- **The `overflow-y` pin on `.scroll` was tried and reverted.** Measurably
-  inert, wrong axis. Don't re-propose it as an obvious first move.
+- **A row's height is stated, not inferred** — `height:var(--lh)` on `.line` and
+  `.sic-row`, `min-height` on `.xref`. WebKit quantises a line box to a whole
+  pixel (24.000px measured) while keeping margins at 24.796875px, so every row
+  of offset lost 0.796875px and accumulated. **Do not simplify these back to
+  `line-height` alone.** `.xref` keeps `min-height` on purpose: it is the only
+  `white-space:normal` row, and `height` would make a wrapped reference overlap
+  the row below instead of merely mis-budgeting it.
+- **The 1px overlap on abutting rules was tried and reverted.** The "break" at
+  III·113 → 204 was a **vertical** 0.8px step, not a horizontal paint seam;
+  only-child groups have no bracket vertical to hide it. Don't re-propose it.
+- **The Scale control is innocent.** The row-normalised error was identical at
+  100%, 85% and 70%. If it ever looks guilty again, check you are not mixing
+  `getComputedStyle` (unzoomed under CSS `zoom`) with `getBoundingClientRect`
+  (zoomed) — that fabricates exactly 1.86px at 85% and 3.72px at 70%.
+- **Genealogy IV's 5 / +6 / +7 is not the `LEADER_ON_SPOUSE_ROW` shape.** It
+  looks like it — two husbands, three lines — but the plate draws one bracket
+  off 6's line and gives 7 no rule at all. Tables 1, 2 and 4 still declare none.
+- **The `/search/` link sits outside the contents `<ol>`**, count computed, and
+  it says **entries**, not people.
 - **Search sits in `.mast-right` beside Theme**, moved there by the user
-  2026-08-09. It costs a row on a phone — **375px 109px → 157px, three rows**;
-  1280px unchanged at 49px — and that cost was measured before and after and
-  agreed. **Don't shave gaps to buy it back**: `--tap` is `2rem`, and `2.75rem`
-  under `(pointer:coarse)`, so the phone floor is 44px with nothing to reclaim.
-  The wordmark's row is where it goes if it is ever moved back.
+  2026-08-09; it costs a row on a phone (375px 109px → 157px) and that was
+  measured before and after. **Don't shave gaps to buy it back** — `--tap` is
+  2.75rem under `(pointer:coarse)`, so there is nothing to reclaim.
 - **Three apparatus sections fold; two do not.** *The record* and *Navigating
-  this chart* stay open. **Do not fold *Navigating this chart* later** — it is
-  the only place `+`, `F.`/`M.` and the leader rule are decoded, and hiding it
-  re-opens the defect that removing the on-page chart key was meant to close.
+  this chart* stay open — the latter is the only place `+`, `F.`/`M.` and the
+  leader rule are decoded.
 - **One theme storage key, not two.** The widget takes `storageKey`; the host
-  declares `window.LAGUNA_THEME_KEY` once. **Do not reintroduce a bridge** — a
-  second key is the defect, not the starting condition. If the widget ever needs
-  another host-side value, ask for an option before writing a patch of that
-  shape.
+  declares `window.LAGUNA_THEME_KEY` once. **Do not reintroduce a bridge.**
 - **`laguna-search` stays a separate, private repo.** Only its output is
-  published. Merging it in would publish the repo, put its gates on this publish
-  path, and destroy the independence that makes its `validate.py` worth
-  anything — it checks this edition by parsing the *published pages*.
-- **The twelve unattested cross-plate joins are the edition's**, documented in
-  METHOD.md's *Identity across plates*, marked **NOT PRINTED** wherever they
-  appear, and confined to the search page.
+  published. Its independence is what makes its `validate.py` worth anything.
 - **`/search/` is absent from `sitemap.xml`** because the page ships
   `robots=noindex`. Not a de-indexing measure.
+- **The twelve unattested cross-plate joins are the edition's**, documented in
+  METHOD.md, marked **NOT PRINTED**, and confined to the search page.
 
 ## Closed — do not re-raise
 
@@ -175,5 +140,5 @@ re-taken.
 - **Genealogy II's placements** — the user re-checked their full list on
   2026-07-30 and reported no remaining errors.
 - **Phonetic glyph rendering** — proven from the cmap and checked on device.
-- **`laguna-search`'s join count** — corrected 2026-08-09 in that repo,
-  committed and pushed. Eight name-match joins.
+- **`laguna-search`'s join count** — corrected 2026-08-09. Eight name-match
+  joins.
