@@ -3,7 +3,46 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-09 (latest) — Published: one theme key, Search beside Theme, three folding sections
+## 2026-08-09 (latest) — Published: the `/search/` link, alone
+
+`59328e2` cherry-picked onto `main` as **`5495819`** and pushed; the landing
+page's contents block now carries the `.c-across` row to `/search/`. All seven
+pages verified by SHA-256 against `docs/`, sitemap 5 `<loc>` against a build
+count of 7 (correct — `404.html` and the `noindex` search page are deliberately
+absent), identity grep 0. A `--public` build on `main` reproduced `docs/`
+byte-identical to the cherry-picked commit, so `scripts/` and `docs/` agree.
+
+**The Safari scroll fix was NOT published, and the reason matters more than the
+decision.** The user reported the freeze "seems fixed for now" — **on the live
+site**, which does not carry `938b8e8`. So the symptom cleared on a build with
+no fix in it: the freeze is **intermittent**, and its absence is not evidence
+for the focus hypothesis. `938b8e8` is exactly as unverified as it was when it
+was written. Testing it needs the freeze to recur *while the user is on a branch
+build*, plus the diagnostic question that separates the two causes — does
+clicking the prose below the plate free it? The plate eating the gesture is what
+that commit addresses; a locked document is not.
+
+**Splitting the release is why the two-commit split existed.** `59328e2` was
+merged by cherry-pick rather than by merging PR #43, which still holds both
+commits. Since the squash-free cherry-pick puts the same content on `main`, the
+branch is *ahead* of `main` by the scroll fix alone and proposes no deletions —
+`git diff main <branch>` is the check, and the direction is what to read.
+
+### Gate 8 not run; the post-publish `--refresh` was
+
+The register's markup did not move — this publish touched the landing page and
+`404.html` only — so no re-vendor is due, and the `--refresh` run confirms it
+independently: `4 table pages, **re-fetched**`, all seven gates pass, and all
+three of `index.html`, `search.js`, `search-index.json` came back **byte-identical**
+to `vendor/search/`, with `laguna-search` clean at `44e3d7b`. Identity
+resolution unmoved — 79 people on more than one plate → **620 distinct**, 14
+inferred joins, 3 unresolved cross-references, 3 misprints filed; the namesake
+gate still reports **3 pairs, 1 open** (`II-182 / IV-69`).
+
+Note the two projects report the index size differently — 307 KB from this
+build, 308 KB from that one. **That is rounding, not drift**; the hashes match.
+
+## 2026-08-09 — Published: one theme key, Search beside Theme, three folding sections
 
 The two entries below went live. PR #41 squash-merged as **`3dfa06b`**, tree
 identical to the branch head `a076a50`. All seven pages verified by SHA-256

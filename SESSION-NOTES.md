@@ -4,16 +4,17 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-09**. **Everything is published and nothing is
-half-finished.** The live site matches `docs/` by SHA-256 on all seven pages.
+Last updated **2026-08-09**. The `/search/` link is **published and verified
+live**. One thing is deliberately parked, unmerged: the Safari scroll fix.
 
 ## Start here in a new chat
 
 1. This file.
-2. `CHANGELOG.md`'s newest entry — the publish, and the two things it taught.
-3. Only if you are touching the search page or the footer: `CLAUDE.md` →
-   *The search page is vendored, not generated here* and the footer apparatus
-   paragraph.
+2. `CHANGELOG.md`'s newest entry — the split publish, and why the scroll fix
+   stayed behind.
+3. Only if you are touching the plate's scroll behaviour: `CLAUDE.md` →
+   *Preview*, which records why this preview cannot settle a Safari question,
+   plus the two WebKit facts it cost to learn.
 
 Preview: `preview_start`, config name `site`, serves `docs/` on
 `http://localhost:4173`. **If a screenshot comes back blank, read `innerWidth`
@@ -21,54 +22,69 @@ first** — a zero-sized viewport, not a scroll bug. See `CLAUDE.md` → *Previe
 
 ## State
 
-PR #41 squash-merged as **`3dfa06b`** — one theme storage key, Search beside
-Theme, three folding apparatus sections. Branch merged and deleted; no open PRs.
-Verified live: seven pages OK by hash, plus `search.js` and
-`search-index.json`; sitemap 5 `<loc>` against a build count of 7 (correct —
-`404.html` and the `noindex` search page are deliberately absent);
-`LAGUNA_THEME_KEY="lg-theme"` present in the deployed `/search/`; zero
-stale-identity strings on `/`.
+**`main` is at `5495819`, pushed and live** — the landing page's contents block
+carries the `.c-across` row to `/search/`. It reached `main` as a **cherry-pick
+of `59328e2`**, not by merging PR #43. All seven pages verified by SHA-256
+against `docs/`; sitemap 5 `<loc>` against a build count of 7 (correct);
+identity grep 0; both `/search/` links serving. A `--public` rebuild on `main`
+leaves `docs/` byte-identical, so `scripts/` and `docs/` agree.
 
-**The post-publish `--refresh` is done.** `build.py --refresh` in the
-`laguna-search` checkout re-fetched (not cached), all seven of its gates pass,
-and all three vendored files came back **byte-identical** — no re-vendor due,
-and that repo's tree is clean at `9974d55`, which is on its remote. The two
-repos are in step and `vendor/search/SOURCE.md` names a fetchable commit.
+**PR #43 is still open, still a draft, and now holds one commit's worth of
+content — `938b8e8`, the unverified Safari scroll fix.** The search link it also
+carries is already on `main` by cherry-pick, so the branch is *ahead* and
+proposes no deletions. **Verify that before acting on it**, and read the
+direction:
+
+```bash
+git diff main origin/handoff-2026-08-09-search-link-safari-scroll
+```
+
+**`laguna-search` is clean at `44e3d7b`** and its post-publish `--refresh` is
+done — `re-fetched`, all seven gates pass, all three vendored files
+byte-identical, no re-vendor due. Its namesake gate still reports 3 pairs, 1
+open (`II-182 / IV-69`).
 
 All four plates published, all 713 entries, no reading question open on any
-plate. Working tree clean; a `--public` rebuild leaves `docs/` byte-identical.
+plate.
 
-**No open thread.** The publish that had been carried for a session is done, and
-nothing was left behind it.
+## The open thread — the Safari scroll freeze, now known to be intermittent
+
+**Do not treat `938b8e8` as a fix. Do not merge it on the evidence below.**
+
+The user reported the freeze "seems fixed for now" — **on the live site, which
+does not carry `938b8e8`**. So the symptom cleared on a build with no fix in it.
+That establishes one thing and refutes nothing: **the freeze is intermittent**,
+so its absence is not evidence for the focus hypothesis, and the commit is
+exactly as unverified as when it was written.
+
+**The symptom, in the user's words:** scrolling with the mouse wheel inside a
+table stops, and a reload is needed. Vertical dies while sideways panning still
+works; it follows **a click anywhere on the table**, including the inert space
+between names. Safari.
+
+**What is established, by measurement** (unchanged — see `CLAUDE.md` →
+*Preview*): `.scroll` computes `overflow-y:auto` though only `overflow-x` is
+authored, so the plate is a vertical scroll container with zero range; pinning
+that axis was measurably inert and was **reverted, not shipped**; the region is
+`tabindex="0"`, and focus is the only click-persistent state on it, which is
+what `938b8e8` acts on.
+
+**What would actually settle it, and it needs the user:** the next time the
+plate freezes in Safari, be on a **branch build** — not the live site — and try
+the fix there. Ask the same diagnostic either way: **does clicking the prose
+below the plate free it?** That answer separates *the plate is eating the
+gesture* (focus — what `938b8e8` addresses) from *the document itself is
+locked*, which points at Safari's popover handling and needs a different fix.
+
+**If it turns out to be wrong, close PR #43 and drop the branch.** Nothing else
+is riding on it.
 
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
-| Correct `laguna-search`'s README: eight name-match joins, not nine | tiny, other repo | Its `INFERRED_IDENTITIES` tuples are the authority; METHOD.md already says eight |
-| Link `/search/` from the landing page's contents list | small | Additive. The masthead reaches it from every page, so this is not a gap |
+| Decide about PR #43 | small, **needs you** | Park, rebase to hold only the scroll fix, or close. Leaving a stale open PR is how a later squash becomes a revert — `CLAUDE.md` → *Environment* |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — that is what settled the second sort. `digitallibrary.amnh.org` 403s automated fetches |
-
-## Two things this session learned the hard way
-
-Both are now in `CLAUDE.md`, which is the durable copy; they are restated here
-only because acting on either one costs a turn.
-
-1. **Don't trust a handoff's publication claims — check the remotes.** The last
-   one said the branch was unpushed with no open PRs, and said `laguna-search`
-   was unpushed. All three were wrong: PR #41 was already open and both repos
-   were pushed. `/wrap-session` writes the notes *before* the push, so the notes
-   can describe a state one step behind the repo, and the `SessionStart`
-   staleness hook cannot catch it. `gh pr list --state open` and
-   `git rev-list --left-right --count origin/main...HEAD` settle it in one turn.
-   **This file is subject to the same failure** — see *State* above, and verify
-   it rather than believing it.
-2. **A blank screenshot is a zero-sized viewport, not a scroll bug.** The pane
-   reported `innerWidth`/`innerHeight` of 0. The workaround: explicit
-   `resize_window` to `1280x900` (the `desktop` preset alone did not fix it),
-   and `translateY` to bring something below the fold into a scroll-0 capture.
-   That is what finally let the folded footer be *seen* rather than only
-   measured — and it looked right.
 
 ## Before touching the search page
 
@@ -87,10 +103,17 @@ only because acting on either one costs a turn.
    obligation from re-vendoring: it stops that tool's gates passing against a
    cache of the site as it was. **Decide a re-vendor from the register-markup
    diff, never from `meta.generated`**, which is date-granular and will differ
-   by that one field on any later day.
+   by that one field on any later day. That diff was **0** for this publish —
+   only the landing page and `404.html` moved.
 
 ## Decisions already made — don't re-litigate
 
+- **The `/search/` link sits outside the contents `<ol>`**, not as a fifth
+  numbered plate — the list is the edition's plates in Parsons's order. Its
+  count is computed, and it says **entries**, not people: the search page's own
+  line reads "620 people, drawn 713 times".
+- **The `overflow-y` pin on `.scroll` was tried and reverted.** Measurably
+  inert, wrong axis. Don't re-propose it as an obvious first move.
 - **Search sits in `.mast-right` beside Theme**, moved there by the user
   2026-08-09. It costs a row on a phone — **375px 109px → 157px, three rows**;
   1280px unchanged at 49px — and that cost was measured before and after and
@@ -134,3 +157,5 @@ re-taken.
 - **Genealogy II's placements** — the user re-checked their full list on
   2026-07-30 and reported no remaining errors.
 - **Phonetic glyph rendering** — proven from the cmap and checked on device.
+- **`laguna-search`'s join count** — corrected 2026-08-09 in that repo,
+  committed and pushed. Eight name-match joins.
