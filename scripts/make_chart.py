@@ -1275,9 +1275,18 @@ CSS = """
    invalid-at-computed-value-time where light-dark() is unsupported. Hence the
    structure below: static light tokens unconditionally; the light-dark()
    pairs only inside @supports; a static dark set (via the media query and
-   [data-theme], exactly like the old site) for engines without light-dark().
-   The [data-theme] color-scheme flips are all the JS theme control needs. */
-:root{color-scheme:light dark}
+   [data-theme]) for engines without light-dark().
+   The [data-theme] color-scheme flips are all the JS theme control needs.
+
+   THE DEFAULT IS LIGHT, and it is set HERE rather than in the script -- set by
+   the user 2026-08-10. `color-scheme:light` at :root is what makes light-dark()
+   resolve to the light half of every pair, so a reader on a dark OS gets the
+   light palette with the script dead, blocked or still parsing. Dark is now
+   reachable only through [data-theme="dark"], i.e. only by pressing the
+   control. Do NOT reintroduce a prefers-color-scheme palette block: it would
+   restore exactly the OS-follows-you behaviour this replaced, and it would do
+   it only in the no-JS case, which is the one nobody looks at. */
+:root{color-scheme:light}
 :root[data-theme="light"]{color-scheme:light}
 :root[data-theme="dark"]{color-scheme:dark}
 :root{
@@ -1365,29 +1374,12 @@ CSS = """
   }
 }
 /* Engines without light-dark() (Firefox ESR 115, Safari <=17.4): the same
-   dark set, statically, keyed the way the old site keyed it. Kept in step
-   with the pairs above -- change one, change both. */
+   dark set, statically. Kept in step with the pairs above -- change one,
+   change both. Keyed on [data-theme="dark"] ALONE: there is no
+   prefers-color-scheme branch here any more, because the OS no longer selects
+   the palette on either kind of engine. The static light tokens at :root are
+   the default, and this is the only thing that overrides them. */
 @supports not (color: light-dark(#000,#fff)){
-  @media (prefers-color-scheme:dark){
-    :root{
-      --paper:#191713; --panel:#221F1B; --ink:#E9E6DF; --muted:#A49E93;
-      --rule:#756F66; --rule-faint:#423F38; --accent:#DBB970;
-      --accent-strong:#DBB970; --ink-lineage:#C9C0AF; --wash:#2E250D;
-      --sic:#FF8A80; --clan:#DBB970;
-      --shadow:rgba(0,0,0,.45); --eng-bg:#3A3016; --eng-fg:#F0DFAE;
-      --cen-bg:#1D2E3D; --cen-fg:#BCD7EE;
-      --sel-bg:#0E0C09;
-    }
-    :root[data-theme="light"]{
-      --paper:#FAF8F4; --panel:#FFFDF9; --ink:#1C1A17; --muted:#635D53;
-      --rule:#7D766B; --rule-faint:#C4BFB4; --accent:#7A5C1E;
-      --accent-strong:#5C450F; --ink-lineage:#3A342A; --wash:#F4E6CA;
-      --sic:#B3261E; --clan:#7A5C1E;
-      --shadow:rgba(0,0,0,.07); --eng-bg:#E8DFC8; --eng-fg:#4A3A12;
-      --cen-bg:#DCE6EF; --cen-fg:#22384C;
-      --sel-bg:#FFFFFF;
-    }
-  }
   :root[data-theme="dark"]{
     --paper:#191713; --panel:#221F1B; --ink:#E9E6DF; --muted:#A49E93;
     --rule:#756F66; --rule-faint:#423F38; --accent:#DBB970;
@@ -1447,27 +1439,30 @@ a.wordmark:focus-visible{color:var(--accent)}
    overran the row by 2.9px, and the tighter padding buys ~17px of headroom
    so the bar settles at two rows instead of three. Targets stay far past the
    24px minimum -- the labels alone are ~100px wide. */
-/* gap, not a literal space: the link is inline-flex, so "Genealogy " and the
-   numeral are two flex items and flex trims the space at the item boundary --
-   without this they read "GENEALOGYI". It costs nothing under the narrow
-   breakpoint below, where .nav-word is absolutely positioned and therefore
-   not a flex item at all. */
-.masthead nav a{justify-content:center;gap:.3em;padding-inline:var(--s2);
+/* The pills carry the NUMERAL ALONE at every width. "Genealogy " is still in
+   the markup and still in the accessible name -- hidden here, not removed, so
+   the link is still called "Genealogy I" by ear. --tap squares the pill, since
+   a bare numeral is a few px of glyph and was the worst target in this bar.
+   No gap is needed: the word is out of flow, so it is not a flex item. */
+.masthead nav a{justify-content:center;padding-inline:var(--s2);
+  min-width:var(--tap);
   border:1px solid var(--rule-faint);border-radius:2px;
   color:var(--muted);text-decoration:none;white-space:nowrap}
+.masthead nav .nav-word{position:absolute;width:1px;height:1px;margin:-1px;
+  padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 .masthead nav a:hover{color:var(--ink);border-color:var(--rule)}
 .masthead nav a:focus-visible{color:var(--ink);border-color:var(--rule)}
 .masthead nav a[aria-current="page"]{background:var(--ink);color:var(--paper);
   border-color:var(--ink);font-weight:600}
-/* Raising the chrome to 13px widened the labels, and below ~26rem the two
-   pills plus the Theme button overrun the row by 14px -- a third sticky row
-   on a phone. The word is hidden VISUALLY, not removed: the accessible name
-   stays "Genealogy I", and the pills fall back to the --tap square floor so
-   a bare numeral is still a 44px target. */
+/* Below ~26rem the row is still too tight for Search's word beside four
+   pills, so the SAME hide-the-word mechanism runs there -- scoped to
+   .mast-right, because the nav's copy of it is now unconditional above and
+   the two must be able to move independently. Hidden VISUALLY, not removed:
+   the accessible name stays "Search", and the glyph rule below gives it a
+   visible mark at that width. */
 @media (max-width:26rem){
-  .nav-word{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
-    overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
-  .masthead nav a{min-width:var(--tap)}
+  .mast-right .nav-word{position:absolute;width:1px;height:1px;margin:-1px;
+    padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 }
 .mast-right{margin-inline-start:auto;display:flex;align-items:center;gap:var(--s2)}
 .mast-btn{font:inherit;letter-spacing:inherit;text-transform:uppercase;
@@ -1486,6 +1481,21 @@ a.mast-btn{text-decoration:none}
 }
 .mast-btn:hover{color:var(--ink);border-color:var(--rule)}
 .mast-btn:focus-visible{color:var(--ink);border-color:var(--rule)}
+
+/* ---- the theme control, at the foot ------------------------------------- */
+/* Moved out of the masthead 2026-08-10. It keeps .mast-btn's shape and the
+   --tap floor -- it is site chrome wherever it stands -- and only needs the
+   bar's own font, which it no longer inherits down here. Right-aligned on the
+   same rail as the text above it, so it reads as the end of the page rather
+   than as a stray control; the block-start rule closes the page off under the
+   folded apparatus. */
+.theme-foot{display:flex;justify-content:flex-end;
+  max-width:var(--measure-wide);margin:0 auto;
+  padding:var(--s4) var(--s5) var(--s6);
+  border-block-start:1px solid var(--rule-faint);
+  font:400 var(--t-xs)/1.2 var(--font-ui);letter-spacing:.08em}
+.theme-foot .mast-btn{display:inline-flex;align-items:center;
+  min-height:var(--tap);padding-inline:var(--s3)}
 
 /* ---- title page -------------------------------------------------------- */
 .titlepage{max-width:var(--measure);margin:0 auto;
@@ -2110,8 +2120,10 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
 @media print{
   :root,:root[data-theme]{color-scheme:light}
   body{background:#fff;color:#000}
-  .masthead,.skip,.plate-tools,.plate-caption,.apparatus-register,[popover],
-  .ruler-chipslot{display:none}
+  /* .theme-foot joins the list because Theme left the masthead on
+     2026-08-10: hiding .masthead used to cover it, and no longer does. */
+  .masthead,.theme-foot,.skip,.plate-tools,.plate-caption,.apparatus-register,
+  [popover],.ruler-chipslot{display:none}
   .scroll{overflow:visible;padding:0}
   .scroll-shell::before,.scroll-shell::after,.ruler::after{display:none}
   .sheet{border:0;box-shadow:none}
@@ -2243,20 +2255,18 @@ THEME_SNIPPET = ('<script>try{var t=localStorage.getItem("lg-theme");'
                  'catch(e){}</script>')
 
 # The shared theme module: toggle Light <-> Dark on #theme, persist, and keep
-# the theme-color metas in step. String-formatted into both scripts below.
+# the theme-color meta in step. String-formatted into both scripts below.
 #
-# There is no Auto state in the control. The system preference is still
-# honoured -- it is what a first visit resolves to, and what the CSS does on
-# its own before this script runs -- but once resolved the button always names
-# a real palette rather than a mode whose meaning the reader has to infer.
+# There is no Auto state in the control, and since 2026-08-10 there is no
+# system-preference state either: an untouched control resolves to LIGHT, not
+# to the OS. The CSS says the same thing on its own (see the color-scheme note
+# in CSS), so this function only has to agree with it -- it is not the thing
+# that decides. Both halves have to change together or a dark-OS reader gets a
+# light page whose button says "Theme: Dark".
 _THEME_JS = r"""
 var THEMES=["light","dark"];
-function systemTheme(){
-  return (typeof matchMedia!=="undefined"
-    && matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
-}
 function applyTheme(t){
-  if(t!=="light"&&t!=="dark"){t=systemTheme()}
+  if(t!=="light"&&t!=="dark"){t="light"}
   root.dataset.theme=t;
   doc.querySelectorAll('meta[name="theme-color"]').forEach(function(m){
     m.content=t==="light"?"#FAF8F4":"#191713"});
@@ -2268,9 +2278,9 @@ function cycleTheme(){
   store("lg-theme",next);applyTheme(next);
 }
 var themeBtn=$("#theme");
-/* No stored choice resolves to the system preference and is NOT written back:
-   a reader who has never touched the control keeps following their OS until
-   they do. */
+/* No stored choice resolves to light and is NOT written back: nothing is
+   persisted until the reader presses the control, so an untouched control
+   leaves no trace in storage. */
 if(themeBtn){themeBtn.hidden=false;applyTheme(read("lg-theme"))}
 """
 
@@ -2759,15 +2769,23 @@ def masthead_html(tables, current_slug, prefix, home):
     landing page, the absolute site URL in the private build); `home` is the
     wordmark's href, or None on the landing page, which names itself.
     """
+    # "Home", not the edition's name -- set by the user 2026-08-10. The bar is
+    # now a way back rather than a nameplate; the edition names itself in the
+    # <title>, the title block and the citation, which is where a reader who
+    # wants to cite it looks anyway.
     if home:
-        mark = f'<a class="wordmark" href="{home}">Laguna Genealogies</a>'
+        mark = f'<a class="wordmark" href="{home}">Home</a>'
     else:
-        mark = ('<span class="wordmark" aria-current="page">'
-                'Laguna Genealogies</span>')
-    # Full "Genealogy I" labels, not bare numerals: the pills separate the
-    # links visually, so the "Tables:" lead-in is redundant on screen. The
-    # nav keeps aria-label="Tables", which is what carries that grouping to
-    # a screen reader now the visible words are gone.
+        mark = '<span class="wordmark" aria-current="page">Home</span>'
+    # The pills show the NUMERAL ALONE at every width (user, 2026-08-10). The
+    # word is still in the markup and still in the accessible name -- it is
+    # hidden visually by .masthead nav .nav-word, not removed -- because "I"
+    # on its own is not a link name anyone can act on by ear, and the nav's
+    # aria-label="Tables" groups them but does not name them individually.
+    # This is the SAME .nav-word mechanism the Search label uses, now applied
+    # at every width here and still only below 26rem there; the two are
+    # deliberately separate selectors, so widening one does not silently
+    # unhide the other.
     links = "".join(
         f'<a href="{prefix}{slug}/"'
         + (' aria-current="page"' if slug == current_slug else "")
@@ -2778,20 +2796,19 @@ def masthead_html(tables, current_slug, prefix, home):
     # screen reader reading the group. It is a link rather than a button so it
     # works with the script dead, unlike Theme.
     #
-    # It sits in mast-right beside Theme, which is where the user asked for it
-    # on 2026-08-09. That position has a KNOWN COST and it is not a guess: at
-    # 375px the pills and Theme already fill their row to 360px against 359px
-    # of usable width, so adding Search wraps the bar to a third row. Measured
-    # after the move -- 1280px unchanged at 49px, 375px 109px -> 157px,
-    # permanently sticky, a fifth of an 812px viewport. It rode beside the
-    # wordmark until this change precisely to avoid that, and the wordmark's
-    # row still has the spare width if it is ever moved back.
+    # It sits in mast-right, which held Theme as well until 2026-08-10, when
+    # Theme moved to the page foot. The measurement that governed this corner
+    # is worth keeping even though its pressure is off: at 375px the pills and
+    # Theme filled their row to 360px against 359px of usable width, so adding
+    # Search wrapped the bar to a THIRD sticky row (109px -> 157px, a fifth of
+    # an 812px viewport). Theme leaving and the pills dropping to bare numerals
+    # both give width back -- re-measure before spending it.
     #
-    # Do NOT try to buy the row back by shaving gaps: 44px is --tap, the floor,
+    # Do NOT try to buy a row back by shaving gaps: 44px is --tap, the floor,
     # and this file's own history (the 2.9px overrun comment above) is the
     # argument against living on a 3px margin. Its label wears .nav-word so the
-    # SAME ≤26rem rule hides it, reused rather than reinvented; below that width
-    # the glyph alone stands in and the accessible name stays "Search".
+    # ≤26rem rule hides it, reused rather than reinvented; below that width the
+    # glyph alone stands in and the accessible name stays "Search".
     search = (f'<a class="mast-btn" href="{prefix}search/">'
               f'<span class="nav-word">Search</span>{SEARCH_GLYPH}</a>')
     return f"""<header class="masthead">
@@ -2799,13 +2816,23 @@ def masthead_html(tables, current_slug, prefix, home):
   <nav aria-label="Tables">{links}</nav>
   <span class="mast-right">
     {search}
-    <!-- Bare "Theme" in the markup: the server cannot know which palette the
-         reader will resolve to, and applyTheme() names it on the first tick.
-         It must not say Auto -- there is no Auto state, and this label is what
-         ships in the HTML and shows in the moment before the script runs. -->
-    <button id="theme" class="mast-btn" data-action="theme" hidden>Theme</button>
   </span>
 </header>"""
+
+
+# The theme control, at the FOOT of every page (user, 2026-08-10; it rode in
+# the masthead until then). Bare "Theme" in the markup: the server cannot know
+# which palette the reader will resolve to, and applyTheme() names it on the
+# first tick. It must not say Auto -- there is no Auto state, and this label is
+# what ships in the HTML and shows in the moment before the script runs.
+#
+# One string for all three page types, so the control cannot drift between
+# them. Authored hidden and unhidden by the script, exactly as it was in the
+# bar: with the script dead a reader gets the light palette and no dead
+# control, which is the whole reason Theme is a <button> and Search is an <a>.
+THEME_FOOT = ('<div class="theme-foot">'
+              '<button id="theme" class="mast-btn" data-action="theme" hidden>'
+              'Theme</button></div>')
 
 
 def ruler_html(spec, n_gens):
@@ -3291,8 +3318,7 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Genealogy {spec['numeral']} &mdash; Parsons 1923, Laguna Pueblo{"" if public else " (private build)"}</title>
-<meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme:light)">
-<meta name="theme-color" content="#191713" media="(prefers-color-scheme:dark)">
+<meta name="theme-color" content="#FAF8F4">
 <link rel="icon" href="{FAVICON}">
 {head_extra}
 <style>{font_css()}{geom_css()}{CSS}</style>
@@ -3364,6 +3390,7 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
      <time datetime="{today.isoformat()}">{today.strftime("%-d %B %Y")}</time>.
      {f'<span class="print-url">Published at {canonical}</span>' if public else ''}</p>
 </footer>
+{THEME_FOOT}
 <div id="pcard" class="pcard" popover role="dialog" aria-labelledby="pcard-t" tabindex="-1" hidden></div>
 <script>{UI_JS}</script>
 </body>
@@ -3409,6 +3436,12 @@ LANDING_CSS_EXTRA = """
 .faq[open] summary::before{content:"\\2013"}
 .faq summary:hover{color:var(--accent)}
 .faq p{margin:0 0 var(--s4) var(--s4)}
+/* The theme control closes the page on the same rail as the page. A table
+   page's apparatus is --measure-wide and the control matches it there by
+   default; here the contents list and the prose are both --measure, and a
+   closing rule 32rem wider than everything above it reads as a stray element
+   rather than as the end of the page. */
+.theme-foot{max-width:var(--measure)}
 """
 
 
@@ -3434,7 +3467,20 @@ LANDING_CSS_EXTRA = """
 # This replaced a bridge that mirrored the two keys and carried changes back
 # with a MutationObserver. Don't reintroduce one: a second key is the defect,
 # not the starting condition.
-THEME_KEY_DECL = '<script>window.LAGUNA_THEME_KEY="lg-theme"</script>'
+#
+# It carries a SECOND declaration since 2026-08-10: the default palette. Every
+# other page here defaults to light in CSS, with no script involved (see the
+# color-scheme note in CSS), but the widget's palette is keyed on
+# html[data-theme] alone and its own default is the system preference -- so
+# without this, choosing nothing gives a dark /search/ beside a light
+# everything-else on a dark OS. Setting the attribute here rather than asking
+# for another widget option is deliberate: defaulting to light is THIS site's
+# decision, and the widget standing alone should keep following the reader's
+# OS. It runs ahead of the vendored boot script, which only ever assigns when
+# it finds a stored value, so a stored choice still wins.
+THEME_KEY_DECL = (
+    '<script>window.LAGUNA_THEME_KEY="lg-theme";'
+    'document.documentElement.dataset.theme="light"</script>')
 
 
 def write_search(tables):
@@ -3531,12 +3577,18 @@ def write_search(tables):
     for name in ("search.js", "search-index.json"):
         shutil.copyfile(SEARCH_DIR / name, out / name)
 
+    # The bar mirrors the site masthead exactly, and both changed on
+    # 2026-08-10: "Home" for the wordmark, and the numeral alone on the pills
+    # with "Genealogy " kept in the accessible name. Keep the two in step --
+    # this bar is the only navigation a reader who lands on /search/ has, and
+    # it reading differently from every other page's is the thing it exists to
+    # avoid.
     links = "".join(
         f'<a href="../{slug}/"><span class="lg-hb-word">Genealogy </span>{numeral}</a>'
         for numeral, slug in tables)
     bar = (
         '<header class="lg-host-bar">'
-        '<a class="lg-hb-mark" href="../">Laguna Genealogies</a>'
+        '<a class="lg-hb-mark" href="../">Home</a>'
         f'<nav aria-label="Tables">{links}</nav>'
         "</header>")
 
@@ -3557,15 +3609,16 @@ def write_search(tables):
 .lg-hb-mark{{color:var(--lg-ink);font-weight:600;letter-spacing:.14em}}
 .lg-hb-mark:hover,.lg-hb-mark:focus-visible{{color:var(--lg-accent)}}
 .lg-host-bar nav{{display:flex;flex-wrap:wrap;gap:4px}}
-.lg-host-bar nav a{{justify-content:center;gap:.3em;color:var(--lg-muted);
+/* Numeral alone at every width, the word hidden but kept in the accessible
+   name -- the masthead's rule, restated here in the widget's tokens because
+   this bar cannot reach the site's stylesheet. */
+.lg-host-bar nav a{{justify-content:center;min-width:var(--lg-tap);
+  color:var(--lg-muted);
   border:1px solid var(--lg-rule);border-radius:2px;white-space:nowrap}}
 .lg-host-bar nav a:hover,.lg-host-bar nav a:focus-visible{{color:var(--lg-ink);
   border-color:var(--lg-rule-strong)}}
-@media (max-width:26rem){{
-  .lg-hb-word{{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
-    overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}}
-  .lg-host-bar nav a{{min-width:var(--lg-tap)}}
-}}
+.lg-hb-word{{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}}
 @media print{{.lg-host-bar{{display:none}}}}
 /* The heading, on the site's ramp rather than the widget's -- see (5) above.
    This block follows the widget's whole stylesheet at equal specificity, so it
@@ -3690,8 +3743,7 @@ def write_site(today, built):
 <meta name="keywords" content="{esc(', '.join(KEYWORDS))}">
 {social_meta("Laguna Genealogies: A Digital Edition of Parsons 1923",
              SITE_DESCRIPTION, SITE + "/", kind="website")}
-<meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme:light)">
-<meta name="theme-color" content="#191713" media="(prefers-color-scheme:dark)">
+<meta name="theme-color" content="#FAF8F4">
 <link rel="icon" href="{FAVICON}">
 {verify}{jsonld_site(built, today)}
 {jsonld_faq()}
@@ -3761,6 +3813,7 @@ def write_site(today, built):
   <p class="updated">Last updated
      <time datetime="{stamp}">{today.strftime("%-d %B %Y")}</time>.</p>
 </div>
+{THEME_FOOT}
 <script>{LANDING_JS}</script>
 </body>
 </html>
@@ -3776,8 +3829,7 @@ def write_site(today, built):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Page not found &mdash; Laguna Genealogies</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme:light)">
-<meta name="theme-color" content="#191713" media="(prefers-color-scheme:dark)">
+<meta name="theme-color" content="#FAF8F4">
 <link rel="icon" href="{FAVICON}">
 <style>{font_css()}{geom_css()}{CSS}{LANDING_CSS_EXTRA}</style>
 {THEME_SNIPPET}

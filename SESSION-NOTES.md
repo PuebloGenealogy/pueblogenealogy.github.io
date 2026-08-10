@@ -4,77 +4,100 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-10**. A design session on `/search/`, **published and
-verified live**. Three edits the user asked for, all measured; two of the three
-went **upstream** into `laguna-search`, at **`ac33d95`**, pushed.
+Last updated **2026-08-10**. A site-chrome session: six edits the user asked
+for, all built and measured, committed on a branch and **NOT published**. Two of
+them were upstream, in `laguna-search` at **`321f814`**, pushed.
+
+**These notes were written before the branch was pushed and the PR opened, so
+they understate what is done — that is the usual direction of this error. Take
+the publication state from the repo, not from here.**
 
 ## Start here in a new chat
 
 1. This file.
-2. `CHANGELOG.md`'s newest entry — the three `/search/` edits, the three defects
-   found while measuring, the on-device confirmation and why it counts, and the
-   one thing deliberately not done.
-3. Only if you are touching `/search/`: `CLAUDE.md` → *The search page is
-   vendored, not generated here*, which now carries the fifth injection, the
-   host-vs-upstream test, the All People layout and its three load-bearing
-   reasons, why names wrap, and the `.row-summary .grid` specificity trap.
-4. Only if you are measuring anything in a browser: `CLAUDE.md` → *Working
-   style* gained **an audit that compares two things which move together passes
-   on the defect it exists to catch**, which is the lesson of this session and
-   the second time this project has paid for it.
+2. `CHANGELOG.md`'s newest entry — the six edits, the Clan-menu defect that had
+   been live since the filter header was built, and what was checked before
+   committing.
+3. Only if you are touching the theme or the masthead: `CLAUDE.md` →
+   *The theme control has no Auto state* (rewritten — the default is now light,
+   and CSS is what says so) and the *numeral-only pills* note under
+   *Design invariants*.
+4. Only if you are touching `/search/`: `CLAUDE.md` → *The search page is
+   vendored, not generated here*, which now carries the second declaration in
+   `THEME_KEY_DECL`, the two specificity traps, the pan-into-view rule and the
+   third re-vendor shape.
 
 Preview: `preview_start`, config name `site`, serves `docs/` on
 `http://localhost:4173`. **A narrow-viewport check needs a fixed-width iframe,
 not `resize_window`** — the pane widens to the content and there is no pan to
-photograph. See `CLAUDE.md` → *Preview*.
+photograph. See `CLAUDE.md` → *Preview*. Note the pane also paints at a width
+that disagrees with the `innerWidth` it reports; read `innerWidth` before
+believing a screenshot, and prefer measuring to looking.
 
 ## State
 
-**Nothing is half-finished, both repos are committed and pushed, and the site is
-live.**
+**Nothing is half-finished. Both repos are committed. The site is live on the
+PREVIOUS build.**
 
-**The deployed content is `2313ac4`'s `docs/`** (PR #47, squash-merged),
-verified by SHA-256: all seven pages plus `search/search.js` and
-`search/search-index.json`, every path 200, sitemap 5 `<loc>` against a build
-count of 7 (correct), identity grep 0. A `--public` rebuild reproduces `docs/`
-byte-identical, so `scripts/` and `docs/` agree.
+**This session's work is on `chrome-2026-08-10-home-light-theme-foot`, open as
+PR #49 and NOT merged; the DEPLOYED content is still `2313ac4`'s `docs/`.**
+Its direction was measured at the moment it was opened — purely additive against
+`main`, no other PR open — but **a branch's direction is a fact with a
+timestamp, not a property**. Re-read `git diff origin/main origin/<branch>`
+before merging, and bring `main` into it rather than discovering deletions
+afterwards. A parked branch here has a shelf life measured in days: PR #43 went
+from records-only drift to 152 insertions against 262 deletions in one.
 
-**`laguna-search` is at `ac33d95`, pushed, level with origin** — the two layout
-changes, 96/65 in `src/search.css` (`dist/` is gitignored there, so that is the
-whole commit). `vendor/search/` was verified byte-for-byte against that commit's
-`dist/`, all three files, and `SOURCE.md` names the SHA. Its post-publish
-`--refresh` is done: `re-fetched`, seven gates green, all three files still
-byte-identical. Namesake gate unchanged at **3 pairs, 1 open** (`II-182 /
-IV-69`).
+**Establish that gap before anything else**, because a cold start will not see
+it: `--public` reproduces `docs/` byte-identically from `scripts/`, so the repo
+looks entirely consistent while the public site still shows the old masthead,
+the old theme default and the broken Clan menu. **Merge #49, then `/publish` —
+that is the whole of what is outstanding.**
 
-`main` may sit above the deployed commit on records-only commits — this handoff
-and the changelog. Check `git diff 2313ac4 HEAD -- docs vendor scripts`, which
-was empty when this was written. And take publication state from the repo, never
-from this file:
+Take publication state from the repo, never from this file:
 
 ```bash
 gh pr list --state open
 git rev-list --left-right --count origin/main...HEAD
 ```
 
+`laguna-search` is at **`321f814`**, pushed, level with origin — the Clan menu
+fix, the menu's pan-into-view, the two search halves on one line, the theme
+control at the foot, the All People standfirst moved into the footer note, and
+`color-scheme` following `[data-theme]`. `vendor/search/` was re-vendored from
+that commit and `SOURCE.md` names the SHA.
+
 A `--public` build exits 0: 7 pages, 10 JSON-LD blocks valid, leak gate clear.
 `leak_report()` was run by hand over all three vendored files — clean.
+Gate 8's diff test was **0 register-bearing lines on all four plates**, and
+`search-index.json` came back byte-identical, so no `--refresh` was owed for the
+re-vendor. **The post-publish `--refresh` run is still owed** — that is a
+separate obligation and it is never optional.
 
 All four plates published, 713 entries, no reading question open.
 
 **A rebuild on a later day dirties `docs/` with dates alone** — `dateModified`,
 the "Last updated" line, `sitemap.xml` `lastmod`. If tomorrow's first `--public`
 shows pages moving on those and nothing else, that is the clock, not a content
-change: `git checkout -- docs/` and move on. Committing it would signal a
-content change to crawlers that did not happen.
+change: `git checkout -- docs/` and move on. **This matters more than usual
+right now**, because `main` and the deployed build genuinely differ — a date-only
+diff must not be mistaken for that difference, or for its resolution.
 
-## The open thread — bracket placement on I and III, never read against the scan
+## The open thread — publish, then the plates
 
-**Needs you.** Genealogy IV shipped on 2026-07-31 with person 20 attached to the
-wrong marriage, and it survived four `self_check()`s, every publish gate and ten
-days live. **Nothing structural can find the next one**: 19 and 20 are both
-Bear, exactly like their mother, so clan descent cannot discriminate, and the
-counts close either way.
+**Merge #49 and publish. It is small and it is blocking.** Six user-requested
+changes sit unseen on the branch, including a defect fix: on the live site the
+Clan filter on `/search/` still draws a column of black squares with no clan
+names on any window under 860px. Merge, then `/publish`, then run
+`python3 build.py --refresh` in the `laguna-search` checkout — its gates
+otherwise pass against a cache of the site as it was.
+
+**Then the standing thread returns: bracket placement on Genealogy I and III,
+never read against the scan.** **Needs you.** Genealogy IV shipped on
+2026-07-31 with person 20 attached to the wrong marriage, and it survived four
+`self_check()`s, every publish gate and ten days live. **Nothing structural can
+find the next one**: 19 and 20 are both Bear, exactly like their mother, so clan
+descent cannot discriminate, and the counts close either way.
 
 Checked by a human against the scan: **Genealogy II** (the user's full list,
 2026-07-30) and **Genealogy IV's 5/6/7** (2026-08-10). **I and III have not
@@ -104,49 +127,55 @@ change a transcription unilaterally.
 
 | | Effort | Notes |
 |---|---|---|
-| Widen `/search/`'s Name column | small, needs you | Names still wrap at their editorial `<wbr>` seams — 8 of the first 60 rows, 59.3px against 56px. Widest name measures **196px** against a 116px column. Widening removes the wrapping and moves the pan threshold from 672px to ~756px. Declined today because `nowrap` would truncate a transcribed name |
-| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged, and **today's `/search/` confirmation is NOT about it** — different page, different scroller, and this symptom is intermittent. No branch build; the fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** That separates *the plate eats the gesture* from *the document is locked*. Unverified and stays so — it was last reported clear on the *live* site, which never carried it |
+| **Merge #49, then publish** | small, blocking | See the open thread. The branch is six changes ahead of the live site, one of them a defect fix. Then `--refresh` over there |
+| The `/search/` provenance line's home | small, needs you | The All People standfirst went into `/search/`'s own footer note, beside "A read-only finding aid…". The user said "put it in provenance" and that page's footer note is its provenance block — but the landing page's *Provenance and use* is the other reading. Offered and not taken up; ask before moving it |
+| The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. On a chart page nothing in the chrome says *Laguna Genealogies*; it survives in the `<title>`, the citation and the landing page. Flagged, not objected to |
+| Widen `/search/`'s Name column | small, needs you | Names still wrap at their editorial `<wbr>` seams — 8 of the first 60 rows, 59.3px against 56px. Widest name measures **196px** against a 116px column. Widening removes the wrapping and moves the pan threshold from 641px to ~725px. Declined 2026-08-10 because `nowrap` would truncate a transcribed name |
+| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. No branch build; the fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** That separates *the plate eats the gesture* from *the document is locked*. It was last reported clear on the *live* site, which never carried the fix |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — that is what settled the second sort. `digitallibrary.amnh.org` 403s automated fetches |
 
 ## Decisions already made — don't re-litigate
 
-- **Host CSS supplies what the widget lacks; layout goes upstream.** The test is
-  whether the widget *standing alone* would want the change. The h1 size is
-  host-specific (its own site should keep its big heading) and is injected here;
-  the one-line control row and the columnar list are that widget's layout
-  however it is served, and both live in `src/search.css`. If a host override is
-  ever unavoidable, **anchor it to the vendored rule and fail the build when
-  that rule moves** — that anchor is what caught the control-row override the
-  moment it became redundant.
-- **`/search/`'s All People list is a table at every width and pans below
-  672px.** The user chose this over two alternatives. The pan is the
-  **document's**, not an inner scroller's: an inner scroller captures the sticky
-  header's scroll container and the column names stop following the reader down
-  634 rows. It also keeps the site to one horizontal scroller while the plate's
-  `.scroll` has an open Safari symptom.
-  **CONFIRMED ON DEVICE 2026-08-10** — the user checked `/search/` on their
-  phone against the **live** build (`2313ac4`, which carries the pan): the
-  sticky header holds while the page pans, and there is no freeze. That is a
-  real confirmation because the build under their hands is known; contrast the
-  plate's freeze, "reported clear" on a build that never carried its fix.
-  **It says nothing about the plate's `.scroll` freeze**, which is a different
-  page and a different scroller, and stays open below.
-- **Names wrap, and that is editorial, not a styling gap.** Seams are decided in
-  `build.py` and ratified 2026-08-08. `nowrap` truncates a transcribed name.
-- **The `/search/` h1 is derived, never restated** — all three declarations read
-  out of `CSS`'s h1 rule; the build aborts if one leaves it.
-- **A column is as narrow as its CONTROL allows**, never as its values look. Sex
-  is set by its `select` (which sizes to its widest *option*), Clan by its
-  disclosure at 76px.
-- **Everything from the previous session still stands**: a row's height is
-  stated, not inferred (`height:var(--lh)`; **do not** simplify back to
-  `line-height`); the 1px overlap on abutting rules was tried and reverted; the
-  Scale control is innocent; IV's 5/+6/+7 is not the `LEADER_ON_SPOUSE_ROW`
-  shape; the `/search/` link sits outside the contents `<ol>` and says
-  *entries*; Search sits in `.mast-right` and its phone cost is measured; three
-  apparatus sections fold and two do not; one theme storage key, no bridge;
-  `laguna-search` stays a separate private repo; `/search/` is absent from
-  `sitemap.xml`; the twelve unattested cross-plate joins are the edition's.
+- **The default palette is LIGHT, and CSS is what says so.** Not the script.
+  `:root{color-scheme:light}` makes `light-dark()` resolve light, and the
+  `prefers-color-scheme` palette block is **deleted** — dark is reachable only
+  through `[data-theme="dark"]`. **Do not reintroduce that block**: it restores
+  OS-follows-you behaviour in exactly the no-JS case nobody looks at. A stored
+  choice still wins, and nothing is written to storage until the reader presses
+  the control. `/search/` gets the same default from a host-side declaration in
+  `THEME_KEY_DECL`, deliberately not from another widget option.
+- **The pills carry the numeral alone, and the word stays in the markup.**
+  `.masthead nav .nav-word` hides "Genealogy " visually at every width; the
+  accessible name is still "Genealogy I". **Do not delete the span.** The
+  `≤26rem` rule is now `.mast-right .nav-word` and hides the Search label only —
+  two selectors on purpose.
+- **The wordmark reads "Home".** The bar is a way back, not a nameplate.
+- **Theme sits at the foot of every page**, one `THEME_FOOT` string for all
+  three page types, and it is named in `@media print` because hiding
+  `.masthead` no longer covers it.
+- **Upstream vs host was applied four more times, and split three to one.**
+  Upstream: the Clan menu fix, its pan-into-view, the two search halves on one
+  line, the theme control's move, `color-scheme` on `[data-theme]`. Host-side:
+  the light default. The test is whether the widget *standing alone* would want
+  the change.
+- **`min-width: 0` contributes NOTHING to a track's minimum.** This bit twice in
+  one day, one level apart: the search card first resolved to 345.6px with a
+  190px name box inside a 161.8px column, and `.laguna-search` itself needed
+  `min-width:min-content` or the two cards took different widths.
+- **A menu on a panning page brings itself into view horizontally, not with
+  `scrollIntoView`** — which would drag a sticky-headed page vertically to reach
+  a menu already in view.
+- **Everything from the previous session still stands**: `/search/`'s All People
+  list is a table at every width and the document pans (confirmed on device
+  2026-08-10, on a build that carried it); names wrap and that is editorial; the
+  `/search/` h1 is derived from `CSS`'s h1 rule and the build aborts if it
+  moves; a row's height is stated, not inferred (`height:var(--lh)`; **do not**
+  simplify back to `line-height`); the 1px overlap on abutting rules was tried
+  and reverted; the Scale control is innocent; IV's 5/+6/+7 is not the
+  `LEADER_ON_SPOUSE_ROW` shape; the `/search/` link on the landing page sits
+  outside the contents `<ol>` and says *entries*; `laguna-search` stays a
+  separate private repo; `/search/` is absent from `sitemap.xml`; the twelve
+  unattested cross-plate joins are the edition's.
 
 ## Closed — do not re-raise
 

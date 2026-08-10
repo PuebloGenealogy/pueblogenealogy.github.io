@@ -4,8 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Genealogy I &mdash; Parsons 1923, Laguna Pueblo</title>
-<meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme:light)">
-<meta name="theme-color" content="#191713" media="(prefers-color-scheme:dark)">
+<meta name="theme-color" content="#FAF8F4">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c1a17'/%3E%3Cg stroke='%23d9b872' stroke-width='2' fill='none'%3E%3Cpath d='M7 16h6M13 8v16M13 8h6M13 16h6M13 24h6'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="canonical" href="https://pueblogenealogy.github.io/genealogy-i/">
 <meta name="description" content="A verified digital transcription of Table 1, “Genealogy I”, from Elsie Clews Parsons’s Laguna Genealogies (1923): 104 individuals across five generations, with names, ages, clans and marriages as printed.">
@@ -38,9 +37,18 @@
    invalid-at-computed-value-time where light-dark() is unsupported. Hence the
    structure below: static light tokens unconditionally; the light-dark()
    pairs only inside @supports; a static dark set (via the media query and
-   [data-theme], exactly like the old site) for engines without light-dark().
-   The [data-theme] color-scheme flips are all the JS theme control needs. */
-:root{color-scheme:light dark}
+   [data-theme]) for engines without light-dark().
+   The [data-theme] color-scheme flips are all the JS theme control needs.
+
+   THE DEFAULT IS LIGHT, and it is set HERE rather than in the script -- set by
+   the user 2026-08-10. `color-scheme:light` at :root is what makes light-dark()
+   resolve to the light half of every pair, so a reader on a dark OS gets the
+   light palette with the script dead, blocked or still parsing. Dark is now
+   reachable only through [data-theme="dark"], i.e. only by pressing the
+   control. Do NOT reintroduce a prefers-color-scheme palette block: it would
+   restore exactly the OS-follows-you behaviour this replaced, and it would do
+   it only in the no-JS case, which is the one nobody looks at. */
+:root{color-scheme:light}
 :root[data-theme="light"]{color-scheme:light}
 :root[data-theme="dark"]{color-scheme:dark}
 :root{
@@ -128,29 +136,12 @@
   }
 }
 /* Engines without light-dark() (Firefox ESR 115, Safari <=17.4): the same
-   dark set, statically, keyed the way the old site keyed it. Kept in step
-   with the pairs above -- change one, change both. */
+   dark set, statically. Kept in step with the pairs above -- change one,
+   change both. Keyed on [data-theme="dark"] ALONE: there is no
+   prefers-color-scheme branch here any more, because the OS no longer selects
+   the palette on either kind of engine. The static light tokens at :root are
+   the default, and this is the only thing that overrides them. */
 @supports not (color: light-dark(#000,#fff)){
-  @media (prefers-color-scheme:dark){
-    :root{
-      --paper:#191713; --panel:#221F1B; --ink:#E9E6DF; --muted:#A49E93;
-      --rule:#756F66; --rule-faint:#423F38; --accent:#DBB970;
-      --accent-strong:#DBB970; --ink-lineage:#C9C0AF; --wash:#2E250D;
-      --sic:#FF8A80; --clan:#DBB970;
-      --shadow:rgba(0,0,0,.45); --eng-bg:#3A3016; --eng-fg:#F0DFAE;
-      --cen-bg:#1D2E3D; --cen-fg:#BCD7EE;
-      --sel-bg:#0E0C09;
-    }
-    :root[data-theme="light"]{
-      --paper:#FAF8F4; --panel:#FFFDF9; --ink:#1C1A17; --muted:#635D53;
-      --rule:#7D766B; --rule-faint:#C4BFB4; --accent:#7A5C1E;
-      --accent-strong:#5C450F; --ink-lineage:#3A342A; --wash:#F4E6CA;
-      --sic:#B3261E; --clan:#7A5C1E;
-      --shadow:rgba(0,0,0,.07); --eng-bg:#E8DFC8; --eng-fg:#4A3A12;
-      --cen-bg:#DCE6EF; --cen-fg:#22384C;
-      --sel-bg:#FFFFFF;
-    }
-  }
   :root[data-theme="dark"]{
     --paper:#191713; --panel:#221F1B; --ink:#E9E6DF; --muted:#A49E93;
     --rule:#756F66; --rule-faint:#423F38; --accent:#DBB970;
@@ -210,27 +201,30 @@ a.wordmark:focus-visible{color:var(--accent)}
    overran the row by 2.9px, and the tighter padding buys ~17px of headroom
    so the bar settles at two rows instead of three. Targets stay far past the
    24px minimum -- the labels alone are ~100px wide. */
-/* gap, not a literal space: the link is inline-flex, so "Genealogy " and the
-   numeral are two flex items and flex trims the space at the item boundary --
-   without this they read "GENEALOGYI". It costs nothing under the narrow
-   breakpoint below, where .nav-word is absolutely positioned and therefore
-   not a flex item at all. */
-.masthead nav a{justify-content:center;gap:.3em;padding-inline:var(--s2);
+/* The pills carry the NUMERAL ALONE at every width. "Genealogy " is still in
+   the markup and still in the accessible name -- hidden here, not removed, so
+   the link is still called "Genealogy I" by ear. --tap squares the pill, since
+   a bare numeral is a few px of glyph and was the worst target in this bar.
+   No gap is needed: the word is out of flow, so it is not a flex item. */
+.masthead nav a{justify-content:center;padding-inline:var(--s2);
+  min-width:var(--tap);
   border:1px solid var(--rule-faint);border-radius:2px;
   color:var(--muted);text-decoration:none;white-space:nowrap}
+.masthead nav .nav-word{position:absolute;width:1px;height:1px;margin:-1px;
+  padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 .masthead nav a:hover{color:var(--ink);border-color:var(--rule)}
 .masthead nav a:focus-visible{color:var(--ink);border-color:var(--rule)}
 .masthead nav a[aria-current="page"]{background:var(--ink);color:var(--paper);
   border-color:var(--ink);font-weight:600}
-/* Raising the chrome to 13px widened the labels, and below ~26rem the two
-   pills plus the Theme button overrun the row by 14px -- a third sticky row
-   on a phone. The word is hidden VISUALLY, not removed: the accessible name
-   stays "Genealogy I", and the pills fall back to the --tap square floor so
-   a bare numeral is still a 44px target. */
+/* Below ~26rem the row is still too tight for Search's word beside four
+   pills, so the SAME hide-the-word mechanism runs there -- scoped to
+   .mast-right, because the nav's copy of it is now unconditional above and
+   the two must be able to move independently. Hidden VISUALLY, not removed:
+   the accessible name stays "Search", and the glyph rule below gives it a
+   visible mark at that width. */
 @media (max-width:26rem){
-  .nav-word{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
-    overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
-  .masthead nav a{min-width:var(--tap)}
+  .mast-right .nav-word{position:absolute;width:1px;height:1px;margin:-1px;
+    padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 }
 .mast-right{margin-inline-start:auto;display:flex;align-items:center;gap:var(--s2)}
 .mast-btn{font:inherit;letter-spacing:inherit;text-transform:uppercase;
@@ -249,6 +243,21 @@ a.mast-btn{text-decoration:none}
 }
 .mast-btn:hover{color:var(--ink);border-color:var(--rule)}
 .mast-btn:focus-visible{color:var(--ink);border-color:var(--rule)}
+
+/* ---- the theme control, at the foot ------------------------------------- */
+/* Moved out of the masthead 2026-08-10. It keeps .mast-btn's shape and the
+   --tap floor -- it is site chrome wherever it stands -- and only needs the
+   bar's own font, which it no longer inherits down here. Right-aligned on the
+   same rail as the text above it, so it reads as the end of the page rather
+   than as a stray control; the block-start rule closes the page off under the
+   folded apparatus. */
+.theme-foot{display:flex;justify-content:flex-end;
+  max-width:var(--measure-wide);margin:0 auto;
+  padding:var(--s4) var(--s5) var(--s6);
+  border-block-start:1px solid var(--rule-faint);
+  font:400 var(--t-xs)/1.2 var(--font-ui);letter-spacing:.08em}
+.theme-foot .mast-btn{display:inline-flex;align-items:center;
+  min-height:var(--tap);padding-inline:var(--s3)}
 
 /* ---- title page -------------------------------------------------------- */
 .titlepage{max-width:var(--measure);margin:0 auto;
@@ -873,8 +882,10 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
 @media print{
   :root,:root[data-theme]{color-scheme:light}
   body{background:#fff;color:#000}
-  .masthead,.skip,.plate-tools,.plate-caption,.apparatus-register,[popover],
-  .ruler-chipslot{display:none}
+  /* .theme-foot joins the list because Theme left the masthead on
+     2026-08-10: hiding .masthead used to cover it, and no longer does. */
+  .masthead,.theme-foot,.skip,.plate-tools,.plate-caption,.apparatus-register,
+  [popover],.ruler-chipslot{display:none}
   .scroll{overflow:visible;padding:0}
   .scroll-shell::before,.scroll-shell::after,.ruler::after{display:none}
   .sheet{border:0;box-shadow:none}
@@ -913,15 +924,10 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
 <a class="skip" href="#plate">Skip to chart</a>
 <a class="skip" href="#register-sec">Skip past chart to the register</a>
 <header class="masthead">
-  <a class="wordmark" href="../">Laguna Genealogies</a>
+  <a class="wordmark" href="../">Home</a>
   <nav aria-label="Tables"><a href="../genealogy-i/" aria-current="page"><span class="nav-word">Genealogy </span>I</a><a href="../genealogy-ii/"><span class="nav-word">Genealogy </span>II</a><a href="../genealogy-iii/"><span class="nav-word">Genealogy </span>III</a><a href="../genealogy-iv/"><span class="nav-word">Genealogy </span>IV</a></nav>
   <span class="mast-right">
     <a class="mast-btn" href="../search/"><span class="nav-word">Search</span><svg class="mast-glyph" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><circle cx="6.75" cy="6.75" r="4.75" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.4 10.4 14.4 14.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></a>
-    <!-- Bare "Theme" in the markup: the server cannot know which palette the
-         reader will resolve to, and applyTheme() names it on the first tick.
-         It must not say Auto -- there is no Auto state, and this label is what
-         ships in the HTML and shows in the moment before the script runs. -->
-    <button id="theme" class="mast-btn" data-action="theme" hidden>Theme</button>
   </span>
 </header>
 <div class="titlepage">
@@ -1086,6 +1092,7 @@ body.chart .masthead nav a[aria-current="page"]{color:var(--paper)}
      <time datetime="2026-08-10">10 August 2026</time>.
      <span class="print-url">Published at https://pueblogenealogy.github.io/genealogy-i/</span></p>
 </footer>
+<div class="theme-foot"><button id="theme" class="mast-btn" data-action="theme" hidden>Theme</button></div>
 <div id="pcard" class="pcard" popover role="dialog" aria-labelledby="pcard-t" tabindex="-1" hidden></div>
 <script>(function(){
 "use strict";
@@ -1095,12 +1102,8 @@ function store(k,v){try{v===null?localStorage.removeItem(k):localStorage.setItem
 function read(k){try{return localStorage.getItem(k)}catch(e){return null}}
 
 var THEMES=["light","dark"];
-function systemTheme(){
-  return (typeof matchMedia!=="undefined"
-    && matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
-}
 function applyTheme(t){
-  if(t!=="light"&&t!=="dark"){t=systemTheme()}
+  if(t!=="light"&&t!=="dark"){t="light"}
   root.dataset.theme=t;
   doc.querySelectorAll('meta[name="theme-color"]').forEach(function(m){
     m.content=t==="light"?"#FAF8F4":"#191713"});
@@ -1112,9 +1115,9 @@ function cycleTheme(){
   store("lg-theme",next);applyTheme(next);
 }
 var themeBtn=$("#theme");
-/* No stored choice resolves to the system preference and is NOT written back:
-   a reader who has never touched the control keeps following their OS until
-   they do. */
+/* No stored choice resolves to light and is NOT written back: nothing is
+   persisted until the reader presses the control, so an untouched control
+   leaves no trace in storage. */
 if(themeBtn){themeBtn.hidden=false;applyTheme(read("lg-theme"))}
 
 function flip(b,txt){var o=b.textContent;b.textContent=txt;b.disabled=true;
