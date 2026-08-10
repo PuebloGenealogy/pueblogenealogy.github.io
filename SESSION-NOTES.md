@@ -22,11 +22,25 @@ first** — a zero-sized viewport, not a scroll bug. See `CLAUDE.md` → *Previe
 
 ## State
 
-**`main` is at `c362028`, clean, level with `origin/main`, and that is the
-deployed build.** Verified live by SHA-256: all seven pages plus
-`search/search-index.json`, every path 200, sitemap 5 `<loc>` against a build
-count of 7 (correct), identity grep 0. A `--public` rebuild reproduces `docs/`
-byte-identical, so `scripts/` and `docs/` agree.
+**The deployed content is `c362028`'s `docs/`**, verified live by SHA-256: all
+seven pages plus `search/search-index.json`, every path 200, sitemap 5 `<loc>`
+against a build count of 7 (correct), identity grep 0. A `--public` rebuild
+reproduces `docs/` byte-identical, so `scripts/` and `docs/` agree.
+
+**`main`'s HEAD sits above that on records-only commits** — this handoff, and
+the changelog. Don't read the two as disagreeing: check
+`git diff c362028 HEAD -- docs vendor scripts`, which was empty when this was
+written. **And take the publication state from the repo, never from this file** —
+`/wrap-session` writes before the branch is pushed, so these notes are one step
+behind themselves by construction:
+
+```bash
+gh pr list --state open
+git rev-list --left-right --count origin/main...HEAD
+```
+
+**No PR is open.** #45 (this session's records) merged; **#43 was closed
+unmerged** — see the table below.
 
 **`laguna-search` is clean at `44e3d7b`**, level with its origin, and its
 `dist/` is what `vendor/search/` now holds. Its post-publish `--refresh` is done
@@ -81,8 +95,7 @@ the crop and the evidence, do not change a transcription unilaterally.
 
 | | Effort | Notes |
 |---|---|---|
-| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and still parked. `938b8e8` on PR #43 is **unverified** — the freeze was last reported clear on the *live* site, which carries no fix, so it is intermittent and its absence proves nothing. Next time it freezes, be on a **branch build** and ask: **does clicking the prose below the plate free it?** That separates *the plate eats the gesture* (focus, what the commit addresses) from *the document is locked* (needs a different fix) |
-| **PR #43 is drifting further** | small, decide when merging | Open, DRAFT, parked deliberately. It was 256 insertions / 228 deletions against `main` **before** today's two commits; the deletions mean it is **behind**, and merging as-is would revert records. It now also collides directly — it carries +22 lines in `make_chart.py`, the file today's row-height fix changed. If you ever merge it: bring `main` in **first**, then re-measure the direction. Parking it costs nothing |
+| **The Safari scroll freeze** | needs you, awaiting recurrence | Still open as a *symptom*; **PR #43 was closed unmerged 2026-08-10**, so there is no branch build any more. The fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick it onto a fresh branch off current `main` when the freeze next appears, which also tests it against a build that has the row-box fix. It is **unverified and stays so**: the freeze was last reported clear on the *live* site, which never carried it. Ask first, before writing any code: **does clicking the prose below the plate free it?** That separates *the plate eats the gesture* (focus, what `938b8e8` addresses) from *the document is locked*, which needs a different fix. Both attempts' reasoning is on `main` in `CHANGELOG.md` under 2026-08-09 |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — that is what settled the second sort. `digitallibrary.amnh.org` 403s automated fetches |
 
 ## Decisions already made — don't re-litigate

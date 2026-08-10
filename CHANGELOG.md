@@ -121,6 +121,27 @@ not make. That is now one unlabelled group.
 sweep only opens `.html`, so `search.js` and the 314 KB index are never checked
 by it. All three clean.
 
+### PR #43 closed unmerged — a parked branch became a revert in one day
+
+Parked 2026-08-09 as the build to test the Safari scroll freeze on. By
+2026-08-10 it stood at **152 insertions against 262 deletions** in `scripts/`
+and `docs/` alone: `main` had gained IV·20's corrected parentage and the row-box
+fix while the branch stood still, so merging it would have undone both. Nothing
+was ever built on it — **parking was the whole cause**, and the drift looks like
+handoff churn rather than a revert, which is what makes it easy to wave through.
+
+**Nothing measured was lost**, because the previous wrap had deliberately
+carried both scroll attempts' reasoning onto `main` rather than leaving it on
+the branch. `59328e2` (the `/search/` link) was already on `main` by cherry-pick
+as `5495819`. The one unique commit, **`938b8e8`** — the unverified `pointerdown`
+handler that stops a click parking focus on the plate region — stays reachable
+by SHA and should be cherry-picked onto a fresh branch off current `main` if the
+freeze recurs, which also tests it against a build carrying the row-box fix.
+
+The generalisation is in `CLAUDE.md` → *Environment*: **carry the measurements
+to `main` when you park a branch, and the branch becomes disposable.** Leave the
+commit, not the branch.
+
 ## 2026-08-09 — Published: the `/search/` link, alone
 
 `59328e2` cherry-picked onto `main` as **`5495819`** and pushed; the landing
