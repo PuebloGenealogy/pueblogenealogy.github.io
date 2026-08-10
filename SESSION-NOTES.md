@@ -4,9 +4,9 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-10**. A design session on `/search/`, **not published**.
-Three edits the user asked for, all measured; two of the three went **upstream**
-into `laguna-search`, which is committed and pushed at **`ac33d95`**.
+Last updated **2026-08-10**. A design session on `/search/`, **published and
+verified live**. Three edits the user asked for, all measured; two of the three
+went **upstream** into `laguna-search`, at **`ac33d95`**, pushed.
 
 ## Start here in a new chat
 
@@ -23,18 +23,27 @@ photograph. See `CLAUDE.md` → *Preview*.
 
 ## State
 
-**Nothing is half-finished, and both repos are committed.**
+**Nothing is half-finished, both repos are committed and pushed, and the site is
+live.**
+
+**The deployed content is `2313ac4`'s `docs/`** (PR #47, squash-merged),
+verified by SHA-256: all seven pages plus `search/search.js` and
+`search/search-index.json`, every path 200, sitemap 5 `<loc>` against a build
+count of 7 (correct), identity grep 0. A `--public` rebuild reproduces `docs/`
+byte-identical, so `scripts/` and `docs/` agree.
 
 **`laguna-search` is at `ac33d95`, pushed, level with origin** — the two layout
-changes, 96/65 in `src/search.css`. `vendor/search/` was verified byte-for-byte
-against that commit's `dist/`, all three files, and `SOURCE.md` names the SHA.
+changes, 96/65 in `src/search.css` (`dist/` is gitignored there, so that is the
+whole commit). `vendor/search/` was verified byte-for-byte against that commit's
+`dist/`, all three files, and `SOURCE.md` names the SHA. Its post-publish
+`--refresh` is done: `re-fetched`, seven gates green, all three files still
+byte-identical. Namesake gate unchanged at **3 pairs, 1 open** (`II-182 /
+IV-69`).
 
-This repo's work is on branch **`search-layout-2026-08-10`**, pushed, open as a
-PR. It carries the h1 injection, the re-vendor, `CLAUDE.md` (+99) and the
-records. **Nothing was published**, so the live site still serves the previous
-session's build.
-
-Take publication state from the repo, never from this file:
+`main` may sit above the deployed commit on records-only commits — this handoff
+and the changelog. Check `git diff 2313ac4 HEAD -- docs vendor scripts`, which
+was empty when this was written. And take publication state from the repo, never
+from this file:
 
 ```bash
 gh pr list --state open
@@ -48,24 +57,30 @@ of `laguna-search`'s gates pass; namesake gate unchanged at **3 pairs, 1 open**
 
 All four plates published, 713 entries, no reading question open.
 
-## The open thread — merge the PR and publish
+## The open thread — check `/search/` on a phone in Safari
 
-The `/search/` work is finished and committed on both sides; what is left is
-shipping it. **Publish** — `/publish`. Two things about Gate 8 are already
-settled, so do not re-derive them:
+**Needs you, and it is cheap.** `/search/` now pans the **document** sideways
+below 672px. That is the **first horizontal document scroll this site has ever
+had**, it went live today, and it has only ever been measured in Chromium —
+where the preview pane cannot even simulate it, since the pane widens to the
+content rather than panning (use a fixed-width iframe; see `CLAUDE.md` →
+*Preview*).
 
-- **The re-vendor is done**, and it was the *upstream-driven* shape:
-  `search.js` and `search-index.json` came back **byte-identical** and only
-  `index.html` moved, because that is where the stylesheet is inlined.
-- **A byte-identical index means no `--refresh` obligation.** The index is
-  built by parsing pages that did not move. The post-publish `--refresh` run
-  is a separate obligation and still applies.
+Two reasons this is worth a minute rather than nothing:
 
-One thing worth watching on the deploy, because it has never been on the live
-site: `/search/` now pans the **document** sideways below 672px. That is the
-first horizontal document scroll this site has had, and the plate's `.scroll`
-already carries an unresolved Safari freeze. Check `/search/` on a phone in
-Safari after publishing.
+- The plate's `.scroll` region carries an **unresolved Safari freeze**, and the
+  three WebKit facts behind it are all about scroll containers and focus. A
+  second scrolling surface is exactly the sort of thing that interacts with it.
+- The one thing that would be a real defect is the **sticky column header**
+  losing its grip while the page pans. It is sticky by design so the column
+  names follow the reader down 634 rows, and the pan was deliberately given to
+  the document rather than an inner scroller to protect that. Verified sticky in
+  Chromium at every width; unverified in WebKit.
+
+What to look for: pan `/search/` sideways on a phone, scroll down the list, and
+say whether the header still follows and whether the gesture ever locks up.
+
+If it is fine, this closes and the substantive thread below is next.
 
 **A rebuild on a later day dirties `docs/` with dates alone.** If tomorrow's
 first `--public` shows six pages moving on `dateModified` / "Last updated" /

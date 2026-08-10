@@ -3,11 +3,16 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-10 (latest) — `/search/` design: the heading, and the list that stops stacking
+## 2026-08-10 (latest) — Published: `/search/` design, the heading and the list that stops stacking
 
-**Not published.** Four files uncommitted on `main` at the time of writing;
-`docs/search/index.html` is the only built page that moves. Three design edits
-the user asked for, in order, plus three defects found while measuring them.
+`2313ac4` (PR #47) on `main`, **live and verified**: all seven pages OK by
+SHA-256 against `docs/`, plus `search/search.js` and `search/search-index.json`;
+every path 200 (`/fonts/` 404s harmlessly, as ever); sitemap 5 `<loc>` against a
+build count of 7, correct; identity grep 0. `docs/search/index.html` was the
+only built page that moved — the four plates are byte-identical.
+
+Three design edits the user asked for, in order, plus three defects found while
+measuring them.
 
 ### The heading now matches every other page
 
@@ -106,9 +111,17 @@ the wrapping and moves the pan threshold from 672px to roughly **756px**.
 ### State of the re-vendor
 
 `search.js` and `search-index.json` came back **byte-identical** — the tell of a
-pure layout change, and it carries **no `--refresh` obligation**, because the
-index is built by parsing pages that did not move. `leak_report()` run by hand
-over all three vendored files: clean. All seven upstream gates pass.
+pure layout change. `leak_report()` run by hand over all three vendored files:
+clean. All seven upstream gates pass.
+
+**Gate 8 was correctly skipped, and the post-publish `--refresh` proved it.**
+The gate's test is a diff, and it was **0 on all four table pages** — none of
+them moved at all. The `--refresh` run afterwards is the *separate* obligation
+that always applies, and it came back `re-fetched`, seven gates green, with all
+three files **still byte-identical to the vendored copies**. So the index was
+never stale: the diff test and the live re-fetch agree. Keep the two apart —
+"the index is due" and "that tool's cache is stale" are different questions and
+only the second is unconditional.
 
 **Upstream is `ac33d95`**, committed and pushed on `laguna-search`'s `main` —
 96 insertions / 65 deletions in `src/search.css`, which is the whole of it there
