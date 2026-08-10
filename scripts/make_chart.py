@@ -3541,12 +3541,15 @@ def write_search(tables):
        Missing any of the three fails the build rather than shipping a heading
        that is a step off every other page.
 
-    6. THE STANDFIRST'S TYPE. The same argument one line down (user,
-       2026-08-10). The widget's `.lede` is 1.25rem/1.45 -- 20px, sized for a
-       page where it is the only thing under the title. A table page sets its
-       statistics line at `--t-base`/1.6, 16px, directly under the same h1, so
-       /search/ takes that instead. Read out of `CSS`'s `.imprint` rule, same
-       abort if it stops stating either declaration.
+    6. THE REST OF THE TITLE BLOCK -- the standfirst and the double rule
+       between it and the heading (user, 2026-08-10). Same argument as the h1:
+       the widget sizes both for a page where its title block is the whole of
+       the page. Its `.lede` is 1.25rem/1.45, 20px, against the table pages'
+       statistics line at `--t-base`/1.6, 16px, under the same h1; its `.rule`
+       is 452px wide and 7px deep in accent gold against `.rule-double`'s 8rem,
+       4px and ink. Both are read whole out of `CSS`, and the rule's ink token
+       is substituted for the widget's, exactly as the bar's colours are. Same
+       abort if either rule stops stating what is read from it.
 
     Note what is NOT in this list. The search card's one-line control row and
     the list keeping its columns at every width were both wanted here on
@@ -3611,6 +3614,21 @@ def write_search(tables):
                      "/search/'s standfirst would drift off the table pages'")
     if lede_type is None:
         return False
+
+    # The double rule under the title. The widget draws its own -- 452px wide,
+    # 7px deep, in accent gold -- because it was built to stand alone; a table
+    # page's is 8rem, 4px and ink, and it is the same mark under the same
+    # heading (user, 2026-08-10: match the lines under the header title with
+    # the tables' lines). Read whole out of `.rule-double`, colour token
+    # substituted, exactly as the bar's rules are.
+    rule_double = take(site_decls(r"(?m)^\.rule-double\{([^}]*)\}"),
+                       ("width", "height", "margin",
+                        "border-block-start", "border-block-end"),
+                       ".rule-double rule",
+                       "/search/'s rule would drift off the table pages'")
+    if rule_double is None:
+        return False
+    rule_double = rule_double.replace("var(--ink)", "var(--lg-ink)")
 
     # The bar's metrics, straight off the masthead's own tokens. The names are
     # kept AS THEY ARE rather than namespaced, so every rule below is the
@@ -3766,6 +3784,12 @@ a.lg-hb-mark:hover,a.lg-hb-mark:focus-visible{{color:var(--lg-accent)}}
    title block, same measure. Same equal-specificity trick: the <=480px rule
    sets a size of its own. */
 .laguna-search .lede{{{lede_type}}}
+/* And the double rule between them, which is the table pages' own mark: 8rem
+   and 4px deep in ink, not 452px and 7px in accent gold. The widget states it
+   with the physical `border-top`/`border-bottom` and this states it with the
+   logical pair, which is the same computed property -- later wins, and the
+   <=480px rule that re-widens it is earlier still. */
+.laguna-search .rule{{{rule_double}}}
 """
 
     charset = '<meta charset="utf-8">'

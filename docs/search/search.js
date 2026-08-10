@@ -1451,9 +1451,12 @@ export function mountSearch(host, options = {}) {
       el("p", { class: "kicker", text: "A digital edition of Parsons, 1923" }),
       el("h1", { text: "Search the Tables" }),
       el("span", { class: "rule", "aria-hidden": true }),
+      // Written by the editor, 2026-08-10, and it names the two halves of the
+      // card below in the order they appear. The count it used to carry
+      // ("all 4 tables") is gone from here; the footer note still states what
+      // the index holds, from `ctx.meta`, so no count is now typed anywhere.
       el("p", { class: "lede" },
-        `Find a person by table and number, or search all ${ctx.meta.tables.length}`,
-        " tables by name.")));
+        "Search by name or find a person by table and number.")));
   }
 
   root.append(searchCard);

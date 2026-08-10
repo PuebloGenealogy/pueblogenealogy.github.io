@@ -6,14 +6,15 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `520d858` |
-| Vendored on | 2026-08-10 (eighth re-vendor that day) |
+| Vendored from | `dist/`, at `499a3b4` |
+| Vendored on | 2026-08-10 (ninth re-vendor that day) |
 
-Two changes to the person list, both **upstream in `src/search.css` and
-`src/search.js`, neither injected here**. The test is whether the widget
-standing alone would want the change; table typography and a section's own
-heading both belong to that widget. The h1 size remains the one thing that had
-to be host-side, because it sits on *this* site's type ramp.
+Six changes to the search card and the person list, all **upstream in
+`src/search.css` and `src/search.js`, none injected here**. The test is whether
+the widget standing alone would want the change; table typography, a section's
+own heading, its captions and the height of its own controls all belong to that
+widget. What had to be host-side is the title block's type — see the note below
+the list.
 
 - **The name size** (`e31b271`) — `1.45rem` down to `1.2rem`, and `1.15rem`
   down to `1.05rem` in the 860px query.
@@ -33,21 +34,28 @@ to be host-side, because it sits on *this* site's type ramp.
   it, so the name box, the numerals and the number box share a top and a
   bottom edge. It was the last caption left stacked in the card, and it held
   that half's control row 30.36px taller than the other's.
+- **The standfirst, and the card's height** (`499a3b4`) — the standfirst
+  rewritten to *"Search by name or find a person by table and number."*, and
+  the card compacted vertically: the three controls from 52px to `--lg-tap`,
+  and the four gaps around them tightened. 195.89px → 170.28px at 1100px.
+  `--lg-tap` rather than a literal because 44px is the touch floor, so that is
+  as compact as the card may get.
 
-Five re-vendors, and between them they show every non-data shape there is:
+Six re-vendors, and between them they show every non-data shape there is:
 stylesheet only, so **`index.html` alone** (the stylesheet is inlined there),
 twice; markup *and* stylesheet, so **both `index.html` and `search.js`**; and —
 the one this file had not recorded before — **`search.js` alone**, twice, for a
 change to what the script writes at runtime, which is what both the note and
-the caption are. **`search-index.json` is byte-identical through all five**,
+the caption are. **`search-index.json` is byte-identical through all six**,
 and it is the only one that decides a `--refresh` obligation — so there is
 none. Nothing at this end changed the register markup either.
 
-**The bar and the standfirst on `/search/` moved the same day and are NOT in
-this list**, because they are host-side: `write_search()` now builds the bar
-from the site masthead's own tokens and sizes the widget's `.lede` from the
-table pages' `.imprint`. Both fail the upstream test — the widget standing
-alone wants its own bar-less title block and its own 20px lede.
+**The bar and the title block's type on `/search/` moved the same day and are
+NOT in this list**, because they are host-side: `write_search()` now builds the
+bar from the site masthead's own tokens, sizes the widget's `.lede` from the
+table pages' `.imprint`, and redraws its `.rule` from `.rule-double`. All three
+fail the upstream test — the widget standing alone wants its own bar-less title
+block, its own 20px lede and its own 452px gold rule.
 
 The **data** shape is the one neither of these two is, and it is worth keeping.
 Earlier that day **Genealogy IV's data changed** — 20's father corrected from 7

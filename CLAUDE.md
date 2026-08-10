@@ -882,13 +882,19 @@ supply it:
   size, letter-spacing and line-height. All three are **read out of `CSS`'s h1
   rule**, never restated; the ramp stays one literal and the build aborts if
   any of the three leaves that rule.
-- **The standfirst's size** (added 2026-08-10, the same argument one line
-  down). The widget's `.lede` is `1.25rem`/1.45 — 20px, sized for a page where
-  it is the only thing under the title. A table page sets its statistics line at
-  `--t-base`/1.6, **16px**, directly under the same h1, so `/search/` takes
-  that: same title block, same measure. Read out of **`CSS`'s `.imprint` rule**,
-  same abort if it stops stating either declaration. Verified 16px/25.6px on
-  both pages.
+- **The rest of the title block** (added 2026-08-10, the same argument one line
+  down — the widget sizes both for a page where its title block is the whole
+  page).
+  - **The standfirst.** `.lede` is `1.25rem`/1.45 — 20px — against the table
+    pages' statistics line at `--t-base`/1.6, **16px**, under the same h1. Read
+    out of **`CSS`'s `.imprint` rule**; verified 16px/25.6px on both pages.
+  - **The double rule between them.** The widget's `.rule` is 452px wide and
+    7px deep in **accent gold**; a table page's `.rule-double` is **8rem, 4px
+    and ink**, and it is the same mark under the same heading. Read whole out
+    of `.rule-double` — width, height, margin and both borders — with
+    `var(--ink)` substituted for `var(--lg-ink)`, exactly as the bar's colours
+    are. Verified identical on all six properties against a table page.
+  Same abort as the h1 if either rule stops stating what is read from it.
 
 **Which changes belong here, and which belong upstream — the test is whether
 the widget standing ALONE would want them.** Added 2026-08-10, after two

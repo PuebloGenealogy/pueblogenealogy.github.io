@@ -235,11 +235,17 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
  * Both write to the same state, so there is no second result list and nothing
  * to keep in step.
  */
+/* The card was made more compact on 2026-08-10, at the editor's request, and
+   the whole of it is vertical: the three controls come down from 52px to
+   `--lg-tap`, and the four gaps that stack above and below them each give up a
+   little. `--lg-tap` is the FLOOR and the reason the height is a token rather
+   than a smaller number — 44px is the touch target, so this is as compact as
+   the card is allowed to get. Nothing horizontal moved. */
 .laguna-search .card.search {
   display: grid;
   grid-template-columns: 1.08fr 1fr;
   margin-top: 0;
-  padding: 1.35rem 1.5rem;
+  padding: 1.1rem 1.5rem;
 }
 
 .laguna-search .search-half { min-width: 0; padding: 0 1.7rem; }
@@ -258,7 +264,7 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
   display: flex;
   align-items: flex-end;
   gap: 0.75rem;
-  margin-top: 1.05rem;
+  margin-top: 0.75rem;
 }
 
 .laguna-search .table-field { flex: 1 1 auto; min-width: 270px; }
@@ -289,7 +295,7 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 
 .laguna-search .table-buttons button {
   width: 74px;
-  height: 52px;
+  height: var(--lg-tap);
   border: 1px solid var(--lg-rule-strong);
   border-radius: 4px;
   background: var(--lg-sunk);
@@ -309,7 +315,7 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 
 .laguna-search .number-field input {
   width: 98px;
-  height: 52px;
+  height: var(--lg-tap);
   border: 1px solid var(--lg-rule-strong);
   border-radius: 4px;
   padding: 0 2.1rem 0 0.6rem;
@@ -322,7 +328,7 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 .laguna-search .name-field {
   flex: 1;
   min-width: 0;
-  height: 52px;
+  height: var(--lg-tap);
   border: 1px solid var(--lg-rule-strong);
   border-radius: 4px;
   background: var(--lg-sunk);
@@ -331,7 +337,7 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 .laguna-search .name-field input {
   width: 100%;
   min-width: 0;
-  height: 50px;
+  height: calc(var(--lg-tap) - 2px);
   border: 0;
   padding: 0 0.6rem 0 1.1rem;
   background: transparent;
@@ -386,7 +392,7 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 .laguna-search .clearable input:placeholder-shown + .clear-x { display: none; }
 
 .laguna-search .note {
-  margin: 1rem 0 0;
+  margin: 0.7rem 0 0;
   color: var(--lg-muted);
   font-size: 0.82rem;
 }
@@ -1420,6 +1426,12 @@ a.lg-hb-mark:hover,a.lg-hb-mark:focus-visible{color:var(--lg-accent)}
    title block, same measure. Same equal-specificity trick: the <=480px rule
    sets a size of its own. */
 .laguna-search .lede{font-size:var(--t-base);line-height:1.6;}
+/* And the double rule between them, which is the table pages' own mark: 8rem
+   and 4px deep in ink, not 452px and 7px in accent gold. The widget states it
+   with the physical `border-top`/`border-bottom` and this states it with the
+   logical pair, which is the same computed property -- later wins, and the
+   <=480px rule that re-widens it is earlier still. */
+.laguna-search .rule{width:8rem;height:4px;margin:var(--s4) auto;border-block-start:2px solid var(--lg-ink);border-block-end:1px solid var(--lg-ink);}
 </style>
 </head>
 <body>
