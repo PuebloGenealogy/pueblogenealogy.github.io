@@ -97,6 +97,23 @@ overflows.** `resize_window` to 375px on a 672px-wide table reports
 photograph. A phone check of anything wider than the phone goes in a
 **fixed-width iframe**, rendered visibly and screenshotted.
 
+### Confirmed on device, and why that confirmation counts
+
+The user checked `/search/` on their phone after the deploy: **the sticky column
+header holds while the page pans, and there is no freeze.** WebKit, which is the
+engine this could not be measured in — the preview is Chromium, and the pane
+cannot even simulate a viewport the page overflows.
+
+**This one is admissible because the build under their hands is known.** It was
+checked against the live site *after* `2313ac4` shipped, and `2313ac4` is what
+carries the pan. Compare the plate's scroll freeze, reported clear on
+2026-08-09 **on a live site that never carried the fix** — an absence observed
+on an unfixed build is not evidence about a fix. Ask which build before writing
+"verified"; here the answer was checkable.
+
+What it does **not** cover: the plate's `.scroll` freeze. Different page,
+different scroller, and that symptom is intermittent. It stays open.
+
 ### Deliberately not done
 
 **Names still wrap.** They are column data, so "keep the data from wrapping"

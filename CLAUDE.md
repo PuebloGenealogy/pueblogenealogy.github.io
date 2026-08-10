@@ -828,6 +828,12 @@ DOCUMENT pans sideways**. Three things about that are load-bearing:
   stop following the reader down 634 rows — which is the only reason that
   header sticks. It also keeps the site to one horizontal scroller, which
   matters while the plate's `.scroll` has an open Safari freeze symptom.
+  **Confirmed on device 2026-08-10**: the user checked `/search/` on their phone
+  against the live build that carries the pan, and the header holds with no
+  freeze. Admissible precisely because the build was known — see *And
+  confirmation from the user is only evidence if you know which build they were
+  on*, and note this says nothing about the plate's freeze, a different page and
+  a different scroller.
 - **`minmax(0,1fr)` and `min-width:0` are the enemy once the table sets the
   page's width.** A zero floor means the inner grid's 445px never reaches
   `min-content`, so the card stops short of its own minimum and the columns

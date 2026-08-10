@@ -57,30 +57,37 @@ of `laguna-search`'s gates pass; namesake gate unchanged at **3 pairs, 1 open**
 
 All four plates published, 713 entries, no reading question open.
 
-## The open thread — check `/search/` on a phone in Safari
+## The open thread — bracket placement on I and III, never read against the scan
 
-**Needs you, and it is cheap.** `/search/` now pans the **document** sideways
-below 672px. That is the **first horizontal document scroll this site has ever
-had**, it went live today, and it has only ever been measured in Chromium —
-where the preview pane cannot even simulate it, since the pane widens to the
-content rather than panning (use a fixed-width iframe; see `CLAUDE.md` →
-*Preview*).
+**Needs you.** Genealogy IV shipped on 2026-07-31 with person 20 attached to the
+wrong marriage, and it survived four `self_check()`s, every publish gate and ten
+days live. **Nothing structural can find the next one**: 19 and 20 are both
+Bear, exactly like their mother, so clan descent cannot discriminate, and the
+counts close either way.
 
-Two reasons this is worth a minute rather than nothing:
+Checked by a human against the scan: **Genealogy II** (the user's full list,
+2026-07-30) and **Genealogy IV's 5/6/7** (2026-08-10). **I and III have not
+been.** III is the largest and most intricate — 261 people, seven generations,
+two descent blocks, 72 unions.
 
-- The plate's `.scroll` region carries an **unresolved Safari freeze**, and the
-  three WebKit facts behind it are all about scroll containers and focus. A
-  second scrolling surface is exactly the sort of thing that interacts with it.
-- The one thing that would be a real defect is the **sticky column header**
-  losing its grip while the page pans. It is sticky by design so the column
-  names follow the reader down 634 rows, and the pan was deliberately given to
-  the document rather than an inner scroller to protect that. Verified sticky in
-  Chromium at every width; unverified in WebKit.
+The method, and it is cheap:
 
-What to look for: pan `/search/` sideways on a phone, scroll down the list, and
-say whether the header still follows and whether the gesture ever locks up.
+- Crop the **bracket-column strip** at native resolution — 260–320px wide, so
+  the vertical and every stub entering it are the only things in frame. Never
+  read structure off a downscale.
+- **Count the leaders entering each vertical before counting the lines in the
+  block.** One leader means one group however many `+` lines sit above it. That
+  single question is what IV·20 turned on.
+- A spouse whose line carries **no rule** had no recorded issue.
 
-If it is fine, this closes and the substantive thread below is next.
+The automated half is done and clean: a data-driven audit reading `_GROUPS`,
+taking each union's mother (or its `LEADER_ON_SPOUSE_ROW` spouse), and asserting
+the bracket starts on that named person's line — 426 checks, all four plates.
+**It cannot catch a group whose data and rendering agree with each other and
+disagree with the plate**, which is the whole remaining risk.
+
+Their reading wins on placement; present the crop and the evidence, and do not
+change a transcription unilaterally.
 
 **A rebuild on a later day dirties `docs/` with dates alone.** If tomorrow's
 first `--public` shows six pages moving on `dateModified` / "Last updated" /
@@ -90,7 +97,6 @@ first `--public` shows six pages moving on `dateModified` / "Last updated" /
 
 | | Effort | Notes |
 |---|---|---|
-| **Bracket placement on I and III, never read against the scan** | needs you | **Still the substantive open thread.** IV·20 shipped wrong on 2026-07-31 and survived four `self_check()`s, every publish gate and ten days live. Nothing structural can find the next one. Method: crop the bracket-column strip at native resolution, 260–320px wide, and **count the leaders entering each vertical before counting the lines in the block**. A spouse whose line carries no rule had no recorded issue. The data-driven audit (426 checks, `_GROUPS` → named leader → bracket start) is done and clean — it cannot catch data and rendering agreeing with each other and disagreeing with the plate |
 | Widen `/search/`'s Name column | small, needs you | Names still wrap at their editorial `<wbr>` seams — 8 of the first 60 rows, 59.3px against 56px. Widest name measures **196px** against a 116px column. Widening removes the wrapping and moves the pan threshold from 672px to ~756px. Declined today because `nowrap` would truncate a transcribed name |
 | **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged. No branch build; the fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** That separates *the plate eats the gesture* from *the document is locked*. Unverified and stays so — it was last reported clear on the *live* site, which never carried it |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — that is what settled the second sort. `digitallibrary.amnh.org` 403s automated fetches |
@@ -111,6 +117,13 @@ first `--public` shows six pages moving on `dateModified` / "Last updated" /
   header's scroll container and the column names stop following the reader down
   634 rows. It also keeps the site to one horizontal scroller while the plate's
   `.scroll` has an open Safari symptom.
+  **CONFIRMED ON DEVICE 2026-08-10** — the user checked `/search/` on their
+  phone against the **live** build (`2313ac4`, which carries the pan): the
+  sticky header holds while the page pans, and there is no freeze. That is a
+  real confirmation because the build under their hands is known; contrast the
+  plate's freeze, "reported clear" on a build that never carried its fix.
+  **It says nothing about the plate's `.scroll` freeze**, which is a different
+  page and a different scroller, and stays open below.
 - **Names wrap, and that is editorial, not a styling gap.** Seams are decided in
   `build.py` and ratified 2026-08-08. `nowrap` truncates a transcribed name.
 - **The `/search/` h1 is derived, never restated** — all three declarations read
