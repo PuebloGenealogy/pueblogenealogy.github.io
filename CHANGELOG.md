@@ -28,6 +28,37 @@ commits. Since the squash-free cherry-pick puts the same content on `main`, the
 branch is *ahead* of `main` by the scroll fix alone and proposes no deletions —
 `git diff main <branch>` is the check, and the direction is what to read.
 
+### The two scroll attempts, recorded here because `main` never carried them
+
+Both were made on the branch, and the record of them lived there too — so
+`main` had the *decision* without the *measurements*. That is the wrong half to
+keep. The symptom: scrolling inside a table stops, vertical dies while sideways
+panning still works, a reload is needed, and it follows **a click anywhere on
+the table**, including the inert space between names, where a click runs no JS.
+
+*Attempt 1 — built, measured, **reverted**.* `.scroll` computes
+**`overflow-y:auto`** though only `overflow-x` is authored: the
+overflow-propagation rule turns a `visible` axis into `auto` whenever the other
+one scrolls, so the plate is a vertical scroll container with **zero range**
+(`scrollHeight` == `clientHeight`, both 6164 on Genealogy II). Pinning that axis
+looked right and did nothing, because the axis consuming the gesture is the
+**horizontal** one. Two things worth keeping: a written `overflow-y:clip`
+**computes to `hidden`** here for the same reason, and the change was measurably
+inert — `clientW/scrollW/clientH/scrollH` unchanged at 1250/2504/6164/6164. It
+was reverted rather than kept, so no published page carries a comment explaining
+a fix that fixed nothing. **Don't re-propose it.**
+
+*Attempt 2 — `938b8e8`, on the branch, unmerged and unverified.* The region is
+`tabindex="0"` for arrow-key panning and as the "Skip to chart" target; WebKit
+focuses such a region **on click** and routes the wheel to whatever holds focus,
+and this region scrolls in x only. So a `pointerdown` handler drops the
+attribute for the one task in which the press would consume it and restores it
+on the next, leaving the region focusable at every moment a keyboard can reach
+it — pointer focus is the whole of what is given up. Chromium confirms it is
+otherwise sound (click on inert space leaves focus on `BODY`, person 1's line
+still opens the card and selects `p1`, `tabindex` restored either way) and
+**cannot** confirm it works, since Blink does not route the wheel this way.
+
 ### Gate 8 not run; the post-publish `--refresh` was
 
 The register's markup did not move — this publish touched the landing page and

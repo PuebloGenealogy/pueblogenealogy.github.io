@@ -29,14 +29,22 @@ against `docs/`; sitemap 5 `<loc>` against a build count of 7 (correct);
 identity grep 0; both `/search/` links serving. A `--public` rebuild on `main`
 leaves `docs/` byte-identical, so `scripts/` and `docs/` agree.
 
-**PR #43 is still open, still a draft, and now holds one commit's worth of
-content — `938b8e8`, the unverified Safari scroll fix.** The search link it also
-carries is already on `main` by cherry-pick, so the branch is *ahead* and
-proposes no deletions. **Verify that before acting on it**, and read the
-direction:
+**PR #43 is still open, still a draft, and holds one commit's worth of code —
+`938b8e8`, the unverified Safari scroll fix.** The search link it also carries
+is already on `main` by cherry-pick, so on `scripts/` and `docs/` the branch is
+purely **additive**: +22 lines in `make_chart.py`, +22 in each table page, no
+deletions.
+
+**But it is BEHIND `main` on `CHANGELOG.md` and `SESSION-NOTES.md`, and merging
+it as-is would revert them** to their state before this session's records were
+written. That is the stale-PR-becomes-a-revert mechanic in `CLAUDE.md` →
+*Environment*, in miniature, and it appeared *after* the branch was parked —
+`main` moved, the branch did not. It is harmless while the PR sits unmerged.
+Before ever merging it, bring `main` into the branch first, then read the
+direction of the diff — deletions mean behind:
 
 ```bash
-git diff main origin/handoff-2026-08-09-search-link-safari-scroll
+git diff --stat main origin/handoff-2026-08-09-search-link-safari-scroll
 ```
 
 **`laguna-search` is clean at `44e3d7b`** and its post-publish `--refresh` is
@@ -81,12 +89,11 @@ is riding on it.
 
 **PR #43 stays parked — decided by the user 2026-08-09.** Not rebased, not
 closed: the branch is what the Safari test build comes from when the freeze next
-appears. It is safe to leave open *because the search link reached `main` by
-cherry-pick* — the branch is ahead by the scroll fix alone and proposes no
-deletions, so the stale-PR-becomes-a-revert mechanic in `CLAUDE.md` →
-*Environment* does not apply here. **Re-check that with `git diff` before
-branching anything new off `main`**, since it stops being true the moment the
-branch falls behind.
+appears. Parked is safe; **merging it without first bringing `main` into it is
+not** — see *State* for the two files it is now behind on. Nothing on `main`
+depends on the branch: the CLAUDE.md paragraph on the Chromium/WebKit asymmetry
+and the record of both scroll attempts were carried over during the wrap, so if
+the branch is eventually closed unmerged, nothing measured is lost with it.
 
 ## Other things that could be picked up
 
