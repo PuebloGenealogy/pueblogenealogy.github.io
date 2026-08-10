@@ -1387,10 +1387,17 @@ export function mountSearch(host, options = {}) {
           el("div", { class: "clearable" }, numberInput,
             clearButton(numberInput, "Clear person number",
               () => { numberSoon.cancel(); list.patch({ number: "" }); })))),
+      // The sentence naming the numbers as Parsons's own came out on
+      // 2026-08-10 at the editor's request. It is not lost: the plates' own
+      // numbering is what the edition is, and the footer note and METHOD.md
+      // both carry it. What stays here is the instruction.
+      //
+      // `tableHint` stays too, and it is not prose — it is the live readout
+      // of which tables are selected, `.hint` in ink rather than muted, and
+      // it is the only place that state is written down.
       el("p", { class: "note" },
-        "The numbers are Parsons's own, as printed on each plate. Choose a ",
-        "table and the number finds that one person on it; press a numeral ",
-        "again to release it — ", tableHint, ".")));
+        "Choose a table and enter the number to find the person; press a ",
+        "numeral again to release it — ", tableHint, ".")));
 
   /* -- url --------------------------------------------------------------- */
   const useUrl = options.urlState !== false && typeof history !== "undefined";

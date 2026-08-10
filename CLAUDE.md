@@ -457,7 +457,11 @@ by ear. **Do not delete the span.** The `≤26rem` rule that used to do this is
 now scoped to **`.mast-right`**, where it still trades the Search label for the
 glyph; two selectors on purpose, so widening one never silently unhides the
 other. The site masthead and `/search/`'s host bar say the same thing in two
-stylesheets (`.nav-word` / `.lg-hb-word`) — keep them in step.
+stylesheets (`.nav-word` / `.lg-hb-word`), including this pair of selectors —
+keep them in step. **Since 2026-08-10 the bar's metrics cannot drift**: the host
+bar is built from the masthead's own tokens, read out of `CSS`. What still can
+drift is a *rule* one bar has and the other does not, which is why the two are
+kept as a diff — see *A host bar* under *The search page is vendored*.
 
 The wordmark reads **"Home"**, not the edition's name, on every page including
 `/search/`. The bar is a way back, not a nameplate; the edition names itself in
@@ -787,7 +791,7 @@ from and how to refresh it.
 overwritten by the next re-vendor exactly as `docs/` is by the next build.
 
 `write_search()` deliberately does the least it can — it wraps, never rewrites.
-Five things are injected, and each is there because the vendored file cannot
+Six things are injected, and each is there because the vendored file cannot
 supply it:
 
 - **The subset font.** `search.css` declares **no `@font-face` at all**, and
@@ -799,11 +803,42 @@ supply it:
   distinct characters in the index are in the subset, both faces `loaded`,
   `span.cell.name` computes `Laguna Serif`.
 - **A host bar.** The widget draws a title block and no navigation, so a reader
-  landing on `/search/` had no route into the edition. Scoped `.lg-host-bar` and
-  built from the widget's own `--lg-*` tokens, so it follows the theme and
-  cannot collide with the widget, which is scoped `.laguna-search`. It sets
-  `--lg-sticky-top`, the widget's documented hook for "the host page has a bar
-  this tall" — without it the widget's sticky filter header rests underneath it.
+  landing on `/search/` had no route into the edition. Scoped `.lg-host-bar`,
+  taking its **colours** from the widget's own `--lg-*` tokens, so it follows
+  the theme and cannot collide with the widget, which is scoped
+  `.laguna-search`. It sets `--lg-sticky-top`, the widget's documented hook for
+  "the host page has a bar this tall" — without it the widget's sticky filter
+  header rests underneath it. `calc(var(--bar-h) + 1px)`, because `--bar-h`
+  does not carry the bar's bottom border; measured flush, 0px overlap.
+
+  **Its METRICS are the masthead's, lifted out of `CSS`** (user, 2026-08-10:
+  make the bar uniform on every page). It used to restate them in round
+  numbers, and the drift that produced is the reason this is now derived: **69px
+  tall against the masthead's 49px**, a 44px hit floor where the site's is 32px
+  on a mouse, a bare `system-ui` stack against `--font-ui`, a 16px inset against
+  8px, and **no Search control at all**. `--font-ui`, `--tap`, `--bar-h`,
+  `--s1`, `--s2`, `--s4` and `--t-xs` are emitted **under the site's own names**
+  — a build guard aborts if the vendored file ever declares one of them — so
+  every rule is the masthead's text with only the selectors and the colour
+  tokens changed. **Diff the two when either moves; that diff should show
+  selectors and colours and nothing else.** Measured identical after: bar 49px,
+  pills 32×32, wordmark and Search inset 8px from each edge, at 375, 410, 430
+  and 1000px, in both palettes.
+
+  **One rule in it is not the masthead's, and it is what makes the rest of them
+  work: `box-sizing`.** The site resets it globally; the widget scopes its reset
+  to `.laguna-search *`, and this bar is deliberately outside that. Without
+  `.lg-host-bar,.lg-host-bar *{box-sizing:border-box}` the identical
+  declarations build a **different bar** — 65px tall, pills 50×34 — because
+  padding and border are added on rather than absorbed. Nothing errors; the
+  numbers just stop matching.
+
+  **Search is in it, marked `aria-current="page"` rather than linked.** A bar
+  that drops a control on one page is not uniform, and a link to the page you
+  are on is a dead control — the wordmark's own idiom on the landing page. It
+  takes the masthead's filled inversion, so the current page survives both
+  themes and a monochrome screen. Its `font-weight:600` makes it 2px wider than
+  the masthead's unmarked one; that 2px is the state, not drift.
 - **The theme key, and the default palette.** `THEME_KEY_DECL` — two
   declarations, `window.LAGUNA_THEME_KEY = "lg-theme"` and
   `documentElement.dataset.theme = "light"` — and it is the **only** injection
@@ -847,6 +882,13 @@ supply it:
   size, letter-spacing and line-height. All three are **read out of `CSS`'s h1
   rule**, never restated; the ramp stays one literal and the build aborts if
   any of the three leaves that rule.
+- **The standfirst's size** (added 2026-08-10, the same argument one line
+  down). The widget's `.lede` is `1.25rem`/1.45 — 20px, sized for a page where
+  it is the only thing under the title. A table page sets its statistics line at
+  `--t-base`/1.6, **16px**, directly under the same h1, so `/search/` takes
+  that: same title block, same measure. Read out of **`CSS`'s `.imprint` rule**,
+  same abort if it stops stating either declaration. Verified 16px/25.6px on
+  both pages.
 
 **Which changes belong here, and which belong upstream — the test is whether
 the widget standing ALONE would want them.** Added 2026-08-10, after two

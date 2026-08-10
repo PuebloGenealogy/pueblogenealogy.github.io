@@ -6,8 +6,8 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `de773d4` |
-| Vendored on | 2026-08-10 (fifth re-vendor that day) |
+| Vendored from | `dist/`, at `81d28ed` |
+| Vendored on | 2026-08-10 (sixth re-vendor that day) |
 
 Two changes to the person list, both **upstream in `src/search.css` and
 `src/search.js`, neither injected here**. The test is whether the widget
@@ -21,13 +21,26 @@ to be host-side, because it sits on *this* site's type ramp.
   and the heading *All people* replaced by **`Index`**, the running count moved
   to sit beside it, and **`Clear all` removed**. The empty state's *Clear
   filters* is untouched.
+- **The number field's note** (`81d28ed`) — the sentence naming the numbers as
+  Parsons's own removed, and the instruction reworded to *"Choose a table and
+  enter the number to find the person; press a numeral again to release it"*.
+  The live `tableHint` after the em dash is untouched: it is a readout of which
+  tables are selected, not part of that sentence.
 
-Two re-vendors, and between them they show both non-data shapes: the first
-moved `index.html` alone (stylesheet inlined there), the second moved
-`index.html` and `search.js`. **`search-index.json` is byte-identical through
-both**, and it is the only one of the three that decides a `--refresh`
-obligation — so there is none. Nothing at this end changed the register markup
-either.
+Three re-vendors, and between them they show every non-data shape there is:
+stylesheet only, so **`index.html` alone** (the stylesheet is inlined there);
+markup *and* stylesheet, so **both `index.html` and `search.js`**; and — the
+one this file had not recorded before — **`search.js` alone**, a change to a
+string the script writes at runtime, which is what the note is.
+**`search-index.json` is byte-identical through all three**, and it is the only
+one that decides a `--refresh` obligation — so there is none. Nothing at this
+end changed the register markup either.
+
+**The bar and the standfirst on `/search/` moved the same day and are NOT in
+this list**, because they are host-side: `write_search()` now builds the bar
+from the site masthead's own tokens and sizes the widget's `.lede` from the
+table pages' `.imprint`. Both fail the upstream test — the widget standing
+alone wants its own bar-less title block and its own 20px lede.
 
 The **data** shape is the one neither of these two is, and it is worth keeping.
 Earlier that day **Genealogy IV's data changed** — 20's father corrected from 7
