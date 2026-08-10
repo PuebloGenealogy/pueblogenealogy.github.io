@@ -279,6 +279,29 @@ macOS substituted silently.
 **Preview:** `preview_start`, config name `site` — serves `docs/` on
 `http://localhost:4173`. Loop: edit `make_chart.py` → rerun `--public` → reload.
 
+**The preview is Chromium, so it cannot settle a WebKit question — and the user
+reads this edition in Safari.** When a report names Safari, the preview can show
+that a change is *inert* (geometry unchanged, nothing else broken) and can never
+show that it *works*, because the engine that has the behaviour is not the
+engine under test. Say which of the two you measured. This cost two fixes on
+2026-08-09, both reasoned out against inferences the preview was structurally
+unable to test, and **the first was simply wrong** — see the changelog's scroll
+entry. The same asymmetry as font substitution: the measurement available is not
+the measurement needed, so reason from the mechanism and then **ask the user to
+confirm on the browser that has it**. Two WebKit facts learned there, both cheap
+to re-lose: `.scroll` computes `overflow-y:auto` though only `overflow-x` is
+authored (the propagation rule promotes a `visible` axis whenever the other
+scrolls, and a written `clip` computes to `hidden` for the same reason), and
+WebKit focuses a `tabindex` region **on click**, then routes the wheel to
+whatever holds focus.
+
+**And confirmation from the user is only evidence if you know which build they
+were on.** The scroll freeze was reported clear on 2026-08-09 — **on the live
+site, which carries no fix**. So the symptom is **intermittent**, and an absence
+observed on an unfixed build says nothing about a fix at all. Before writing
+down "verified", ask which build was under the user's hands; a fix that cannot
+be distinguished from the bug's own remission has not been tested.
+
 **A blank screenshot means a zero-sized viewport, not a scroll bug.** The
 browser pane can come up reporting `innerWidth`/`innerHeight` of **0**, which
 captures nothing; because scrolling a zero-height viewport changes nothing
