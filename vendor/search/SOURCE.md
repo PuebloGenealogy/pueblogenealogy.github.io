@@ -6,8 +6,8 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `e937fdb` |
-| Vendored on | 2026-08-10 (seventh re-vendor that day) |
+| Vendored from | `dist/`, at `520d858` |
+| Vendored on | 2026-08-10 (eighth re-vendor that day) |
 
 Two changes to the person list, both **upstream in `src/search.css` and
 `src/search.js`, neither injected here**. The test is whether the widget
@@ -29,13 +29,17 @@ to be host-side, because it sits on *this* site's type ramp.
 - **The table buttons' caption** (`e937fdb`) — *Genealogy table* removed from
   above `I II III IV`. The group's `aria-label` stays, so the accessible name
   is unchanged; this removed a caption, not a name.
+- **The number box's `#`** (`520d858`) — moved from above the box to beside
+  it, so the name box, the numerals and the number box share a top and a
+  bottom edge. It was the last caption left stacked in the card, and it held
+  that half's control row 30.36px taller than the other's.
 
-Four re-vendors, and between them they show every non-data shape there is:
-stylesheet only, so **`index.html` alone** (the stylesheet is inlined there);
-markup *and* stylesheet, so **both `index.html` and `search.js`**; and — the
-one this file had not recorded before — **`search.js` alone**, twice, for a
+Five re-vendors, and between them they show every non-data shape there is:
+stylesheet only, so **`index.html` alone** (the stylesheet is inlined there),
+twice; markup *and* stylesheet, so **both `index.html` and `search.js`**; and —
+the one this file had not recorded before — **`search.js` alone**, twice, for a
 change to what the script writes at runtime, which is what both the note and
-the caption are. **`search-index.json` is byte-identical through all four**,
+the caption are. **`search-index.json` is byte-identical through all five**,
 and it is the only one that decides a `--refresh` obligation — so there is
 none. Nothing at this end changed the register markup either.
 

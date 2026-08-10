@@ -264,14 +264,26 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 .laguna-search .table-field { flex: 1 1 auto; min-width: 270px; }
 
 .laguna-search .control-label {
-  display: block;
-  margin-bottom: 0.55rem;
   font-size: 0.93rem;
   letter-spacing: 0.11em;
   text-transform: uppercase;
 }
 
-.laguna-search .number-field .control-label { text-align: center; }
+/* `#` sits BESIDE the number box, not over it (2026-08-10). Over it, it was
+   the only caption left in the card once the table buttons lost theirs, and it
+   made this half's control row 82.36px against the name box's 52 — so the name
+   box sat 31.36px above the buttons and the box it is meant to line up with,
+   and the two halves' notes were out by the same amount. Inline, both rows are
+   52px and every box in the card shares a top and a bottom edge.
+
+   `align-items: center` and not `baseline`: the box is 52px of chrome and the
+   label is one small-caps word, so a shared baseline would sit the `#` low
+   against a box whose own text is centred. */
+.laguna-search .number-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
 .laguna-search .table-buttons { display: flex; gap: 0.5rem; }
 
