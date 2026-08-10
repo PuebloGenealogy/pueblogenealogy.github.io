@@ -1376,8 +1376,16 @@ export function mountSearch(host, options = {}) {
     el("div", { class: "search-half" },
       el("h2", { text: "Find by table and number" }),
       el("div", { class: "controls" },
+        // No visible label over the buttons (2026-08-10, at the editor's
+        // request). Four buttons reading I II III IV under a heading that
+        // already says "Find by table and number" were labelled twice. The
+        // group keeps its `aria-label`, so the name a screen reader announces
+        // is unchanged -- this removes a caption, not an accessible name.
+        //
+        // `.controls` is `align-items: flex-end`, so the buttons stay on the
+        // number input's line with the label gone; the `#` label above that
+        // input is what makes the row taller, and it is still there.
         el("div", { class: "table-field" },
-          el("span", { class: "control-label", text: "Genealogy table" }),
           el("div", {
             class: "table-buttons", role: "group",
             "aria-label": "Restrict to genealogy tables",

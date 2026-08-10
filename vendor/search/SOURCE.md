@@ -6,8 +6,8 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `81d28ed` |
-| Vendored on | 2026-08-10 (sixth re-vendor that day) |
+| Vendored from | `dist/`, at `e937fdb` |
+| Vendored on | 2026-08-10 (seventh re-vendor that day) |
 
 Two changes to the person list, both **upstream in `src/search.css` and
 `src/search.js`, neither injected here**. The test is whether the widget
@@ -26,15 +26,18 @@ to be host-side, because it sits on *this* site's type ramp.
   enter the number to find the person; press a numeral again to release it"*.
   The live `tableHint` after the em dash is untouched: it is a readout of which
   tables are selected, not part of that sentence.
+- **The table buttons' caption** (`e937fdb`) — *Genealogy table* removed from
+  above `I II III IV`. The group's `aria-label` stays, so the accessible name
+  is unchanged; this removed a caption, not a name.
 
-Three re-vendors, and between them they show every non-data shape there is:
+Four re-vendors, and between them they show every non-data shape there is:
 stylesheet only, so **`index.html` alone** (the stylesheet is inlined there);
 markup *and* stylesheet, so **both `index.html` and `search.js`**; and — the
-one this file had not recorded before — **`search.js` alone**, a change to a
-string the script writes at runtime, which is what the note is.
-**`search-index.json` is byte-identical through all three**, and it is the only
-one that decides a `--refresh` obligation — so there is none. Nothing at this
-end changed the register markup either.
+one this file had not recorded before — **`search.js` alone**, twice, for a
+change to what the script writes at runtime, which is what both the note and
+the caption are. **`search-index.json` is byte-identical through all four**,
+and it is the only one that decides a `--refresh` obligation — so there is
+none. Nothing at this end changed the register markup either.
 
 **The bar and the standfirst on `/search/` moved the same day and are NOT in
 this list**, because they are host-side: `write_search()` now builds the bar
