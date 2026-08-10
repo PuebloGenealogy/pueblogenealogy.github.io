@@ -6,23 +6,30 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `ac33d95` |
-| Vendored on | 2026-08-10 (second re-vendor that day) |
+| Vendored from | `dist/`, at `321f814` |
+| Vendored on | 2026-08-10 (third re-vendor that day) |
 
-Re-vendored a **second** time on 2026-08-10, for a **stylesheet** change rather
-than a data one: the All People list now keeps its columns at every width
-instead of stacking into cards below 860px, and the search card's numerals and
-number box hold one line. `search.js` and `search-index.json` came back
-**byte-identical** — which is the tell that this was a pure layout change and
-carries **no `--refresh` obligation**: the index is built by parsing the
-published pages, and nothing it parses moved.
+The **third** re-vendor of 2026-08-10, and the first where `search.js` moved
+without the data moving: the Clan menu's checkbox fix, the menu panning itself
+into view, the two search halves holding one line, the theme control moving to
+the foot and the All People standfirst moving into the footer note. Markup and
+stylesheet both, so **`index.html` and `search.js` both changed** —
+`search-index.json` came back **byte-identical**, which is the only one of the
+three that decides a `--refresh` obligation, and it says there is none: the
+index is built by parsing the published pages, and nothing it parses moved.
 
-The earlier re-vendor that day was the opposite shape, and is worth keeping as
-the contrast: **Genealogy IV's data changed** — 20's father was corrected from 7
-to 5 — `index.html` and `search.js` came back byte-identical, and only
-`search-index.json` moved, in `meta.generated` and four `relationships` entries.
-Decide a re-vendor from the **relationships** diff, never from `meta.generated`,
-which is date-granular and differs on any later day.
+Confirmed independently at this end, which is the test that actually settles
+it: the register-bearing diff (`.reg`, `.reg-rel`, `.num`, `.xref`,
+`sic-ring`, `data-rel`) on all four table pages was **0 lines**.
+
+The two earlier re-vendors that day are worth keeping as the contrasting
+shapes. The first: **Genealogy IV's data changed** — 20's father corrected
+from 7 to 5 — so `index.html` and `search.js` came back byte-identical and
+only `search-index.json` moved, in `meta.generated` and four `relationships`
+entries. The second: a **stylesheet-only** change, so only `index.html` moved,
+the stylesheet being inlined there. Decide from the **relationships** diff,
+never from `meta.generated`, which is date-granular and differs on any later
+day.
 
 ## What is here, and what is not
 

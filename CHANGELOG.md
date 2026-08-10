@@ -3,7 +3,149 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-10 (latest) — Published: `/search/` design, the heading and the list that stops stacking
+## 2026-08-10 (latest) — Site chrome: the bar loses its nameplate, Light becomes the default, Theme moves to the foot
+
+Six edits the user asked for in one pass — four in the site chrome, three on
+`/search/` (one of them is both). **Built, measured and committed, but NOT
+published**: the live site is still `2313ac4`'s `docs/`, and the first thing a
+next session should establish is whether that is still true.
+`laguna-search` is at **`321f814`**, pushed, with `vendor/` re-vendored from it.
+
+### The masthead
+
+**"Laguna Genealogies" is now "Home"**, and the table pills carry **the roman
+numeral alone**. The word "Genealogy " is still in the markup and still in each
+link's accessible name — `.masthead nav .nav-word` hides it visually at every
+width, rather than removing it, because "I" is not a link name anyone can act
+on by ear.
+
+The `≤26rem` rule that used to hide it is now scoped to **`.mast-right`**, where
+it still hides the Search label in favour of the glyph. Two selectors on purpose:
+the nav's copy is unconditional and the Search one is not, and they have to be
+able to move independently.
+
+**Measured on a phone, and this is the sentence to keep**: a table page's sticky
+bar at 371px goes from the **three rows / 157px** recorded on 2026-08-09 to
+**one row / 49px**. Theme leaving and the pills shedding their word both give
+width back. `1280px` is unchanged at 49px. That 157px was the known cost of
+moving Search into `.mast-right`; it is now repaid, and the rule it produced —
+never buy a row back by shaving gaps, `--tap` is the floor — stands.
+
+### Light is the default, and it is CSS that says so
+
+Set by the user. It replaces "a first visit resolves to the system preference",
+which had been the standing rule since the theme control was built.
+
+The decision is made in **CSS, not in the script**: `:root{color-scheme:light}`
+is what makes `light-dark()` resolve to the light half of every pair, so the
+page is light with the script dead, blocked or still parsing. The
+`prefers-color-scheme` palette block in the `@supports not (light-dark())`
+branch is **deleted** — dark is now reachable only through `[data-theme="dark"]`
+on either kind of engine. `applyTheme()` defaults to `"light"` to agree with it,
+and `systemTheme()` is gone. A stored choice still wins, in both directions, and
+nothing is written to storage until the reader presses the control.
+
+The three `<meta name="theme-color">` **pairs collapse to one light meta**. The
+pair was keyed on `prefers-color-scheme`, so on a dark OS the browser chrome
+went dark around a light page for the moment before `applyTheme()` rewrote it —
+and on the 404, which ships no script, permanently.
+
+Verified with the OS emulated dark and storage empty: page `#FAF8F4`,
+`data-theme="light"`, and the toggle still round-trips to dark and back.
+
+### Theme moves to the foot of every page
+
+`THEME_FOOT` — one string, all three page types, so the control cannot drift
+between them. Chart pages take it after `</footer>`; the landing page after
+`.prose`, at `--measure` rather than `--measure-wide` so its closing rule sits
+on the same rail as the page above it. It keeps `.mast-btn`'s shape and the
+`--tap` floor: it is site chrome wherever it stands. `@media print` gained
+`.theme-foot`, because hiding `.masthead` used to cover it and no longer does.
+
+The 404 has no theme control, exactly as before — it ships no script, and the
+button was authored `hidden`.
+
+### `/search/`: the Clan menu was broken, and had been for a while
+
+Found while checking the narrow-width report, and it is the substantial find of
+the session. The Clan filter menu lives **inside `.head`**, so
+`.laguna-search .head input` reaches its option checkboxes. Below 860px that
+rule sets `width:100%; height:var(--lg-tap)` and **beat `.cbf-option input` on
+source order** — so every checkbox became a 44px block filling the option's
+whole width, pushing the clan names clean out of the menu. Measured: options
+**340px of content inside a 244px box**, so the menu drew a column of black
+squares, no labels at all, and a horizontal scrollbar of its own. Above 860px
+`.cbf-option input` won and the menu was correct, which is why this only ever
+showed on a narrow window.
+
+Fixed upstream with `:not([type="checkbox"])` in **both** the base rule and the
+860px block. The base one wins on source order today — that accident is exactly
+what stopped holding inside the media query, so it is now stated rather than
+relied on.
+
+Second defect, same control: the menu hangs off the **right edge of the last
+column**, so on a panned page it opens partly off-screen — at 375px, with the
+page panned fully right to reach the control, it sat at x **−71.8**. No
+stylesheet can know that; the menu is placed in document coordinates and the
+clipping is the viewport's. `panIntoView()` on the `toggle` event moves it in
+**horizontally and only horizontally** — `scrollIntoView` would also drag a
+sticky-headed page vertically to reach a menu already in view. After: x 8.2,
+right 281.6, fully visible, with the Clan control still on screen at 206.5.
+
+### `/search/`: the two searches keep one line
+
+Set by the user. `.card.search` stopped being two columns at 1120px; now it
+never does. Below 860px the card takes `min-width:min-content` and **pans with
+the list** instead of crushing — and the zero floors had to come off with it:
+a grid item with `min-width:0` contributes **nothing** to its track's minimum,
+so the first attempt resolved the card to **345.6px with a 190px name box
+inside a 161.8px column**. `.search-half`, `.table-field` and the numerals now
+carry real floors (`min-content`, `min-content`, `--lg-tap`).
+
+`.laguna-search` itself takes `min-width:min-content` so the two cards share one
+width; without it the search card stopped ~95px short of the list's right edge
+and the page had two different right margins depending how far down it you were.
+
+Measured at 320, 375, 480, 560, 700, 900 and 1100px: two halves on one line at
+every width, card and list identical in width and left edge, and **the pan
+threshold is still the list's** — 641px, against 648 before, the 7px being the
+gutter the wrapper used to hold.
+
+### `/search/`: the standfirst under "All people" moves into the footer
+
+Asked for as a removal; put in the page's provenance note instead, at the
+user's direction. The counts and the sentence naming how many cross-plate joins
+are the edition's own rather than Parsons's are provenance — read once, and they
+sat between the reader and the list they describe. **The disclosure itself is
+not dropped**: it has to stay where the count is and not only inside a row a
+reader may never open, so it is now the second `.foot-note`, beside the
+"read-only finding aid" paragraph, with the theme control below it.
+
+The widget's theme bar moved to the foot in the same commit, and `color-scheme`
+now follows `[data-theme]` there — without it a chosen palette flipped the
+tokens while the Sex select's popup, the Clan checkboxes, the scrollbars and
+every focus ring stayed on whatever the OS asked for. Verified: choose Dark on a
+chart page, and `/search/` renders dark **with a dark `select`**.
+
+Defaulting `/search/` to light is done **host-side**, in `THEME_KEY_DECL`,
+which now declares the attribute as well as the key. Deliberately not another
+widget option: defaulting to light is this site's decision, and the widget
+standing alone should keep following its reader's OS. It runs ahead of the
+vendored boot script, which only assigns when it finds a stored value, so a
+stored choice still wins.
+
+### What was checked before committing
+
+`--public` exits 0 — 7 pages, 10 JSON-LD blocks valid, leak gate clear.
+`leak_report()` run by hand over all three vendored files: **clean**, 43 / 61 /
+307 KB. Gate 8's diff test: **0 register-bearing lines on all four plates**, and
+`search-index.json` byte-identical from the widget's own rebuild — no
+`--refresh` obligation. Genealogy III's sheet markup: **0 changed lines**; the
+plates are untouched and only chrome moved.
+
+---
+
+## 2026-08-10 — Published: `/search/` design, the heading and the list that stops stacking
 
 `2313ac4` (PR #47) on `main`, **live and verified**: all seven pages OK by
 SHA-256 against `docs/`, plus `search/search.js` and `search/search-index.json`;

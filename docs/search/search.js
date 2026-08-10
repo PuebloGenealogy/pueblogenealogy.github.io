@@ -380,10 +380,36 @@ function checkboxFilter({ label, allLabel, options, onChange }) {
       summary.focus();
     }
   };
+  /*
+   * The list pans sideways once its columns no longer fit, and this menu
+   * hangs off the right edge of the LAST column — so on a narrow window it
+   * opens partly to the left of what the reader can see, and the further they
+   * have panned to reach the control, the more of it is off-screen. Nothing
+   * in CSS can know that: the menu is placed in document coordinates and the
+   * clipping is the viewport's.
+   *
+   * So bring it in, horizontally and only horizontally. `scrollIntoView` is
+   * the wrong tool here — it would also move the page vertically, past a
+   * sticky header, to reach a menu that is already in view top to bottom.
+   */
+  function panIntoView() {
+    const box = menu.getBoundingClientRect();
+    const margin = 8;
+    let by = 0;
+    if (box.left < margin) by = box.left - margin;
+    else if (box.right > innerWidth - margin) {
+      // Never so far that the left edge leaves the window: a menu wider than
+      // the viewport is better clipped at its end than at its beginning.
+      by = Math.min(box.right - innerWidth + margin, box.left - margin);
+    }
+    if (by) scrollBy({ left: by, behavior: "instant" });
+  }
+
   details.addEventListener("toggle", () => {
     const add = details.open ? "addEventListener" : "removeEventListener";
     document[add]("pointerdown", closeOutside);
     document[add]("keydown", closeEscape);
+    if (details.open) panIntoView();
   });
 
   paint();
@@ -1405,8 +1431,6 @@ export function mountSearch(host, options = {}) {
   addEventListener("keydown", onSlash);
 
   /* -- assembly ---------------------------------------------------------- */
-  if (options.themeToggle !== false) root.append(themeToggle(options.storageKey));
-
   if (options.chrome !== false) {
     root.append(el("header", { class: "intro" },
       el("p", { class: "kicker", text: "A digital edition of Parsons, 1923" }),
@@ -1425,17 +1449,12 @@ export function mountSearch(host, options = {}) {
     el("div", { class: "section-head" },
       el("div", {},
         el("p", { class: "kicker", text: "Browse the complete edition" }),
-        el("h2", { id: "lg-people-title", text: "All people" }),
-        el("p", { class: "sub" },
-          `${ctx.meta.distinct} people, drawn ${ctx.meta.total} times across `,
-          `${ctx.meta.tables.length} plates. Someone Parsons draws on more `,
-          "than one plate appears here once.",
-          // The joins are not all hers, and the page has to say so where the
-          // count is, not only inside a row somebody may never open.
-          ctx.meta.inferredIdentities
-            ? ` ${ctx.meta.inferredIdentities} of those joins are identified `
-              + "here rather than printed in the edition, and each says so."
-            : "")),
+        // No standfirst under the heading. The counts and the statement about
+        // who made each join moved to the footer note on 2026-08-10 — they
+        // are provenance, read once, and they sat between the reader and the
+        // list they describe. The running count to the right is what a reader
+        // filtering the list actually watches, and it stays here.
+        el("h2", { id: "lg-people-title", text: "All people" })),
       el("div", { class: "section-actions" }, count,
         el("button", {
           type: "button", class: "link-button", text: "Clear all",
@@ -1449,7 +1468,26 @@ export function mountSearch(host, options = {}) {
       "A read-only finding aid. It reproduces the plates and adds nothing to ",
       "them: a year shown as “c.” is calculated from a recorded age and is not ",
       "printed on the plate, and a “†” marks an attribution the plate does not ",
-      "make. No census matches and no identifications of living people appear here.")));
+      "make. No census matches and no identifications of living people appear here."),
+    // What the list is a list OF, moved down from under its heading on
+    // 2026-08-10. The second sentence is not decoration: the plates carry
+    // more entries than people, and joining two entries into one person is a
+    // claim — most of them Parsons's, some of them this edition's. That
+    // distinction has to be stated where the count is, and not only inside a
+    // row a reader may never open. Every unprinted join says so on its row as
+    // well; this is what tells them there are any.
+    el("p", { class: "foot-note" },
+      `The list holds ${ctx.meta.distinct} people, drawn ${ctx.meta.total} `,
+      `times across ${ctx.meta.tables.length} plates: someone Parsons draws `,
+      "on more than one plate appears once.",
+      ctx.meta.inferredIdentities
+        ? ` ${ctx.meta.inferredIdentities} of those joins are identified here `
+          + "rather than printed in the edition, and each says so."
+        : ""),
+    // The theme control closes the page (2026-08-10). It used to be the first
+    // thing in the widget, above the title — a control the reader touches
+    // once, ahead of the thing they came for.
+    ...(options.themeToggle !== false ? [themeToggle(options.storageKey)] : [])));
 
   host.replaceChildren(root);
 

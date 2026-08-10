@@ -82,7 +82,15 @@ try {
   }
 }
 
-/* The reader's explicit choice outranks the OS in both directions. */
+/* The reader's explicit choice outranks the OS in both directions — and that
+   has to include `color-scheme`, or the tokens flip while the UA-drawn parts
+   do not: the Sex <select>'s popup, the checkbox in the Clan menu, the
+   scrollbars and every focus ring stay on whatever the OS asked for. The page
+   declares `light dark` in a meta, which is what makes the default follow the
+   OS; these two are what let a choice override it. */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
 :root[data-theme="light"] {
   --lg-paper: #FAF8F4; --lg-panel: #FFFDF9; --lg-sunk: #F2EFE8;
   --lg-ink: #1C1A17; --lg-muted: #635D53;
@@ -146,9 +154,17 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
    this the empty-state panel shows through underneath every populated list. */
 .laguna-search [hidden] { display: none !important; }
 
-/* ------------------------------------------------------------- title block */
+/* ---------------------------------------------------------- theme control */
 
-.laguna-search .theme-bar { display: flex; justify-content: flex-end; }
+/* At the foot of the page since 2026-08-10, inside `.foot`, which is centred
+   text — hence `justify-content: center` rather than the `flex-end` it used
+   when it sat above the title. It is one control, pressed once; the page
+   should open on what the reader came for. */
+.laguna-search .theme-bar {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.1rem;
+}
 
 .laguna-search .theme {
   min-height: 34px;
@@ -163,6 +179,8 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
   cursor: pointer;
 }
 .laguna-search .theme:hover { border-color: var(--lg-accent); color: var(--lg-accent); }
+
+/* ------------------------------------------------------------- title block */
 
 .laguna-search .intro { text-align: center; }
 
@@ -383,14 +401,6 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 
 .laguna-search .count { margin: 0; color: var(--lg-muted); font-size: 0.84rem; }
 
-.laguna-search .sub {
-  max-width: 48ch;
-  margin: 0.35rem 0 0;
-  color: var(--lg-muted);
-  font-size: 0.78rem;
-  line-height: 1.4;
-}
-
 .laguna-search .link-button {
   min-height: var(--lg-tap);
   display: inline-flex;
@@ -497,7 +507,11 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
   white-space: nowrap;
 }
 
-.laguna-search .head input,
+/* The Clan menu is inside `.head`, so its option checkboxes match `.head
+   input` too. They are excluded by name rather than left to be undone further
+   down the sheet: `.cbf-option input` happens to win here on source order, and
+   that accident is exactly what stopped holding inside the 860px block. */
+.laguna-search .head input:not([type="checkbox"]),
 .laguna-search .head select {
   width: 100%;
   min-width: 0;
@@ -1056,12 +1070,15 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 /* ------------------------------------------------------------- narrow: lap */
 
 @media (max-width: 1120px) {
-  .laguna-search .card.search { grid-template-columns: 1fr; gap: 1.4rem; }
-  .laguna-search .search-half:first-child {
-    border-right: 0;
-    border-bottom: 1px solid var(--lg-rule);
-    padding-bottom: 1.4rem;
-  }
+  /* THE TWO SEARCHES STAY SIDE BY SIDE AT EVERY WIDTH (user, 2026-08-10).
+     This block used to stack them — `grid-template-columns: 1fr`, the divider
+     turned from a right border into a bottom one. They are two ways of asking
+     the same question, and a reader who has just failed to find a name by
+     spelling it should be able to see the number route without scrolling to
+     it. The columns only tighten here: the halves give up their 1.7rem of
+     inside padding at 860px, and below that the card takes `min-content` and
+     pans with the list rather than crushing (see the 860px block). */
+  .laguna-search .search-half { padding-inline: 1rem; }
   .laguna-search .head,
   .laguna-search .row-summary {
     grid-template-columns: minmax(0, 1fr) minmax(128px, auto) 40px;
@@ -1081,11 +1098,33 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 /* ---------------------------------------------------------- narrow: tablet */
 
 @media (max-width: 860px) {
-  .laguna-search { width: min(100% - 1.4rem, 1296px); }
+  /* `min-width: min-content` on the wrapper is what keeps the two cards the
+     same width once the page pans. Without it each card takes its own
+     minimum, and the search card — the narrower of the two — stops ~95px
+     short of the list's right edge, so the page has two different right
+     margins depending on how far down it you are. The wrapper's min-content
+     is the widest child's, which is the list's, so this adds nothing to the
+     pan. */
+  .laguna-search { width: min(100% - 1.4rem, 1296px); min-width: min-content; }
   .laguna-search .card.search { padding: 1.2rem 1rem; }
-  .laguna-search .search-half { padding-inline: 0; }
+  .laguna-search .search-half { padding-inline: 0.7rem; }
   .laguna-search .controls { flex-wrap: wrap; }
-  .laguna-search .name-field { flex-basis: 100%; }
+
+  /* The card pans with the list instead of crushing. Below here the two
+     halves cannot both shrink and stay usable, so the card takes its own
+     `min-content` — the floors set in this block, nothing typed — and the
+     DOCUMENT carries it sideways, exactly as `.card.people` already does.
+     One horizontal scroller for the page, and the two cards share its width.
+     Measured 2026-08-10: this card's minimum is well inside the list's, so
+     the page's pan threshold is still the list's and is unmoved. */
+  .laguna-search .card.search { min-width: min-content; }
+  /* And the zero floors have to come off with it, for the reason the list's
+     block below states at length: a grid item with `min-width: 0` contributes
+     ZERO to its track's minimum, so the card's `min-content` above resolves
+     to nothing and the halves quietly overflow their columns instead of
+     panning. Measured before this line: card 345.6px, a 190px name box inside
+     a 161.8px column. */
+  .laguna-search .search-half { min-width: min-content; }
 
   /* "Who is 23 on plate III" is ONE question, so the four numerals and the
      number box stay on one line at every width. They used to wrap — the box
@@ -1093,13 +1132,25 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
      which at 800px is a 728px-wide box for a three-digit number. The numerals
      give ground first, from 74px down; the box follows only once they are
      spent, and both start from the values they hold above this breakpoint, so
-     860px is pixel-identical to 861px. */
+     860px is pixel-identical to 861px.
+
+     Their floors are the touch floor, NOT zero. `min-width: 0` was right when
+     this half had the card's whole width to shrink inside; now that the card
+     asks its content how narrow it may go, a zero floor answers "nothing",
+     and four numerals would collapse to slivers rather than pan. */
   .laguna-search .controls:has(.table-field) { flex-wrap: nowrap; }
-  .laguna-search .table-field { min-width: 0; }
+  .laguna-search .table-field { min-width: min-content; }
   .laguna-search .table-buttons { gap: clamp(4px, 1.5vw, 0.5rem); }
-  .laguna-search .table-buttons button { flex: 0 1 74px; width: auto; min-width: 0; }
+  .laguna-search .table-buttons button {
+    flex: 0 1 74px;
+    width: auto;
+    min-width: var(--lg-tap);
+  }
   .laguna-search .number-field { flex: 0 0 auto; }
   .laguna-search .number-field input { width: clamp(72px, 19vw, 98px); }
+  /* The name box is the other half's whole content, so its floor is what
+     stops that column collapsing. Wide enough to read a typed name back. */
+  .laguna-search .name-field { min-width: 190px; }
 
   /*
    * THE LIST STAYS A TABLE AT EVERY WIDTH.
@@ -1157,7 +1208,17 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
      still has to show "Not recorded" without clipping, which is what sets
      that column's 104px. */
   .laguna-search { --lg-head-control: var(--lg-tap); }
-  .laguna-search .head input,
+  /* `:not([type="checkbox"])` is load-bearing, not tidiness. The Clan menu
+     lives INSIDE `.head`, so a bare `.head input` reaches its option
+     checkboxes as well -- and this rule sets `width: 100%` and
+     `height: var(--lg-tap)`. It beat `.cbf-option input` (equal specificity,
+     later in the sheet) and turned every checkbox into a 44px block filling
+     the option's whole width, which pushed the clan names clean out of the
+     menu: 340px of content inside a 244px box, so the menu drew a column of
+     black squares, no labels, and a horizontal scrollbar of its own. Above
+     860px `.cbf-option input` won and the menu was correct, which is why this
+     showed only on a narrow window. Found and fixed 2026-08-10. */
+  .laguna-search .head input:not([type="checkbox"]),
   .laguna-search .head select,
   .laguna-search .cbf summary {
     height: var(--lg-tap);

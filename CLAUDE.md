@@ -194,7 +194,7 @@ Enforced structurally, and must stay that way:
   check only ever saw table pages, so the landing page — the one carrying the
   FAQ — went unchecked entirely until 2026-07-28.
   **`.html` is the whole of it, and since 2026-08-09 that is a real gap rather
-  than a tidy scope.** `docs/search/` ships a 59 KB `search.js` and a 307 KB
+  than a tidy scope.** `docs/search/` ships a 61 KB `search.js` and a 307 KB
   `search-index.json` that this sweep never opens. Both are clean — checked by
   hand at publish — but nothing re-checks them on a later build. Run
   `leak_report()` over them by hand whenever `vendor/search/` is re-vendored.
@@ -449,9 +449,19 @@ Four rules that look like styling preferences and are not:
 4. **`--tap` floors every hit area** in the site chrome, and `--bar-h` derives
    from it so anchor `scroll-margin` tracks the bar. Don't restate either.
 
-One thing that will look like a bug and isn't: below 26rem the word "Genealogy"
-in the table pills is visually hidden but kept in the accessible name, so the
-sticky bar stays two rows on a phone.
+One thing that will look like a bug and isn't: **the table pills carry the roman
+numeral alone at every width** (user, 2026-08-10), and the word "Genealogy " is
+still in the markup and in each link's accessible name — `.masthead nav
+.nav-word` hides it *visually*, because "I" is not a link name anyone can act on
+by ear. **Do not delete the span.** The `≤26rem` rule that used to do this is
+now scoped to **`.mast-right`**, where it still trades the Search label for the
+glyph; two selectors on purpose, so widening one never silently unhides the
+other. The site masthead and `/search/`'s host bar say the same thing in two
+stylesheets (`.nav-word` / `.lg-hb-word`) — keep them in step.
+
+The wordmark reads **"Home"**, not the edition's name, on every page including
+`/search/`. The bar is a way back, not a nameplate; the edition names itself in
+the `<title>`, the title block and the citation.
 
 **The person card is a regrouped copy of the register entry, and every
 card-specific rule must stay scoped to it.** The card clones `#r{n}` — one
@@ -519,10 +529,37 @@ than as part of the name (5.28:1 light, 5.69:1 dark, added 2026-07-28).
 Everything else on a table page stays `--ink`. Adding a third is re-opening the
 colour decision; measure the contrast if you do.
 
-**The theme control has no Auto state.** It toggles Light ↔ Dark and the button
-always names a real palette. The system preference is still honoured: it is what
-a first visit resolves to, and no choice is written to storage until the reader
-presses the button, so an untouched control keeps following the OS.
+**The theme control has no Auto state, and since 2026-08-10 no system state
+either — the default is LIGHT.** It toggles Light ↔ Dark and the button always
+names a real palette. Set by the user; it replaces "a first visit resolves to
+the system preference", which had been the rule since the control was built.
+
+**The decision is made in CSS, not in the script**, and that is the half worth
+protecting: `:root{color-scheme:light}` is what makes `light-dark()` resolve to
+the light half of every pair, so the page is light with the script dead, blocked
+or still parsing. The `prefers-color-scheme` palette block inside
+`@supports not (light-dark())` is **deleted** — dark is reachable only through
+`[data-theme="dark"]`, on either kind of engine. **Do not reintroduce one**: it
+restores OS-follows-you behaviour in exactly the no-JS case nobody looks at.
+`applyTheme()` defaults to `"light"` to agree with it; both halves have to
+change together or a dark-OS reader gets a light page whose button says *Theme:
+Dark*. A stored choice still wins in both directions, and nothing is written to
+storage until the reader presses the button.
+
+There is **one `<meta name="theme-color">` per page, not a media-keyed pair**,
+for the same reason — the pair put dark browser chrome around a light page on a
+dark OS until `applyTheme()` rewrote it, and permanently on the 404, which
+ships no script.
+
+**The control sits at the FOOT of every page** (user, 2026-08-10; it rode in the
+masthead until then). `THEME_FOOT` is one string for all three page types, so it
+cannot drift between them: chart pages take it after `</footer>`, the landing
+page after `.prose` at `--measure` rather than `--measure-wide`, so its closing
+rule lands on the same rail as the page above it. It keeps `.mast-btn`'s shape
+and the `--tap` floor — it is site chrome wherever it stands — and it is named
+in `@media print`, because hiding `.masthead` used to cover it and no longer
+does. The 404 still has no theme control at all: no script, and the button is
+authored `hidden`.
 
 The footer apparatus is a **two-column grid of `.app-sec` sections** at
 `--measure-wide`, collapsing to one column below 56rem. Grid of whole sections,
@@ -767,13 +804,24 @@ supply it:
   cannot collide with the widget, which is scoped `.laguna-search`. It sets
   `--lg-sticky-top`, the widget's documented hook for "the host page has a bar
   this tall" — without it the widget's sticky filter header rests underneath it.
-- **The theme key.** One line — `THEME_KEY_DECL`, `window.LAGUNA_THEME_KEY =
-  "lg-theme"` — and it is the **only** injection that does not go in at
-  `</head>`. It is spliced in **after the charset meta**, because it has to
-  precede the vendored blocking script that reads it, and nothing should come
-  between the document and the declaration that decodes it. `write_search()`
-  **aborts the build** if that meta is missing rather than emit a page whose
-  palette silently detaches.
+- **The theme key, and the default palette.** `THEME_KEY_DECL` — two
+  declarations, `window.LAGUNA_THEME_KEY = "lg-theme"` and
+  `documentElement.dataset.theme = "light"` — and it is the **only** injection
+  that does not go in at `</head>`. It is spliced in **after the charset meta**,
+  because it has to precede the vendored blocking script that reads it, and
+  nothing should come between the document and the declaration that decodes it.
+  `write_search()` **aborts the build** if that meta is missing rather than emit
+  a page whose palette silently detaches.
+
+  The second declaration is there because **every other page defaults to light
+  in CSS and this one cannot**: the widget's palette is keyed on
+  `html[data-theme]` alone and its own default is the system preference, so
+  without it a dark-OS reader gets a dark `/search/` beside a light everything
+  else. It is set **host-side rather than as another widget option on purpose**
+  — defaulting to light is *this site's* decision, and the widget standing alone
+  should keep following its reader's OS. It runs ahead of the vendored boot
+  script, which only assigns when it finds a stored value, so a stored choice
+  still wins.
 
   This site stores the palette under **`lg-theme`** and the widget's own default
   is **`laguna-theme`**, and *both drive `html[data-theme]`* — so two keys means
@@ -815,6 +863,16 @@ fix landed. That is the shape to reach for if a host override is ever genuinely
 unavoidable — **anchor it to the vendored rule and fail the build when it
 moves** — but reach for upstream first.
 
+**Four more changes ran that test later the same day, and they split three to
+one.** Upstream: the Clan menu's checkbox fix and its pan-into-view, the two
+search halves holding one line, the theme control moving to the foot, and
+`color-scheme` following `[data-theme]` — every one of them something the widget
+standing alone is wrong without. Host-side: **defaulting the palette to light**,
+which is *this* site's decision and is a second declaration in
+`THEME_KEY_DECL`. That one is the shape to notice — it was tempting to ask for
+another widget option, and the right answer was that the widget standing alone
+should keep following its reader's OS.
+
 **`/search/`'s All People list is a table at EVERY width, and pans rather than
 stacks.** Set by the user 2026-08-10. It used to become a stacked card below
 860px — name on its own line, then sex, birth, death and clan under it with
@@ -851,31 +909,64 @@ against 56px. The lever, if it is ever wanted: the widest name measures 196px
 against a 116px Name column, so widening that column removes the wrapping and
 moves the pan threshold from 672px to roughly 756px.
 
-**One specificity trap in that stylesheet, and it was live for months.**
+**The search card's two halves also hold one line at every width** (user,
+2026-08-10), and they hold it the same way: `.card.search` takes
+`min-width:min-content` below 860px and **pans with the list** rather than
+crushing. Two things that cost a round each. **A grid or flex item with
+`min-width:0` contributes NOTHING to its track's minimum**, so the card first
+resolved to 345.6px with a 190px name box inside a 161.8px column — the same
+trap the list's block already warns about, one level up. And **`.laguna-search`
+itself needs `min-width:min-content`**, or each card takes its own minimum and
+the narrower one stops ~95px short of the list's right edge. Measured 320–1100px
+after: one line throughout, both cards identical in width and left edge, and the
+pan threshold still the list's.
+
+**Two specificity traps in that stylesheet, and both were live for months.**
 `.laguna-search .row-summary .grid` is (0,3,0) and carries the row's inline
 padding, so a rule written at `.grid` — (0,2,0) — reaches the **header and not
 the rows**. That is how the column names sat 4px left of their values from
 861–1120px. Any breakpoint touching that padding must name both selectors.
 
-**The masthead's Search link sits in `.mast-right` beside Theme — moved there by
-the user 2026-08-09, and it costs a row on a phone.** That cost was measured
-before the move and again after, and both agree: **1280px unchanged at 49px, one
-row; 375px 109px → 157px, three rows**, permanently sticky, a fifth of an 812px
-viewport. The pills and Theme already fill their row to **360px against 359px of
-usable width**, so Search cannot join it — it wraps to a third. It rode beside
-the **wordmark** until this change for exactly that reason, and that row still
-has ~160px spare if it is ever moved back.
+The second is the **Clan menu, which lives inside `.head`** — so a rule written
+at `.head input` reaches its option checkboxes. Below 860px that rule set
+`width:100%; height:var(--lg-tap)` and **beat `.cbf-option input` on source
+order**, turning every checkbox into a 44px block filling the option's width and
+pushing the clan names out of the menu entirely: 340px of content in a 244px
+box, a column of black squares, no labels, and a horizontal scrollbar inside the
+dropdown. Above 860px `.cbf-option input` won, which is why it only ever showed
+on a narrow window. Now `:not([type="checkbox"])` in **both** the base rule and
+the media query — the base one still wins on source order, and that accident is
+precisely what stopped holding once a later rule restated it.
 
-**Do not buy the row back by shaving gaps.** `--tap` is `2rem`, and **`2.75rem`
+**And a menu on a panning page must bring itself into view.** The Clan menu
+hangs off the right edge of the last column, so with the page panned right to
+reach the control it opened at x **−71.8** at 375px. No stylesheet can know
+that: the menu is placed in document coordinates and the clipping is the
+viewport's. `panIntoView()` on `toggle` moves it **horizontally and only
+horizontally** — `scrollIntoView` would drag a sticky-headed page vertically to
+reach a menu already in view top to bottom.
+
+**The masthead's Search link sits in `.mast-right`, and since 2026-08-10 it sits
+there alone.** Theme moved to the page foot that day and the pills dropped to
+bare numerals, so a table page at 371px is **one row, 49px**; 1280px has been
+49px throughout. Keep the history, because it is the measurement that governs
+this corner: Search was moved here by the user on 2026-08-09 and took the bar
+from **109px to 157px at 375px** — three permanently sticky rows, a fifth of an
+812px viewport — because the pills and Theme already filled their row to **360px
+against 359px of usable width**. That cost is repaid, not disproved.
+**Re-measure before spending the width.**
+
+**Do not buy a row back by shaving gaps.** `--tap` is `2rem`, and **`2.75rem`
 under `(pointer:coarse)`** — so the floor on the phone, which is the only place
 the row is scarce, is 44px and there is nothing to reclaim. This bar already has
 a 2.9px-overrun comment recording what living on a thin margin costs. Search
-measures 32px beside Theme and the pills on a desktop pointer and 44px on a
-coarse one, matching them exactly; that is the check to re-run if `.mast-btn`
-ever changes. Below 26rem the label is hidden by the **same `.nav-word` rule the
-pills use**, and an inline SVG magnifier takes its place — drawn, not typed,
-because U+2315 is missing from the UI stack and U+1F50D is an emoji, and this
-bar has no embedded face.
+measures 32px beside the pills on a desktop pointer and 44px on a coarse one,
+matching them exactly; that is the check to re-run if `.mast-btn` ever changes.
+Below 26rem its label is hidden and an inline SVG magnifier takes its place —
+drawn, not typed, because U+2315 is missing from the UI stack and U+1F50D is an
+emoji, and this bar has no embedded face. That rule is `.mast-right .nav-word`;
+it was the shared `.nav-word` until the pills went numeral-only, and the two are
+now separate on purpose.
 
 **The landing page reaches it a second way, and that row is deliberately NOT a
 plate.** Published 2026-08-09 (`5495819`). The contents block carries a
@@ -888,9 +979,15 @@ plate's rule comes from `.contents li` and this row is not one. `.c-across` in
 `LANDING_CSS_EXTRA` is a single declaration; everything else it inherits from
 `.contents a`. Its count is **computed** from the built tables and says
 **entries**, not people — the search page's own line reads "620 people, drawn
-713 times", and the two must not contradict each other. Don't renumber it into
-the list, and don't type a count into the copy: that is the shape of claim that
-outlived its truth in `SITE_DESCRIPTION`.
+713 times", and the two must not contradict each other. Since 2026-08-10 that
+line is `/search/`'s **second `.foot-note`**, not the standfirst under *All
+people*: the user asked for the standfirst to go and for its content to live in
+the page's provenance note. **It did not simply go.** The sentence naming how
+many cross-plate joins are the edition's own rather than Parsons's has to sit
+where the count is and not only inside a row a reader may never open — see
+*There is a SECOND kind of editorial claim*. Don't renumber the landing row into
+the list, and don't type a count into either copy: that is the shape of claim
+that outlived its truth in `SITE_DESCRIPTION`.
 
 **`/search/` is deliberately absent from `sitemap.xml`.** The page ships
 `<meta name="robots" content="noindex">`, and advertising it in a sitemap while
@@ -936,10 +1033,20 @@ stylesheet is inlined. Two consequences worth having in advance:
 - **`leak_report()` is still due on all three**, because the sweep is about
   what `docs/` will carry, not about what changed. Run it every time.
 
+**A THIRD shape closes the set, and it is the one that looks alarming and is
+not: `index.html` and `search.js` both move while `search-index.json` stays
+byte-identical.** Added 2026-08-10, the third re-vendor of that day — a change
+to both the widget's markup and its stylesheet (the Clan menu, the search card,
+the theme control's move to the foot). Only **`search-index.json`** decides a
+`--refresh` obligation, because only it is built by parsing these pages; two
+files moving says nothing about whether the index is stale. **Confirm it at this
+end rather than inferring it** — the register-bearing diff on all four table
+pages was 0 lines that day, which is the test that actually settles it.
+
 **And run `leak_report()` by hand over the three vendored files every time.**
-`check_published_pages()` only opens `.html`, so `search.js` (59 KB) and
+`check_published_pages()` only opens `.html`, so `search.js` (61 KB) and
 `search-index.json` (307 KB) are never swept by the build. Done 2026-08-10 on
-both of that day's re-vendors, all three clean each time.
+all three of that day's re-vendors, all three files clean each time.
 
 **Running `--refresh` after a publish is a separate obligation from
 re-vendoring, and it is the one that is never optional.** Gate 8 asks whether
