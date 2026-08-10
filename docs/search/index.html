@@ -1071,8 +1071,11 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
     grid-template-columns: minmax(140px, 210px) 124px 74px 74px minmax(80px, 100px);
     column-gap: 0.55rem;
   }
+  /* `.row-summary .grid` is (0,3,0) and carries the row's inline padding, so
+     a rule written at `.grid` here reaches the header and NOT the rows: the
+     column names shift 4px left of the values under them. Both are named. */
   .laguna-search .head-grid,
-  .laguna-search .grid { padding-inline: 0.85rem; }
+  .laguna-search .row-summary .grid { padding-inline: 0.85rem; }
   .laguna-search .detail-fields { grid-template-columns: 88px minmax(0, 1fr); }
 }
 
@@ -1083,33 +1086,91 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
   .laguna-search .card.search { padding: 1.2rem 1rem; }
   .laguna-search .search-half { padding-inline: 0; }
   .laguna-search .controls { flex-wrap: wrap; }
-  .laguna-search .table-field { min-width: 100%; }
-  .laguna-search .table-buttons button { flex: 1; width: auto; }
-  .laguna-search .number-field { flex: 1; }
-  .laguna-search .number-field input { width: 100%; }
   .laguna-search .name-field { flex-basis: 100%; }
 
-  /* The header stops pretending to be columns and becomes a filter panel;
-     the row keeps its own compact two-line layout below. A panel this tall
-     must NOT stick — pinned to a phone viewport it would cover the rows it
-     filters. Sticky is for the one-line column header only. */
-  .laguna-search .head {
-    position: static;
-    grid-template-columns: 1fr;
-    gap: 0.6rem;
-    padding: 0.7rem;
+  /* "Who is 23 on plate III" is ONE question, so the four numerals and the
+     number box stay on one line at every width. They used to wrap — the box
+     dropped below the numerals and stretched the full width of the card,
+     which at 800px is a 728px-wide box for a three-digit number. The numerals
+     give ground first, from 74px down; the box follows only once they are
+     spent, and both start from the values they hold above this breakpoint, so
+     860px is pixel-identical to 861px. */
+  .laguna-search .controls:has(.table-field) { flex-wrap: nowrap; }
+  .laguna-search .table-field { min-width: 0; }
+  .laguna-search .table-buttons { gap: clamp(4px, 1.5vw, 0.5rem); }
+  .laguna-search .table-buttons button { flex: 0 1 74px; width: auto; min-width: 0; }
+  .laguna-search .number-field { flex: 0 0 auto; }
+  .laguna-search .number-field input { width: clamp(72px, 19vw, 98px); }
+
+  /*
+   * THE LIST STAYS A TABLE AT EVERY WIDTH.
+   *
+   * It used to stop being one here: the header became a 2x2 filter panel and
+   * each row a stacked card — name on its own line, then sex, birth, death
+   * and clan below it with `Birth ` and `Death ` glued on as ::before labels
+   * because the column headings they belonged to were no longer overhead. A
+   * row went from 56px to 153px, the header from 82px to 270px, and a reader
+   * comparing two people lost the one thing a table is for: the same field in
+   * the same place on every line.
+   *
+   * So the columns hold, and the page pans sideways instead once they will
+   * not fit. `.card.people` takes `min-width: min-content`, which is the sum
+   * of the column minimums below rather than a number typed here — retune a
+   * column and the pan threshold follows it. Below that width the DOCUMENT
+   * scrolls, deliberately: an inner scroller would take the sticky header's
+   * scroll container with it and the column names would stop following the
+   * reader down 634 rows, which is the whole reason the header sticks.
+   *
+   * The panel-vs-sticky objection that used to live here dissolves with the
+   * panel: one row of controls is short enough to pin without covering the
+   * rows it filters.
+   */
+  .laguna-search .card.people { min-width: min-content; }
+
+  /* `minmax(0, …)` and `min-width: 0` are what let the columns collapse at
+     wider widths, and they are exactly wrong once the table is the thing that
+     sets the page's width: a zero floor means the inner grid's 445px never
+     reaches `min-content` above, so the card stopped short of its own minimum
+     and the five columns slid straight under `Table · #`. Both floors are
+     released here so the real minimum propagates and the page pans at it. */
+  .laguna-search .head,
+  .laguna-search .row-summary {
+    grid-template-columns: minmax(min-content, 1fr) minmax(112px, auto) 38px;
   }
-  .laguna-search .head-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.55rem 0.7rem;
-    padding: 0;
+  .laguna-search .head-grid,
+  .laguna-search .row-summary .grid { min-width: min-content; }
+  /* Clan's floor is 76px and not 72px because that is what its own disclosure
+     measures -- the same way Sex's floor is set by its select. A column here
+     is as narrow as its CONTROL allows, never as narrow as its values look. */
+  .laguna-search .grid {
+    grid-template-columns:
+      minmax(116px, 1fr) 104px 62px 62px minmax(76px, 92px);
+    column-gap: 0.4rem;
   }
-  .laguna-search .field-name { grid-column: 1 / -1; }
-  .laguna-search .head-ref,
-  .laguna-search .head-spacer { display: none; }
+  /* Both named, for the specificity reason given at the 1120px breakpoint. */
+  .laguna-search .head-grid,
+  .laguna-search .row-summary .grid { padding-inline: 0.6rem; }
+
+  /* The controls reach the touch floor, so the heading line has to be lifted
+     by the taller control -- `--lg-head-control` is what `.head-ref` reads to
+     stay off it, and leaving it at the mouse layout's 32px drops `Table · #`
+     a row. Their type shrinks to fit the narrowed columns: the Sex select
+     still has to show "Not recorded" without clipping, which is what sets
+     that column's 104px. */
+  .laguna-search { --lg-head-control: var(--lg-tap); }
   .laguna-search .head input,
   .laguna-search .head select,
-  .laguna-search .cbf summary { height: var(--lg-tap); font-size: 0.95rem; }
+  .laguna-search .cbf summary {
+    height: var(--lg-tap);
+    /* A `select` sizes to its widest OPTION, not to its column: at 104px the
+       Sex control kept the 124px its "Not recorded" needs and hung 20px over
+       Birth. Held to the column instead, and the type shrunk far enough that
+       the longest option still reads inside it. */
+    width: 100%;
+    min-width: 0;
+    padding-inline: 0.4rem;
+    font-size: 0.82rem;
+  }
   .laguna-search .cbf-option { min-height: var(--lg-tap); font-size: 0.95rem; }
 
   /* Every control reaches the touch floor. Each of these ships a fixed or
@@ -1121,41 +1182,16 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
   .laguna-search .theme { height: auto; min-height: var(--lg-tap); }
   .laguna-search .clear-x { width: var(--lg-tap); }
 
-  /* `.sort` grows to the 44px tap floor here and a plain label does not, so
-     matching their heights would pad the panel out by ~58px at 375px — and
-     this panel is already tall enough that it cannot be sticky. Sit the text
-     of both on the bottom edge instead: the boxes still differ, the printed
-     line does not, and the panel keeps its height. */
+  /* A column heading has to survive its column getting narrower, and the one
+     thing it must not do is wrap: two-line headings would push the control
+     line down on some columns and not others, and the row of controls stops
+     being a row. They are already `nowrap`; this is the size that keeps them
+     inside 62px. */
   .laguna-search .field-label,
-  .laguna-search .sort { align-items: end; }
-  /* And with the text bottom-aligned, the heading no longer needs to be held
-     open to `.sort`'s height — that is the desktop rule, and here it only
-     makes the panel taller. */
-  .laguna-search .field-label { min-height: 0; }
+  .laguna-search .sort { font-size: 0.6rem; letter-spacing: 0.04em; }
 
-  /* Below this width the header stops being columns while the row keeps its
-     own compact layout, so the two must be addressed separately — they share
-     `.grid` above precisely because they DO align at wider widths. */
-  .laguna-search .row-summary { grid-template-columns: 1fr auto; }
-  .laguna-search .row-summary .grid {
-    grid-column: 1 / -1;
-    grid-template-columns: 46px minmax(0, 1fr) minmax(0, 1fr);
-    gap: 0.3rem 0.8rem;
-    padding: 0.85rem 0.95rem 0.5rem;
-  }
-  .laguna-search .cell.name { grid-column: 1 / -1; font-size: 1.25rem; }
-  .laguna-search .cell.sex { grid-column: 1; grid-row: 2; }
-  .laguna-search .cell.birth { grid-column: 2; grid-row: 2; }
-  .laguna-search .cell.death { grid-column: 3; grid-row: 2; }
-  .laguna-search .cell.clan { grid-column: 2 / -1; grid-row: 3; }
-  .laguna-search .cell.birth:not(:empty)::before { content: "Birth "; opacity: 0.7; }
-  .laguna-search .cell.death:not(:empty)::before { content: "Death "; opacity: 0.7; }
-  .laguna-search .ref {
-    grid-column: 1 / 2;
-    justify-content: flex-start;
-    padding: 0 0 0.8rem 0.95rem;
-  }
-  .laguna-search .chev { min-width: var(--lg-tap); align-self: end; }
+  .laguna-search .cell { font-size: 0.92rem; }
+  .laguna-search .cell.name { font-size: 1.15rem; }
 
   .laguna-search .rel-row { grid-template-columns: 1fr; gap: 0.3rem; }
   .laguna-search .rel-label { padding-top: 0; }
@@ -1173,15 +1209,10 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
   .laguna-search .rule { width: min(82vw, 320px); margin-block: 1rem; }
   .laguna-search .lede { font-size: 1rem; }
   .laguna-search .card.people { padding: 1rem 0.7rem; }
-  .laguna-search .head-grid { grid-template-columns: 1fr; }
-  .laguna-search .row-summary .grid {
-    grid-template-columns: 42px minmax(0, 1fr) minmax(0, 1fr);
-    padding: 0.8rem 0.7rem 0.45rem;
-  }
-  /* Birth and Death are blank for most people at this width, so a clan held
-     in column 2 hangs indented under nothing. Give it the full row. */
-  .laguna-search .cell.clan { grid-column: 1 / -1; }
-  .laguna-search .cell.name { font-size: 1.15rem; }
+  /* The columns do not change again here — they are already at the width the
+     table pans below, and re-tightening them would only move the pan
+     threshold without buying a phone anything. What changes is the type,
+     which is still reading size at 92px of Clan. */
   .laguna-search .cell { font-size: 0.9rem; }
   .laguna-search .detail { padding: 0.8rem 0.75rem 1rem; }
   .laguna-search .detail-fields { grid-template-columns: 78px minmax(0, 1fr); }
@@ -1235,6 +1266,11 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
   .lg-host-bar nav a{min-width:var(--lg-tap)}
 }
 @media print{.lg-host-bar{display:none}}
+/* The heading, on the site's ramp rather than the widget's -- see (5) above.
+   This block follows the widget's whole stylesheet at equal specificity, so it
+   also wins over the <=480px rule, which sets a size AND a letter-spacing of
+   its own; that is the width where the two disagree most. */
+.laguna-search h1{font-size:clamp(1.6rem,1.15rem + 1.9vw,2.5rem);letter-spacing:.09em;line-height:1.15;}
 </style>
 </head>
 <body>
