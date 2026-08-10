@@ -6,30 +6,33 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `321f814` |
-| Vendored on | 2026-08-10 (third re-vendor that day) |
+| Vendored from | `dist/`, at `e31b271` |
+| Vendored on | 2026-08-10 (fourth re-vendor that day) |
 
-The **third** re-vendor of 2026-08-10, and the first where `search.js` moved
-without the data moving: the Clan menu's checkbox fix, the menu panning itself
-into view, the two search halves holding one line, the theme control moving to
-the foot and the All People standfirst moving into the footer note. Markup and
-stylesheet both, so **`index.html` and `search.js` both changed** —
-`search-index.json` came back **byte-identical**, which is the only one of the
-three that decides a `--refresh` obligation, and it says there is none: the
-index is built by parsing the published pages, and nothing it parses moved.
+The **fourth** re-vendor of 2026-08-10, and the cleanest of the three shapes:
+a **stylesheet-only** change, so **only `index.html` moved** — the stylesheet
+is inlined there — while `search.js` and `search-index.json` came back
+**byte-identical**. The change is the All People list's name size, `1.45rem`
+down to `1.2rem` and `1.15rem` down to `1.05rem` in the 860px query.
 
-Confirmed independently at this end, which is the test that actually settles
-it: the register-bearing diff (`.reg`, `.reg-rel`, `.num`, `.xref`,
-`sic-ring`, `data-rel`) on all four table pages was **0 lines**.
+**Only `search-index.json` decides a `--refresh` obligation**, because only it
+is built by parsing the published pages. It did not move, so there is none.
+Nothing here changed the register markup either — this edit is entirely in the
+other repo's stylesheet.
 
-The two earlier re-vendors that day are worth keeping as the contrasting
+It went **upstream, into `src/search.css`, not into an injection here**: the
+test is whether the widget standing alone would want the change, and table
+typography is that widget's own layout. The h1 size remains the one thing that
+had to be host-side, because it sits on *this* site's ramp.
+
+The three earlier re-vendors that day are worth keeping as the contrasting
 shapes. The first: **Genealogy IV's data changed** — 20's father corrected
 from 7 to 5 — so `index.html` and `search.js` came back byte-identical and
 only `search-index.json` moved, in `meta.generated` and four `relationships`
-entries. The second: a **stylesheet-only** change, so only `index.html` moved,
-the stylesheet being inlined there. Decide from the **relationships** diff,
-never from `meta.generated`, which is date-granular and differs on any later
-day.
+entries. The second: a **stylesheet-only** change, the same shape as this one.
+The third: markup *and* stylesheet, so `index.html` and `search.js` both moved
+while the data stood still. Decide from the **relationships** diff, never from
+`meta.generated`, which is date-granular and differs on any later day.
 
 ## What is here, and what is not
 

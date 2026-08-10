@@ -715,9 +715,25 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
    browser again and the seams stop mattering. The two are a pair. No
    fallback is needed to keep a name inside this 210px column: the longest run
    between seams is 9 characters, measured across all 448 names. */
+/* The name is sized DOWN from what a standalone title would take, and this
+   size is declared TWICE — here and in the 860px media query below. Change one
+   and the other silently disagrees at the width nobody checked.
+
+   It was 1.45rem / 1.15rem until 2026-08-10. That is 1.48x the 0.98rem the
+   other cells take, which is a heading's ratio, not a table's: 634 rows read
+   as a list of titles, and at 1120px — where the Name column is 210px — 2 of
+   the first 60 rows wrapped to two lines and ran 69.56px against the row's 56.
+   At 1.2rem (1.22x) none of the 60 wraps and every row is 56px.
+   Hierarchy here does not need the size: the name is the only cell in
+   `--lg-ink` and the only one at 700.
+
+   MEASURE THIS WITH THE FONT LOADED. Every count here is taken after
+   `document.fonts.ready`. The same audit run against a cold iframe reported
+   11 wrapped rows instead of 2 — it was measuring fallback metrics mid-load,
+   and the number is plausible enough to write down and act on. */
 .laguna-search .cell.name {
   color: var(--lg-ink);
-  font-size: 1.45rem;
+  font-size: 1.2rem;
   font-weight: 700;
   line-height: 1.12;
 }
@@ -1251,7 +1267,15 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
   .laguna-search .sort { font-size: 0.6rem; letter-spacing: 0.04em; }
 
   .laguna-search .cell { font-size: 0.92rem; }
-  .laguna-search .cell.name { font-size: 1.15rem; }
+  /* The second half of the pair declared at `.cell.name` above -- both move
+     together or they disagree at one of the two widths. The Name column is a
+     fixed 116px track here, so this size does NOT move the width the document
+     starts panning at: measured 675px before and after, panning at 674 either
+     way. The name's own width never reached that track's minimum, so shrinking
+     it buys no width back -- widening the column is still the only lever on
+     the threshold. What it does buy is line breaks: 12 of the first 60 rows
+     wrapped at 1.15rem, 4 at 1.05rem, measured at 375px and again at 480px. */
+  .laguna-search .cell.name { font-size: 1.05rem; }
 
   .laguna-search .rel-row { grid-template-columns: 1fr; gap: 0.3rem; }
   .laguna-search .rel-label { padding-top: 0; }

@@ -878,8 +878,9 @@ stacks.** Set by the user 2026-08-10. It used to become a stacked card below
 860px — name on its own line, then sex, birth, death and clan under it with
 `Birth `/`Death ` glued on as `::before` labels standing in for the headings
 overhead; a row went 56px → 153px and the header 82px → 270px. Now the columns
-hold, `.card.people` takes `min-width:min-content`, and below **672px the
-DOCUMENT pans sideways**. Three things about that are load-bearing:
+hold, `.card.people` takes `min-width:min-content`, and below **675px the
+DOCUMENT pans sideways** (measured; see *The threshold is MEASURED* below).
+Three things about that are load-bearing:
 
 - **The pan is the document's, not an inner scroller's.** An inner scroller
   would become the sticky header's scroll container and the column names would
@@ -904,24 +905,41 @@ DOCUMENT pans sideways**. Three things about that are load-bearing:
 **Names still wrap there, deliberately.** Where a name may be divided is an
 editorial question, answered in `build.py` and published as `<wbr>` seams
 (ratified 2026-08-08). Forcing `nowrap` would truncate a transcribed name, so
-8 of the first 60 rows take two lines below 860px and those rows run 59.3px
-against 56px. The lever, if it is ever wanted: the widest name measures 196px
-against a 116px Name column, so widening that column removes the wrapping and
-moves the pan threshold from 672px to roughly 756px.
+4 of the first 60 rows take two lines below 860px and those rows run 59.3px
+against 56px. It was 12 of 60 until the name size came down on 2026-08-10.
 
-**Re-measure that threshold before acting on it — two records of it disagree.**
-This file says the widening moves it from **672px**; a handoff said **641px**.
-Both record the same +84px shift from a different base, so one of the two bases
-was mistyped and neither is a measurement you should spend on. Measure, then
-correct whichever is wrong. Noted 2026-08-10.
+**The threshold is MEASURED, and it is 675px** — the document pans at 674 and
+is clean at 675, taken as window width with a 15px scrollbar, so 660px of
+client width. That settles the disagreement this file carried: **neither
+recorded number was the threshold.** `672` was near it and `641` is a
+different quantity altogether — the document's `scrollWidth` at phone widths,
+which is 641 at 375–480px and 660 once the viewport is near the threshold.
+Two numbers that both look like "the width it pans at" and are not the same
+measurement. The claim that **widening the Name column** moves it to ~756px is
+**still unverified**; only the base is now known.
 
-**And the SIZE of a name is a second lever on the same measurement**, which is
-what makes the pair easy to get wrong. `.laguna-search .cell.name` is declared
-**twice** in the vendored stylesheet — the base rule at `1.45rem`/`700`/`1.12`,
-and again inside the narrow media query at `1.15rem`. Change one and the other
-silently disagrees at the width nobody checked. Any change to the name's size
-also changes the 196px above, so the wrapping and the pan threshold move with
-it: measure both after, and never carry the old numbers forward. Note the
+**The SIZE of the name is NOT a second lever on it, and that was measured on
+2026-08-10 rather than reasoned.** The expectation — smaller name, narrower
+content, earlier pan — is wrong, because the Name column is a **fixed 116px
+track** in the narrow grid and the name's own width never reached that track's
+minimum. Dropping `1.15rem` to `1.05rem` left the threshold at exactly 675px.
+Widening the column remains the only lever. What the size *does* move is the
+wrapping, and it moves it a lot: 12 of the first 60 rows to 4 at 375px, and at
+1120px 2 rows to 0, every row back to a flat 56px.
+
+**`.laguna-search .cell.name` is declared TWICE** in the vendored stylesheet —
+the base rule (`1.2rem`/`700`/`1.12`, and `1.45rem` before 2026-08-10) and
+again inside the 860px media query (`1.05rem`, and `1.15rem` before). Change
+one and the other silently disagrees at the width nobody checked. Both live
+**upstream in `src/search.css`**, not in a host injection: table typography is
+the widget's own layout, and the upstream-vs-host test says so.
+
+**Measure it with the font loaded — `await document.fonts.ready`.** The same
+wrapped-row audit run against a cold iframe reported **11** wrapped rows at
+1120px where the true figure is **2**: it was measuring fallback metrics
+mid-load. Nothing errors, the number is plausible, and it is wrong by 5×. This
+is the font-substitution trap in a new place — the measurement available is not
+the measurement needed. Note the
 section's kicker, *Browse the complete edition*, is written by `search.js` at
 runtime and appears in no HTML file — grepping `docs/` for it finds nothing.
 
