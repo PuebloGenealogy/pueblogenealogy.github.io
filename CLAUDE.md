@@ -873,8 +873,9 @@ which is *this* site's decision and is a second declaration in
 another widget option, and the right answer was that the widget standing alone
 should keep following its reader's OS.
 
-**`/search/`'s All People list is a table at EVERY width, and pans rather than
-stacks.** Set by the user 2026-08-10. It used to become a stacked card below
+**`/search/`'s person list — headed *Index* since 2026-08-10, *All people*
+before that, and called the All People list throughout this file — is a table
+at EVERY width, and pans rather than stacks.** Set by the user 2026-08-10. It used to become a stacked card below
 860px — name on its own line, then sex, birth, death and clan under it with
 `Birth `/`Death ` glued on as `::before` labels standing in for the headings
 overhead; a row went 56px → 153px and the header 82px → 270px. Now the columns
@@ -939,9 +940,28 @@ wrapped-row audit run against a cold iframe reported **11** wrapped rows at
 1120px where the true figure is **2**: it was measuring fallback metrics
 mid-load. Nothing errors, the number is plausible, and it is wrong by 5×. This
 is the font-substitution trap in a new place — the measurement available is not
-the measurement needed. Note the
-section's kicker, *Browse the complete edition*, is written by `search.js` at
-runtime and appears in no HTML file — grepping `docs/` for it finds nothing.
+the measurement needed.
+
+**The section is headed *Index*, and its head is a heading and its count —
+nothing else** (user, 2026-08-10). It carried a kicker (*Browse the complete
+edition*), the heading *All people* and a *Clear all* button, with the count
+pushed to the opposite edge of the card by `justify-content: space-between`.
+Now `Index` and `620 people` sit adjacent on one baseline, 0.8rem apart,
+wrapping under each other if the card is ever too narrow to hold both — 320px
+still holds them. The count keeps `role="status"` and `aria-live="polite"`; it
+is the running total (`258 of 620 people` when filtered) and moving it left put
+it where the reader is already looking. `aria-labelledby` still names the `h2`.
+
+**Removing *Clear all* left the empty state's *Clear filters* alone, and that
+is the load-bearing half.** Every filter clears from its own control — the
+selects to `All`, the year fields empty, the Clan menu unchecks, the search box
+keeps its clear button — but a reader who has filtered down to **no rows** can
+see no such control, so that one button stays. Both are `.link-button`, so the
+class did not become dead.
+
+**All of that markup is written by `search.js` at RUNTIME and appears in no
+HTML file** — grepping `docs/` for *Index*, the count, or the old *Browse the
+complete edition* finds nothing either way.
 
 **The search card's two halves also hold one line at every width** (user,
 2026-08-10), and they hold it the same way: `.card.search` takes

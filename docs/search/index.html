@@ -386,18 +386,19 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 
 .laguna-search .card.people { padding: 1.3rem 1.3rem 1.2rem; }
 
+/* Heading and count, adjacent and on one baseline. It was
+   `justify-content: space-between` across a `.section-actions` group until
+   2026-08-10, which put the count at the far edge of a 1100px card from the
+   word it counts. `baseline`, not `center`: the two are different sizes —
+   1.2rem uppercase against 0.84rem — and centring them leaves neither sitting
+   on a line. `wrap` is what a narrow card needs; the count drops under the
+   heading rather than squeezing it. */
 .laguna-search .section-head {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1.5rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 0.8rem;
   padding: 0 0.5rem 0.9rem;
-}
-
-.laguna-search .section-actions {
-  display: flex;
-  align-items: center;
-  gap: 1.1rem;
 }
 
 .laguna-search .count { margin: 0; color: var(--lg-muted); font-size: 0.84rem; }
@@ -1282,8 +1283,9 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
   .laguna-search .rel-label { padding-top: 0; }
   .laguna-search .rel-link { min-height: var(--lg-tap); align-items: center; }
   .laguna-search .empty { align-items: flex-start; flex-direction: column; }
-  .laguna-search .section-head { align-items: flex-start; }
-  .laguna-search .section-actions { align-items: flex-start; flex-direction: column; gap: 0.3rem; }
+  /* `.section-head` needs no narrow rule any more: it is a heading and its
+     count on one baseline, and it wraps on its own. The pair of rules here
+     placed a `.section-actions` group that no longer exists. */
 }
 
 /* ---------------------------------------------------------- narrow: phone */

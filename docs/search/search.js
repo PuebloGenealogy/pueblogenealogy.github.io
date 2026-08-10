@@ -1446,20 +1446,22 @@ export function mountSearch(host, options = {}) {
   root.append(el("section", {
     class: "card people", "aria-labelledby": "lg-people-title",
   },
+    // The head is a heading and its count, side by side, and nothing else
+    // (2026-08-10). It carried a kicker, a two-word heading and a Clear all
+    // button; the kicker said what the list was for, which the list says
+    // itself, and the count sat at the far side of the card from the word it
+    // counts. No standfirst either — the counts and the statement about who
+    // made each join are in the footer note, provenance read once, and they
+    // sat between the reader and the list they describe. The count stays: it
+    // is the running total a reader filtering the list watches, so it keeps
+    // `role="status"` and moves to where the reader is already looking.
+    //
+    // `Clear all` is gone with it. Every filter still clears from its own
+    // control, and the empty state's `Clear filters` — the one moment a
+    // reader cannot see any control to undo — is untouched.
     el("div", { class: "section-head" },
-      el("div", {},
-        el("p", { class: "kicker", text: "Browse the complete edition" }),
-        // No standfirst under the heading. The counts and the statement about
-        // who made each join moved to the footer note on 2026-08-10 — they
-        // are provenance, read once, and they sat between the reader and the
-        // list they describe. The running count to the right is what a reader
-        // filtering the list actually watches, and it stays here.
-        el("h2", { id: "lg-people-title", text: "All people" })),
-      el("div", { class: "section-actions" }, count,
-        el("button", {
-          type: "button", class: "link-button", text: "Clear all",
-          onclick: () => list.reset(),
-        }))),
+      el("h2", { id: "lg-people-title", text: "Index" }),
+      count),
     list.node));
 
   root.append(el("footer", { class: "foot" },

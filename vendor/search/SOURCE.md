@@ -6,33 +6,36 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `e31b271` |
-| Vendored on | 2026-08-10 (fourth re-vendor that day) |
+| Vendored from | `dist/`, at `de773d4` |
+| Vendored on | 2026-08-10 (fifth re-vendor that day) |
 
-The **fourth** re-vendor of 2026-08-10, and the cleanest of the three shapes:
-a **stylesheet-only** change, so **only `index.html` moved** — the stylesheet
-is inlined there — while `search.js` and `search-index.json` came back
-**byte-identical**. The change is the All People list's name size, `1.45rem`
-down to `1.2rem` and `1.15rem` down to `1.05rem` in the 860px query.
+Two changes to the person list, both **upstream in `src/search.css` and
+`src/search.js`, neither injected here**. The test is whether the widget
+standing alone would want the change; table typography and a section's own
+heading both belong to that widget. The h1 size remains the one thing that had
+to be host-side, because it sits on *this* site's type ramp.
 
-**Only `search-index.json` decides a `--refresh` obligation**, because only it
-is built by parsing the published pages. It did not move, so there is none.
-Nothing here changed the register markup either — this edit is entirely in the
-other repo's stylesheet.
+- **The name size** (`e31b271`) — `1.45rem` down to `1.2rem`, and `1.15rem`
+  down to `1.05rem` in the 860px query.
+- **The section head** (`de773d4`) — the kicker *Browse the complete edition*
+  and the heading *All people* replaced by **`Index`**, the running count moved
+  to sit beside it, and **`Clear all` removed**. The empty state's *Clear
+  filters* is untouched.
 
-It went **upstream, into `src/search.css`, not into an injection here**: the
-test is whether the widget standing alone would want the change, and table
-typography is that widget's own layout. The h1 size remains the one thing that
-had to be host-side, because it sits on *this* site's ramp.
+Two re-vendors, and between them they show both non-data shapes: the first
+moved `index.html` alone (stylesheet inlined there), the second moved
+`index.html` and `search.js`. **`search-index.json` is byte-identical through
+both**, and it is the only one of the three that decides a `--refresh`
+obligation — so there is none. Nothing at this end changed the register markup
+either.
 
-The three earlier re-vendors that day are worth keeping as the contrasting
-shapes. The first: **Genealogy IV's data changed** — 20's father corrected
-from 7 to 5 — so `index.html` and `search.js` came back byte-identical and
+The **data** shape is the one neither of these two is, and it is worth keeping.
+Earlier that day **Genealogy IV's data changed** — 20's father corrected from 7
+to 5 — and then `index.html` and `search.js` came back byte-identical while
 only `search-index.json` moved, in `meta.generated` and four `relationships`
-entries. The second: a **stylesheet-only** change, the same shape as this one.
-The third: markup *and* stylesheet, so `index.html` and `search.js` both moved
-while the data stood still. Decide from the **relationships** diff, never from
-`meta.generated`, which is date-granular and differs on any later day.
+entries. That is the shape that owes a `--refresh`. Decide from the
+**relationships** diff, never from `meta.generated`, which is date-granular and
+differs on any later day.
 
 ## What is here, and what is not
 
