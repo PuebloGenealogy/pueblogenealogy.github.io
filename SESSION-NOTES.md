@@ -12,9 +12,16 @@ went **upstream** into `laguna-search`, at **`ac33d95`**, pushed.
 
 1. This file.
 2. `CHANGELOG.md`'s newest entry — the three `/search/` edits, the three defects
-   found while measuring, and the one thing deliberately not done.
+   found while measuring, the on-device confirmation and why it counts, and the
+   one thing deliberately not done.
 3. Only if you are touching `/search/`: `CLAUDE.md` → *The search page is
-   vendored, not generated here*, which gained four blocks today.
+   vendored, not generated here*, which now carries the fifth injection, the
+   host-vs-upstream test, the All People layout and its three load-bearing
+   reasons, why names wrap, and the `.row-summary .grid` specificity trap.
+4. Only if you are measuring anything in a browser: `CLAUDE.md` → *Working
+   style* gained **an audit that compares two things which move together passes
+   on the defect it exists to catch**, which is the lesson of this session and
+   the second time this project has paid for it.
 
 Preview: `preview_start`, config name `site`, serves `docs/` on
 `http://localhost:4173`. **A narrow-viewport check needs a fixed-width iframe,
@@ -51,11 +58,15 @@ git rev-list --left-right --count origin/main...HEAD
 ```
 
 A `--public` build exits 0: 7 pages, 10 JSON-LD blocks valid, leak gate clear.
-`leak_report()` was run by hand over all three vendored files — clean. All seven
-of `laguna-search`'s gates pass; namesake gate unchanged at **3 pairs, 1 open**
-(`II-182 / IV-69`).
+`leak_report()` was run by hand over all three vendored files — clean.
 
 All four plates published, 713 entries, no reading question open.
+
+**A rebuild on a later day dirties `docs/` with dates alone** — `dateModified`,
+the "Last updated" line, `sitemap.xml` `lastmod`. If tomorrow's first `--public`
+shows pages moving on those and nothing else, that is the clock, not a content
+change: `git checkout -- docs/` and move on. Committing it would signal a
+content change to crawlers that did not happen.
 
 ## The open thread — bracket placement on I and III, never read against the scan
 
@@ -89,16 +100,12 @@ disagree with the plate**, which is the whole remaining risk.
 Their reading wins on placement; present the crop and the evidence, and do not
 change a transcription unilaterally.
 
-**A rebuild on a later day dirties `docs/` with dates alone.** If tomorrow's
-first `--public` shows six pages moving on `dateModified` / "Last updated" /
-`lastmod` and nothing else, that is the clock, not a content change.
-
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
 | Widen `/search/`'s Name column | small, needs you | Names still wrap at their editorial `<wbr>` seams — 8 of the first 60 rows, 59.3px against 56px. Widest name measures **196px** against a 116px column. Widening removes the wrapping and moves the pan threshold from 672px to ~756px. Declined today because `nowrap` would truncate a transcribed name |
-| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged. No branch build; the fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** That separates *the plate eats the gesture* from *the document is locked*. Unverified and stays so — it was last reported clear on the *live* site, which never carried it |
+| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged, and **today's `/search/` confirmation is NOT about it** — different page, different scroller, and this symptom is intermittent. No branch build; the fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** That separates *the plate eats the gesture* from *the document is locked*. Unverified and stays so — it was last reported clear on the *live* site, which never carried it |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — that is what settled the second sort. `digitallibrary.amnh.org` 403s automated fetches |
 
 ## Decisions already made — don't re-litigate

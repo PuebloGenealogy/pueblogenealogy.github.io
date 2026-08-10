@@ -194,7 +194,7 @@ Enforced structurally, and must stay that way:
   check only ever saw table pages, so the landing page — the one carrying the
   FAQ — went unchecked entirely until 2026-07-28.
   **`.html` is the whole of it, and since 2026-08-09 that is a real gap rather
-  than a tidy scope.** `docs/search/` ships a 59 KB `search.js` and a 315 KB
+  than a tidy scope.** `docs/search/` ships a 59 KB `search.js` and a 307 KB
   `search-index.json` that this sweep never opens. Both are clean — checked by
   hand at publish — but nothing re-checks them on a later build. Run
   `leak_report()` over them by hand whenever `vendor/search/` is re-vendored.
@@ -937,8 +937,8 @@ stylesheet is inlined. Two consequences worth having in advance:
   what `docs/` will carry, not about what changed. Run it every time.
 
 **And run `leak_report()` by hand over the three vendored files every time.**
-`check_published_pages()` only opens `.html`, so `search.js` (61 KB) and
-`search-index.json` (314 KB) are never swept by the build. Done 2026-08-10 on
+`check_published_pages()` only opens `.html`, so `search.js` (59 KB) and
+`search-index.json` (307 KB) are never swept by the build. Done 2026-08-10 on
 both of that day's re-vendors, all three clean each time.
 
 **Running `--refresh` after a publish is a separate obligation from
