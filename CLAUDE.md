@@ -756,6 +756,21 @@ pills use**, and an inline SVG magnifier takes its place — drawn, not typed,
 because U+2315 is missing from the UI stack and U+1F50D is an emoji, and this
 bar has no embedded face.
 
+**The landing page reaches it a second way, and that row is deliberately NOT a
+plate.** Published 2026-08-09 (`5495819`). The contents block carries a
+`.c-across` row to `/search/`, ruled in with the four plates but **outside the
+`<ol>`** — `.contents ol li` still counts 4, so a screen reader hears the
+edition's plates in Parsons's order and then a link, not a five-item list. It is
+measured flush with them (left offset 0.00px, identical width and padding, same
+17px title) and carries **its own `--rule-faint` bottom rule**, because a
+plate's rule comes from `.contents li` and this row is not one. `.c-across` in
+`LANDING_CSS_EXTRA` is a single declaration; everything else it inherits from
+`.contents a`. Its count is **computed** from the built tables and says
+**entries**, not people — the search page's own line reads "620 people, drawn
+713 times", and the two must not contradict each other. Don't renumber it into
+the list, and don't type a count into the copy: that is the shape of claim that
+outlived its truth in `SITE_DESCRIPTION`.
+
 **`/search/` is deliberately absent from `sitemap.xml`.** The page ships
 `<meta name="robots" content="noindex">`, and advertising it in a sitemap while
 asking robots to skip it is a contradictory signal, not a stronger one. This is
@@ -1049,6 +1064,19 @@ font subset. It was **closed, not merged**.
 not only when tidying branches. The check that settles it is
 `git diff origin/main origin/<branch>`, and the thing to read is the
 **direction**: deletions there mean the branch is *behind* `main`, not ahead.
+
+**A branch does not have to be built on to acquire this, and a PARKED one
+acquires it fastest.** Found 2026-08-09. PR #43 was deliberately left open as
+the build to test a Safari fix on; it was purely additive against `main` when it
+was parked, and stopped being so within the hour — not because anything was
+branched off it, but because `main` moved on `CHANGELOG.md` and
+`SESSION-NOTES.md` while the branch stood still. Every session that records
+anything widens it. So **a branch's direction is a fact with a timestamp, not a
+property**: re-measure it at the moment of merging, never trust the reading that
+was taken when it was parked, and bring `main` into the branch before merging
+rather than after discovering the deletions. The records are the files that
+drift first, which is also why the drift is easy to wave through — it looks like
+handoff churn rather than a revert.
 
 Two mechanics from the same sweep. GitHub **auto-deletes a branch on merge**,
 so remote-tracking refs here go stale in bulk — ten did — and

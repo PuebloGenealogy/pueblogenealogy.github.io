@@ -22,12 +22,15 @@ first** — a zero-sized viewport, not a scroll bug. See `CLAUDE.md` → *Previe
 
 ## State
 
-**`main` is at `5495819`, pushed and live** — the landing page's contents block
-carries the `.c-across` row to `/search/`. It reached `main` as a **cherry-pick
-of `59328e2`**, not by merging PR #43. All seven pages verified by SHA-256
-against `docs/`; sitemap 5 `<loc>` against a build count of 7 (correct);
-identity grep 0; both `/search/` links serving. A `--public` rebuild on `main`
-leaves `docs/` byte-identical, so `scripts/` and `docs/` agree.
+**`main` is at `c41e1ae`, clean, and the deployed build is `5495819`** — the
+landing page's contents block carries the `.c-across` row to `/search/`. It
+reached `main` as a **cherry-pick of `59328e2`**, not by merging PR #43; the two
+commits after it are records only (`42b0cbc`, `8348730`, then the wrap as PR #44
+→ `c41e1ae`), so nothing in `docs/` has moved since the deploy. All seven pages
+verified by SHA-256 against `docs/`; sitemap 5 `<loc>` against a build count of
+7 (correct); identity grep 0; both `/search/` links serving. A `--public`
+rebuild on `main` leaves `docs/` byte-identical, so `scripts/` and `docs/`
+agree.
 
 **PR #43 is still open, still a draft, and holds one commit's worth of code —
 `938b8e8`, the unverified Safari scroll fix.** The search link it also carries

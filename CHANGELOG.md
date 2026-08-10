@@ -73,6 +73,18 @@ gate still reports **3 pairs, 1 open** (`II-182 / IV-69`).
 Note the two projects report the index size differently — 307 KB from this
 build, 308 KB from that one. **That is rounding, not drift**; the hashes match.
 
+### Three commits after the deploy, none of them the site
+
+`42b0cbc` and `8348730` are records; the wrap is PR #44, squash-merged as
+**`c41e1ae`**. Nothing in `docs/` has moved since `5495819`, so the deployed
+build and `main` are one commit apart on purpose and the live hashes still
+match. Two durable additions came out of the wrap, both in `CLAUDE.md`: the
+landing page's `.c-across` row (a link, deliberately outside the contents
+`<ol>`, so `.contents ol li` still counts 4), and **a parked branch acquires the
+revert hazard fastest of all** — PR #43 was purely additive when it was parked
+and behind on two record files within the hour, because `main` moved and it did
+not. A branch's direction is a fact with a timestamp, not a property.
+
 ## 2026-08-09 — Published: one theme key, Search beside Theme, three folding sections
 
 The two entries below went live. PR #41 squash-merged as **`3dfa06b`**, tree
