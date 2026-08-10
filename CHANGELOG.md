@@ -33,6 +33,30 @@ moved, exactly as Gate 8's diff test predicted before the publish.
 is one file of **315,224 bytes** = 307.8 KiB, floored by `make_chart.py` and
 rounded by `build.py`. It looks like drift in a handoff and is arithmetic.
 
+### The next priority was set, and it is not the plates
+
+The user asked for design work on `/search/`'s **Browse the complete edition**
+section, starting by reducing the font size of the names in the table.
+**Bracket placement on Genealogy I and III is deferred, not closed** — it stays
+in the handoff in full, because it is still the largest correctness risk on the
+site and its method is expensive to re-derive.
+
+Two things recorded in `CLAUDE.md` rather than only here, because a handoff is
+designed to be overwritten:
+
+- **`.laguna-search .cell.name` is declared twice** in the vendored stylesheet —
+  the base rule at `1.45rem`/`700`/`1.12`, and again inside the narrow media
+  query at `1.15rem`. Change one and the other silently disagrees at the width
+  nobody checked. A name's size is also a second lever on the 196px that decides
+  the wrapping and the pan threshold, so both move with it.
+- **The recorded pan threshold disagrees with itself** — 672px in `CLAUDE.md`,
+  641px in the handoff, both describing the same +84px shift from a different
+  base. One base was mistyped. Measure it rather than picking one.
+
+Also worth knowing before grepping for it: the section's kicker string *Browse
+the complete edition* is written by `search.js` at runtime and appears in no
+HTML file.
+
 ## 2026-08-10 — Site chrome: the bar loses its nameplate, Light becomes the default, Theme moves to the foot
 
 Six edits the user asked for in one pass — four in the site chrome, three on

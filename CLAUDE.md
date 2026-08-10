@@ -909,6 +909,22 @@ against 56px. The lever, if it is ever wanted: the widest name measures 196px
 against a 116px Name column, so widening that column removes the wrapping and
 moves the pan threshold from 672px to roughly 756px.
 
+**Re-measure that threshold before acting on it — two records of it disagree.**
+This file says the widening moves it from **672px**; a handoff said **641px**.
+Both record the same +84px shift from a different base, so one of the two bases
+was mistyped and neither is a measurement you should spend on. Measure, then
+correct whichever is wrong. Noted 2026-08-10.
+
+**And the SIZE of a name is a second lever on the same measurement**, which is
+what makes the pair easy to get wrong. `.laguna-search .cell.name` is declared
+**twice** in the vendored stylesheet — the base rule at `1.45rem`/`700`/`1.12`,
+and again inside the narrow media query at `1.15rem`. Change one and the other
+silently disagrees at the width nobody checked. Any change to the name's size
+also changes the 196px above, so the wrapping and the pan threshold move with
+it: measure both after, and never carry the old numbers forward. Note the
+section's kicker, *Browse the complete edition*, is written by `search.js` at
+runtime and appears in no HTML file — grepping `docs/` for it finds nothing.
+
 **The search card's two halves also hold one line at every width** (user,
 2026-08-10), and they hold it the same way: `.card.search` takes
 `min-width:min-content` below 860px and **pans with the list** rather than

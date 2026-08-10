@@ -17,19 +17,26 @@ gh pr list --state open
 git rev-list --left-right --count origin/main...HEAD
 ```
 
+**The next priority is set, and it is not the plates.** The user asked for
+design work on `/search/`'s *Browse the complete edition* section, starting by
+**reducing the font size of the names in the table**. Bracket placement on
+Genealogy I and III is **deferred, not closed** — it is still the largest
+correctness risk here, and it is written out in full below so deferring it costs
+nothing later.
+
 ## Start here in a new chat
 
 1. This file.
-2. `CHANGELOG.md`'s newest two entries — the publish, then the six edits and the
+2. `CLAUDE.md` → *The search page is vendored, not generated here*, and the
+   `/search/` **All People** block under *Design invariants*. Both are required
+   reading for the open thread, not optional: they carry the upstream-vs-host
+   test, the two specificity traps, the pan-into-view rule and the three
+   re-vendor shapes.
+3. `CHANGELOG.md`'s newest two entries — the publish, then the six edits and the
    Clan-menu defect that had been live since the filter header was built.
-3. Only if you are touching the theme or the masthead: `CLAUDE.md` →
-   *The theme control has no Auto state* (rewritten — the default is now light,
-   and CSS is what says so) and the *numeral-only pills* note under
-   *Design invariants*.
-4. Only if you are touching `/search/`: `CLAUDE.md` → *The search page is
-   vendored, not generated here*, which now carries the second declaration in
-   `THEME_KEY_DECL`, the two specificity traps, the pan-into-view rule and the
-   third re-vendor shape.
+4. Only if you are touching the theme or the masthead: `CLAUDE.md` →
+   *The theme control has no Auto state* (the default is now light, and CSS is
+   what says so) and the *numeral-only pills* note under *Design invariants*.
 
 Preview: `preview_start`, config name `site`, serves `docs/` on
 `http://localhost:4173`. **A narrow-viewport check needs a fixed-width iframe,
@@ -77,15 +84,80 @@ change: `git checkout -- docs/` and move on. It is now the *only* thing a
 `docs/` diff on a clean tree can mean, since `main` and the deployed build no
 longer differ.
 
-## The open thread — bracket placement on Genealogy I and III
+## The open thread — design edits to `/search/`'s *Browse the complete edition*
 
-**With the publish done, the standing thread is the only one left: bracket
-placement on Genealogy I and III, never read against the scan.** **Needs you.**
-Genealogy IV shipped on
-2026-07-31 with person 20 attached to the wrong marriage, and it survived four
-`self_check()`s, every publish gate and ten days live. **Nothing structural can
-find the next one**: 19 and 20 are both Bear, exactly like their mother, so clan
-descent cannot discriminate, and the counts close either way.
+**Set by the user 2026-08-10, and it is the top priority.** The section is the
+All People card on `/search/` — the kicker `Browse the complete edition` is
+written by `search.js:1451`, so grepping the HTML for that string finds nothing;
+it is built at runtime.
+
+**Start with the one thing named: make the NAMES IN THE TABLE smaller.** The
+lever is `.laguna-search .cell.name`, and there are **two** declarations of it in
+the vendored stylesheet, not one:
+
+| Where | Today |
+|---|---|
+| `vendor/search/index.html:718` — the base rule | `font-size: 1.45rem`, `font-weight:700`, `line-height:1.12` |
+| `vendor/search/index.html:1254` — inside the narrow media query | `font-size: 1.15rem` |
+
+**Change one and the other silently disagrees at the width nobody checked.**
+Decide what each should be, and say which width you measured at.
+
+Four things to have in hand before touching it:
+
+- **Apply the upstream-vs-host test first, and expect it to say UPSTREAM.** The
+  test is whether the widget *standing alone* would want the change. Table
+  typography is that widget's own layout, so this most likely belongs in
+  `src/search.css` in `laguna-search` — not injected here. The h1 size is the
+  counter-example that went host-side, and it went there because it had to sit
+  on *this* site's type ramp; a name cell has no such tie. **Ask before writing
+  a host override**, and if one is truly unavoidable, anchor it to the vendored
+  rule so the build fails when that rule moves.
+- **Shrinking the name changes the pan threshold, and that is a feature the user
+  may or may not want.** Names wrap at their editorial `<wbr>` seams — 8 of the
+  first 60 rows run 59.3px against 56px — because the widest name measures 196px
+  against a 116px Name column. A smaller name narrows that 196px, so some
+  wrapping will disappear on its own and the page will start panning at a
+  narrower width. **Measure the new threshold; do not predict it.**
+- **The recorded threshold numbers disagree with each other**, so trust neither
+  without measuring: `CLAUDE.md` says widening the Name column moves it from
+  **672px to ~756px**, this file said **641px to ~725px**. Both record the same
+  +84px shift from a different base. Settle it by measurement and correct
+  whichever is wrong.
+- **A narrow check needs a fixed-width iframe.** `resize_window` widens the pane
+  to the content, so there is no pan to photograph and `innerWidth` lies. See
+  *Start here* above.
+
+**Then the re-vendor.** If the change lands upstream, rebuild `dist/` there,
+re-vendor the three files, update the SHA and date in `vendor/search/SOURCE.md`,
+rebuild here and publish. Expect the **second re-vendor shape**: a stylesheet-only
+change moves `index.html` alone, because that is where the CSS is inlined, while
+`search.js` and `search-index.json` come back byte-identical. A byte-identical
+index means **no `--refresh` obligation** — but `leak_report()` over all three
+vendored files is due every time regardless.
+
+## Other things that could be picked up
+
+| | Effort | Notes |
+|---|---|---|
+| **Bracket placement on Genealogy I and III** | large, needs you | **DEFERRED 2026-08-10, not closed** — the user set the `/search/` design work above it. Still the largest correctness risk on the site; see the section below, which is kept in full because re-deriving it is expensive |
+| The `/search/` provenance line's home | small, needs you | The All People standfirst went into `/search/`'s own footer note, beside "A read-only finding aid…". The user said "put it in provenance" and that page's footer note is its provenance block — but the landing page's *Provenance and use* is the other reading. Offered and not taken up; ask before moving it |
+| The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. On a chart page nothing in the chrome says *Laguna Genealogies*; it survives in the `<title>`, the citation and the landing page. Flagged, not objected to |
+| Widen `/search/`'s Name column | small, needs you | Names still wrap at their editorial `<wbr>` seams — 8 of the first 60 rows, 59.3px against 56px. Widest name measures **196px** against a 116px column. Declined 2026-08-10 because `nowrap` would truncate a transcribed name. **Now coupled to the open thread**: a smaller name font changes the same measurement, so do this one second or not at all |
+| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. No branch build; the fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** That separates *the plate eats the gesture* from *the document is locked*. It was last reported clear on the *live* site, which never carried the fix |
+| A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — that is what settled the second sort. `digitallibrary.amnh.org` 403s automated fetches |
+
+## Deferred, not closed — bracket placement on Genealogy I and III
+
+**Kept in full because it is the site's largest correctness risk and the method
+is expensive to re-derive.** The user deprioritised it on 2026-08-10 in favour
+of the `/search/` design work; it has not been done, and it has not been struck.
+
+Genealogy IV shipped on 2026-07-31 with person 20 attached to the wrong
+marriage, and it survived four `self_check()`s, every publish gate and ten days
+live. **Nothing structural can find the next one**: 19 and 20 are both Bear,
+exactly like their mother, so clan descent cannot discriminate, and the counts
+close either way.
 
 Checked by a human against the scan: **Genealogy II** (the user's full list,
 2026-07-30) and **Genealogy IV's 5/6/7** (2026-08-10). **I and III have not
@@ -110,16 +182,6 @@ disagree with the plate**, which is the whole remaining risk.
 
 Their reading wins on placement; present the crop and the evidence, and do not
 change a transcription unilaterally.
-
-## Other things that could be picked up
-
-| | Effort | Notes |
-|---|---|---|
-| The `/search/` provenance line's home | small, needs you | The All People standfirst went into `/search/`'s own footer note, beside "A read-only finding aid…". The user said "put it in provenance" and that page's footer note is its provenance block — but the landing page's *Provenance and use* is the other reading. Offered and not taken up; ask before moving it |
-| The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. On a chart page nothing in the chrome says *Laguna Genealogies*; it survives in the `<title>`, the citation and the landing page. Flagged, not objected to |
-| Widen `/search/`'s Name column | small, needs you | Names still wrap at their editorial `<wbr>` seams — 8 of the first 60 rows, 59.3px against 56px. Widest name measures **196px** against a 116px column. Widening removes the wrapping and moves the pan threshold from 641px to ~725px. Declined 2026-08-10 because `nowrap` would truncate a transcribed name |
-| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. No branch build; the fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** That separates *the plate eats the gesture* from *the document is locked*. It was last reported clear on the *live* site, which never carried the fix |
-| A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — that is what settled the second sort. `digitallibrary.amnh.org` 403s automated fetches |
 
 ## Decisions already made — don't re-litigate
 
