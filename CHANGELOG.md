@@ -3,7 +3,125 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-09 (latest) — Published: the `/search/` link, alone
+## 2026-08-10 (latest) — Published: IV·20's parentage, and the WebKit row-box fix
+
+`9df9194` pushed to `main`. All seven pages verified by SHA-256 against `docs/`,
+every path 200 (`/fonts/` 404s harmlessly, as ever), sitemap 5 `<loc>` against a
+build count of 7, identity grep 0.
+
+Two corrections, and only one of them is about IV.
+
+### Genealogy IV: 20 was attached to the wrong marriage
+
+`_GROUPS` had `V03 6+5 → [19]` and `V04 6+7 → [20]`. The plate draws **one**
+vertical spanning 19 and 20 with a **single** leader entering it at 19's row,
+from 6's line, and **7's line carries no rule at all** — read at native
+resolution on plate 4 at x 4400–6800 / y 6040–6380, first in the bracket strip
+and again across both lines. By this plate's own convention that makes both
+children 5+6's, and 6's second marriage to 7 has no recorded issue: the same
+shape as III's 85/86/87, where a spouse with no leader had none.
+
+Now `V03 → [19, 20]` and V04 has no group at all, exactly as V12 has none. The
+chart draws the plate's single bracket, 7's line is no longer a `lead-line`, and
+the register reads *20 · Parents 6 Tsiwaitina · 5 Naʼyabuni*. Counts unchanged —
+73 persons, 14 unions, 58 links; only 20's father moved. The reading is recorded
+in full in `transcription_iv.py`'s V04 note, which is documentation only:
+**union notes never reach the page** (`grep '\["note"\]'` in `make_chart.py`
+returns nothing).
+
+**Nothing structural could have caught this**, and that is the reusable part. 19
+and 20 are both Bear, exactly like their mother, so clan descent cannot
+discriminate; `self_check()` passes either way; the counts close either way. It
+was found by a **data-driven** browser audit — for every group in `_GROUPS`,
+does the bracket start on the line of the person the data names as its leader?
+Note the audit that *missed* it first: matching each bracket to the **nearest**
+`.lead-line` reports 0.00px for a bracket hanging off the wrong row, because the
+nearest line is whichever one it landed on. Derive the expected leader from the
+transcription, never from the DOM.
+
+### Every bracket on every plate was off in WebKit, and had been since launch
+
+**A row's height is now stated, not inferred from its line box** — `height:
+var(--lh)` on `.line` and `.sic-row`, `min-height` on `.xref`.
+
+Every vertical offset in the chart is a multiple of `--lh` expressed as a
+**margin** — `.kids{margin-top:calc(var(--lh) * N)}` to sit on the mother's row,
+and the same calc from `line_pad` on a pushed line. A margin is a length, so an
+engine keeps it to LayoutUnit precision: **24.796875px**. A **line box is not a
+length**, and WebKit quantises it to a whole pixel. Measured in **Safari 26.3**,
+2026-08-10: every `.line`, `.xref` and `.sic-row` box came back **24.000px**
+against a declared line-height of 24.799999px, while the same page's `.kids`
+margins were 24.796875px. Each row of offset therefore lost **0.796875px**, and
+it accumulated down the tree — **69 of 141 brackets off their mother's line**,
+worst **−20.016px (25 × 0.797) at III·21 → 74**, then −17.594 at 29 → 91, −8.000
+at 16 → 49, −4.000 at 40 → 116. The sign is set by whether the mismatched margin
+sat on the `.kids` group (positive) or on a `line_pad` push inside the block
+(negative). **Chromium reported 24.797px for both and was clean at 0.003px**,
+which is why this survived the entire life of the edition.
+
+A bracket off its mother's line asserts a different genealogy, so this was a
+reading error wearing a styling error's clothes.
+
+`.xref` gets `min-height` and not `height` on purpose: it is the one row type
+that is `white-space:normal`, so capping it at one row would make a wrapped
+reference **overlap** the row below instead of merely mis-budgeting it. Wrapping
+remains the unsolved case — split at the plate's own break with `|`.
+
+### The same defect is what read as "a break in the line" at III·113 → 204
+
+The user's original report. `W51` was off by **0.797px** — one row of offset,
+the smallest bin — and a 0.8px vertical step where the leader meets the stub
+reads as a break, because **204 is an only child and `:only-child::after` draws
+no bracket vertical to bridge it**. There are 29 such groups across the four
+plates (I 5, II 5, III 15, IV 4); everywhere else the vertical hides the step.
+
+**Two wrong turns worth not repeating.** First, the break was assumed to be a
+horizontal paint seam, and abutting rules were given a 1px overlap. The layout
+gap was 0.00px in Chromium and the fix changed nothing in Safari — **reverted,
+nothing of it remains**. Second, an attempt to implicate the Scale control:
+under CSS `zoom`, `getComputedStyle` returns **unzoomed** lengths while
+`getBoundingClientRect` returns **zoomed** ones, and mixing them fabricates a
+constant error of exactly `12.4 − 12.4 × zoom` — 1.86px at 85%, 3.72px at 70%.
+Measure alignment from **element rects only**. Scale was exonerated properly:
+the row-normalised error is identical at 100%, 85% and 70%.
+
+**What finally settled it was making the page measure itself in the reader's
+browser.** Chromium cannot answer a WebKit question, and reasoning at it
+produced two wrong answers in a row. A throwaway `docs/_diag.html` loaded each
+plate in an iframe, reported a DOM tally (identical counts in both engines, so
+the harness was sound), the row-box heights, and every bracket sorted by
+offset — one screenshot named the cause. It is deleted. Note it also **tripped
+the leak gate**, because a function in it was named `census`: the gate deleted
+the file and exited 1, which is the gate working.
+
+### Gate 8: the search index was genuinely stale, and re-vendored
+
+A plate's data changed, so this was the mandatory case. `build.py --refresh` in
+the `laguna-search` checkout reported **`re-fetched`** — the word to read — and
+all seven of its gates passed. Its namesake gate is **unchanged at 3 pairs, 1
+open** (`II-182 / IV-69`), so correcting 20's father moved no fold collision and
+nothing needed adjudicating.
+
+Re-vendored from `44e3d7b`. **`index.html` and `search.js` came back
+byte-identical; only `search-index.json` moved**, and the decision rested on the
+`relationships` diff, never on `meta.generated`:
+
+```
+IV-20  parents  [6, 7] -> [6, 5]
+IV-5   children [19] -> [19, 20]
+IV-6   "Children (with 5)" [19] + "Children (with 7)" [20]  ->  "Children" [19, 20]
+IV-7   children [20] -> (none)
+```
+
+IV-6 is the one worth noticing: the search page had been printing 6's issue as
+**two labelled groups by husband**, which is precisely the claim the plate does
+not make. That is now one unlabelled group.
+
+`leak_report()` was run **by hand** over all three vendored files — the build's
+sweep only opens `.html`, so `search.js` and the 314 KB index are never checked
+by it. All three clean.
+
+## 2026-08-09 — Published: the `/search/` link, alone
 
 `59328e2` cherry-picked onto `main` as **`5495819`** and pushed; the landing
 page's contents block now carries the `.c-across` row to `/search/`. All seven

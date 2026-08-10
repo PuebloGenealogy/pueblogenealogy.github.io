@@ -6,8 +6,17 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `9974d55` |
-| Vendored on | 2026-08-09 |
+| Vendored from | `dist/`, at `44e3d7b` |
+| Vendored on | 2026-08-10 |
+
+Re-vendored 2026-08-10 because **Genealogy IV's data changed** — 20's father was
+corrected from 7 to 5 — and the index is built by parsing the published pages.
+`index.html` and `search.js` came back **byte-identical**; only
+`search-index.json` moved, and only in `meta.generated` and four
+`relationships` entries (IV-20's parents, IV-5's children, IV-6's two child
+groups collapsing to one, IV-7 losing children). That is the shape of a genuine
+re-vendor: decide from the **relationships** diff, never from `meta.generated`,
+which is date-granular and differs on any later day.
 
 ## What is here, and what is not
 
