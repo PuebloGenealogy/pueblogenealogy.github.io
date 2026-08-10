@@ -1153,6 +1153,21 @@ rather than after discovering the deletions. The records are the files that
 drift first, which is also why the drift is easy to wave through — it looks like
 handoff churn rather than a revert.
 
+**That branch was CLOSED unmerged on 2026-08-10, and the end of the story is the
+useful part.** In one further day it went from records-only drift to a genuine
+revert: **152 insertions against 262 deletions** in `scripts/` and `docs/`
+alone, because `main` had gained Genealogy IV's corrected parentage and the
+row-box fix while the branch stood still. Nobody built on it; parking was the
+whole cause. **A parked branch has a shelf life measured in days, and the cost
+of keeping one is that its diff must be re-read every time it is considered.**
+The right shape, when a fix needs testing later, is to leave the **commit**
+reachable by SHA and cherry-pick it onto a fresh branch off current `main` at
+the moment it is wanted — which also means it gets tested against a build that
+has everything since. Nothing was lost closing it: the reasoning behind both
+scroll attempts had been carried onto `main` during the previous wrap precisely
+so the branch was never the only copy. **Carry the measurements to `main` when
+you park a branch, and the branch becomes disposable.**
+
 Two mechanics from the same sweep. GitHub **auto-deletes a branch on merge**,
 so remote-tracking refs here go stale in bulk — ten did — and
 `git fetch --prune` belongs *before* any cleanup. And a batch
