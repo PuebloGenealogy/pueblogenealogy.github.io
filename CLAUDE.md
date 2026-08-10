@@ -279,6 +279,14 @@ macOS substituted silently.
 **Preview:** `preview_start`, config name `site` — serves `docs/` on
 `http://localhost:4173`. Loop: edit `make_chart.py` → rerun `--public` → reload.
 
+**The pane serves `/search/` from cache, and a plain reload does not clear it.**
+Found 2026-08-10, twice in one session, and both times it presented as *the
+change did not apply* — a rebuilt page reporting the **old** computed values,
+which is the most misleading failure available in this loop because it looks
+like a CSS specificity problem. Bust it: `location.replace('/search/?v=' +
+Date.now())`, or a `?v=` on the `src` of every measuring iframe. Read a value
+you changed before trusting any measurement.
+
 **The preview is Chromium, so it cannot settle a WebKit question — and the user
 reads this edition in Safari.** When a report names Safari, the preview can show
 that a change is *inert* (geometry unchanged, nothing else broken) and can never
@@ -314,7 +322,8 @@ is the gate working, not a false positive.
 
 **The preview pane cannot simulate a NARROW viewport that the page overflows —
 it widens to the content instead.** Found 2026-08-10. `resize_window` to 375px
-on a page whose table is 672px wide reports `innerWidth` **648**, not 375: there
+on a page whose content is **641px** wide at that width reports `innerWidth`
+**648**, not 375: there
 is no pan to photograph, because the pane grew to fit. So a phone check of
 anything wider than the phone must go in a **fixed-width iframe** — the same
 self-measuring harness as above, but rendered *visibly* and screenshotted,

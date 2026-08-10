@@ -3,7 +3,112 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-10 (latest, second entry) — Published: PR #49 merged, all seven pages verified live
+## 2026-08-10 (latest, third entry) — `/search/` redesigned: seven changes, none of them live
+
+Everything below is **committed and unpublished**. Six commits on
+`handoff-2026-08-10-search-browse-priority`, six more in `laguna-search`, and
+**neither branch is pushed**. PR #50 is open on this branch and still holds only
+the previous session's handoff commit.
+
+The session did the open thread and then five more edits the user asked for as
+it went. **Every one of them ran the upstream-vs-host test, and it split six to
+three** — the widest use of that test yet, and the split is worth reading as a
+worked example rather than re-deriving:
+
+| Change | Where | Why |
+|---|---|---|
+| Name size in the list | upstream | table typography is the widget's own layout |
+| `Index` head, count beside it, `Clear all` gone | upstream | a section's own heading |
+| The number field's note text | upstream | the widget's own copy |
+| `Genealogy table` caption gone | upstream | its own caption |
+| `#` moved beside the number box | upstream | its own control layout |
+| Standfirst text, and the card's height | upstream | its own copy and controls |
+| **The host bar's metrics** | **host** | it must match *this* site's masthead |
+| **The standfirst's size** | **host** | it must sit on *this* site's ramp |
+| **The rule under the title** | **host** | it must be *this* site's mark |
+
+### What changed on the page
+
+- **The list's names are 1.2rem, and 1.05rem below 860px** — from 1.45rem and
+  1.15rem, which was 1.48× the 0.98rem every other cell takes. At 1120px 2 of
+  the first 60 rows wrapped and ran 69.56px; now none wraps and every row is a
+  flat 56px. On a phone it was 12 of 60, now 4.
+- **The list is headed `Index`**, with `620 people` beside it on one baseline.
+  The kicker *Browse the complete edition* and the heading *All people* are
+  gone, and so is **`Clear all`**. The count keeps `role="status"` and still
+  reads `258 of 620 people` under a filter.
+- **The bar on `/search/` is the masthead**, measurably: 49px against the 69px
+  it had been, a 32px hit floor on a mouse instead of 44, `--font-ui` instead of
+  a bare `system-ui`, an 8px inset instead of 16 — and it now carries **Search**,
+  marked `aria-current`.
+- **The title block matches a plate's** — standfirst 16px/1.6 like `.imprint`,
+  and the rule 8rem × 4px in ink like `.rule-double`, where the widget drew
+  452px × 7px in accent gold. Standfirst text is now *"Search by name or find a
+  person by table and number."*
+- **The search card is 26px shorter** and every box in it shares an edge: the
+  three controls are `--lg-tap`, the `#` sits beside the number box rather than
+  over it, and the table buttons have no caption. 195.89px → 170.28px at 1100px.
+- **The number field's note** drops the sentence naming the numbers as
+  Parsons's own and reads *"Choose a table and enter the number to find the
+  person; press a numeral again to release it"*. The live `tableHint` after the
+  em dash stays — it is the only readout of which tables are selected.
+
+### Measurements that cost something to get, and would cost the same again
+
+- **The pan threshold is 675px** — panning at 674, clean at 675, as window width
+  with a 15px scrollbar. `CLAUDE.md` said 672 and the handoff said 641, and
+  **neither was the threshold**: 641 is the document's `scrollWidth` at phone
+  widths, a different quantity that reads like the same one. Corrected in
+  `CLAUDE.md`.
+- **The name's size is NOT a lever on that threshold**, which is the opposite of
+  what the handoff predicted. The Name column is a fixed 116px track and the
+  name never reached its minimum: 675px before and after. Widening the column
+  stays the only lever, and its +84px claim is still unverified.
+- **Measure with the font loaded — `await document.fonts.ready`.** The first
+  wrapped-row audit ran against a cold iframe and reported **11** wrapped rows
+  at 1120px where the true figure is **2**. Nothing errors and the number is
+  plausible; it is wrong by 5×, and the first commit's numbers had to be
+  amended because of it. Same shape as the font-substitution trap.
+- **`box-sizing` is why two identical stylesheets built different bars.** The
+  site resets it globally; the widget scopes its reset to `.laguna-search *`,
+  and the host bar sits outside that. Without a scoped reset the masthead's own
+  declarations produced a 65px bar with 50×34 pills — padding and border added
+  on rather than absorbed.
+
+### The build now reads nine declarations out of `CSS`, and guards all of them
+
+`write_search()` used to read the h1 rule alone. It now also reads `.imprint`
+(two declarations), `.rule-double` (five), the `:root` tokens the bar needs
+(seven) and the `(pointer:coarse)` `--tap` override. **Six aborts, every one
+negative-tested by mangling `CSS` in memory and confirming the build refuses.**
+A seventh aborts if `vendor/search/` ever declares one of the site token names
+this now emits — the bar's metrics are emitted under the site's own names on
+purpose, so the rules are the masthead's text and a diff between the two shows
+selectors and colours and nothing else.
+
+### Re-vendoring, five times in one session
+
+`search-index.json` was **byte-identical through all six upstream commits**, so
+**no `--refresh` was owed at any point** — nothing that gets parsed into the
+index moved. `leak_report()` was run by hand over all three vendored files after
+every re-vendor; clean every time.
+
+One shape this file had not recorded before showed up twice: **`search.js`
+alone**, with `index.html` and `search-index.json` both byte-identical. It
+happens when the change is to a *string the script writes at runtime* — the
+note's copy, a caption. The set of non-data shapes is now complete: stylesheet
+only (`index.html`), markup only (`search.js`), and both.
+
+### Not done
+
+- **Nothing is published.** Two unpushed branches, and PR #50 does not yet carry
+  any of it.
+- **Bracket placement on Genealogy I and III** is untouched and still deferred.
+- The empty state's **`Clear filters`** was deliberately kept when `Clear all`
+  went: it is the one moment a reader can see no control to undo. Offered for
+  removal, not taken up.
+
+## 2026-08-10 (second entry) — Published: PR #49 merged, all seven pages verified live
 
 The six chrome edits below are now **on the live site**. PR #49 squash-merged as
 **`863e60b`**; `main` was 0 commits ahead of the branch at the moment of merging,

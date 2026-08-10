@@ -4,154 +4,114 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-10**, after the publish. The six site-chrome edits are
-**live**: PR #49 merged as **`863e60b`** and all seven pages verified against
-`docs/` by SHA-256. `laguna-search` is at **`321f814`**, pushed, and its
-post-publish `--refresh` has been run — clean, no re-vendor owed.
+Last updated **2026-08-10**, at the end of a session that redesigned `/search/`.
 
-**Nothing is outstanding from that work.** Take the publication state from the
-repo anyway, never from this file:
+**Nothing from that session is live, and both branches are unpushed.** That is
+the one thing to establish before anything else, and this file is the least
+reliable place to read it from — take it from the repo:
 
 ```bash
 gh pr list --state open
 git rev-list --left-right --count origin/main...HEAD
+git log --oneline origin/$(git branch --show-current)..HEAD
 ```
 
-**The next priority is set, and it is not the plates.** The user asked for
-design work on `/search/`'s *Browse the complete edition* section, starting by
-**reducing the font size of the names in the table**. Bracket placement on
-Genealogy I and III is **deferred, not closed** — it is still the largest
-correctness risk here, and it is written out in full below so deferring it costs
-nothing later.
+At the moment of writing: **6 commits unpushed here**, **6 unpushed in
+`laguna-search`**, and **PR #50 open** on this branch carrying only the previous
+session's handoff. The wrap commit that adds this file makes 7.
+
+**The open thread is publishing.** The design work the last session was asked
+for is done and measured; what it has not had is a `/publish`.
 
 ## Start here in a new chat
 
 1. This file.
-2. `CLAUDE.md` → *The search page is vendored, not generated here*, and the
-   `/search/` **All People** block under *Design invariants*. Both are required
-   reading for the open thread, not optional: they carry the upstream-vs-host
-   test, the two specificity traps, the pan-into-view rule and the three
-   re-vendor shapes.
-3. `CHANGELOG.md`'s newest two entries — the publish, then the six edits and the
-   Clan-menu defect that had been live since the filter header was built.
-4. Only if you are touching the theme or the masthead: `CLAUDE.md` →
-   *The theme control has no Auto state* (the default is now light, and CSS is
-   what says so) and the *numeral-only pills* note under *Design invariants*.
+2. `CHANGELOG.md`'s newest entry — the seven `/search/` changes, the
+   upstream-vs-host split as a worked table, and the four measurements that
+   cost something to get.
+3. Only if you are touching `/search/`: `CLAUDE.md` → *The search page is
+   vendored, not generated here* (now **six** injections, not five) and the
+   `/search/` **All People** block under *Design invariants*.
+4. Only if you are publishing: `/publish`'s own gates, and `CLAUDE.md` →
+   *The re-vendor loop is `/publish` Gate 8*.
 
 Preview: `preview_start`, config name `site`, serves `docs/` on
-`http://localhost:4173`. **A narrow-viewport check needs a fixed-width iframe,
-not `resize_window`** — the pane widens to the content and there is no pan to
-photograph. See `CLAUDE.md` → *Preview*. Note the pane also paints at a width
-that disagrees with the `innerWidth` it reports; read `innerWidth` before
-believing a screenshot, and prefer measuring to looking.
+`http://localhost:4173`. **The pane caches `/search/` hard** — a rebuild does
+not show until you bust it (`location.replace('/search/?v=' + Date.now())`, or
+a `?v=` on an iframe's `src`). This cost two false readings in the last
+session, both of them "the change did not apply".
+
+**A narrow-viewport check needs a fixed-width iframe, not `resize_window`** —
+the pane widens to the content. And **`await document.fonts.ready` inside the
+iframe before measuring anything about text**; see *State*.
 
 ## State
 
-**Nothing is half-finished, nothing is unpublished, and no PR is open.** `main`
-is at **`863e60b`** and the live site serves it. Both repos are committed and
-level with their remotes.
+**Nothing is half-finished. Everything committed builds, and the build
+reproduces `docs/` byte-identically.** `--public` exits 0: 7 pages, 713 people
+drawn, 10 JSON-LD blocks valid, no research prose. `leak_report()` was run by
+hand over all three vendored files after every re-vendor — clean each time.
 
-The publish was clean end to end. What is worth carrying forward from it:
+What was done, in one line each: the list's names are smaller; the list is
+headed **`Index`** with `620 people` beside it and no `Clear all`; the host bar
+on `/search/` **is** the masthead, Search included; the title block's
+standfirst and rule are the plates'; the search card is 26px shorter with every
+box sharing an edge; and the number field's note is reworded.
 
-- **All seven pages verified live by SHA-256**, plus `search.js` and
-  `search-index.json` — the two files `check_published_pages()` never opens.
-  Status codes 200 on everything but `/fonts/`, which 404s harmlessly; sitemap 5
-  `<loc>` against 7 built pages, which is the correct count; stale-identity grep
-  0.
-- **Publishing was merging.** The branch already carried a same-day `--public`
-  build, so the post-merge rebuild reproduced `docs/` byte-identically and Gates
-  3–5 had nothing to commit. A clean `git status` there is the confirmation, not
-  a warning.
-- **The post-publish `--refresh` is DONE**, and it genuinely re-fetched — first
-  line `4 table pages, re-fetched`, not `cached in cache/`. All seven of that
-  tool's gates pass, and all three `dist/` files came back **byte-identical** to
-  `vendor/search/`, so no re-vendor was owed.
-- **`307 KB` vs `308 KB` is not drift.** One file of 315,224 bytes = 307.8 KiB;
-  `make_chart.py` floors it and `build.py` rounds it. Do not go looking.
+**`search-index.json` was byte-identical through all six upstream commits, so
+no `--refresh` was owed and none was run.** Nothing that gets parsed into the
+index moved. This still leaves the **post-publish** `--refresh` obligation
+untouched — that one is not optional and is not the same thing.
 
-`laguna-search` is at **`321f814`**, pushed, level with origin — the Clan menu
-fix, the menu's pan-into-view, the two search halves on one line, the theme
-control at the foot, the All People standfirst moved into the footer note, and
-`color-scheme` following `[data-theme]`. `vendor/search/` is vendored from that
-commit and `SOURCE.md` names the SHA.
+Three things learned that are now in `CLAUDE.md` rather than only here:
 
-All four plates published, 713 entries, no reading question open.
+- **The pan threshold is 675px**, measured. Both previously recorded numbers
+  were wrong, and `641` was a different quantity — the document's `scrollWidth`
+  at phone widths.
+- **The name's size is not a lever on that threshold.** Fixed 116px track.
+- **Measure text with the font loaded.** A cold iframe reported 11 wrapped rows
+  where the truth is 2. Plausible, silent, wrong by 5×.
 
-**A rebuild on a later day dirties `docs/` with dates alone** — `dateModified`,
-the "Last updated" line, `sitemap.xml` `lastmod`. If tomorrow's first `--public`
-shows pages moving on those and nothing else, that is the clock, not a content
-change: `git checkout -- docs/` and move on. It is now the *only* thing a
-`docs/` diff on a clean tree can mean, since `main` and the deployed build no
-longer differ.
+## The open thread — publish it
 
-## The open thread — design edits to `/search/`'s *Browse the complete edition*
+Nothing is blocking. The work is measured and the repo is clean; it needs
+`/publish`, which will merge PR #50 (or a fresh PR — see below) and push
+`laguna-search`.
 
-**Set by the user 2026-08-10, and it is the top priority.** The section is the
-All People card on `/search/` — the kicker `Browse the complete edition` is
-written by `search.js:1451`, so grepping the HTML for that string finds nothing;
-it is built at runtime.
+Four things specific to this publish:
 
-**Start with the one thing named: make the NAMES IN THE TABLE smaller.** The
-lever is `.laguna-search .cell.name`, and there are **two** declarations of it in
-the vendored stylesheet, not one:
-
-| Where | Today |
-|---|---|
-| `vendor/search/index.html:718` — the base rule | `font-size: 1.45rem`, `font-weight:700`, `line-height:1.12` |
-| `vendor/search/index.html:1254` — inside the narrow media query | `font-size: 1.15rem` |
-
-**Change one and the other silently disagrees at the width nobody checked.**
-Decide what each should be, and say which width you measured at.
-
-Four things to have in hand before touching it:
-
-- **Apply the upstream-vs-host test first, and expect it to say UPSTREAM.** The
-  test is whether the widget *standing alone* would want the change. Table
-  typography is that widget's own layout, so this most likely belongs in
-  `src/search.css` in `laguna-search` — not injected here. The h1 size is the
-  counter-example that went host-side, and it went there because it had to sit
-  on *this* site's type ramp; a name cell has no such tie. **Ask before writing
-  a host override**, and if one is truly unavoidable, anchor it to the vendored
-  rule so the build fails when that rule moves.
-- **Shrinking the name changes the pan threshold, and that is a feature the user
-  may or may not want.** Names wrap at their editorial `<wbr>` seams — 8 of the
-  first 60 rows run 59.3px against 56px — because the widest name measures 196px
-  against a 116px Name column. A smaller name narrows that 196px, so some
-  wrapping will disappear on its own and the page will start panning at a
-  narrower width. **Measure the new threshold; do not predict it.**
-- **The recorded threshold numbers disagree with each other**, so trust neither
-  without measuring: `CLAUDE.md` says widening the Name column moves it from
-  **672px to ~756px**, this file said **641px to ~725px**. Both record the same
-  +84px shift from a different base. Settle it by measurement and correct
-  whichever is wrong.
-- **A narrow check needs a fixed-width iframe.** `resize_window` widens the pane
-  to the content, so there is no pan to photograph and `innerWidth` lies. See
-  *Start here* above.
-
-**Then the re-vendor.** If the change lands upstream, rebuild `dist/` there,
-re-vendor the three files, update the SHA and date in `vendor/search/SOURCE.md`,
-rebuild here and publish. Expect the **second re-vendor shape**: a stylesheet-only
-change moves `index.html` alone, because that is where the CSS is inlined, while
-`search.js` and `search-index.json` come back byte-identical. A byte-identical
-index means **no `--refresh` obligation** — but `leak_report()` over all three
-vendored files is due every time regardless.
+- **PR #50 is the previous session's handoff PR and today's work is stacked on
+  it.** Re-read its direction at the moment of merging, not from this file:
+  `git diff origin/main origin/handoff-2026-08-10-search-browse-priority`, and
+  read **deletions** as "the branch is behind `main`". It was purely additive
+  when last measured, and a parked branch acquires drift in days.
+- **`laguna-search` must be pushed too** — 6 commits on `main` there, and
+  `vendor/search/SOURCE.md` names `499a3b4` as the vendored commit. A SHA in
+  `SOURCE.md` that exists only in a local clone is the failure to avoid.
+- **Gate 8's diff test will say no re-vendor is due**, and that is right: the
+  register-bearing markup on the table pages did not move this session. The
+  publish still owes the `--refresh` run afterwards.
+- **Verify `/search/` live by SHA-256 including `search.js`**, which
+  `check_published_pages()` never opens.
 
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
-| **Bracket placement on Genealogy I and III** | large, needs you | **DEFERRED 2026-08-10, not closed** — the user set the `/search/` design work above it. Still the largest correctness risk on the site; see the section below, which is kept in full because re-deriving it is expensive |
-| The `/search/` provenance line's home | small, needs you | The All People standfirst went into `/search/`'s own footer note, beside "A read-only finding aid…". The user said "put it in provenance" and that page's footer note is its provenance block — but the landing page's *Provenance and use* is the other reading. Offered and not taken up; ask before moving it |
-| The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. On a chart page nothing in the chrome says *Laguna Genealogies*; it survives in the `<title>`, the citation and the landing page. Flagged, not objected to |
-| Widen `/search/`'s Name column | small, needs you | Names still wrap at their editorial `<wbr>` seams — 8 of the first 60 rows, 59.3px against 56px. Widest name measures **196px** against a 116px column. Declined 2026-08-10 because `nowrap` would truncate a transcribed name. **Now coupled to the open thread**: a smaller name font changes the same measurement, so do this one second or not at all |
-| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. No branch build; the fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** That separates *the plate eats the gesture* from *the document is locked*. It was last reported clear on the *live* site, which never carried the fix |
-| A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — that is what settled the second sort. `digitallibrary.amnh.org` 403s automated fetches |
+| **Publish the `/search/` redesign** | medium | The open thread above. Two branches, one PR, one `--refresh` after |
+| **Bracket placement on Genealogy I and III** | large, needs you | **DEFERRED 2026-08-10 for the second time, not closed** — still the largest correctness risk on the site. Method in full below |
+| The `/search/` provenance line's home | small, needs you | The All People standfirst went into `/search/`'s own footer note. The user said "put it in provenance"; that page's footer note is one reading, the landing page's *Provenance and use* the other. Offered, not taken up |
+| Remove the empty state's `Clear filters` | small, needs you | `Clear all` went from the section head; this one was kept deliberately — it is the only moment a reader can see no control to undo. Offered, not taken up |
+| Widen `/search/`'s Name column | small, needs you | Declined earlier because `nowrap` would truncate a transcribed name. **Its numbers are now stale**: the name is 1.2rem/1.05rem, so the 196px and the +84px shift both need re-measuring before this is worth anything |
+| The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. Flagged, not objected to |
+| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. The fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** |
+| A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first.** `digitallibrary.amnh.org` 403s automated fetches |
 
 ## Deferred, not closed — bracket placement on Genealogy I and III
 
 **Kept in full because it is the site's largest correctness risk and the method
-is expensive to re-derive.** The user deprioritised it on 2026-08-10 in favour
-of the `/search/` design work; it has not been done, and it has not been struck.
+is expensive to re-derive.** Deprioritised twice now, on 2026-08-10 both times,
+in favour of `/search/` work. It has not been done and it has not been struck.
 
 Genealogy IV shipped on 2026-07-31 with person 20 attached to the wrong
 marriage, and it survived four `self_check()`s, every publish gate and ten days
@@ -185,46 +145,31 @@ change a transcription unilaterally.
 
 ## Decisions already made — don't re-litigate
 
-- **The default palette is LIGHT, and CSS is what says so.** Not the script.
-  `:root{color-scheme:light}` makes `light-dark()` resolve light, and the
-  `prefers-color-scheme` palette block is **deleted** — dark is reachable only
-  through `[data-theme="dark"]`. **Do not reintroduce that block**: it restores
-  OS-follows-you behaviour in exactly the no-JS case nobody looks at. A stored
-  choice still wins, and nothing is written to storage until the reader presses
-  the control. `/search/` gets the same default from a host-side declaration in
-  `THEME_KEY_DECL`, deliberately not from another widget option.
-- **The pills carry the numeral alone, and the word stays in the markup.**
-  `.masthead nav .nav-word` hides "Genealogy " visually at every width; the
-  accessible name is still "Genealogy I". **Do not delete the span.** The
-  `≤26rem` rule is now `.mast-right .nav-word` and hides the Search label only —
-  two selectors on purpose.
-- **The wordmark reads "Home".** The bar is a way back, not a nameplate.
-- **Theme sits at the foot of every page**, one `THEME_FOOT` string for all
-  three page types, and it is named in `@media print` because hiding
-  `.masthead` no longer covers it.
-- **Upstream vs host was applied four more times, and split three to one.**
-  Upstream: the Clan menu fix, its pan-into-view, the two search halves on one
-  line, the theme control's move, `color-scheme` on `[data-theme]`. Host-side:
-  the light default. The test is whether the widget *standing alone* would want
-  the change.
-- **`min-width: 0` contributes NOTHING to a track's minimum.** This bit twice in
-  one day, one level apart: the search card first resolved to 345.6px with a
-  190px name box inside a 161.8px column, and `.laguna-search` itself needed
-  `min-width:min-content` or the two cards took different widths.
-- **A menu on a panning page brings itself into view horizontally, not with
-  `scrollIntoView`** — which would drag a sticky-headed page vertically to reach
-  a menu already in view.
-- **Everything from the previous session still stands**: `/search/`'s All People
-  list is a table at every width and the document pans (confirmed on device
-  2026-08-10, on a build that carried it); names wrap and that is editorial; the
-  `/search/` h1 is derived from `CSS`'s h1 rule and the build aborts if it
-  moves; a row's height is stated, not inferred (`height:var(--lh)`; **do not**
-  simplify back to `line-height`); the 1px overlap on abutting rules was tried
-  and reverted; the Scale control is innocent; IV's 5/+6/+7 is not the
-  `LEADER_ON_SPOUSE_ROW` shape; the `/search/` link on the landing page sits
-  outside the contents `<ol>` and says *entries*; `laguna-search` stays a
-  separate private repo; `/search/` is absent from `sitemap.xml`; the twelve
-  unattested cross-plate joins are the edition's.
+- **The upstream-vs-host test decided nine changes this session, six to three.**
+  Upstream: anything about the widget's own copy, captions, control layout or
+  typography. Host: the bar's metrics, the standfirst's size, the rule under the
+  title — the three things that exist only to match *this* site. The test is
+  whether the widget standing alone would want it.
+- **The host bar's metrics are read out of `CSS` and emitted under the SITE's
+  token names**, so every rule in it is the masthead's text with only selectors
+  and colour tokens changed. A build guard aborts if `vendor/search/` ever
+  declares one of those names. **Do not re-namespace them** — the point is that
+  a diff between the two bars shows selectors and colours and nothing else.
+- **`.lg-host-bar,.lg-host-bar *{box-sizing:border-box}` is load-bearing.** The
+  widget scopes its reset to `.laguna-search *` and the bar is outside it;
+  without this line the masthead's own declarations build a 65px bar.
+- **`Clear all` is gone and `Clear filters` stays.** Not an oversight.
+- **The count beside `Index` keeps `role="status"`.** It is a live readout.
+- **The `tableHint` after the note's em dash stays.** It is the only place the
+  selected-tables state is written down.
+- **`--lg-tap` is the search card's floor.** The controls are written as the
+  token, not as 44px, to say that this is as compact as the card may get.
+- **Everything from the previous session still stands**: the list is a table at
+  every width and the document pans; names wrap at editorial `<wbr>` seams; the
+  default palette is light and CSS is what says so; Theme sits at the foot; the
+  pills carry the numeral alone with the word kept in the accessible name; a
+  row's height is stated, not inferred; `laguna-search` stays a separate private
+  repo; `/search/` is absent from `sitemap.xml`.
 
 ## Closed — do not re-raise
 
@@ -244,5 +189,3 @@ re-taken.
 - **Genealogy II's placements** — the user re-checked their full list on
   2026-07-30 and reported no remaining errors.
 - **Phonetic glyph rendering** — proven from the cmap and checked on device.
-- **`laguna-search`'s join count** — corrected 2026-08-09. Eight name-match
-  joins.
