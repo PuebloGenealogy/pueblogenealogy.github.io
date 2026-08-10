@@ -110,9 +110,10 @@ pure layout change, and it carries **no `--refresh` obligation**, because the
 index is built by parsing pages that did not move. `leak_report()` run by hand
 over all three vendored files: clean. All seven upstream gates pass.
 
-**The upstream repo is uncommitted** — 96 insertions / 65 deletions in
-`src/search.css` on top of `44e3d7b`, nothing committed. `vendor/search/SOURCE.md`
-records the provenance as incomplete and names the SHA that has to replace it.
+**Upstream is `ac33d95`**, committed and pushed on `laguna-search`'s `main` —
+96 insertions / 65 deletions in `src/search.css`, which is the whole of it there
+(`dist/` is gitignored). `vendor/search/` was verified byte-for-byte against
+that commit's `dist/`, all three files, and `SOURCE.md` names the SHA.
 
 ## 2026-08-10 — Published: IV·20's parentage, and the WebKit row-box fix
 

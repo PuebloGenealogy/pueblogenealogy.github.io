@@ -6,8 +6,7 @@ This file answers one question only: *what would I pick up next?*
 
 Last updated **2026-08-10**. A design session on `/search/`, **not published**.
 Three edits the user asked for, all measured; two of the three went **upstream**
-into `laguna-search` rather than into this repo, and that repo is **left
-uncommitted**.
+into `laguna-search`, which is committed and pushed at **`ac33d95`**.
 
 ## Start here in a new chat
 
@@ -24,26 +23,17 @@ photograph. See `CLAUDE.md` → *Preview*.
 
 ## State
 
-**Nothing is half-finished, but two repos are dirty and neither is committed.**
+**Nothing is half-finished, and both repos are committed.**
 
-This repo, five files on `main`, working tree only:
+**`laguna-search` is at `ac33d95`, pushed, level with origin** — the two layout
+changes, 96/65 in `src/search.css`. `vendor/search/` was verified byte-for-byte
+against that commit's `dist/`, all three files, and `SOURCE.md` names the SHA.
 
-| File | Why |
-|---|---|
-| `scripts/make_chart.py` | the h1 injection (5th), and the docstring's note on what belongs upstream |
-| `vendor/search/index.html` | re-vendored twice today |
-| `vendor/search/SOURCE.md` | provenance, **recorded as incomplete on purpose** |
-| `docs/search/index.html` | the only built page that moves |
-| `CLAUDE.md` | +99 lines |
+This repo's work is on branch **`search-layout-2026-08-10`**, pushed, open as a
+PR. It carries the h1 injection, the re-vendor, `CLAUDE.md` (+99) and the
+records. **Nothing was published**, so the live site still serves the previous
+session's build.
 
-**`laguna-search` is uncommitted too** — 96 insertions / 65 deletions in
-`src/search.css` on top of `44e3d7b`. **This is the thing to close first.**
-Right now the reasoning behind `/search/`'s whole narrow-width layout lives in
-one uncommitted file outside this repo, and `vendor/search/SOURCE.md` cannot
-name the SHA it was built from. Commit there, then replace the SHA here.
-
-`main` is level with origin (`0 0`), **no PR is open**, and nothing was
-published today — so the live site still carries the previous session's build.
 Take publication state from the repo, never from this file:
 
 ```bash
@@ -58,22 +48,24 @@ of `laguna-search`'s gates pass; namesake gate unchanged at **3 pairs, 1 open**
 
 All four plates published, 713 entries, no reading question open.
 
-## The open thread — commit `laguna-search`, then publish
+## The open thread — merge the PR and publish
 
-Two steps, in this order, and the first is not optional.
+The `/search/` work is finished and committed on both sides; what is left is
+shipping it. **Publish** — `/publish`. Two things about Gate 8 are already
+settled, so do not re-derive them:
 
-1. **Commit `src/search.css` upstream** and put the resulting SHA into
-   `vendor/search/SOURCE.md`, replacing the line that currently reads
-   `44e3d7b` **plus an uncommitted `src/search.css`**. That file says so in a
-   blockquote; the note comes out when the SHA goes in.
-2. **Publish** — `/publish`. Two things about Gate 8 that are already settled,
-   so do not re-derive them:
-   - **The re-vendor is done**, and it was the *upstream-driven* shape:
-     `search.js` and `search-index.json` came back **byte-identical** and only
-     `index.html` moved, because that is where the stylesheet is inlined.
-   - **A byte-identical index means no `--refresh` obligation.** The index is
-     built by parsing pages that did not move. The post-publish `--refresh` run
-     is a separate obligation and still applies.
+- **The re-vendor is done**, and it was the *upstream-driven* shape:
+  `search.js` and `search-index.json` came back **byte-identical** and only
+  `index.html` moved, because that is where the stylesheet is inlined.
+- **A byte-identical index means no `--refresh` obligation.** The index is
+  built by parsing pages that did not move. The post-publish `--refresh` run
+  is a separate obligation and still applies.
+
+One thing worth watching on the deploy, because it has never been on the live
+site: `/search/` now pans the **document** sideways below 672px. That is the
+first horizontal document scroll this site has had, and the plate's `.scroll`
+already carries an unresolved Safari freeze. Check `/search/` on a phone in
+Safari after publishing.
 
 **A rebuild on a later day dirties `docs/` with dates alone.** If tomorrow's
 first `--public` shows six pages moving on `dateModified` / "Last updated" /

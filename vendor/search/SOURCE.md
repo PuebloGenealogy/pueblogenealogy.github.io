@@ -6,14 +6,8 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `44e3d7b` **plus an uncommitted `src/search.css`** |
+| Vendored from | `dist/`, at `ac33d95` |
 | Vendored on | 2026-08-10 (second re-vendor that day) |
-
-> **The provenance above is incomplete on purpose, and must be closed.** This
-> `index.html` was built from a working tree that is `44e3d7b` with 96/65 lines
-> changed in `src/search.css` and nothing committed. **Commit that upstream and
-> replace the SHA here**, or the only copy of the reasoning behind this layout
-> is one uncommitted file outside this repo.
 
 Re-vendored a **second** time on 2026-08-10, for a **stylesheet** change rather
 than a data one: the All People list now keeps its columns at every width
