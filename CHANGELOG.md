@@ -3,12 +3,42 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-10 (latest) — Site chrome: the bar loses its nameplate, Light becomes the default, Theme moves to the foot
+## 2026-08-10 (latest, second entry) — Published: PR #49 merged, all seven pages verified live
+
+The six chrome edits below are now **on the live site**. PR #49 squash-merged as
+**`863e60b`**; `main` was 0 commits ahead of the branch at the moment of merging,
+so the direction re-read cost nothing and the 648 deletions in its diffstat were
+edited lines, not a revert.
+
+A `--public` rebuild after the merge reproduced `docs/` **byte-identically** —
+same day, so not even the date fields moved — which meant Gates 3–5 had nothing
+to commit and the merge itself was the push. Worth knowing for next time: when
+the branch already carries a same-day build, publishing *is* merging, and a
+clean `git status` after the rebuild is the confirmation, not a warning.
+
+Verified live by SHA-256: all **7** `.html` pages `OK`, plus `search.js` and
+`search-index.json`, which the build's own sweep never opens. Status codes 200
+on everything except `/fonts/`, which 404s harmlessly as always; sitemap 5
+`<loc>` against the build's 7 pages, which is correct; stale-identity grep 0.
+
+**Gate 8 — the post-publish `--refresh`, run and clean.** First line read
+`4 table pages, re-fetched`, so it was not answering from `cache/`. All seven of
+that tool's gates pass: 713 entries, 620 distinct people, 505 names carrying
+break seams, three namesake pairs with one still open (II-182 / IV-69), no
+research data in any output. **All three `dist/` files came back byte-identical
+to `vendor/search/`, so no re-vendor was owed** — the register's markup had not
+moved, exactly as Gate 8's diff test predicted before the publish.
+
+**Do not hunt the `307 KB` / `308 KB` disagreement between the two builds.** It
+is one file of **315,224 bytes** = 307.8 KiB, floored by `make_chart.py` and
+rounded by `build.py`. It looks like drift in a handoff and is arithmetic.
+
+## 2026-08-10 — Site chrome: the bar loses its nameplate, Light becomes the default, Theme moves to the foot
 
 Six edits the user asked for in one pass — four in the site chrome, three on
-`/search/` (one of them is both). **Built, measured and committed, but NOT
-published**: the live site is still `2313ac4`'s `docs/`, and the first thing a
-next session should establish is whether that is still true.
+`/search/` (one of them is both). Built and measured here, and **published the
+same day** — see the entry above; this entry's original text said they were
+committed but not published, which was true when it was written.
 `laguna-search` is at **`321f814`**, pushed, with `vendor/` re-vendored from it.
 
 ### The masthead

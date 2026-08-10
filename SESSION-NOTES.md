@@ -4,20 +4,24 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-10**. A site-chrome session: six edits the user asked
-for, all built and measured, committed on a branch and **NOT published**. Two of
-them were upstream, in `laguna-search` at **`321f814`**, pushed.
+Last updated **2026-08-10**, after the publish. The six site-chrome edits are
+**live**: PR #49 merged as **`863e60b`** and all seven pages verified against
+`docs/` by SHA-256. `laguna-search` is at **`321f814`**, pushed, and its
+post-publish `--refresh` has been run — clean, no re-vendor owed.
 
-**These notes were written before the branch was pushed and the PR opened, so
-they understate what is done — that is the usual direction of this error. Take
-the publication state from the repo, not from here.**
+**Nothing is outstanding from that work.** Take the publication state from the
+repo anyway, never from this file:
+
+```bash
+gh pr list --state open
+git rev-list --left-right --count origin/main...HEAD
+```
 
 ## Start here in a new chat
 
 1. This file.
-2. `CHANGELOG.md`'s newest entry — the six edits, the Clan-menu defect that had
-   been live since the filter header was built, and what was checked before
-   committing.
+2. `CHANGELOG.md`'s newest two entries — the publish, then the six edits and the
+   Clan-menu defect that had been live since the filter header was built.
 3. Only if you are touching the theme or the masthead: `CLAUDE.md` →
    *The theme control has no Auto state* (rewritten — the default is now light,
    and CSS is what says so) and the *numeral-only pills* note under
@@ -36,64 +40,48 @@ believing a screenshot, and prefer measuring to looking.
 
 ## State
 
-**Nothing is half-finished. Both repos are committed. The site is live on the
-PREVIOUS build.**
+**Nothing is half-finished, nothing is unpublished, and no PR is open.** `main`
+is at **`863e60b`** and the live site serves it. Both repos are committed and
+level with their remotes.
 
-**This session's work is on `chrome-2026-08-10-home-light-theme-foot`, open as
-PR #49 and NOT merged; the DEPLOYED content is still `2313ac4`'s `docs/`.**
-Its direction was measured at the moment it was opened — purely additive against
-`main`, no other PR open — but **a branch's direction is a fact with a
-timestamp, not a property**. Re-read `git diff origin/main origin/<branch>`
-before merging, and bring `main` into it rather than discovering deletions
-afterwards. A parked branch here has a shelf life measured in days: PR #43 went
-from records-only drift to 152 insertions against 262 deletions in one.
+The publish was clean end to end. What is worth carrying forward from it:
 
-**Establish that gap before anything else**, because a cold start will not see
-it: `--public` reproduces `docs/` byte-identically from `scripts/`, so the repo
-looks entirely consistent while the public site still shows the old masthead,
-the old theme default and the broken Clan menu. **Merge #49, then `/publish` —
-that is the whole of what is outstanding.**
-
-Take publication state from the repo, never from this file:
-
-```bash
-gh pr list --state open
-git rev-list --left-right --count origin/main...HEAD
-```
+- **All seven pages verified live by SHA-256**, plus `search.js` and
+  `search-index.json` — the two files `check_published_pages()` never opens.
+  Status codes 200 on everything but `/fonts/`, which 404s harmlessly; sitemap 5
+  `<loc>` against 7 built pages, which is the correct count; stale-identity grep
+  0.
+- **Publishing was merging.** The branch already carried a same-day `--public`
+  build, so the post-merge rebuild reproduced `docs/` byte-identically and Gates
+  3–5 had nothing to commit. A clean `git status` there is the confirmation, not
+  a warning.
+- **The post-publish `--refresh` is DONE**, and it genuinely re-fetched — first
+  line `4 table pages, re-fetched`, not `cached in cache/`. All seven of that
+  tool's gates pass, and all three `dist/` files came back **byte-identical** to
+  `vendor/search/`, so no re-vendor was owed.
+- **`307 KB` vs `308 KB` is not drift.** One file of 315,224 bytes = 307.8 KiB;
+  `make_chart.py` floors it and `build.py` rounds it. Do not go looking.
 
 `laguna-search` is at **`321f814`**, pushed, level with origin — the Clan menu
 fix, the menu's pan-into-view, the two search halves on one line, the theme
 control at the foot, the All People standfirst moved into the footer note, and
-`color-scheme` following `[data-theme]`. `vendor/search/` was re-vendored from
-that commit and `SOURCE.md` names the SHA.
-
-A `--public` build exits 0: 7 pages, 10 JSON-LD blocks valid, leak gate clear.
-`leak_report()` was run by hand over all three vendored files — clean.
-Gate 8's diff test was **0 register-bearing lines on all four plates**, and
-`search-index.json` came back byte-identical, so no `--refresh` was owed for the
-re-vendor. **The post-publish `--refresh` run is still owed** — that is a
-separate obligation and it is never optional.
+`color-scheme` following `[data-theme]`. `vendor/search/` is vendored from that
+commit and `SOURCE.md` names the SHA.
 
 All four plates published, 713 entries, no reading question open.
 
 **A rebuild on a later day dirties `docs/` with dates alone** — `dateModified`,
 the "Last updated" line, `sitemap.xml` `lastmod`. If tomorrow's first `--public`
 shows pages moving on those and nothing else, that is the clock, not a content
-change: `git checkout -- docs/` and move on. **This matters more than usual
-right now**, because `main` and the deployed build genuinely differ — a date-only
-diff must not be mistaken for that difference, or for its resolution.
+change: `git checkout -- docs/` and move on. It is now the *only* thing a
+`docs/` diff on a clean tree can mean, since `main` and the deployed build no
+longer differ.
 
-## The open thread — publish, then the plates
+## The open thread — bracket placement on Genealogy I and III
 
-**Merge #49 and publish. It is small and it is blocking.** Six user-requested
-changes sit unseen on the branch, including a defect fix: on the live site the
-Clan filter on `/search/` still draws a column of black squares with no clan
-names on any window under 860px. Merge, then `/publish`, then run
-`python3 build.py --refresh` in the `laguna-search` checkout — its gates
-otherwise pass against a cache of the site as it was.
-
-**Then the standing thread returns: bracket placement on Genealogy I and III,
-never read against the scan.** **Needs you.** Genealogy IV shipped on
+**With the publish done, the standing thread is the only one left: bracket
+placement on Genealogy I and III, never read against the scan.** **Needs you.**
+Genealogy IV shipped on
 2026-07-31 with person 20 attached to the wrong marriage, and it survived four
 `self_check()`s, every publish gate and ten days live. **Nothing structural can
 find the next one**: 19 and 20 are both Bear, exactly like their mother, so clan
@@ -127,7 +115,6 @@ change a transcription unilaterally.
 
 | | Effort | Notes |
 |---|---|---|
-| **Merge #49, then publish** | small, blocking | See the open thread. The branch is six changes ahead of the live site, one of them a defect fix. Then `--refresh` over there |
 | The `/search/` provenance line's home | small, needs you | The All People standfirst went into `/search/`'s own footer note, beside "A read-only finding aid…". The user said "put it in provenance" and that page's footer note is its provenance block — but the landing page's *Provenance and use* is the other reading. Offered and not taken up; ask before moving it |
 | The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. On a chart page nothing in the chrome says *Laguna Genealogies*; it survives in the `<title>`, the citation and the landing page. Flagged, not objected to |
 | Widen `/search/`'s Name column | small, needs you | Names still wrap at their editorial `<wbr>` seams — 8 of the first 60 rows, 59.3px against 56px. Widest name measures **196px** against a 116px column. Widening removes the wrapping and moves the pan threshold from 641px to ~725px. Declined 2026-08-10 because `nowrap` would truncate a transcribed name |
