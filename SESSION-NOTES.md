@@ -39,13 +39,20 @@ believing a screenshot, and prefer measuring to looking.
 **Nothing is half-finished. Both repos are committed. The site is live on the
 PREVIOUS build.**
 
-**This session's work is on a branch and a PR; the DEPLOYED content is still
-`2313ac4`'s `docs/`.** That is the one thing to establish before anything else,
-because it is the gap a cold start will not see: `--public` reproduces `docs/`
-byte-identically from `scripts/`, so the repo looks entirely consistent while
-the public site shows the old masthead, the old theme default and the broken
-Clan menu. **`/publish` is the whole of what is outstanding**, once the PR is
-merged.
+**This session's work is on `chrome-2026-08-10-home-light-theme-foot`, open as
+PR #49 and NOT merged; the DEPLOYED content is still `2313ac4`'s `docs/`.**
+Its direction was measured at the moment it was opened — purely additive against
+`main`, no other PR open — but **a branch's direction is a fact with a
+timestamp, not a property**. Re-read `git diff origin/main origin/<branch>`
+before merging, and bring `main` into it rather than discovering deletions
+afterwards. A parked branch here has a shelf life measured in days: PR #43 went
+from records-only drift to 152 insertions against 262 deletions in one.
+
+**Establish that gap before anything else**, because a cold start will not see
+it: `--public` reproduces `docs/` byte-identically from `scripts/`, so the repo
+looks entirely consistent while the public site still shows the old masthead,
+the old theme default and the broken Clan menu. **Merge #49, then `/publish` —
+that is the whole of what is outstanding.**
 
 Take publication state from the repo, never from this file:
 
@@ -78,10 +85,10 @@ diff must not be mistaken for that difference, or for its resolution.
 
 ## The open thread — publish, then the plates
 
-**Publish first. It is small and it is blocking.** Six user-requested changes
-sit on `main` unseen, including a defect fix: on the live site the Clan filter
-on `/search/` still draws a column of black squares with no clan names on any
-window under 860px. `/publish` is the whole of it. Then run
+**Merge #49 and publish. It is small and it is blocking.** Six user-requested
+changes sit unseen on the branch, including a defect fix: on the live site the
+Clan filter on `/search/` still draws a column of black squares with no clan
+names on any window under 860px. Merge, then `/publish`, then run
 `python3 build.py --refresh` in the `laguna-search` checkout — its gates
 otherwise pass against a cache of the site as it was.
 
@@ -120,7 +127,7 @@ change a transcription unilaterally.
 
 | | Effort | Notes |
 |---|---|---|
-| **Publish** | small, blocking | See the open thread. `main` is six changes ahead of the live site, one of them a defect fix. Then `--refresh` over there |
+| **Merge #49, then publish** | small, blocking | See the open thread. The branch is six changes ahead of the live site, one of them a defect fix. Then `--refresh` over there |
 | The `/search/` provenance line's home | small, needs you | The All People standfirst went into `/search/`'s own footer note, beside "A read-only finding aid…". The user said "put it in provenance" and that page's footer note is its provenance block — but the landing page's *Provenance and use* is the other reading. Offered and not taken up; ask before moving it |
 | The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. On a chart page nothing in the chrome says *Laguna Genealogies*; it survives in the `<title>`, the citation and the landing page. Flagged, not objected to |
 | Widen `/search/`'s Name column | small, needs you | Names still wrap at their editorial `<wbr>` seams — 8 of the first 60 rows, 59.3px against 56px. Widest name measures **196px** against a 116px column. Widening removes the wrapping and moves the pan threshold from 641px to ~725px. Declined 2026-08-10 because `nowrap` would truncate a transcribed name |
