@@ -312,6 +312,15 @@ published page. Note it tripped the leak gate on its first build, because a
 function in it was named `census`: the gate deleted the file and exited 1, which
 is the gate working, not a false positive.
 
+**The preview pane cannot simulate a NARROW viewport that the page overflows —
+it widens to the content instead.** Found 2026-08-10. `resize_window` to 375px
+on a page whose table is 672px wide reports `innerWidth` **648**, not 375: there
+is no pan to photograph, because the pane grew to fit. So a phone check of
+anything wider than the phone must go in a **fixed-width iframe** — the same
+self-measuring harness as above, but rendered *visibly* and screenshotted,
+rather than measured offscreen. `f.contentWindow.innerWidth` reports the real
+355 and the pan is real inside it.
+
 **And confirmation from the user is only evidence if you know which build they
 were on.** The scroll freeze was reported clear on 2026-08-09 — **on the live
 site, which carries no fix**. So the symptom is **intermittent**, and an absence
@@ -741,7 +750,7 @@ from and how to refresh it.
 overwritten by the next re-vendor exactly as `docs/` is by the next build.
 
 `write_search()` deliberately does the least it can — it wraps, never rewrites.
-Four things are injected, and each is there because the vendored file cannot
+Five things are injected, and each is there because the vendored file cannot
 supply it:
 
 - **The subset font.** `search.css` declares **no `@font-face` at all**, and
@@ -782,6 +791,65 @@ supply it:
   key is the defect, not the starting condition — if the widget ever needs
   another host-side value, ask for an option before writing a patch of that
   shape.
+
+- **The h1 size** (added 2026-08-10). The widget sets its heading from its own
+  ramp — `clamp(2.1rem,5vw,4rem)` at `.1em` — because it was built to stand
+  alone: 64px against this edition's 40px at 1280px, and 40px against 25.6px on
+  a phone. On this site it is one page of seven, so it takes the site's own
+  size, letter-spacing and line-height. All three are **read out of `CSS`'s h1
+  rule**, never restated; the ramp stays one literal and the build aborts if
+  any of the three leaves that rule.
+
+**Which changes belong here, and which belong upstream — the test is whether
+the widget standing ALONE would want them.** Added 2026-08-10, after two
+requests took opposite answers on the same day. The h1 size is host-specific by
+nature: `laguna-search`'s own site should keep its big heading, and only *this*
+site needs it on *this* ramp. But the search card's one-line control row, and
+the All People list keeping its columns at every width, are that widget's
+layout however it is served — so both went **upstream, into
+`src/search.css`**, and neither is injected here. An override of another
+project's media queries is a thing to re-read on every re-vendor rather than a
+thing to own; the first of those two was written as a host injection, anchored
+to the rule it undid, and the anchor is what caught it the moment the upstream
+fix landed. That is the shape to reach for if a host override is ever genuinely
+unavoidable — **anchor it to the vendored rule and fail the build when it
+moves** — but reach for upstream first.
+
+**`/search/`'s All People list is a table at EVERY width, and pans rather than
+stacks.** Set by the user 2026-08-10. It used to become a stacked card below
+860px — name on its own line, then sex, birth, death and clan under it with
+`Birth `/`Death ` glued on as `::before` labels standing in for the headings
+overhead; a row went 56px → 153px and the header 82px → 270px. Now the columns
+hold, `.card.people` takes `min-width:min-content`, and below **672px the
+DOCUMENT pans sideways**. Three things about that are load-bearing:
+
+- **The pan is the document's, not an inner scroller's.** An inner scroller
+  would become the sticky header's scroll container and the column names would
+  stop following the reader down 634 rows — which is the only reason that
+  header sticks. It also keeps the site to one horizontal scroller, which
+  matters while the plate's `.scroll` has an open Safari freeze symptom.
+- **`minmax(0,1fr)` and `min-width:0` are the enemy once the table sets the
+  page's width.** A zero floor means the inner grid's 445px never reaches
+  `min-content`, so the card stops short of its own minimum and the columns
+  slide under `Table · #`. Both floors are released below 860px.
+- **A column is as narrow as its CONTROL allows, never as its values look.**
+  Sex's floor is its `select`, which sizes to its widest *option* (`Not
+  recorded`) and will hang over Birth rather than shrink; Clan's is its
+  disclosure at 76px. Values like `M.` and `Corn` say nothing about it.
+
+**Names still wrap there, deliberately.** Where a name may be divided is an
+editorial question, answered in `build.py` and published as `<wbr>` seams
+(ratified 2026-08-08). Forcing `nowrap` would truncate a transcribed name, so
+8 of the first 60 rows take two lines below 860px and those rows run 59.3px
+against 56px. The lever, if it is ever wanted: the widest name measures 196px
+against a 116px Name column, so widening that column removes the wrapping and
+moves the pan threshold from 672px to roughly 756px.
+
+**One specificity trap in that stylesheet, and it was live for months.**
+`.laguna-search .row-summary .grid` is (0,3,0) and carries the row's inline
+padding, so a rule written at `.grid` — (0,2,0) — reaches the **header and not
+the rows**. That is how the column names sat 4px left of their values from
+861–1120px. Any breakpoint touching that padding must name both selectors.
 
 **The masthead's Search link sits in `.mast-right` beside Theme — moved there by
 the user 2026-08-09, and it costs a row on a phone.** That cost was measured
@@ -847,10 +915,25 @@ groups labelled by husband**, `Children (with 5)` and `Children (with 7)`, which
 stated the split claim more explicitly than the chart ever did. A data error
 here is louder over there.
 
+**There is a SECOND shape of re-vendor, and it runs the other way: the change
+starts UPSTREAM and no data moves at all.** Added 2026-08-10, the same day and
+the mirror image of the entry above. A layout fix to `src/search.css` — the All
+People list keeping its columns, the search card's one-line control row —
+rebuilds `dist/`, and **`search.js` and `search-index.json` come back
+byte-identical while only `index.html` moves**, because that is where the
+stylesheet is inlined. Two consequences worth having in advance:
+
+- **A byte-identical index means no `--refresh` obligation.** That obligation
+  exists because the index is built by parsing *these* pages; a change that
+  parses to the same thing has not staled it. Gate 8's diff test answers "is
+  the index due", and the answer here is no — do not run the fetch to prove it.
+- **`leak_report()` is still due on all three**, because the sweep is about
+  what `docs/` will carry, not about what changed. Run it every time.
+
 **And run `leak_report()` by hand over the three vendored files every time.**
 `check_published_pages()` only opens `.html`, so `search.js` (61 KB) and
-`search-index.json` (314 KB) are never swept by the build. Done 2026-08-10, all
-three clean.
+`search-index.json` (314 KB) are never swept by the build. Done 2026-08-10 on
+both of that day's re-vendors, all three clean each time.
 
 **Running `--refresh` after a publish is a separate obligation from
 re-vendoring, and it is the one that is never optional.** Gate 8 asks whether
@@ -1403,6 +1486,19 @@ child. The audit that works reads `_GROUPS`, takes the union's mother (or the
 `LEADER_ON_SPOUSE_ROW` spouse), finds `#p{first_child}`, walks up to its
 `.kids`, and asserts the bracket starts on **that named person's** line. 426
 checks across four plates, and it is cheap.
+
+**An audit that compares two things which MOVE TOGETHER passes on the defect it
+exists to catch.** Found 2026-08-10 on `/search/`, and it is the same failure as
+the nearest-`.lead-line` audit above wearing different clothes. The check was
+"does each data cell sit at its column heading's left edge?" — it reported
+**0.00px drift at every width** while the header's five columns were sliding
+straight under `Table · #`, because heading and cell overflowed *by the same
+amount* and the difference stayed zero. A screenshot found it in one look. So
+when an audit compares A to B, ask what happens if A and B are wrong in the
+same direction; if the answer is "it passes", the audit needs a **third,
+independent** reference — here, the neighbour the pair was colliding with. And
+**look at the thing at least once**: two measurements agreeing is not evidence
+they are right.
 
 **Under CSS `zoom`, never mix `getComputedStyle` with `getBoundingClientRect`.**
 The plate scale control is `zoom`, and computed styles come back **unzoomed**

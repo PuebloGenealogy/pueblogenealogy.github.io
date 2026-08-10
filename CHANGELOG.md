@@ -3,7 +3,118 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-10 (latest) — Published: IV·20's parentage, and the WebKit row-box fix
+## 2026-08-10 (latest) — `/search/` design: the heading, and the list that stops stacking
+
+**Not published.** Four files uncommitted on `main` at the time of writing;
+`docs/search/index.html` is the only built page that moves. Three design edits
+the user asked for, in order, plus three defects found while measuring them.
+
+### The heading now matches every other page
+
+`/search/`'s `<h1>` was sized by the vendored widget's own ramp —
+`clamp(2.1rem,5vw,4rem)` at `.1em` — against this edition's
+`clamp(1.6rem,1.15rem + 1.9vw,2.5rem)` at `.09em`. Measured: **64px against
+40px at 1280px, 40px against 25.6px at 375px**. Now identical on both pages at
+both widths, letter-spacing and line-height included.
+
+`write_search()` gained a fifth injection, and the way it gets the value is the
+point: it **reads the three declarations out of `CSS`'s own h1 rule** rather
+than restating them, so the ramp stays one literal. Losing any of the three
+from that rule aborts the build.
+
+### The search card's numerals and number box hold one line
+
+Below 860px the widget gave `.table-field` a `min-width:100%`, which wrapped the
+`#` box onto a row of its own and stretched it: **728.6px of box for a
+three-digit number at 800px**. Now one line at 320–1280px, no horizontal
+overflow anywhere, the box flush right at every width. The numerals give ground
+first (74px → 56.4px at 375px, 43.3px at 320px), the box follows (98px → 72px);
+both start from the values they hold above the breakpoint, so **860px is
+pixel-identical to 861px**.
+
+Built **twice**. First as a host injection in `write_search()`, anchored to the
+vendored rule it undid so a re-vendor could not silently strand it — then moved
+**upstream** into `src/search.css` and deleted here. The anchor is what caught
+the move: the build aborted the instant the upstream fix landed. Keep that
+shape if a host override is ever unavoidable, but prefer upstream.
+
+### All People stays a table at every width
+
+The user's choice, from three offered: tighten the columns, and pan sideways
+below where they fit — **nothing stacks**. It used to become a stacked card
+below 860px, with `Birth `/`Death ` glued on as `::before` labels standing in
+for headings that were no longer overhead.
+
+| | before | after |
+|---|---|---|
+| row height ≤860px | 153px | **56px** |
+| header ≤860px | 270px, 2×2 panel | **116px, one band, still sticky** |
+| columns stack | below 860px | **never** |
+| document pans | — | below **672px** only |
+
+Done upstream in `src/search.css` and re-vendored; a host override would have
+been ~25 declarations against another project's media queries. The pan is the
+**document's**, deliberately — an inner scroller would capture the sticky
+header's scroll container and the column names would stop following the reader
+down 634 rows.
+
+### Three defects found while measuring, one of them already live
+
+1. **A 4px head-to-data misalignment, 861–1120px, shipped and live.**
+   `.row-summary .grid` is (0,3,0) and carries the row's inline padding, so the
+   breakpoint's `.grid` rule — (0,2,0) — reached the header and not the rows.
+   Column names sat 4px left of their values. Both selectors are now named at
+   both breakpoints.
+2. **A `select` sizes to its widest OPTION, not its column.** Tightened to
+   104px, the Sex control kept the 124px `Not recorded` needs and hung **20px
+   over Birth** — exactly what the widget's own base comment warned of. Held to
+   its column, with the type shrunk so the longest option still reads. Clan's
+   floor is its disclosure at 76px, found the same way.
+3. **`minmax(0,1fr)` + `min-width:0` defeat `min-content`.** With a zero floor
+   the inner grid's 445px never propagated, so `.card.people`'s
+   `min-width:min-content` came out **140px short** and the five columns slid
+   under `Table · #`. Both floors released below 860px.
+
+### The audit that passed the broken layout
+
+Worth more than the fix. The check was *"does each data cell sit at its column
+heading's left edge?"* and it reported **0.00px drift at every width** while
+(3) above was live — because heading and cell overflowed **by the same amount**
+and the difference stayed zero. A screenshot found it in one look. Same failure
+as the nearest-`.lead-line` audit of the previous session: when an audit
+compares A to B, ask what happens if A and B are wrong in the same direction.
+It needs a third, independent reference — here, the neighbour they collided
+with.
+
+Also learned: **the preview pane cannot simulate a narrow viewport the page
+overflows.** `resize_window` to 375px on a 672px-wide table reports
+`innerWidth` **648** — it widens to the content, so there is no pan to
+photograph. A phone check of anything wider than the phone goes in a
+**fixed-width iframe**, rendered visibly and screenshotted.
+
+### Deliberately not done
+
+**Names still wrap.** They are column data, so "keep the data from wrapping"
+would cover them — but where a name may be divided is an editorial question,
+answered in `build.py` and published as `<wbr>` seams (ratified 2026-08-08).
+`nowrap` would mean truncating a transcribed name. So 8 of the first 60 rows
+take two lines below 860px, at 59.3px against 56px, and nothing is clipped —
+horizontal overflow is 0 at every width. The lever if it is ever wanted: the
+widest name measures **196px** against a 116px Name column; widening it removes
+the wrapping and moves the pan threshold from 672px to roughly **756px**.
+
+### State of the re-vendor
+
+`search.js` and `search-index.json` came back **byte-identical** — the tell of a
+pure layout change, and it carries **no `--refresh` obligation**, because the
+index is built by parsing pages that did not move. `leak_report()` run by hand
+over all three vendored files: clean. All seven upstream gates pass.
+
+**The upstream repo is uncommitted** — 96 insertions / 65 deletions in
+`src/search.css` on top of `44e3d7b`, nothing committed. `vendor/search/SOURCE.md`
+records the provenance as incomplete and names the SHA that has to replace it.
+
+## 2026-08-10 — Published: IV·20's parentage, and the WebKit row-box fix
 
 `9df9194` pushed to `main`. All seven pages verified by SHA-256 against `docs/`,
 every path 200 (`/fonts/` 404s harmlessly, as ever), sitemap 5 `<loc>` against a

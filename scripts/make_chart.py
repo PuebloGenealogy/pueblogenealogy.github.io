@@ -3443,7 +3443,7 @@ def write_search(tables):
 
     That directory is another project's build output (vendor/search/SOURCE.md),
     so this function does the least it can to it: it never rewrites the widget,
-    only wraps it. Four things are added, and each is here because the vendored
+    only wraps it. Five things are added, and each is here because the vendored
     file cannot supply it.
 
     1. THE FONT. `search.css` declares no @font-face at all, and every name it
@@ -3474,6 +3474,28 @@ def write_search(tables):
        other page here stores it under "lg-theme", and a reader's choice is
        dropped in whichever direction they crossed the boundary.
 
+    5. THE HEADING'S TYPE. The widget sets its h1 from its own ramp, because it
+       was built to stand alone: clamp(2.1rem,5vw,4rem) at .1em, which is 64px
+       at 1280px against this edition's 40px, and 40px on a phone against
+       25.6px. On this site it is one page of seven, so it takes the site's own
+       h1 size, letter-spacing and line-height.
+
+       All three are READ OUT OF `CSS`'s h1 rule rather than restated. That is
+       the point of doing it this way: the ramp is one literal, so it can move
+       without leaving /search/ behind, and there is no second copy to notice.
+       Missing any of the three fails the build rather than shipping a heading
+       that is a step off every other page.
+
+    Note what is NOT in this list. The search card's one-line control row and
+    the list keeping its columns at every width were both wanted here on
+    2026-08-10, and both went UPSTREAM instead, into laguna-search's own
+    stylesheet -- they are that widget's layout, not this host's, and an
+    override of another project's media queries is a thing to re-read on every
+    re-vendor rather than a thing to own. The h1 above is the counter-example
+    and the test to apply: it is host-specific by nature, because the widget
+    standing alone should keep its own ramp. If a wanted change would look
+    wrong on the widget's own site too, it belongs upstream.
+
     Returns False if the vendored files are missing, which fails the build. That
     is deliberate: METHOD.md's *Identity across plates* describes this page in
     the present tense, so an edition that ships without it is describing
@@ -3485,6 +3507,24 @@ def write_search(tables):
         print(f"ABORTED: vendor/search/ incomplete -- missing {', '.join(missing)}")
         print("  See vendor/search/SOURCE.md; the search page cannot be built.")
         return False
+
+    # The site's own h1 rule, taken apart so /search/ can be given the three
+    # declarations that decide how the heading reads. No value is typed twice.
+    site_h1 = re.search(r"(?m)^h1\{([^}]*)\}", CSS)
+    decls = {}
+    for d in (site_h1.group(1) if site_h1 else "").replace("\n", " ").split(";"):
+        prop, sep, val = d.partition(":")
+        if sep:
+            decls[prop.strip()] = val.strip()
+    wanted = ("font-size", "letter-spacing", "line-height")
+    if not all(p in decls for p in wanted):
+        print("ABORTED: the site's h1 rule no longer states " +
+              ", ".join(p for p in wanted if p not in decls) +
+              "; /search/'s heading would drift off every other page's")
+        return False
+    h1_type = "".join(f"{p}:{decls[p]};" for p in wanted)
+
+    html = (SEARCH_DIR / "index.html").read_text(encoding="utf-8")
 
     out = DOCS / "search"
     out.mkdir(parents=True, exist_ok=True)
@@ -3527,9 +3567,13 @@ def write_search(tables):
   .lg-host-bar nav a{{min-width:var(--lg-tap)}}
 }}
 @media print{{.lg-host-bar{{display:none}}}}
+/* The heading, on the site's ramp rather than the widget's -- see (5) above.
+   This block follows the widget's whole stylesheet at equal specificity, so it
+   also wins over the <=480px rule, which sets a size AND a letter-spacing of
+   its own; that is the width where the two disagree most. */
+.laguna-search h1{{{h1_type}}}
 """
 
-    html = (SEARCH_DIR / "index.html").read_text(encoding="utf-8")
     charset = '<meta charset="utf-8">'
     if charset not in html:
         print("ABORTED: vendor/search/index.html has no charset meta to anchor "
