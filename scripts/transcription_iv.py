@@ -131,7 +131,16 @@ UNIONS = [
     ("V03",  6,  5, 1, 1, ""),
     # drawn_under=5: the plate prints this marriage inside 5's block, on the
     # line below 6, because 6 is already shown there as 5's wife.
-    ("V04",  6,  7, 2, 1, "second husband of 6", 5),
+    ("V04",  6,  7, 2, 1, "second husband of 6; no issue recorded. Corrected "
+     "2026-08-10: 20 was attached to THIS union and belongs to V03. Read at "
+     "native resolution, x 4400-6800 / y 6040-6380: the plate draws ONE "
+     "vertical spanning 19 and 20 with a SINGLE leader entering it at 19's "
+     "row, from 6's line; 7's line ends after 'Parrot' and carries no rule at "
+     "all. Splitting the bracket asserted a paternity the plate does not "
+     "state, and drew a leader on 7's line the plate does not print. Same "
+     "shape as Genealogy III's 85/86/87 -- a spouse with no leader had no "
+     "recorded issue. Nothing structural could see it: 19 and 20 are both "
+     "Bear, exactly like their mother, so clan descent cannot separate them", 5),
     ("V05",  9,  8, 1, 1, ""),
     ("V06", 11, 10, 1, 1, ""),
     ("V07", 12, 10, 1, 2, "second wife of 10"),
@@ -148,8 +157,9 @@ UNIONS = [
 _GROUPS = [
     ("V01",  1,  2, [3, 5]),
     ("V02",  3,  4, [8, 10, 13, 15, 17]),
-    ("V03",  6,  5, [19]),
-    ("V04",  6,  7, [20]),
+    # Both children hang off 6's line under the plate's single bracket -- see
+    # V04's note in UNIONS. V04 has no group at all, exactly as V12 has none.
+    ("V03",  6,  5, [19, 20]),
     ("V05",  9,  8, [21, 22, 23, 24, 25]),
     ("V06", 11, 10, [26, 27, 28]),
     ("V07", 12, 10, [29, 30, 31]),

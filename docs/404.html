@@ -390,7 +390,27 @@ body.chart .titlepage{max-width:var(--measure-wide)}
    what lets a sibling group be offset onto its mother's row by whole rows. */
 .block{white-space:nowrap;padding:0;width:var(--col)}
 .node.leaf > .block{width:auto}
-.line{line-height:var(--lh);
+/* A ROW'S HEIGHT IS STATED, NOT INFERRED FROM ITS LINE BOX. This is the whole
+   of the sibling-bracket alignment, and line-height alone does not carry it.
+   `--lh` is 1.55rem = 24.8px, and every vertical offset in the chart is a
+   multiple of it: .kids gets margin-top:calc(var(--lh) * N) to sit on its
+   mother's row, and line_pad puts the same calc on a pushed line. Those margins
+   are lengths, so an engine keeps them to LayoutUnit precision -- 24.796875px.
+   A LINE BOX is not a length, and WebKit quantises it to a whole pixel:
+   measured in Safari 26.3 on 2026-08-10, every .line/.xref/.sic-row box came
+   back 24.000px against a declared line-height of 24.799999px, while the same
+   page's .kids margins were 24.796875px. So each row of offset lost 0.796875px,
+   and it accumulates down the tree -- 69 of 141 brackets off, the worst
+   -20.016px (25 x 0.797) at III's 21 -> 74, with the sign set by whether the
+   mismatched margin sat on the group or on a line_pad push inside the block.
+   Chromium reported 24.797px for both and was clean at 0.003px, which is why
+   this was invisible here for the whole life of the edition; it is what a
+   reader in Safari sees as a break in the leader rule at III 113 -> 204, where
+   an only child leaves no bracket vertical to bridge the step.
+   Stating the height makes the box exactly --lh in both engines whatever the
+   line box inside it does. Do not replace it with line-height alone again --
+   .block is white-space:nowrap, so a .line can never need to grow. */
+.line{line-height:var(--lh);height:var(--lh);
   scroll-margin-block:calc(var(--bar-h) + 1.5rem) 1rem;
   scroll-margin-inline:var(--stub)}
 /* Selected row. There is exactly ONE selected row, and which mechanism draws
@@ -486,7 +506,10 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
    throw the sibling bracket off its mother_row. The annotation itself is a
    separate row below, so nothing is inserted into the printed line at all. */
 .sic-ring{outline:1.5px solid var(--sic);outline-offset:3px;border-radius:1rem}
-.sic-row{line-height:var(--lh);padding-inline-start:1.4rem;white-space:nowrap}
+/* height, not just line-height -- see the note on .line. nowrap, so it can
+   never need to grow. */
+.sic-row{line-height:var(--lh);height:var(--lh);
+  padding-inline-start:1.4rem;white-space:nowrap}
 .sic{font:italic .8rem var(--font-ui);color:var(--sic);
   text-decoration:underline dotted;text-underline-offset:.15em}
 .sic:hover,.sic:focus-visible{text-decoration:underline solid}
@@ -521,8 +544,15 @@ a.num:focus-visible{color:var(--accent);text-decoration:underline}
    shared CSS until a plate with six generations and 30 cross-references
    arrived. Exactly the reasoning .sic-row already carries -- keep the two
    together, and see the wrapping note below. */
+/* min-height, not height -- see the note on .line for why the height has to be
+   stated at all. This is the one row type that is white-space:normal, so a
+   reference CAN wrap; min-height lifts a quantised 24px line box back to --lh
+   without capping a wrap at one row, which would overlap the row below instead
+   of merely mis-budgeting it. Wrapping is still the unsolved case the note
+   above describes: split at the plate's own break with `|`. */
 .xref{font-size:.8rem;color:var(--muted);font-style:italic;
-  white-space:normal;max-width:var(--col);line-height:var(--lh);padding:0 0 0 1.4rem}
+  white-space:normal;max-width:var(--col);line-height:var(--lh);
+  min-height:var(--lh);padding:0 0 0 1.4rem}
 .xref a{color:inherit;text-decoration:underline dotted;text-underline-offset:.15em}
 .xref a:hover{color:var(--accent)}
 .xref a:focus-visible{color:var(--accent)}
