@@ -907,11 +907,15 @@ class PersonList {
     const nameField = el("div", { class: "field field-name" },
       this.sortButton("Name", "name"));
 
+    // The unrecorded option reads as a dash, matching the way an absent value
+    // is written in the rows rather than naming itself in words. `title` keeps
+    // the wording available on hover; `label` would REPLACE the dash, which is
+    // the opposite of what is wanted here.
     const sexSelect = el("select", { "aria-label": "Filter by sex" },
       el("option", { value: "all", text: "All" }),
       el("option", { value: "F", text: "Female" }),
       el("option", { value: "M", text: "Male" }),
-      el("option", { value: "none", text: "Not recorded" }));
+      el("option", { value: "none", text: "—", title: "Not recorded" }));
     sexSelect.addEventListener("change", () => this.patch({ sex: sexSelect.value }));
     this.inputs.sex = sexSelect;
 

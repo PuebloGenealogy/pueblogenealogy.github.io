@@ -936,7 +936,7 @@ at EVERY width, and pans rather than stacks.** Set by the user 2026-08-10. It us
 860px — name on its own line, then sex, birth, death and clan under it with
 `Birth `/`Death ` glued on as `::before` labels standing in for the headings
 overhead; a row went 56px → 153px and the header 82px → 270px. Now the columns
-hold, `.card.people` takes `min-width:min-content`, and below **675px the
+hold, `.card.people` takes `min-width:min-content`, and below **651px the
 DOCUMENT pans sideways** (measured; see *The threshold is MEASURED* below).
 Three things about that are load-bearing:
 
@@ -956,9 +956,14 @@ Three things about that are load-bearing:
   `min-content`, so the card stops short of its own minimum and the columns
   slide under `Table · #`. Both floors are released below 860px.
 - **A column is as narrow as its CONTROL allows, never as its values look.**
-  Sex's floor is its `select`, which sizes to its widest *option* (`Not
-  recorded`) and will hang over Birth rather than shrink; Clan's is its
-  disclosure at 76px. Values like `M.` and `Corn` say nothing about it.
+  Sex's floor is its `select`, which sizes to its widest *option* — `Female`
+  since 2026-08-10, `Not recorded` before it — and will hang over Birth rather
+  than shrink; Clan's is its disclosure at 76px. Values like `M.` and `Corn`
+  say nothing about it. **The wording of an option is therefore a layout
+  input.** Shortening the unrecorded option to a dash took the widest option
+  from 124px to 71.78px of need, and the column from 124/124/104px across the
+  three breakpoints to a single **80px** at all three — which is what moved the
+  pan threshold below. Change an option's text and re-measure the column.
 
 **Names still wrap there, deliberately.** Where a name may be divided is an
 editorial question, answered in `build.py` and published as `<wbr>` seams
@@ -966,22 +971,28 @@ editorial question, answered in `build.py` and published as `<wbr>` seams
 4 of the first 60 rows take two lines below 860px and those rows run 59.3px
 against 56px. It was 12 of 60 until the name size came down on 2026-08-10.
 
-**The threshold is MEASURED, and it is 675px** — the document pans at 674 and
-is clean at 675, taken as window width with a 15px scrollbar, so 660px of
-client width. That settles the disagreement this file carried: **neither
-recorded number was the threshold.** `672` was near it and `641` is a
-different quantity altogether — the document's `scrollWidth` at phone widths,
-which is 641 at 375–480px and 660 once the viewport is near the threshold.
-Two numbers that both look like "the width it pans at" and are not the same
-measurement. The claim that **widening the Name column** moves it to ~756px is
-**still unverified**; only the base is now known.
+**The threshold is MEASURED, and it is 651px** — the document is clean at
+**636px of client width** and pans at 635, so 651 as a window width with a 15px
+scrollbar. It was **675px** until the Sex column came down from 124px to 80px
+on 2026-08-10; the column gave up 24px in the narrow grid and the threshold
+moved by exactly that. **State which of the two you measured** — this file
+carried a disagreement for a session because they were confused, and there is a
+third number that looks like both: the document's `scrollWidth` at phone
+widths, **617px** at 375–480px (641 before the Sex column narrowed) and 636
+once the viewport is near the threshold. Two quantities that both read as "the
+width it pans at" and are not the same measurement. The claim that **widening
+the Name column** moves the threshold to ~756px is **still unverified**; only
+the base is known.
 
 **The SIZE of the name is NOT a second lever on it, and that was measured on
 2026-08-10 rather than reasoned.** The expectation — smaller name, narrower
 content, earlier pan — is wrong, because the Name column is a **fixed 116px
 track** in the narrow grid and the name's own width never reached that track's
-minimum. Dropping `1.15rem` to `1.05rem` left the threshold at exactly 675px.
-Widening the column remains the only lever. What the size *does* move is the
+minimum. Dropping `1.15rem` to `1.05rem` left the threshold where it was, at
+675px. Widening the Name column remains the only lever **on that column** —
+but the threshold is the whole grid's, so **any** column's floor moves it, and
+the Sex column proved it the same day: shortening one option's text took 24px
+out and the threshold with it. What the size *does* move is the
 wrapping, and it moves it a lot: 12 of the first 60 rows to 4 at 375px, and at
 1120px 2 rows to 0, every row back to a flat 56px.
 

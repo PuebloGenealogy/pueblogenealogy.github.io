@@ -6,10 +6,10 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `499a3b4` |
-| Vendored on | 2026-08-10 (ninth re-vendor that day) |
+| Vendored from | `dist/`, at `6eaedb0` |
+| Vendored on | 2026-08-10 (tenth re-vendor that day) |
 
-Six changes to the search card and the person list, all **upstream in
+Seven changes to the search card and the person list, all **upstream in
 `src/search.css` and `src/search.js`, none injected here**. The test is whether
 the widget standing alone would want the change; table typography, a section's
 own heading, its captions and the height of its own controls all belong to that
@@ -40,15 +40,30 @@ the list.
   and the four gaps around them tightened. 195.89px → 170.28px at 1100px.
   `--lg-tap` rather than a literal because 44px is the touch floor, so that is
   as compact as the card may get.
+- **The unrecorded sex, and the Sex column** (`6eaedb0`) — the fourth option
+  in the Sex filter reads `—` rather than *Not recorded*, with the wording
+  kept on `title` for hover; `label` would replace the dash rather than
+  describe it. **The wording of an option is a layout input**, because a
+  `select` sizes to its widest OPTION and not to its column: *Not recorded*
+  needed 124px, which is what the column was at the base and 1120px
+  breakpoints and why the 860px block had to hold the control to a 104px
+  column after it hung 20px over Birth. The widest option is now *Female* —
+  71.78px at the mouse layout's 12.48px type, 72.78px at the narrow layout's
+  13.12px — so the column is **80px at all three breakpoints**, with
+  7.22–8.22px of headroom and 6.4–12px of clearance to Birth's left edge at
+  375, 700, 1000 and 1300px. The narrow grid gives up 24px and the document's
+  pan threshold moves with it, **675px → 651px** as a window width (636px of
+  client width, clean at 636 and panning at 635).
 
-Six re-vendors, and between them they show every non-data shape there is:
+Seven re-vendors, and between them they show every non-data shape there is:
 stylesheet only, so **`index.html` alone** (the stylesheet is inlined there),
-twice; markup *and* stylesheet, so **both `index.html` and `search.js`**; and —
-the one this file had not recorded before — **`search.js` alone**, twice, for a
-change to what the script writes at runtime, which is what both the note and
-the caption are. **`search-index.json` is byte-identical through all six**,
-and it is the only one that decides a `--refresh` obligation — so there is
-none. Nothing at this end changed the register markup either.
+twice; markup *and* stylesheet, so **both `index.html` and `search.js`**, twice
+— the card's boxes and, last, the Sex option and its column; and — the one this
+file had not recorded before — **`search.js` alone**, twice, for a change to
+what the script writes at runtime, which is what both the note and the caption
+are. **`search-index.json` is byte-identical through all seven**, and it is the
+only one that decides a `--refresh` obligation — so there is none. Nothing at
+this end changed the register markup either.
 
 **The bar and the title block's type on `/search/` moved the same day and are
 NOT in this list**, because they are host-side: `write_search()` now builds the

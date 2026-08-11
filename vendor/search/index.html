@@ -453,11 +453,15 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
 .laguna-search .grid {
   min-width: 0;
   display: grid;
-  /* The Sex column is 124px because that is what its own control needs: the
-     select must show "Not recorded" plus the native chevron without
-     clipping. Narrow the column and the control overflows into Birth. */
+  /* The Sex column is 80px because that is what its own control needs: the
+     select must show its widest option -- "Female" -- plus the native chevron
+     without clipping. Narrow the column and the control overflows into Birth.
+     80px is the SAME at all three breakpoints, deliberately: the widest option
+     measures 71.78px at the mouse layout's 12.48px type and 72.78px at the
+     narrow layout's 13.12px, so one number clears both with room. It was 124px
+     while the unrecorded option read "Not recorded" in words. */
   grid-template-columns:
-    minmax(180px, 260px) 124px 84px 84px minmax(92px, 116px);
+    minmax(180px, 260px) 80px 84px 84px minmax(92px, 116px);
   align-items: center;
   column-gap: 0.75rem;
 }
@@ -548,10 +552,10 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
   box-shadow: 0 0 0 2px var(--lg-accent-wash);
 }
 
-/* Wide enough for "Not recorded" plus the native chevron, so no option label
-   is ever clipped — the reference's SEX control was sized to its own summary
-   and cut its longest option. */
-.laguna-search .field-sex select { min-width: 124px; }
+/* Wide enough for "Female" plus the native chevron, so no option label is ever
+   clipped — the reference's SEX control was sized to its own summary and cut
+   its longest option. Matches the column above; see the note there. */
+.laguna-search .field-sex select { min-width: 80px; }
 
 /* -------------------------------------------------------------- sort heads */
 
@@ -1119,7 +1123,7 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
     grid-template-columns: minmax(0, 1fr) minmax(128px, auto) 40px;
   }
   .laguna-search .grid {
-    grid-template-columns: minmax(140px, 210px) 124px 74px 74px minmax(80px, 100px);
+    grid-template-columns: minmax(140px, 210px) 80px 74px 74px minmax(80px, 100px);
     column-gap: 0.55rem;
   }
   /* `.row-summary .grid` is (0,3,0) and carries the row's inline padding, so
@@ -1229,7 +1233,7 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
      is as narrow as its CONTROL allows, never as narrow as its values look. */
   .laguna-search .grid {
     grid-template-columns:
-      minmax(116px, 1fr) 104px 62px 62px minmax(76px, 92px);
+      minmax(116px, 1fr) 80px 62px 62px minmax(76px, 92px);
     column-gap: 0.4rem;
   }
   /* Both named, for the specificity reason given at the 1120px breakpoint. */
@@ -1240,8 +1244,9 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
      by the taller control -- `--lg-head-control` is what `.head-ref` reads to
      stay off it, and leaving it at the mouse layout's 32px drops `Table · #`
      a row. Their type shrinks to fit the narrowed columns: the Sex select
-     still has to show "Not recorded" without clipping, which is what sets
-     that column's 104px. */
+     still has to show "Female" without clipping, which is what sets that
+     column's 80px -- the same 80px as the wider layouts, because the option
+     is short enough that the type ramp no longer decides it. */
   .laguna-search { --lg-head-control: var(--lg-tap); }
   /* `:not([type="checkbox"])` is load-bearing, not tidiness. The Clan menu
      lives INSIDE `.head`, so a bare `.head input` reaches its option
@@ -1257,10 +1262,11 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
   .laguna-search .head select,
   .laguna-search .cbf summary {
     height: var(--lg-tap);
-    /* A `select` sizes to its widest OPTION, not to its column: at 104px the
-       Sex control kept the 124px its "Not recorded" needs and hung 20px over
-       Birth. Held to the column instead, and the type shrunk far enough that
-       the longest option still reads inside it. */
+    /* A `select` sizes to its widest OPTION, not to its column: back when the
+       unrecorded option read "Not recorded" the Sex control kept the 124px
+       that needed and hung 20px over Birth at a 104px column. Held to the
+       column regardless -- the option is "Female" now and fits, but a select
+       left free to size itself is the shape of the bug, not the wording. */
     width: 100%;
     min-width: 0;
     padding-inline: 0.4rem;
