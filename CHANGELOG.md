@@ -3,7 +3,73 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-10 (latest, third entry) — `/search/` redesigned: seven changes, none of them live
+## 2026-08-10 (latest, fourth entry) — published, and the unrecorded sex is a dash
+
+**The entry below is superseded in two places, and it is left standing because
+this file is a history.** Its headline says none of that work is live: it is
+live now, merged as `21454f7` (PR #50) and verified by SHA-256 on all seven
+pages plus `search.js` and `search-index.json`. And its pan threshold of 675px
+was true when measured and is now **651px**, for the reason recorded here.
+
+### The unrecorded sex reads as a dash
+
+The Sex filter's fourth option said *Not recorded* in words. It now reads `—`,
+with the wording kept on `title` for hover — **`label` would replace the dash
+rather than describe it**, which is the attribute trap worth remembering.
+
+**The wording of an option is a layout input.** A `select` sizes to its widest
+OPTION and not to its column, and that one string had been setting the Sex
+column all along: *Not recorded* needed 124px, which is what the column was at
+the base and 1120px breakpoints, and it is why the 860px block had to pin the
+control to a 104px column with `width:100%` after it hung 20px over Birth.
+*Female* needs **71.78px** at the mouse layout's 12.48px type and **72.78px**
+at the narrow layout's 13.12px, so the column is now **80px at all three
+breakpoints** — 7.22–8.22px of headroom, and 6.4–12px of clearance to Birth's
+left edge at 375, 700, 1000 and 1300px, with no clipping when the widest option
+is selected. Both halves are upstream, in `laguna-search` `6eaedb0`: the
+wording of a filter option and the width of its column are the widget's own
+layout however it is served.
+
+### The pan threshold is 651px, and any column moves it
+
+The narrow grid gave up 24px and the threshold moved by exactly that: **675px →
+651px** as a window width, **636px of client width** — clean at 636, panning at
+635. The document's `scrollWidth` at 375px goes **641px → 617px**.
+
+The correction that generalises: the entry below concluded that *widening the
+Name column is the only lever*, having found that the name's **size** is not
+one. That is true of the Name column and false of the grid. **The threshold is
+the whole grid's minimum, so any column's floor moves it** — and the cheapest
+lever turned out to be four characters of copy in an option nobody would think
+of as layout.
+
+### Verification of the publish
+
+- Four `self_check()`s pass; `--public` exits 0 — 7 pages, 713 drawn, 10 JSON-LD
+  blocks valid, no research prose; a rebuild reproduces `docs/` byte-identically
+  from the committed source.
+- `leak_report()` run by hand over all three vendored files, clean. The build's
+  own sweep opens only `.html`, so `search.js` (61 KB) and `search-index.json`
+  (307 KB) are never swept by it.
+- Live by SHA-256: all seven `.html`, **and** `search/search.js` and
+  `search/search-index.json`, which `check_published_pages()` never opens.
+  Sitemap holds 5 `<loc>`, two fewer than the build's 7, as it must.
+- **Gate 8's post-publish `--refresh` was run and genuinely re-fetched** — first
+  line `re-fetched`, not `cached in cache/` — and all seven of that tool's gates
+  pass against the live site. **All three files came back byte-identical**, so
+  nothing was re-vendored. That is the strongest form the "no re-vendor due"
+  answer takes: not inferred from a diff, but confirmed by rebuilding from the
+  published pages themselves.
+- `laguna-search` is pushed, so `SOURCE.md`'s `6eaedb0` resolves on the remote
+  rather than in one clone.
+
+Measured in Chromium with the font loaded, and confirmed on the live page: 620
+people, the dash filtering to 111, the select at 80px, names in `Laguna Serif`,
+no console errors. **The native chevron's width is engine-specific**, so the
+7px of headroom is Chromium's; it should absorb the difference, but that is
+reasoning and not a Safari measurement.
+
+## 2026-08-10 (third entry) — `/search/` redesigned: seven changes, none of them live
 
 Everything below is **committed and unpublished**. Six commits on
 `handoff-2026-08-10-search-browse-priority`, six more in `laguna-search`, and
