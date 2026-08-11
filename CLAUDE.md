@@ -322,7 +322,8 @@ is the gate working, not a false positive.
 
 **The preview pane cannot simulate a NARROW viewport that the page overflows —
 it widens to the content instead.** Found 2026-08-10. `resize_window` to 375px
-on a page whose content is **641px** wide at that width reports `innerWidth`
+on a page whose content was **641px** wide at that width — `/search/`, before
+the Sex column narrowed it to 617px later the same day — reports `innerWidth`
 **648**, not 375: there
 is no pan to photograph, because the pane grew to fit. So a phone check of
 anything wider than the phone must go in a **fixed-width iframe** — the same

@@ -18,8 +18,11 @@ git rev-list --left-right --count origin/main...HEAD
 
 At the moment of writing: on **`main`**, clean, **0 ahead and 0 behind**, **no
 open PRs**, and `laguna-search`'s `main` likewise at `6eaedb0` with nothing
-unpushed. PR #50 was squash-merged as **`21454f7`** and its branch deleted. The
-wrap commit that adds this file will put `main` one ahead until it is pushed.
+unpushed. PR #50 was squash-merged as **`21454f7`** and its branch deleted; the
+publish's own records went up as `5819f1b`. The wrap that revised this file
+is a PR of its own, so expect exactly one open — and note that this is the
+case `CLAUDE.md` warns the `SessionStart` hook cannot flag, because notes
+committed alongside a build always look current.
 
 **There is no open thread.** The work the last two sessions were asked for is
 done, measured, published and verified. What is left is the list below, and its
@@ -122,6 +125,14 @@ change a transcription unilaterally.
   three breakpoints was set by the string *Not recorded*. It is one **80px** at
   all three now. `title` carries the wording on hover; **`label` would replace
   the dash rather than describe it** — do not reach for it.
+- **The dash's accessibility cost was raised and the change was asked for
+  anyway.** A screen reader announces `—` as "dash" or as nothing, and `title`
+  on an `<option>` is not reliably announced, so that one option's meaning now
+  depends on sight; the select's `aria-label` is unchanged, so the control is
+  still named. **A decision, not an oversight** — do not propose reverting it as
+  a fix. If it is ever revisited the answer is a shorter *word*, since going
+  back to *Not recorded* puts 44px into the column and the threshold back to
+  675px.
 - **The upstream-vs-host test decided everything in these two sessions**, six to
   three the first time and both halves upstream this time. The test is whether
   the widget standing alone would want the change. Table typography, a control's
