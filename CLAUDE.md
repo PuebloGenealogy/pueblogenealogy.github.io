@@ -279,6 +279,14 @@ macOS substituted silently.
 **Preview:** `preview_start`, config name `site` — serves `docs/` on
 `http://localhost:4173`. Loop: edit `make_chart.py` → rerun `--public` → reload.
 
+**The pane serves `/search/` from cache, and a plain reload does not clear it.**
+Found 2026-08-10, twice in one session, and both times it presented as *the
+change did not apply* — a rebuilt page reporting the **old** computed values,
+which is the most misleading failure available in this loop because it looks
+like a CSS specificity problem. Bust it: `location.replace('/search/?v=' +
+Date.now())`, or a `?v=` on the `src` of every measuring iframe. Read a value
+you changed before trusting any measurement.
+
 **The preview is Chromium, so it cannot settle a WebKit question — and the user
 reads this edition in Safari.** When a report names Safari, the preview can show
 that a change is *inert* (geometry unchanged, nothing else broken) and can never
@@ -314,7 +322,8 @@ is the gate working, not a false positive.
 
 **The preview pane cannot simulate a NARROW viewport that the page overflows —
 it widens to the content instead.** Found 2026-08-10. `resize_window` to 375px
-on a page whose table is 672px wide reports `innerWidth` **648**, not 375: there
+on a page whose content is **641px** wide at that width reports `innerWidth`
+**648**, not 375: there
 is no pan to photograph, because the pane grew to fit. So a phone check of
 anything wider than the phone must go in a **fixed-width iframe** — the same
 self-measuring harness as above, but rendered *visibly* and screenshotted,
@@ -457,7 +466,11 @@ by ear. **Do not delete the span.** The `≤26rem` rule that used to do this is
 now scoped to **`.mast-right`**, where it still trades the Search label for the
 glyph; two selectors on purpose, so widening one never silently unhides the
 other. The site masthead and `/search/`'s host bar say the same thing in two
-stylesheets (`.nav-word` / `.lg-hb-word`) — keep them in step.
+stylesheets (`.nav-word` / `.lg-hb-word`), including this pair of selectors —
+keep them in step. **Since 2026-08-10 the bar's metrics cannot drift**: the host
+bar is built from the masthead's own tokens, read out of `CSS`. What still can
+drift is a *rule* one bar has and the other does not, which is why the two are
+kept as a diff — see *A host bar* under *The search page is vendored*.
 
 The wordmark reads **"Home"**, not the edition's name, on every page including
 `/search/`. The bar is a way back, not a nameplate; the edition names itself in
@@ -787,7 +800,7 @@ from and how to refresh it.
 overwritten by the next re-vendor exactly as `docs/` is by the next build.
 
 `write_search()` deliberately does the least it can — it wraps, never rewrites.
-Five things are injected, and each is there because the vendored file cannot
+Six things are injected, and each is there because the vendored file cannot
 supply it:
 
 - **The subset font.** `search.css` declares **no `@font-face` at all**, and
@@ -799,11 +812,42 @@ supply it:
   distinct characters in the index are in the subset, both faces `loaded`,
   `span.cell.name` computes `Laguna Serif`.
 - **A host bar.** The widget draws a title block and no navigation, so a reader
-  landing on `/search/` had no route into the edition. Scoped `.lg-host-bar` and
-  built from the widget's own `--lg-*` tokens, so it follows the theme and
-  cannot collide with the widget, which is scoped `.laguna-search`. It sets
-  `--lg-sticky-top`, the widget's documented hook for "the host page has a bar
-  this tall" — without it the widget's sticky filter header rests underneath it.
+  landing on `/search/` had no route into the edition. Scoped `.lg-host-bar`,
+  taking its **colours** from the widget's own `--lg-*` tokens, so it follows
+  the theme and cannot collide with the widget, which is scoped
+  `.laguna-search`. It sets `--lg-sticky-top`, the widget's documented hook for
+  "the host page has a bar this tall" — without it the widget's sticky filter
+  header rests underneath it. `calc(var(--bar-h) + 1px)`, because `--bar-h`
+  does not carry the bar's bottom border; measured flush, 0px overlap.
+
+  **Its METRICS are the masthead's, lifted out of `CSS`** (user, 2026-08-10:
+  make the bar uniform on every page). It used to restate them in round
+  numbers, and the drift that produced is the reason this is now derived: **69px
+  tall against the masthead's 49px**, a 44px hit floor where the site's is 32px
+  on a mouse, a bare `system-ui` stack against `--font-ui`, a 16px inset against
+  8px, and **no Search control at all**. `--font-ui`, `--tap`, `--bar-h`,
+  `--s1`, `--s2`, `--s4` and `--t-xs` are emitted **under the site's own names**
+  — a build guard aborts if the vendored file ever declares one of them — so
+  every rule is the masthead's text with only the selectors and the colour
+  tokens changed. **Diff the two when either moves; that diff should show
+  selectors and colours and nothing else.** Measured identical after: bar 49px,
+  pills 32×32, wordmark and Search inset 8px from each edge, at 375, 410, 430
+  and 1000px, in both palettes.
+
+  **One rule in it is not the masthead's, and it is what makes the rest of them
+  work: `box-sizing`.** The site resets it globally; the widget scopes its reset
+  to `.laguna-search *`, and this bar is deliberately outside that. Without
+  `.lg-host-bar,.lg-host-bar *{box-sizing:border-box}` the identical
+  declarations build a **different bar** — 65px tall, pills 50×34 — because
+  padding and border are added on rather than absorbed. Nothing errors; the
+  numbers just stop matching.
+
+  **Search is in it, marked `aria-current="page"` rather than linked.** A bar
+  that drops a control on one page is not uniform, and a link to the page you
+  are on is a dead control — the wordmark's own idiom on the landing page. It
+  takes the masthead's filled inversion, so the current page survives both
+  themes and a monochrome screen. Its `font-weight:600` makes it 2px wider than
+  the masthead's unmarked one; that 2px is the state, not drift.
 - **The theme key, and the default palette.** `THEME_KEY_DECL` — two
   declarations, `window.LAGUNA_THEME_KEY = "lg-theme"` and
   `documentElement.dataset.theme = "light"` — and it is the **only** injection
@@ -847,6 +891,19 @@ supply it:
   size, letter-spacing and line-height. All three are **read out of `CSS`'s h1
   rule**, never restated; the ramp stays one literal and the build aborts if
   any of the three leaves that rule.
+- **The rest of the title block** (added 2026-08-10, the same argument one line
+  down — the widget sizes both for a page where its title block is the whole
+  page).
+  - **The standfirst.** `.lede` is `1.25rem`/1.45 — 20px — against the table
+    pages' statistics line at `--t-base`/1.6, **16px**, under the same h1. Read
+    out of **`CSS`'s `.imprint` rule**; verified 16px/25.6px on both pages.
+  - **The double rule between them.** The widget's `.rule` is 452px wide and
+    7px deep in **accent gold**; a table page's `.rule-double` is **8rem, 4px
+    and ink**, and it is the same mark under the same heading. Read whole out
+    of `.rule-double` — width, height, margin and both borders — with
+    `var(--ink)` substituted for `var(--lg-ink)`, exactly as the bar's colours
+    are. Verified identical on all six properties against a table page.
+  Same abort as the h1 if either rule stops stating what is read from it.
 
 **Which changes belong here, and which belong upstream — the test is whether
 the widget standing ALONE would want them.** Added 2026-08-10, after two
@@ -873,13 +930,15 @@ which is *this* site's decision and is a second declaration in
 another widget option, and the right answer was that the widget standing alone
 should keep following its reader's OS.
 
-**`/search/`'s All People list is a table at EVERY width, and pans rather than
-stacks.** Set by the user 2026-08-10. It used to become a stacked card below
+**`/search/`'s person list — headed *Index* since 2026-08-10, *All people*
+before that, and called the All People list throughout this file — is a table
+at EVERY width, and pans rather than stacks.** Set by the user 2026-08-10. It used to become a stacked card below
 860px — name on its own line, then sex, birth, death and clan under it with
 `Birth `/`Death ` glued on as `::before` labels standing in for the headings
 overhead; a row went 56px → 153px and the header 82px → 270px. Now the columns
-hold, `.card.people` takes `min-width:min-content`, and below **672px the
-DOCUMENT pans sideways**. Three things about that are load-bearing:
+hold, `.card.people` takes `min-width:min-content`, and below **651px the
+DOCUMENT pans sideways** (measured; see *The threshold is MEASURED* below).
+Three things about that are load-bearing:
 
 - **The pan is the document's, not an inner scroller's.** An inner scroller
   would become the sticky header's scroll container and the column names would
@@ -897,17 +956,80 @@ DOCUMENT pans sideways**. Three things about that are load-bearing:
   `min-content`, so the card stops short of its own minimum and the columns
   slide under `Table · #`. Both floors are released below 860px.
 - **A column is as narrow as its CONTROL allows, never as its values look.**
-  Sex's floor is its `select`, which sizes to its widest *option* (`Not
-  recorded`) and will hang over Birth rather than shrink; Clan's is its
-  disclosure at 76px. Values like `M.` and `Corn` say nothing about it.
+  Sex's floor is its `select`, which sizes to its widest *option* — `Female`
+  since 2026-08-10, `Not recorded` before it — and will hang over Birth rather
+  than shrink; Clan's is its disclosure at 76px. Values like `M.` and `Corn`
+  say nothing about it. **The wording of an option is therefore a layout
+  input.** Shortening the unrecorded option to a dash took the widest option
+  from 124px to 71.78px of need, and the column from 124/124/104px across the
+  three breakpoints to a single **80px** at all three — which is what moved the
+  pan threshold below. Change an option's text and re-measure the column.
 
 **Names still wrap there, deliberately.** Where a name may be divided is an
 editorial question, answered in `build.py` and published as `<wbr>` seams
 (ratified 2026-08-08). Forcing `nowrap` would truncate a transcribed name, so
-8 of the first 60 rows take two lines below 860px and those rows run 59.3px
-against 56px. The lever, if it is ever wanted: the widest name measures 196px
-against a 116px Name column, so widening that column removes the wrapping and
-moves the pan threshold from 672px to roughly 756px.
+4 of the first 60 rows take two lines below 860px and those rows run 59.3px
+against 56px. It was 12 of 60 until the name size came down on 2026-08-10.
+
+**The threshold is MEASURED, and it is 651px** — the document is clean at
+**636px of client width** and pans at 635, so 651 as a window width with a 15px
+scrollbar. It was **675px** until the Sex column came down from 124px to 80px
+on 2026-08-10; the column gave up 24px in the narrow grid and the threshold
+moved by exactly that. **State which of the two you measured** — this file
+carried a disagreement for a session because they were confused, and there is a
+third number that looks like both: the document's `scrollWidth` at phone
+widths, **617px** at 375–480px (641 before the Sex column narrowed) and 636
+once the viewport is near the threshold. Two quantities that both read as "the
+width it pans at" and are not the same measurement. The claim that **widening
+the Name column** moves the threshold to ~756px is **still unverified**; only
+the base is known.
+
+**The SIZE of the name is NOT a second lever on it, and that was measured on
+2026-08-10 rather than reasoned.** The expectation — smaller name, narrower
+content, earlier pan — is wrong, because the Name column is a **fixed 116px
+track** in the narrow grid and the name's own width never reached that track's
+minimum. Dropping `1.15rem` to `1.05rem` left the threshold where it was, at
+675px. Widening the Name column remains the only lever **on that column** —
+but the threshold is the whole grid's, so **any** column's floor moves it, and
+the Sex column proved it the same day: shortening one option's text took 24px
+out and the threshold with it. What the size *does* move is the
+wrapping, and it moves it a lot: 12 of the first 60 rows to 4 at 375px, and at
+1120px 2 rows to 0, every row back to a flat 56px.
+
+**`.laguna-search .cell.name` is declared TWICE** in the vendored stylesheet —
+the base rule (`1.2rem`/`700`/`1.12`, and `1.45rem` before 2026-08-10) and
+again inside the 860px media query (`1.05rem`, and `1.15rem` before). Change
+one and the other silently disagrees at the width nobody checked. Both live
+**upstream in `src/search.css`**, not in a host injection: table typography is
+the widget's own layout, and the upstream-vs-host test says so.
+
+**Measure it with the font loaded — `await document.fonts.ready`.** The same
+wrapped-row audit run against a cold iframe reported **11** wrapped rows at
+1120px where the true figure is **2**: it was measuring fallback metrics
+mid-load. Nothing errors, the number is plausible, and it is wrong by 5×. This
+is the font-substitution trap in a new place — the measurement available is not
+the measurement needed.
+
+**The section is headed *Index*, and its head is a heading and its count —
+nothing else** (user, 2026-08-10). It carried a kicker (*Browse the complete
+edition*), the heading *All people* and a *Clear all* button, with the count
+pushed to the opposite edge of the card by `justify-content: space-between`.
+Now `Index` and `620 people` sit adjacent on one baseline, 0.8rem apart,
+wrapping under each other if the card is ever too narrow to hold both — 320px
+still holds them. The count keeps `role="status"` and `aria-live="polite"`; it
+is the running total (`258 of 620 people` when filtered) and moving it left put
+it where the reader is already looking. `aria-labelledby` still names the `h2`.
+
+**Removing *Clear all* left the empty state's *Clear filters* alone, and that
+is the load-bearing half.** Every filter clears from its own control — the
+selects to `All`, the year fields empty, the Clan menu unchecks, the search box
+keeps its clear button — but a reader who has filtered down to **no rows** can
+see no such control, so that one button stays. Both are `.link-button`, so the
+class did not become dead.
+
+**All of that markup is written by `search.js` at RUNTIME and appears in no
+HTML file** — grepping `docs/` for *Index*, the count, or the old *Browse the
+complete edition* finds nothing either way.
 
 **The search card's two halves also hold one line at every width** (user,
 2026-08-10), and they hold it the same way: `.card.search` takes

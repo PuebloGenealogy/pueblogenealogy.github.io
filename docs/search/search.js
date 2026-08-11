@@ -907,11 +907,15 @@ class PersonList {
     const nameField = el("div", { class: "field field-name" },
       this.sortButton("Name", "name"));
 
+    // The unrecorded option reads as a dash, matching the way an absent value
+    // is written in the rows rather than naming itself in words. `title` keeps
+    // the wording available on hover; `label` would REPLACE the dash, which is
+    // the opposite of what is wanted here.
     const sexSelect = el("select", { "aria-label": "Filter by sex" },
       el("option", { value: "all", text: "All" }),
       el("option", { value: "F", text: "Female" }),
       el("option", { value: "M", text: "Male" }),
-      el("option", { value: "none", text: "Not recorded" }));
+      el("option", { value: "none", text: "—", title: "Not recorded" }));
     sexSelect.addEventListener("change", () => this.patch({ sex: sexSelect.value }));
     this.inputs.sex = sexSelect;
 
@@ -1376,8 +1380,16 @@ export function mountSearch(host, options = {}) {
     el("div", { class: "search-half" },
       el("h2", { text: "Find by table and number" }),
       el("div", { class: "controls" },
+        // No visible label over the buttons (2026-08-10, at the editor's
+        // request). Four buttons reading I II III IV under a heading that
+        // already says "Find by table and number" were labelled twice. The
+        // group keeps its `aria-label`, so the name a screen reader announces
+        // is unchanged -- this removes a caption, not an accessible name.
+        //
+        // `.controls` is `align-items: flex-end`, so the buttons stay on the
+        // number input's line with the label gone; the `#` label above that
+        // input is what makes the row taller, and it is still there.
         el("div", { class: "table-field" },
-          el("span", { class: "control-label", text: "Genealogy table" }),
           el("div", {
             class: "table-buttons", role: "group",
             "aria-label": "Restrict to genealogy tables",
@@ -1387,10 +1399,17 @@ export function mountSearch(host, options = {}) {
           el("div", { class: "clearable" }, numberInput,
             clearButton(numberInput, "Clear person number",
               () => { numberSoon.cancel(); list.patch({ number: "" }); })))),
+      // The sentence naming the numbers as Parsons's own came out on
+      // 2026-08-10 at the editor's request. It is not lost: the plates' own
+      // numbering is what the edition is, and the footer note and METHOD.md
+      // both carry it. What stays here is the instruction.
+      //
+      // `tableHint` stays too, and it is not prose — it is the live readout
+      // of which tables are selected, `.hint` in ink rather than muted, and
+      // it is the only place that state is written down.
       el("p", { class: "note" },
-        "The numbers are Parsons's own, as printed on each plate. Choose a ",
-        "table and the number finds that one person on it; press a numeral ",
-        "again to release it — ", tableHint, ".")));
+        "Choose a table and enter the number to find the person; press a ",
+        "numeral again to release it — ", tableHint, ".")));
 
   /* -- url --------------------------------------------------------------- */
   const useUrl = options.urlState !== false && typeof history !== "undefined";
@@ -1436,9 +1455,12 @@ export function mountSearch(host, options = {}) {
       el("p", { class: "kicker", text: "A digital edition of Parsons, 1923" }),
       el("h1", { text: "Search the Tables" }),
       el("span", { class: "rule", "aria-hidden": true }),
+      // Written by the editor, 2026-08-10, and it names the two halves of the
+      // card below in the order they appear. The count it used to carry
+      // ("all 4 tables") is gone from here; the footer note still states what
+      // the index holds, from `ctx.meta`, so no count is now typed anywhere.
       el("p", { class: "lede" },
-        `Find a person by table and number, or search all ${ctx.meta.tables.length}`,
-        " tables by name.")));
+        "Search by name or find a person by table and number.")));
   }
 
   root.append(searchCard);
@@ -1446,20 +1468,22 @@ export function mountSearch(host, options = {}) {
   root.append(el("section", {
     class: "card people", "aria-labelledby": "lg-people-title",
   },
+    // The head is a heading and its count, side by side, and nothing else
+    // (2026-08-10). It carried a kicker, a two-word heading and a Clear all
+    // button; the kicker said what the list was for, which the list says
+    // itself, and the count sat at the far side of the card from the word it
+    // counts. No standfirst either — the counts and the statement about who
+    // made each join are in the footer note, provenance read once, and they
+    // sat between the reader and the list they describe. The count stays: it
+    // is the running total a reader filtering the list watches, so it keeps
+    // `role="status"` and moves to where the reader is already looking.
+    //
+    // `Clear all` is gone with it. Every filter still clears from its own
+    // control, and the empty state's `Clear filters` — the one moment a
+    // reader cannot see any control to undo — is untouched.
     el("div", { class: "section-head" },
-      el("div", {},
-        el("p", { class: "kicker", text: "Browse the complete edition" }),
-        // No standfirst under the heading. The counts and the statement about
-        // who made each join moved to the footer note on 2026-08-10 — they
-        // are provenance, read once, and they sat between the reader and the
-        // list they describe. The running count to the right is what a reader
-        // filtering the list actually watches, and it stays here.
-        el("h2", { id: "lg-people-title", text: "All people" })),
-      el("div", { class: "section-actions" }, count,
-        el("button", {
-          type: "button", class: "link-button", text: "Clear all",
-          onclick: () => list.reset(),
-        }))),
+      el("h2", { id: "lg-people-title", text: "Index" }),
+      count),
     list.node));
 
   root.append(el("footer", { class: "foot" },

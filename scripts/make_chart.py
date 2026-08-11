@@ -3489,7 +3489,7 @@ def write_search(tables):
 
     That directory is another project's build output (vendor/search/SOURCE.md),
     so this function does the least it can to it: it never rewrites the widget,
-    only wraps it. Five things are added, and each is here because the vendored
+    only wraps it. Six things are added, and each is here because the vendored
     file cannot supply it.
 
     1. THE FONT. `search.css` declares no @font-face at all, and every name it
@@ -3503,12 +3503,21 @@ def write_search(tables):
        check sees an empty page. If this injection is ever dropped, the page
        keeps working and silently substitutes.
 
-    2. A WAY BACK. The widget draws a title block and no navigation -- it was
+    2. THE BAR. The widget draws a title block and no navigation -- it was
        built to be mounted in a host page that already had some. Without this a
        reader who lands on /search/ from a link has no route into the edition.
-       The bar is scoped `.lg-host-bar` and built from the widget's own
+       It is scoped `.lg-host-bar` and takes its COLOURS from the widget's own
        `--lg-*` tokens, so it follows the theme toggle and cannot collide with
        the widget, which is scoped `.laguna-search`.
+
+       Its METRICS are the masthead's, lifted out of `CSS` (user, 2026-08-10:
+       make the bar uniform on every page). It used to restate them in round
+       numbers and was 69px tall against the masthead's 49px, with a 44px hit
+       floor where the site's is 32px on a mouse, a bare `system-ui` stack, a
+       16px inset against 8px -- and no Search control at all. Every one of
+       those now comes from the site's own tokens, emitted under the site's own
+       names. Search is present too, marked `aria-current` rather than linked:
+       a bar that drops a control on one page is not uniform.
 
     3. `--lg-sticky-top`. The widget's filter header is sticky; the token is its
        documented hook for "the host page has a bar this tall". Set it or the
@@ -3532,6 +3541,16 @@ def write_search(tables):
        Missing any of the three fails the build rather than shipping a heading
        that is a step off every other page.
 
+    6. THE REST OF THE TITLE BLOCK -- the standfirst and the double rule
+       between it and the heading (user, 2026-08-10). Same argument as the h1:
+       the widget sizes both for a page where its title block is the whole of
+       the page. Its `.lede` is 1.25rem/1.45, 20px, against the table pages'
+       statistics line at `--t-base`/1.6, 16px, under the same h1; its `.rule`
+       is 452px wide and 7px deep in accent gold against `.rule-double`'s 8rem,
+       4px and ink. Both are read whole out of `CSS`, and the rule's ink token
+       is substituted for the widget's, exactly as the bar's colours are. Same
+       abort if either rule stops stating what is read from it.
+
     Note what is NOT in this list. The search card's one-line control row and
     the list keeping its columns at every width were both wanted here on
     2026-08-10, and both went UPSTREAM instead, into laguna-search's own
@@ -3554,35 +3573,111 @@ def write_search(tables):
         print("  See vendor/search/SOURCE.md; the search page cannot be built.")
         return False
 
-    # The site's own h1 rule, taken apart so /search/ can be given the three
-    # declarations that decide how the heading reads. No value is typed twice.
-    site_h1 = re.search(r"(?m)^h1\{([^}]*)\}", CSS)
-    decls = {}
-    for d in (site_h1.group(1) if site_h1 else "").replace("\n", " ").split(";"):
-        prop, sep, val = d.partition(":")
-        if sep:
-            decls[prop.strip()] = val.strip()
-    wanted = ("font-size", "letter-spacing", "line-height")
-    if not all(p in decls for p in wanted):
-        print("ABORTED: the site's h1 rule no longer states " +
-              ", ".join(p for p in wanted if p not in decls) +
-              "; /search/'s heading would drift off every other page's")
+    # The site's own rules, taken apart so /search/ can be given the exact
+    # declarations that decide how it reads. No value is typed twice: every
+    # number below is lifted out of `CSS`, so the ramp and the spacing scale
+    # can move without leaving this page behind.
+    def site_decls(pattern):
+        """The declarations of one rule in `CSS`, comments stripped."""
+        m = re.search(pattern, CSS)
+        body = re.sub(r"/\*.*?\*/", "", m.group(1), flags=re.S) if m else ""
+        out = {}
+        for d in body.replace("\n", " ").split(";"):
+            prop, sep, val = d.partition(":")
+            if sep:
+                out[prop.strip()] = val.strip()
+        return out
+
+    def take(decls, props, what, why):
+        """`props` out of `decls`, or abort the build naming what went."""
+        missing = [p for p in props if p not in decls]
+        if missing:
+            print(f"ABORTED: the site's {what} no longer states " +
+                  ", ".join(missing) + "; " + why)
+            return None
+        return "".join(f"{p}:{decls[p]};" for p in props)
+
+    h1_type = take(site_decls(r"(?m)^h1\{([^}]*)\}"),
+                   ("font-size", "letter-spacing", "line-height"),
+                   "h1 rule",
+                   "/search/'s heading would drift off every other page's")
+    if h1_type is None:
         return False
-    h1_type = "".join(f"{p}:{decls[p]};" for p in wanted)
+
+    # The standfirst. A table page sets its statistics line at --t-base/1.6
+    # directly under the same h1; the widget's own lede is 1.25rem/1.45, built
+    # for a page where it is the only thing under the title. Same title block,
+    # same size (user, 2026-08-10).
+    lede_type = take(site_decls(r"(?m)^\.imprint\{([^}]*)\}"),
+                     ("font-size", "line-height"),
+                     ".imprint rule",
+                     "/search/'s standfirst would drift off the table pages'")
+    if lede_type is None:
+        return False
+
+    # The double rule under the title. The widget draws its own -- 452px wide,
+    # 7px deep, in accent gold -- because it was built to stand alone; a table
+    # page's is 8rem, 4px and ink, and it is the same mark under the same
+    # heading (user, 2026-08-10: match the lines under the header title with
+    # the tables' lines). Read whole out of `.rule-double`, colour token
+    # substituted, exactly as the bar's rules are.
+    rule_double = take(site_decls(r"(?m)^\.rule-double\{([^}]*)\}"),
+                       ("width", "height", "margin",
+                        "border-block-start", "border-block-end"),
+                       ".rule-double rule",
+                       "/search/'s rule would drift off the table pages'")
+    if rule_double is None:
+        return False
+    rule_double = rule_double.replace("var(--ink)", "var(--lg-ink)")
+
+    # The bar's metrics, straight off the masthead's own tokens. The names are
+    # kept AS THEY ARE rather than namespaced, so every rule below is the
+    # masthead's text with only the selectors and the colour tokens changed --
+    # a diff between the two is then a real difference and not a rename.
+    root = site_decls(r"(?ms)^:root\{(.*?)^\}")
+    bar_tokens = ("--font-ui", "--tap", "--bar-h",
+                  "--s1", "--s2", "--s4", "--t-xs")
+    token_css = take(root, bar_tokens, ":root block",
+                     "/search/'s bar could not be built from the site's own "
+                     "spacing and type scale")
+    if token_css is None:
+        return False
+
+    coarse = re.search(r"@media\s*\(pointer:coarse\)\{:root\{([^}]*)\}\}", CSS)
+    if not coarse or "--tap" not in coarse.group(1):
+        print("ABORTED: the site's (pointer:coarse) --tap override is gone; "
+              "/search/'s bar would keep a 32px hit area on a touch screen")
+        return False
 
     html = (SEARCH_DIR / "index.html").read_text(encoding="utf-8")
+
+    # The tokens above are emitted under the SITE's names, which is only safe
+    # while the widget keeps every one of its own behind `--lg-`. It does, and
+    # this is the check that says so on the day it stops.
+    clash = [t for t in bar_tokens if t in html]
+    if clash:
+        print("ABORTED: vendor/search/ now declares " + ", ".join(clash) +
+              "; /search/'s bar would overwrite the widget's own token")
+        return False
 
     out = DOCS / "search"
     out.mkdir(parents=True, exist_ok=True)
     for name in ("search.js", "search-index.json"):
         shutil.copyfile(SEARCH_DIR / name, out / name)
 
-    # The bar mirrors the site masthead exactly, and both changed on
-    # 2026-08-10: "Home" for the wordmark, and the numeral alone on the pills
-    # with "Genealogy " kept in the accessible name. Keep the two in step --
-    # this bar is the only navigation a reader who lands on /search/ has, and
-    # it reading differently from every other page's is the thing it exists to
-    # avoid.
+    # The bar mirrors the site masthead, and since 2026-08-10 it mirrors it
+    # MEASURABLY rather than approximately (user: make the bar uniform across
+    # every page). It used to restate the metrics in round numbers -- 13px
+    # type, 6px/16px padding, a 44px hit floor, no Search control -- which put
+    # it 69px tall against the masthead's 49px, with the wordmark 8px further
+    # in. Everything it needs now comes out of `CSS` above, so the two bars are
+    # one bar wearing two sets of colour tokens.
+    #
+    # Search is here for the same reason: the masthead carries it on every
+    # other page, and a bar that drops a control on one page is not uniform. It
+    # is a <span> with aria-current, not a link -- the wordmark's own idiom for
+    # "you are here" on the landing page, and a link to the page you are on is
+    # a dead control.
     links = "".join(
         f'<a href="../{slug}/"><span class="lg-hb-word">Genealogy </span>{numeral}</a>'
         for numeral, slug in tables)
@@ -3590,41 +3685,111 @@ def write_search(tables):
         '<header class="lg-host-bar">'
         '<a class="lg-hb-mark" href="../">Home</a>'
         f'<nav aria-label="Tables">{links}</nav>'
+        '<span class="lg-hb-right">'
+        '<span class="lg-hb-btn" aria-current="page">'
+        f'<span class="lg-hb-word">Search</span>{SEARCH_GLYPH}</span>'
+        "</span>"
         "</header>")
 
+    # Every rule from `.lg-host-bar` to the print block is the masthead's own,
+    # with two substitutions and nothing else: the selectors (.masthead ->
+    # .lg-host-bar, .wordmark -> .lg-hb-mark, .mast-right -> .lg-hb-right,
+    # .mast-btn -> .lg-hb-btn, .nav-word -> .lg-hb-word) and the colour tokens
+    # (--paper/--ink/--muted -> --lg-*, --rule-faint -> --lg-rule, --rule ->
+    # --lg-rule-strong). The colours have to be the widget's or the bar stops
+    # following the theme; the METRICS are the site's, emitted above under the
+    # site's own names, so the two bars cannot drift on size, spacing or the
+    # touch floor. Diff this against the masthead section of CSS when either
+    # changes -- that diff should show selectors and colours, nothing more.
+    #
     # --lg-serif is a stack, not a family: prepending keeps every fallback the
     # widget chose. Georgia stays the second choice, as it is here.
     host_css = f"""{font_css()}:root{{
   --lg-serif:'Laguna Serif',Georgia,"Iowan Old Style","Times New Roman",serif;
-  --lg-host-bar-h:calc(var(--lg-tap) + 12px);
-  --lg-sticky-top:var(--lg-host-bar-h);
+  {token_css}
+  /* The widget's documented hook for "the host has a bar this tall". +1px is
+     the bar's bottom border, which --bar-h does not carry: without it the
+     sticky filter header comes to rest a hairline high and the border shows
+     through it. */
+  --lg-sticky-top:calc(var(--bar-h) + 1px);
 }}
+@media (pointer:coarse){{:root{{{coarse.group(1)}}}}}
+/* The site resets `box-sizing` globally (`*{{box-sizing:border-box}}`); the
+   widget scopes its reset to `.laguna-search *`, and this bar is deliberately
+   outside that. So without this line every metric below is read as
+   content-box and the same declarations build a DIFFERENT bar: measured
+   65px tall against the masthead's 49, pills 50x34 against 32x32 -- padding
+   and border added on rather than absorbed. It is the one rule here that is
+   not the masthead's, and it exists to make the rest of them the masthead's. */
+.lg-host-bar,.lg-host-bar *{{box-sizing:border-box}}
 .lg-host-bar{{position:sticky;inset-block-start:0;z-index:40;
-  display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;
-  min-height:var(--lg-host-bar-h);padding:6px 16px;
+  min-height:var(--bar-h);
+  display:flex;align-items:center;flex-wrap:wrap;gap:var(--s1) var(--s2);
+  padding:var(--s2) calc(var(--s4) - var(--s2));
   background:var(--lg-paper);border-block-end:1px solid var(--lg-rule);
-  font:400 13px/1.2 system-ui,sans-serif;letter-spacing:.08em}}
-.lg-host-bar a{{display:inline-flex;align-items:center;min-height:var(--lg-tap);
-  padding-inline:8px;text-decoration:none;text-transform:uppercase}}
-.lg-hb-mark{{color:var(--lg-ink);font-weight:600;letter-spacing:.14em}}
-.lg-hb-mark:hover,.lg-hb-mark:focus-visible{{color:var(--lg-accent)}}
-.lg-host-bar nav{{display:flex;flex-wrap:wrap;gap:4px}}
+  font:400 var(--t-xs)/1.2 var(--font-ui);letter-spacing:.08em}}
+/* One hit-area rule for every control in the bar, links included. */
+.lg-hb-mark,.lg-host-bar nav a,.lg-hb-btn{{
+  display:inline-flex;align-items:center;min-height:var(--tap);
+  padding-inline:var(--s2);vertical-align:middle}}
+.lg-host-bar a{{text-decoration:none}}
+.lg-hb-mark{{text-transform:uppercase;letter-spacing:.14em;font-weight:600;
+  color:var(--lg-ink)}}
+a.lg-hb-mark:hover,a.lg-hb-mark:focus-visible{{color:var(--lg-accent)}}
+.lg-host-bar nav{{display:flex;flex-wrap:wrap;gap:var(--s1);
+  color:var(--lg-muted);text-transform:uppercase}}
 /* Numeral alone at every width, the word hidden but kept in the accessible
-   name -- the masthead's rule, restated here in the widget's tokens because
-   this bar cannot reach the site's stylesheet. */
-.lg-host-bar nav a{{justify-content:center;min-width:var(--lg-tap);
-  color:var(--lg-muted);
-  border:1px solid var(--lg-rule);border-radius:2px;white-space:nowrap}}
+   name -- the masthead's rule, restated here in the widget's colour tokens
+   because this bar cannot reach the site's stylesheet. */
+.lg-host-bar nav a{{justify-content:center;padding-inline:var(--s2);
+  min-width:var(--tap);
+  border:1px solid var(--lg-rule);border-radius:2px;
+  color:var(--lg-muted);white-space:nowrap}}
 .lg-host-bar nav a:hover,.lg-host-bar nav a:focus-visible{{color:var(--lg-ink);
   border-color:var(--lg-rule-strong)}}
-.lg-hb-word{{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
-  overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}}
+.lg-host-bar nav .lg-hb-word{{position:absolute;width:1px;height:1px;
+  margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);
+  white-space:nowrap;border:0}}
+/* Below 26rem the row is too tight for Search's word beside four pills, so
+   the same hide-the-word mechanism runs there -- scoped to .lg-hb-right,
+   because the nav's copy above is unconditional and the two must be able to
+   move independently. Exactly the masthead's pair of selectors. */
+@media (max-width:26rem){{
+  .lg-hb-right .lg-hb-word{{position:absolute;width:1px;height:1px;margin:-1px;
+    padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}}
+}}
+.lg-hb-right{{margin-inline-start:auto;display:flex;align-items:center;
+  gap:var(--s2)}}
+.lg-hb-btn{{text-transform:uppercase;color:var(--lg-muted);
+  border:1px solid var(--lg-rule);border-radius:2px}}
+/* You are here. The masthead's own current-page treatment -- a filled
+   inversion, not a colour shift, so it survives both themes, a monochrome
+   screen and colour-blind vision. */
+.lg-hb-btn[aria-current="page"]{{background:var(--lg-ink);color:var(--lg-paper);
+  border-color:var(--lg-ink);font-weight:600}}
+/* The glyph is the narrow-screen half of the Search label, and it is the
+   site's own SEARCH_GLYPH string, so it carries .mast-glyph. */
+.lg-host-bar .mast-glyph{{display:none}}
+@media (max-width:26rem){{
+  .lg-host-bar .mast-glyph{{display:block}}
+  .lg-hb-btn{{min-width:var(--tap);justify-content:center}}
+}}
 @media print{{.lg-host-bar{{display:none}}}}
 /* The heading, on the site's ramp rather than the widget's -- see (5) above.
    This block follows the widget's whole stylesheet at equal specificity, so it
    also wins over the <=480px rule, which sets a size AND a letter-spacing of
    its own; that is the width where the two disagree most. */
 .laguna-search h1{{{h1_type}}}
+/* And the standfirst under it, on the table pages' .imprint size -- same
+   title block, same measure. Same equal-specificity trick: the <=480px rule
+   sets a size of its own. */
+.laguna-search .lede{{{lede_type}}}
+/* And the double rule between them, which is the table pages' own mark: 8rem
+   and 4px deep in ink, not 452px and 7px in accent gold. The widget states it
+   with the physical `border-top`/`border-bottom` and this states it with the
+   logical pair, which is the same computed property -- later wins, and the
+   <=480px rule that re-widens it is earlier still. */
+.laguna-search .rule{{{rule_double}}}
 """
 
     charset = '<meta charset="utf-8">'
