@@ -6,8 +6,64 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `6eaedb0` |
-| Vendored on | 2026-08-10 (tenth re-vendor that day) |
+| Vendored from | `dist/`, at `65b8254` |
+| Vendored on | 2026-08-17 |
+
+## 2026-08-17 — Juana is a woman, and the reading is read rather than guessed
+
+**A data error on the public site, and the first re-vendor that had to be
+built from a cache seeded by hand.** Genealogy III's 37 — Juana, whom the
+edition reads **F** and the plate prints **`M.`** — was published in this index
+as `sex: "M", sexPrinted: "M"`, so she could not be found as a woman. Two
+independent halves, and fixing either alone left it visible:
+
+- **The reading was not published.** This site rings a misprint and showed only
+  the misprint, so the reading was unrecoverable from the page. That tool
+  recovered a misprinted **clan** by *guessing* — nearest known clan within two
+  edits, which gets `Bager` to Badger — and there is **no such vocabulary for
+  sex**, since `M` and `F` are equally valid and neither is nearer the other.
+  So it filed the printed letter under both fields, deliberately.
+- **The sex filter tested only one reading** where the clan filter tested both,
+  which is why the data error was invisible: the `sic` tooltip promises *"Both
+  are searchable"*, true for clan and false for sex.
+
+**The fix could not start upstream, and this is the part a fresh reader gets
+backwards.** `build.py` builds the index by **parsing these published pages**
+and reads no transcription module, so it has no `PERSONS` to take the reading
+from. `make_chart.py` now emits **`data-reading`** on the ringed `.sex`/`.clan`
+span — the fix `CLAUDE.md` had named years before it was needed — and only then
+can the parser read it. A build gate asserting the index's `sex` matches the
+transcription, landed first, would abort every build forever.
+
+Upstream (`65b8254`): `sitesource.py` captures the attribute; `build_index()`
+prefers it and keeps `nearest_clan()` as the fallback for a page built by an
+older version of this site; **gate 1 now refuses a ringed field whose reading
+did not resolve** (empty is legitimate for a sex nobody recorded, so it is
+asked only where the field is ringed); and the sex filter matches both
+readings. `sexOf()` is untouched — the plate's letter is still what the row
+shows, because the edition reproduces the plate.
+
+**Exactly one record moves in the whole index**: III·37, `sex` M → F,
+`sexPrinted` still M. `identities`, `namesakes` and `relationships` are
+byte-identical, and both clan misprints resolve to the same values the guess
+produced, now stated rather than inferred.
+
+**The re-vendor shape is a FOURTH one**, and the file list is the tell:
+`search.js` and `search-index.json` both move while **`index.html` is
+byte-identical** — a script-and-data change, the stylesheet untouched. The
+three shapes recorded below are stylesheet-only, markup-and-stylesheet, and
+data-only.
+
+**And the build order inverts, which is the thing to plan for next time.** The
+index is built by fetching *these* pages, but the change the index needs was
+*in* those pages and not yet live — so a plain `--refresh` would have re-fetched
+a site without `data-reading` and rebuilt the old index. The `cache/` directory
+was seeded with the local `docs/` build, `build.py` run **without**
+`--refresh` against it, and the result vendored. That is sound only because
+`docs/` is reproducible and exactly those bytes were published in the same
+commit; **the post-publish `--refresh` is what confirms it**, and if that run
+ever disagrees, re-vendor from it. Do not use this shortcut for anything but a
+change that ships in the same publish.
 
 Seven changes to the search card and the person list, all **upstream in
 `src/search.css` and `src/search.js`, none injected here**. The test is whether

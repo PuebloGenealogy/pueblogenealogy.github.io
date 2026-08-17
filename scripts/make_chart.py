@@ -933,9 +933,22 @@ def person_line(p, is_spouse, english_seen, printed_number=0):
     # direct child's className, and moves the .clan node itself into its badge,
     # so a wrapper would either leak the letter into the card title or strip the
     # ring off the badge. .sic-ring is an outline, so no row moves.
+    # `data-reading` publishes the EDITION's reading beside the plate's
+    # misprint. It changes nothing a reader sees -- the ring and the printed
+    # value are untouched -- and it exists because the reading was otherwise
+    # unrecoverable from this page. That cost a real error: `laguna-search`
+    # parses these pages and reads no transcription module, so it recovered a
+    # misprinted CLAN by guessing (nearest known clan within two edits, which
+    # gets `Bager` to Badger) and could not recover a misprinted SEX at all,
+    # because `M.` and `F.` are both valid and neither is nearer the other. So
+    # Genealogy III's 37, Juana, was published as male in that index. Emitted
+    # raw, without the display's trailing period, to match the field a
+    # consumer already keeps.
     printed_sex = str(p.get("printed_sex", "") or "")
     sex_cls = "sex sic-ring" if printed_sex else "sex"
-    bits.append(f'<span class="{sex_cls}">{esc(printed_sex or p["sex"])}.</span>')
+    sex_reading = f' data-reading="{esc(p["sex"])}"' if printed_sex else ""
+    bits.append(f'<span class="{sex_cls}"{sex_reading}>'
+                f'{esc(printed_sex or p["sex"])}.</span>')
 
     name, alt = p["name_as_printed"], p["alt_name"]
     if name and alt:
@@ -980,7 +993,15 @@ def person_line(p, is_spouse, english_seen, printed_number=0):
     else:
         clan = ""
     if clan:
-        bits.append(f'<span class="{clan_cls}">{clan}</span>')
+        # Same `data-reading` as the sex above. The clan was already recoverable
+        # by guessing, so this only turns a guess into a statement -- but it is
+        # the same fact and it belongs in the same place, and the guess is
+        # deliberately timid enough to give up on a clan two edits from two
+        # others. `origin` is not part of the reading: it is rendered into the
+        # display string beside the clan, and a consumer wants the clan.
+        clan_reading = (f' data-reading="{esc(p["clan"])}"'
+                        if printed_clan else "")
+        bits.append(f'<span class="{clan_cls}"{clan_reading}>{clan}</span>')
 
     census = " ".join(x for x in (p["census_name"], p["census_year"]) if x)
     if census:

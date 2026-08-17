@@ -1005,9 +1005,15 @@ class PersonList {
     for (const group of this.ctx.groups) {
       if (tables.size && !any(group, (p) => tables.has(p.table))) continue;
 
+      // Both readings match, exactly as the clan filter below does. `sexOf`
+      // is for DISPLAY -- the plate's letter is what the row shows, ringed --
+      // and matching on it alone made the `sic` tooltip's promise that "both
+      // are searchable" true for clan and false for sex: Genealogy III's 37 is
+      // read F and printed `M.`, so Sex = Female excluded the one person the
+      // ring exists to flag.
       if (s.sex !== "all" && !any(group, (p) => {
-        const value = sexOf(p);
-        return s.sex === "none" ? !value : value === s.sex;
+        if (s.sex === "none") return !p.sex && !p.sexPrinted;
+        return p.sex === s.sex || p.sexPrinted === s.sex;
       })) continue;
 
       if (clans.size && !any(group, (p) => (
