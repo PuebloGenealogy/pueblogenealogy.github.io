@@ -310,9 +310,20 @@ body.chart .titlepage{max-width:var(--measure-wide)}
 /* 16px on the find field, not --t-xs: anything smaller and iOS Safari zooms
    the viewport on focus, which on a horizontally scrolling plate is a nasty
    way to lose your place. */
+/* max-width is 100%, not 60vw: at 375px that capped the box at 225px and the
+   placeholder overflowed it by 5px, cutting the ")" off the "( / )" that is
+   the only place the keyboard shortcut is advertised. --font-ui is a SYSTEM
+   stack, so how much is lost is the reader's OS's decision and 5px here is the
+   best case, not the worst. Costs nothing: 60vw only binds below 453px, where
+   `width:17rem` is already the smaller of the two and #scale-mount has already
+   wrapped to its own row -- measured 272px, no overflow, Scale still on its
+   own row at 375px. Measure this with a VALUE in the box, not with canvas
+   measureText: the text inset the input keeps for its caret is real and
+   measureText cannot see it, which is how this reads as fitting with 16px to
+   spare when it does not fit at all. */
 #find input{font:var(--t-base) var(--font-ui);color:var(--ink);
   background:var(--panel);border:1px solid var(--rule);border-radius:2px;
-  padding:.35rem .6rem;width:17rem;max-width:60vw;min-height:var(--tap)}
+  padding:.35rem .6rem;width:17rem;max-width:100%;min-height:var(--tap)}
 #find input:focus-visible{outline:2px solid var(--accent-strong);
   outline-offset:1px}
 .find-note{font:var(--t-xs) var(--font-ui);color:var(--muted)}
