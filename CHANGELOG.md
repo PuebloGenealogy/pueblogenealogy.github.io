@@ -3,7 +3,167 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-10 (latest, fourth entry) — published, and the unrecorded sex is a dash
+## 2026-08-17 (latest) — an outside debug report, and the five findings that were ours
+
+Two markdown files landed in the repo root: an investigation of this site dated
+2026-08-16, run against `main` and the live pages by someone else. Its findings
+are now `SESSION-NOTES.md`'s open thread; the raw files were moved to
+`../debug-2026-08-16/`, out of the tree. Published as `69544f0` (PR #52) and
+verified live by SHA-256 on all seven pages plus `search.js` and
+`search-index.json`.
+
+**Nine findings, five of them entirely in this repo, and all five are done.**
+The other four need an upstream change in `laguna-search` plus a re-vendor.
+
+### The report was careful, and two of its six numbered findings still failed
+
+Both are worth keeping, because each is a trap a future session walks into by
+believing a confident document.
+
+**#1's prescribed fix is impossible as written, and its prescribed gate would
+abort every build.** It says to fix Juana (III·37, read F, printed `M.`) in the
+upstream builder by "taking `sex` from `PERSONS`". That builder has no
+`PERSONS`: it constructs the index by **fetching these published pages and
+parsing them**, and reads no transcription module. The clan path is not the
+precedent it looks like — `nearest_clan()` *guesses*, taking the single nearest
+clan within two edits from the vocabulary harvested off unringed entries, which
+is how `Bager` reaches Badger. **Sex has no vocabulary**: `M.` and `F.` are both
+valid and neither is nearer the other, so that builder files the printed letter
+under both `sex` and `sexPrinted` deliberately, and says so in a comment. The
+order therefore reverses — `data-reading` is emitted **here** first, then the
+parser reads it, then re-vendor, then the gate. Landing the gate first fails the
+build forever. This is now in `CLAUDE.md` under *The reading behind a misprint
+is not published*, which had already named `data-reading` as the fix and can now
+say it is due.
+
+**#4 asks to revert a decision.** It reads `/search/` panning at phone widths as
+"unusable on every phone" and prescribes an inner scroller with the search
+card's halves stacked. Its measurements are right and match the recorded ones
+exactly — 375px of client width against 617px of `scrollWidth` — but the pan is
+what the user asked for on 2026-08-10 and confirmed on their own phone, and an
+inner scroller is specifically ruled out because it becomes the sticky header's
+scroll container. Its `SEARCH THE TA…` claim does not survive either: the page's
+only `text-overflow:ellipsis` is on `.cbf-text`, the clan filter's button. The
+heading overflows and is panned to.
+
+### The host bar was sliding off the panned page (#4b, the real half of #4)
+
+`.lg-host-bar` is `position:sticky`, and **sticky does not stick
+horizontally**. Its containing block is body's content box — only the
+viewport's width — so panning right to reach the `#` box slid the bar off to the
+left and left the top of the page bare. A table page has no such problem because
+there the pan is scoped to `.scroll` and the document never moves.
+
+Widening body is the whole fix, and **no rule in the bar changes**:
+`body{width:fit-content;min-width:100%}`. `fit-content` is
+min(max-content, max(min-content, available)), so it lands on exactly the
+min-content width the cards already overflow to; `min-width:100%` keeps body the
+viewport's width once the viewport is wider. **`max-content` is the wrong tool
+and looks like the obvious one** — it would size the table to its no-wrap width
+and blow the pan out past the cards' own minimum.
+
+Measured in a fixed-width iframe against a control that reverts the fix in the
+page — bare strip at full right pan: **257px at 375, 218 at 414, 152 at 480 →
+0 at all three**. The pan threshold is untouched, still clean at 636 of client
+width and panning at 635, and `scrollWidth` is still 617 at phone widths. A
+build guard aborts if the vendored file ever sets a width on `body`, since
+source order would then decide it and the bar would silently go back to sliding.
+
+### Find now matches the number the plate prints, not the internal id (#3)
+
+Typing `258` on Genealogy III could only ever reach one of the two people whose
+lines print `258.`, and **no route existed to the other**. The printed number
+now wins and the id is the fallback — which is what still reaches the three
+people whose printed number belongs to somebody else, so the datalist's
+`1010`-style values keep working. Where two people share a number the second is
+named in `#find-note` with a link.
+
+`data-n`/`data-nm` ride on **only the six options that need them**; the script
+reads `dataset.n || value`, so for the other ~710 the id already is the printed
+number and the markup is unchanged — Genealogy IV's diff is the shared JS and
+nothing else. Both members of a pair carry them, so the script never reasons
+about which kind it is holding.
+
+Audited over all four plates: **710 distinct printed numbers, 0 failures**, the
+three shared numbers (II 101, III 258, III 259) all noted correctly, every id
+still resolving.
+
+**Two costs, both deliberate.** The report also wanted the box never to display
+`1010`; making the datalist `value` the printed number would break the
+dropdown-pick path for exactly these people, since picking Dzaiʼsdyui would fill
+`258` and land on whoever prints it first. And III's ids 258 and 259 are no
+longer reachable by typing that number directly — typing `258` goes to 256,
+first in plate order, with the note as the one-click route to the other.
+
+### Two contracts became gates, and a placeholder stopped losing its bracket
+
+**#6b.** `/search/` is absent from `sitemap.xml` because the vendored page ships
+a robots `noindex`, and nothing checked it. `write_search()` now reads **both**
+halves — the meta out of the vendored file, the path out of the sitemap
+`write_site()` has already written — and aborts if they ever *agree*, which
+catches drift in either direction rather than only the one the comment imagined.
+
+**#6c.** The register's row and the person card's heading both hardcoded
+`#note-paternity`, while the note's id belongs to the plate: Genealogy III's is
+`note-paternity-rule` and Genealogy IV has none. Dormant, not broken — neither
+renders a dagger — and it would have become a dead link the day a third
+attribution was added to either. The anchor now comes from
+`spec["paternity_note"]`; the card **reads its href off the register** instead
+of restating it, so there is one source of truth and the card's fallback is
+unreachable by construction; and `check_editorial_marks()` holds every emitted
+dagger against the ids its own page carries. A dead fragment is silent in a
+browser, which is why this needs a gate and not an eye.
+
+**#6d.** `max-width:60vw` capped the Find box at 225px at 375px and the
+placeholder overflowed by **5px**, cutting the `)` off the `( / )` that is the
+only advertisement of the keyboard shortcut. Now `100%`, which costs nothing:
+60vw only binds below 453px, where `width:17rem` is already the smaller of the
+two and `#scale-mount` has already wrapped to its own row. Measured 272px and
+zero overflow at 375, 414 and 480.
+
+### Three lessons about measuring, all paid for this session
+
+**Canvas `measureText` cannot see an input's caret inset**, so it reported the
+Find placeholder fitting with 16px to spare when it overflowed by 5. Measure a
+field by putting the string in it as a **value** and comparing `scrollWidth` to
+`clientWidth`. Note `--font-ui` is a *system* stack, so 5px here is the best
+case and the reader's OS decides the worst.
+
+**Driving `location.hash` in a loop hits Chrome's ~200 same-document navigation
+throttle.** The first run of the finder audit reported 300+ failures that were
+entirely the harness's: Genealogy I and IV passed only because they are smaller
+than the limit, and II and III failed from index 200 exactly. Reload the frame
+every ~120 checks. This is the third shape of "an audit that fails for its own
+reasons" recorded in this project.
+
+**`git checkout <file>` reverts a file, not an edit.** Used to undo a
+deliberately-corrupted input after proving a gate fires, it also discarded three
+uncommitted fixes sitting in the same file. They were redone and the diff came
+back identical, so nothing was lost — but revert an experiment with a **file
+copy** when the file carries other uncommitted work.
+
+### Gate 8: no re-vendor is due, confirmed two ways
+
+The register-bearing diff — `.reg`, `.reg-rel`, `.num`, `.xref`, `sic-ring` —
+is **0 lines on all four table pages** against ~60 changed lines each, because
+everything that moved is CSS, the finder's script and the datalist, and a
+datalist option is not register markup. The post-publish `--refresh` run then
+re-fetched genuinely (cache written the same minute) and passed all seven of its
+gates, and its `search-index.json` differs from the vendored one **only in
+`meta.generated`**, 2026-08-10 → 2026-08-17: `people`, `identities`,
+`namesakes` and `relationships` are byte-identical. That field is date-granular
+and is never grounds for a re-vendor.
+
+### Still open, all needing upstream `laguna-search` plus a re-vendor
+
+**#1 + #2** — Juana is male in the index *and* the sex filter tests only the
+printed value where the clan filter tests both, so they are one user-facing bug
+and fixing either alone leaves it visible. #1 needs `data-reading` here first.
+**#5** — the Death filter accepts letters where Birth strips them, both labelled
+*Year*; side effect, `?d=d.` returns all 115 people with a recorded death.
+Needs a decision. **#6a** — `?open=` can name a row that is not open.
+
+## 2026-08-10 (fourth entry) — published, and the unrecorded sex is a dash
 
 **The entry below is superseded in two places, and it is left standing because
 this file is a history.** Its headline says none of that work is live: it is

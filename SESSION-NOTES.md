@@ -4,8 +4,8 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-10**, at the end of a session that published the
-`/search/` redesign.
+Last updated **2026-08-17**, at the end of a session that took in an outside
+debug report and published the five findings that were ours.
 
 **Everything is live and both repos are pushed.** That reverses the previous
 handoff's headline, and it is still the least reliable sentence in this file —
@@ -17,18 +17,20 @@ git rev-list --left-right --count origin/main...HEAD
 ```
 
 At the moment of writing: on **`main`**, clean, **0 ahead and 0 behind**, **no
-open PRs**, and `laguna-search`'s `main` likewise at `6eaedb0` with nothing
-unpushed. PR #50 was squash-merged as **`21454f7`** and its branch deleted; the
-publish's own records went up as `5819f1b`. The wrap that revised this file
+open PRs**, and `laguna-search` untouched at `6eaedb0` with a clean tree — its
+`dist/` and `cache/` are gitignored, so the `--refresh` run dirtied nothing.
+PR #51 (the previous session's wrap, parked six days) merged as **`371d986`**;
+PR #52 merged as **`69544f0`** and is **live, verified by SHA-256** on all seven
+pages plus `search.js` and `search-index.json`. The wrap that revised this file
 is a PR of its own, so expect exactly one open — and note that this is the
 case `CLAUDE.md` warns the `SessionStart` hook cannot flag, because notes
 committed alongside a build always look current.
 
-**The open thread is the debug findings of 2026-08-16**, brought into the
-project on 2026-08-17 and set out in full below. Nothing in them has been fixed
-yet. Two of the six were checked and found **wrong as prescribed**, and both
-would cost a session that followed them — read that section before touching
-either.
+**The open thread is the debug findings of 2026-08-16**, set out in full below.
+**Five of the nine are done and published**; the four that remain all need an
+upstream change in `laguna-search` plus a re-vendor. Two of the report's six
+numbered findings were checked and found **wrong as prescribed**, and both would
+cost a session that followed them — read that section before touching either.
 
 ## Start here in a new chat
 
@@ -51,7 +53,16 @@ document.fonts.ready` inside the iframe** before measuring anything about text.
 
 **Nothing is half-finished.** `--public` exits 0 — 7 pages, 713 drawn, 10
 JSON-LD blocks valid — and a rebuild reproduces `docs/` byte-identically from
-the committed source. All four `self_check()`s pass.
+the committed source. All four `self_check()`s pass. Two **new** gates ship with
+this publish and both were proved by feeding them bad input and confirming
+exit 1: the sitemap/`noindex` agreement check in `write_search()`, and
+`check_editorial_marks()`.
+
+**Gate 8 was run and no re-vendor is due**, confirmed two independent ways — the
+register-bearing diff is 0 lines on all four table pages, and the post-publish
+`--refresh` (genuinely re-fetched; all seven of its gates passed) produced a
+`search-index.json` differing **only in `meta.generated`**, which is
+date-granular and never grounds for a re-vendor.
 
 The publish verified further than the gates require, and the two extra checks
 are the ones worth repeating:
