@@ -10,9 +10,11 @@ verified live.
 
 ## Start here in a new chat
 
-1. This file.
-2. `CHANGELOG.md`'s newest entry — it is this whole session, and its last two
-   sections are the deploy block and what is still open.
+1. This file — the open thread is *Bracket placement*, below.
+2. `CHANGELOG.md`'s newest entry — it is this whole session. Read its last
+   three sections only if something looks unexplained: they cover an 80-minute
+   GitHub outage that blocked the deploy and then cleared, the gate-8 check
+   that validated it, and what is still open.
 3. Only if you are touching `/search/`: `CLAUDE.md` → *The search page is
    vendored, not generated here* (now **four** re-vendor shapes) and the
    `/search/` **All People** block under *Design invariants*.
@@ -27,10 +29,18 @@ document.fonts.ready` inside the iframe** before measuring anything about text.
 ## State
 
 **Nothing is half-finished, and this time that is checked rather than
-asserted.** Working tree clean, no open PRs, `main` at the wrap commit and 0/0
-with origin. `--public` exits 0 — 7 pages, 713 drawn, 10 JSON-LD blocks valid —
-a rebuild reproduces `docs/` byte-identically from the committed source, and all
-four `self_check()`s pass.
+asserted.** Working tree clean, no open PRs, `main` at **`85b7a77`** and 0/0
+with origin; `laguna-search` clean at **`65b8254`** and pushed. `--public` exits
+0 — 7 pages, 713 drawn, 10 JSON-LD blocks valid — a rebuild reproduces `docs/`
+byte-identically from the committed source, and all four `self_check()`s pass.
+
+**Take that from the repo, not from here** — it is the least reliable sentence
+in this file, and `/wrap-session` writes it before the last PR merges:
+
+```bash
+gh pr list --state open
+git rev-list --left-right --count origin/main...HEAD
+```
 
 **The publish is complete and verified live**: all seven pages plus `search.js`
 and `search-index.json` by SHA-256, sitemap 5 `<loc>` with `/search/` absent,
@@ -64,11 +74,14 @@ upstream.
 | **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. The fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first.** `digitallibrary.amnh.org` 403s automated fetches |
 
-## Deferred, not closed — bracket placement on Genealogy I and III
+## THE OPEN THREAD — bracket placement on Genealogy I and III
 
 **Kept in full because it is the site's largest correctness risk and the method
-is expensive to re-derive.** Deprioritised four times now. It has not been done
-and it has not been struck.
+is expensive to re-derive.** Deferred four times now — every time in favour of
+`/search/` work, which is finished. It has not been done and it has not been
+struck. **It needs the user at a scan**, so it cannot be started alone; the
+first move is to ask whether they want to read Genealogy III against the plate,
+and everything else on the table above is smaller.
 
 Genealogy IV shipped on 2026-07-31 with person 20 attached to the wrong
 marriage, and it survived four `self_check()`s, every publish gate and ten days
