@@ -3,7 +3,91 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-17 (latest) — an outside debug report, seven findings fixed, and a blocked deploy
+## 2026-08-17 (latest) — Genealogy I read against its plate, and a rig for doing it
+
+**Genealogy I is now the second plate a human has read against the scan, and
+the first read stub by stub.** The user read the printed number against every
+one of its **76 bracket stubs** and every number matched. Nothing in the
+edition changed: this is a verification, not a correction, and
+`scripts/transcription.py` is untouched.
+
+Before that reading, the plate's ink was measured at 1:1 and held against
+`_GROUPS`. **All 24 groups reconcile** — child counts group for group, groups in
+the column and order the transcription claims, and every leader on its mother's
+line within 9px of a 146.6px row. Two shapes worth keeping:
+
+- **45–51 and 52–53 are one continuous vertical on the plate with two leaders
+  entering it**, at 21's line and 23's. The transcription splits it 7 + 2 at
+  exactly the second leader. That is Genealogy IV's 20 shape, read correctly
+  here.
+- **83–85 takes its leader off 68's own line**, not off either husband's, which
+  is why the plate assigns no paternity and the transcription records none.
+
+### The rig is committed, at `scripts/plate_audit/`
+
+Four scripts and a README. They exist because the DOM audit **cannot** find
+this class of error: it derives the expected leader from `_GROUPS` and measures
+the rendered page, so it proves data and rendering agree and stays silent when
+both agree with each other and disagree with Parsons. The reference here is the
+scan.
+
+**Validated against a known-bad input rather than asserted.** Fed Genealogy IV
+with 20 restored to the 6+7 union — the exact state that shipped from
+2026-07-31 to 2026-08-10 — the audit adds one line and only one:
+
+> generation 3: the plate draws 3 bracket vertical(s) in this column, the
+> transcription claims 2 group(s) of 2+ children
+
+and does not report it against the corrected data.
+
+**What it cannot do is read type**, so a group of the right size whose members
+are misnumbered passes silently. That half is a human reading crops, which is
+what the user did.
+
+### Calibration does not transfer between plates, and the failure is confident
+
+**The most useful finding of the session, because it would have wasted the
+user's reading.** Parameters tuned on Table 1 fragment Table 4's stubs — the
+paper is tan rather than grey, the ink weight and scan scale differ. The cheap
+test is the stub-to-stub gap distribution, sharply bimodal when calibrated:
+
+| plate | gaps |
+|---|---|
+| Table 1, calibrated | 146 × 62, 292 × 5 — one row and two rows, nothing else |
+| Table 4, uncalibrated | 22, 23, 24, 25, 26, 27, 28, 30, 33, 35, 37, 39 … |
+
+The spray of small gaps corrupts the measured row pitch, which then flags
+leaders that are fine — **eight on Genealogy IV, four at a constant ~+176px
+against a nominal 146px row.** Those are artifacts of the rig. **Genealogy IV
+was not touched and stands as the user checked it on 2026-08-10.** Genealogy
+III was deliberately *not* run for this reason: a mis-calibrated detector spends
+the expensive resource, the user's reading, on the tool's own noise.
+
+Traps paid for building it, each of which produced a plausible wrong answer:
+a rule **drifts 16px in x** down its length, so a fixed narrow window reports
+one bracket as four; an ink cluster can hold the rule **and the type beside
+it**, and measuring stubs from its edge reports **zero stubs on a bracket that
+plainly has five**; an x-ink profile **cannot** separate rule from type, since
+the threshold isolating Table 1's sharp spike swallows type on Table 4's flat
+hump; the plate's rules are **broken ink** with a white gap where a leader meets
+its vertical, so a contiguity test finds almost nothing; a vertical can **stop
+short of its own last stub** (24–27 ends 33px above 27's rule); and
+near-duplicate detections of one rule **push the expected groups out of step
+with the ink and flag brackets that are fine**.
+
+One methodological note worth more than the code: the first implementation was
+rebuilt from scratch mid-session after the peak-splitting fix repaired Table 4
+and broke Table 1. The clean Table 1 result was then produced **twice, by two
+independent implementations**, which is worth more than either run alone.
+
+### `CLAUDE.md`'s host-bar paragraph was stale
+
+It still described `.lg-host-bar`'s horizontal-sticky failure as "genuinely
+unrecorded" and open. It was fixed earlier the same day by
+`body{width:fit-content;min-width:100%}`. Corrected, with the `max-content`
+warning kept.
+
+## 2026-08-17 — an outside debug report, seven findings fixed, and a blocked deploy
 
 Two markdown files landed in the repo root: an investigation of this site dated
 2026-08-16, run against `main` and the live pages by someone else. Its findings
