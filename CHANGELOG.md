@@ -3,7 +3,7 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-17 (latest) — an outside debug report, and the five findings that were ours
+## 2026-08-17 (latest) — an outside debug report, seven findings fixed, and a blocked deploy
 
 Two markdown files landed in the repo root: an investigation of this site dated
 2026-08-16, run against `main` and the live pages by someone else. Its findings
@@ -154,11 +154,82 @@ gates, and its `search-index.json` differs from the vendored one **only in
 `namesakes` and `relationships` are byte-identical. That field is date-granular
 and is never grounds for a re-vendor.
 
-### Still open, all needing upstream `laguna-search` plus a re-vendor
+### Then #1 and #2 as well — Juana is a woman, and the reading is published
 
-**#1 + #2** — Juana is male in the index *and* the sex filter tests only the
-printed value where the clan filter tests both, so they are one user-facing bug
-and fixing either alone leaves it visible. #1 needs `data-reading` here first.
+Done later the same day, and **committed but NOT DEPLOYED — see the deploy
+note at the end of this entry.**
+
+Genealogy III's 37 — Juana, whom this edition reads **F** and the plate prints
+**`M.`** — was published in `/search/` as a man and could not be found as a
+woman. Two halves, and fixing either alone left it visible.
+
+**Here: `data-reading` on the ringed span.** Nothing a reader sees changes. The
+ring and the printed value are untouched and the chart still reproduces the
+plate, because the edition annotates a misprint rather than fixing it. Six
+attributes in the whole edition, all on Genealogy III — one sex, two clans, each
+in the chart line and the register entry. `genealogy-iii/index.html` is the only
+page that moves, by 4 lines.
+
+**The order is what a fresh session gets backwards, and it is now in
+`CLAUDE.md`.** The report prescribed fixing this upstream by taking `sex` from
+`PERSONS`. That builder **has no `PERSONS`** — it builds the index by parsing
+these published pages and reads no transcription module. The clan path only
+looked like a precedent because it *guesses*: nearest known clan within two
+edits, which gets `Bager` to Badger. Sex has no vocabulary to guess against,
+since `M` and `F` are equally valid. So the edition had to publish the reading
+first, and the gate the report prescribed — asserting the index's `sex` matches
+`PERSONS` — would have aborted every build until it did. **The general lesson:
+when a consumer cannot see something, check whether it is published before
+designing a fix in the consumer.**
+
+Upstream at `65b8254`, vendored here: the parser captures the attribute;
+`build_index()` prefers it and keeps the guess as a fallback; **gate 1 refuses a
+ringed field whose reading did not resolve** — asked only where the field is
+ringed, since an empty sex is legitimate for someone with none recorded, and I
+had first written a comment claiming an existing gate covered this and found on
+checking that it did not; and the **sex filter matches both readings** as the
+clan filter already did. That last is finding #2, and without it the data fix
+stays invisible. `sexOf()` is untouched.
+
+Exactly **one record** moves in the index: III·37, `sex` M → F, `sexPrinted`
+still M. `identities`, `namesakes` and `relationships` byte-identical, and both
+clan misprints resolve to the values the guess already produced, now stated.
+Verified in the browser: `?q=juana&sex=F` returns her among 5, `&sex=M` still
+returns her, the row still shows `M.` ringed, and the `sic` tooltip's promise
+that *"Both are searchable"* is finally true. Sex=F went 258 → 259; Sex=M and
+the unrecorded count unchanged.
+
+**The report contradicts itself here**, and the contradiction was resolved
+towards the plate: #1's Verify asks the detail panel to read `Sex F.`, while
+#2's Change says to leave `sexOf()` alone. #2 was followed, because it agrees
+with the hard rule that a misprint is annotated and not corrected. If that is
+ever revisited, note it would make `/search/` disagree with the chart.
+
+**A fourth re-vendor shape, and an inverted build order.** `search.js` and
+`search-index.json` moved while `index.html` was byte-identical. And because
+the change the index needed was *in* pages that were not yet live, `cache/` was
+seeded with the local `docs/` build and `build.py` run **without** `--refresh`
+against it — sound only because `docs/` is reproducible and exactly those bytes
+ship in the same commit. Both are recorded in `CLAUDE.md` and `SOURCE.md`.
+
+### The deploy is BLOCKED, and this is the thing to check first next session
+
+`e510f05` is merged and on `main`, but **GitHub Pages never deployed it.** The
+deployment failed with a **503 from GitHub's own deployment API** — *"No server
+is currently available to service your request"* — during a **Partial System
+Outage** (Git Operations degraded). A re-run of the job sat in `queued` for 14+
+minutes without starting, and the documented force-rebuild,
+`gh api -X POST .../pages/builds`, returned the **same 503**. Nothing in the
+repo is wrong; the endpoint that creates deployments was refusing requests.
+
+So the live site is serving **`3ff5ed9`**, one publish behind. It is coherent —
+all pages 200 — and the three stale files (`genealogy-iii/index.html`,
+`search/search.js`, `search/search-index.json`) are stale *together*, so there
+is no half-deployed state in which the new script runs against the old index.
+**Gates 6, 7's live half and 8 are outstanding for this publish.**
+
+### Still open, needing upstream `laguna-search` plus a re-vendor
+
 **#5** — the Death filter accepts letters where Birth strips them, both labelled
 *Year*; side effect, `?d=d.` returns all 115 people with a recorded death.
 Needs a decision. **#6a** — `?open=` can name a row that is not open.
