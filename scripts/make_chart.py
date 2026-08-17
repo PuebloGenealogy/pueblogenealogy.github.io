@@ -1546,9 +1546,20 @@ body.chart .titlepage{max-width:var(--measure-wide)}
 /* 16px on the find field, not --t-xs: anything smaller and iOS Safari zooms
    the viewport on focus, which on a horizontally scrolling plate is a nasty
    way to lose your place. */
+/* max-width is 100%, not 60vw: at 375px that capped the box at 225px and the
+   placeholder overflowed it by 5px, cutting the ")" off the "( / )" that is
+   the only place the keyboard shortcut is advertised. --font-ui is a SYSTEM
+   stack, so how much is lost is the reader's OS's decision and 5px here is the
+   best case, not the worst. Costs nothing: 60vw only binds below 453px, where
+   `width:17rem` is already the smaller of the two and #scale-mount has already
+   wrapped to its own row -- measured 272px, no overflow, Scale still on its
+   own row at 375px. Measure this with a VALUE in the box, not with canvas
+   measureText: the text inset the input keeps for its caret is real and
+   measureText cannot see it, which is how this reads as fitting with 16px to
+   spare when it does not fit at all. */
 #find input{font:var(--t-base) var(--font-ui);color:var(--ink);
   background:var(--panel);border:1px solid var(--rule);border-radius:2px;
-  padding:.35rem .6rem;width:17rem;max-width:60vw;min-height:var(--tap)}
+  padding:.35rem .6rem;width:17rem;max-width:100%;min-height:var(--tap)}
 #find input:focus-visible{outline:2px solid var(--accent-strong);
   outline-offset:1px}
 .find-note{font:var(--t-xs) var(--font-ui);color:var(--muted)}
@@ -2338,18 +2349,42 @@ function fold(s){return s.normalize("NFD").replace(/\p{M}+/gu,"")
 if(form&&input&&datalist){
   form.hidden=false;
   var opts=[].map.call(datalist.options,function(o){
-    return {id:o.value,folded:fold(o.textContent||"")}});
+    /* dataset.n is the number the plate PRINTS, carried only where it is
+       shared; everywhere else the id already is it. */
+    return {id:o.value,n:o.dataset.n||o.value,nm:o.dataset.nm||"",
+            folded:fold(o.textContent||"")}});
   form.addEventListener("submit",function(e){
     e.preventDefault();
     var q=input.value.trim();if(!q)return;
-    var id=null,m=q.match(/^\d+/);
-    if(m)id=m[0];
+    var id=null,also=null,m=q.match(/^\d+/);
+    if(m){
+      /* The PRINTED number first -- it is what the reader is holding, and the
+         plate prints one number on two people three times in the edition. The
+         id is only the fallback, which is what reaches the three people whose
+         printed number belongs to somebody else. Getting this order backwards
+         is the whole of the defect: an id lookup silently answers with one of
+         the two and offers no route to the other. */
+      var hits=[];
+      for(var j=0;j<opts.length;j++)if(opts[j].n===m[0])hits.push(opts[j]);
+      if(hits.length){id=hits[0].id;if(hits.length>1)also=hits[1]}
+      else id=m[0];
+    }
     if(!id){var f=fold(q);
       for(var i=0;i<opts.length;i++){
         if(opts[i].folded.indexOf(f)>=0){id=opts[i].id;break}}}
     var el=id&&doc.getElementById("p"+id);
     if(!el){note.textContent="No person “"+q+"” in this table.";return}
     note.textContent="";
+    /* The plate's own reuse of a number is worth surfacing, not hiding. Built
+       as nodes rather than innerHTML: the name is plate text, not ours. */
+    if(also){
+      note.appendChild(doc.createTextNode(
+        "The plate prints "+m[0]+" on two people — also "));
+      var a2=doc.createElement("a");
+      a2.href="#p"+also.id;a2.textContent=also.nm;
+      note.appendChild(a2);
+      note.appendChild(doc.createTextNode("."));
+    }
     if(location.hash!=="#p"+id)location.hash="#p"+id;
     /* Unconditional: finding the person already named by the hash fires no
        hashchange, and the row may have been deselected by a click since. */
@@ -2541,11 +2576,17 @@ function openCard(a){
      card does not carry -- the chart prints it under the line already. */
   function heading(text,editorial){
     var h=doc.createElement("h3");h.className="pc-h";h.textContent=text;
-    /* Same dagger, same target as the register's: the grouping under this
-       heading is the edition's reading, not the plate's bracket. */
+    /* Same dagger, same target as the register's -- and the target is READ
+       from the register rather than restated here, because the note's id
+       belongs to the plate: Genealogy III's is `note-paternity-rule` and
+       Genealogy IV has no such note at all. The card only ever raises a
+       dagger for a row the register already marked, so if there is no
+       `.edmark` below there is no `editorial` here either and the fallback
+       never runs. */
     if(editorial){
       var m=doc.createElement("a");
-      m.className="edmark";m.href="#note-paternity";
+      var src=doc.querySelector("#register a.edmark");
+      m.className="edmark";m.href=src?src.getAttribute("href"):"#note-paternity";
       m.title="editorial attribution";m.textContent="†";
       h.appendChild(m);
     }
@@ -2858,6 +2899,16 @@ def datalist_html(persons, drawn):
     """Finder suggestions: number, printed name, clan. Baseline fields only.
     Persons not drawn on the chart (unreachable from the founding couples --
     a reported data condition) are omitted: the finder cannot jump to them."""
+    # The numbers the plate prints on more than one person. Three times in the
+    # whole edition (II 101, III 258, III 259), and the finder has to be told
+    # about them or a reader holding the plate can reach only one of the two --
+    # see the `data-n` note below.
+    seen_n, shared = set(), set()
+    for pid in persons:
+        if pid in drawn:
+            n = str(persons[pid]["plate_number"])
+            (shared if n in seen_n else seen_n).add(n)
+
     opts = []
     for pid in sorted(persons):
         if pid not in drawn:
@@ -2873,11 +2924,27 @@ def datalist_html(persons, drawn):
         # reuses a number, and the suggestion list is the last place the
         # synthetic id was still visible.
         label = f"{p['plate_number']} · {nm}" + (f" · {p['clan']}" if p["clan"] else "")
-        opts.append(f'<option value="{pid}">{esc(label)}</option>')
+        # `data-n` is the number the plate PRINTS, and it is emitted only on the
+        # handful of options that need it: the script reads `dataset.n ||
+        # value`, so for the other ~710 the id already is the printed number and
+        # the markup is unchanged. Both members of a colliding pair carry it,
+        # including the one whose number and id agree, so the pair is symmetric
+        # and the script never has to reason about which kind it is holding.
+        # `data-nm` rides with it because the note names the OTHER person, and
+        # digging that name back out of the label would be parsing our own
+        # prose -- the mistake `_p()` exists to prevent. It is the label minus
+        # the number, clan included: both of III 259's are unnamed, so the name
+        # alone would offer the reader a choice between "———" and "———".
+        extra = ""
+        if str(p["plate_number"]) in shared:
+            who = nm + (f" · {p['clan']}" if p["clan"] else "")
+            extra = f' data-n="{esc(str(p["plate_number"]))}" data-nm="{esc(who)}"'
+        opts.append(f'<option value="{pid}"{extra}>{esc(label)}</option>')
     return '<datalist id="persons-list">' + "".join(opts) + "</datalist>"
 
 
-def register_html(persons, unions, ku, km, drawn, paternity=None):
+def register_html(persons, unions, ku, km, drawn, paternity=None,
+                  note_id="note-paternity"):
     """
     The Register of persons: a generated index, one entry per person in plate
     order, with parents, spouses and children as #p{n} links. It is the no-JS
@@ -2988,7 +3055,12 @@ def register_html(persons, unions, ku, km, drawn, paternity=None):
         # The dagger says "this grouping is ours, not the plate's" and links to
         # the note that says so. data-editorial carries the same fact to the
         # person card, which builds its own headings.
-        ed_a = ('<a class="edmark" href="#note-paternity"'
+        # The anchor is the TABLE's, not the edition's: Genealogy III's
+        # paternity note is `note-paternity-rule` and Genealogy IV has none at
+        # all, so a hardcoded "#note-paternity" is a dead link waiting for the
+        # first attribution added to either plate. check_editorial_marks()
+        # holds every dagger emitted here against the ids its own page carries.
+        ed_a = (f'<a class="edmark" href="#{note_id}"'
                 ' title="editorial attribution">&dagger;</a>') if editorial else ""
         ed_d = ' data-editorial="1"' if editorial else ""
         return (f'<div class="reg-rel" data-rel="{kind}"{w}{ed_d}>'
@@ -3126,6 +3198,39 @@ def jsonld_chart(spec, description, today):
     }
     return ('<script type="application/ld+json">'
             + json.dumps(data, ensure_ascii=False) + "</script>")
+
+
+def check_editorial_marks(paths):
+    """
+    Every editorial dagger must land on a note the SAME page carries.
+
+    The dagger's target used to be the literal "#note-paternity" in two places
+    -- the register's row and the person card's heading -- while the note's id
+    belongs to the plate: Genealogy III's is `note-paternity-rule` and
+    Genealogy IV has no such note at all. Neither plate renders a dagger today,
+    so this was dormant rather than broken; it would have become a dead link on
+    the day a third editorial attribution was added to either. The anchor is
+    now read from `spec["paternity_note"]`, and this is the check that says so
+    the day the two stop agreeing.
+
+    A dead fragment is silent in a browser -- the page simply does not move --
+    which is exactly the kind of failure that needs a build gate rather than an
+    eye. Note it cannot see the person card's dagger, which is built by script;
+    that one now reads its href off the register, so the register being right
+    is what makes it right.
+    """
+    ok = True
+    for path in paths:
+        html_text = path.read_text(encoding="utf-8")
+        targets = set(re.findall(r'<a class="edmark" href="#([^"]+)"', html_text))
+        for t in sorted(targets):
+            if f'id="{t}"' not in html_text:
+                print(f"ABORTED: {path.relative_to(DOCS)} marks an editorial "
+                      f"attribution with a dagger pointing at #{t}, and carries "
+                      f"no such id -- set \"paternity_note\" in that table's "
+                      f"TABLES entry, or give the note that id")
+                ok = False
+    return ok
 
 
 def check_structured_data(paths):
@@ -3361,7 +3466,8 @@ def build_doc(spec, description, gens, n_gens, trees, status, public, today,
     follow the later generations &mdash; person numbers are links.</span></figcaption>
 </figure>
 </main>
-{register_html(persons, unions, ku, km, drawn, spec.get("paternity"))}
+{register_html(persons, unions, ku, km, drawn, spec.get("paternity"),
+               spec.get("paternity_note", "note-paternity"))}
 <footer id="apparatus">
   <div class="app-cols">
     <section class="app-sec">
@@ -3660,6 +3766,39 @@ def write_search(tables):
               "; /search/'s bar would overwrite the widget's own token")
         return False
 
+    # The sitemap contract, checked rather than trusted to a comment. /search/
+    # is left out of sitemap.xml because this page ships
+    # <meta name="robots" content="noindex">, and advertising a page in a
+    # sitemap while asking robots to skip it is a contradictory signal, not a
+    # stronger one -- see the note in write_site(). EITHER half can drift, so
+    # both are read: the meta out of the vendored file, the path out of the
+    # sitemap write_site() has already written. They must disagree; the day
+    # they agree, one of the two is wrong and it is not knowable here which.
+    robots = re.search(r'<meta\b[^>]*\bname=["\']robots["\'][^>]*>', html, re.I)
+    noindex = bool(robots and "noindex" in robots.group(0).lower())
+    sitemap = DOCS / "sitemap.xml"
+    listed = (sitemap.exists()
+              and f"{SITE}/search/" in sitemap.read_text(encoding="utf-8"))
+    if noindex == listed:
+        print("ABORTED: /search/ " + (
+            "ships a robots noindex meta AND is listed in sitemap.xml"
+            if noindex else
+            "no longer ships a robots noindex meta and is still absent from "
+            "sitemap.xml") +
+            "; drop the meta and list the path, or keep both, but not one of "
+            "the two -- write_site() carries the reasoning")
+        return False
+
+    # The host bar is only pinned while panning because we widen `body` below,
+    # and the widget's own `body` rule sets margin, background and colour but
+    # no width. The day it sets one, source order decides which wins and the
+    # bar silently goes back to sliding off the left edge -- which reads as a
+    # sticky bug and is not one.
+    if re.search(r"body\s*\{[^}]*\bwidth\s*:", html):
+        print("ABORTED: vendor/search/ now sets a width on `body`; "
+              "/search/'s host bar would stop covering the panned document")
+        return False
+
     out = DOCS / "search"
     out.mkdir(parents=True, exist_ok=True)
     for name in ("search.js", "search-index.json"):
@@ -3722,6 +3861,21 @@ def write_search(tables):
    and border added on rather than absorbed. It is the one rule here that is
    not the masthead's, and it exists to make the rest of them the masthead's. */
 .lg-host-bar,.lg-host-bar *{{box-sizing:border-box}}
+/* The document PANS below 651px -- the list is a table at every width (user,
+   2026-08-10) -- and `position:sticky` does not stick HORIZONTALLY. The bar's
+   containing block is body's content box, which is only the viewport's width,
+   so panning right to reach the `#` box slid the bar off to the left and left
+   the top of the page bare. A table page has no such problem: there the pan is
+   scoped to `.scroll` and the document itself never moves.
+   Widening body is the whole fix -- the bar then fills a containing block as
+   wide as the panned document, and no rule below changes. `fit-content` is
+   min(max-content, max(min-content, available)), so it lands on exactly the
+   min-content width the cards already overflow to, and `min-width:100%` keeps
+   body the viewport's width once the viewport is the wider of the two.
+   `max-content` is the WRONG tool and looks like the obvious one: it would
+   size the table to its no-wrap width, blowing the pan out well past the
+   cards' own minimum. Do not "simplify" this to it. */
+body{{width:fit-content;min-width:100%}}
 .lg-host-bar{{position:sticky;inset-block-start:0;z-index:40;
   min-height:var(--bar-h);
   display:flex;align-items:center;flex-wrap:wrap;gap:var(--s1) var(--s2);
@@ -3841,7 +3995,9 @@ def write_site(today, built):
     # /search/ is deliberately absent. The vendored page ships
     # <meta name="robots" content="noindex">, and a sitemap entry for a page
     # that asks not to be indexed is a contradictory signal, not a stronger
-    # one. If that meta is ever dropped, add the path here in the same commit.
+    # one. If that meta is ever dropped, add the path here in the same commit
+    # -- write_search() reads BOTH halves and aborts the build if they ever
+    # agree, so this is enforced rather than remembered.
     paths = ["/"] + [f"/{spec['slug']}/" for spec, _ in built]
     urls = "".join(
         f"\n  <url><loc>{SITE}{path}</loc><lastmod>{stamp}</lastmod></url>"
@@ -4265,6 +4421,8 @@ def main():
 
     pages = [DOCS / "index.html"] + [
         DOCS / spec["slug"] / "index.html" for spec, _ in built]
+    if not check_editorial_marks(pages):
+        return 1
     if not check_structured_data(pages):
         return 1
     return 0

@@ -1370,6 +1370,21 @@ body { margin: 0; background: var(--lg-paper); color: var(--lg-ink); }
    and border added on rather than absorbed. It is the one rule here that is
    not the masthead's, and it exists to make the rest of them the masthead's. */
 .lg-host-bar,.lg-host-bar *{box-sizing:border-box}
+/* The document PANS below 651px -- the list is a table at every width (user,
+   2026-08-10) -- and `position:sticky` does not stick HORIZONTALLY. The bar's
+   containing block is body's content box, which is only the viewport's width,
+   so panning right to reach the `#` box slid the bar off to the left and left
+   the top of the page bare. A table page has no such problem: there the pan is
+   scoped to `.scroll` and the document itself never moves.
+   Widening body is the whole fix -- the bar then fills a containing block as
+   wide as the panned document, and no rule below changes. `fit-content` is
+   min(max-content, max(min-content, available)), so it lands on exactly the
+   min-content width the cards already overflow to, and `min-width:100%` keeps
+   body the viewport's width once the viewport is the wider of the two.
+   `max-content` is the WRONG tool and looks like the obvious one: it would
+   size the table to its no-wrap width, blowing the pan out well past the
+   cards' own minimum. Do not "simplify" this to it. */
+body{width:fit-content;min-width:100%}
 .lg-host-bar{position:sticky;inset-block-start:0;z-index:40;
   min-height:var(--bar-h);
   display:flex;align-items:center;flex-wrap:wrap;gap:var(--s1) var(--s2);
