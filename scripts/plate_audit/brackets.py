@@ -26,7 +26,7 @@ from plate import Band, ROW_T1
 # is a fraction of. Table 3 sets 24.7px to a row against Table 1's 146.6, so
 # leaving it at the default reads Table 3 with windows six times too wide.
 FLAGS = ("--row=", "--xmerge=", "--maxwidth=", "--skew=", "--track=",
-         "--maxthick=", "--ongrid=")
+         "--maxthick=", "--ongrid=", "--gapmax=")
 argv = [a for a in sys.argv if not a.startswith(FLAGS)]
 
 
@@ -58,6 +58,12 @@ MAXTHICK = int(flag("--maxthick=", 0))
 # blot be dressed up as a bracket, whereas dropping the run shows up in the
 # audit as a count the transcription disagrees with, which is loud. 0 is off.
 ONGRID = flag("--ongrid=", 0.0)
+# --gapmax is the ink break a rule may carry without being read as two rules.
+# Row-scaled it comes to 5px on Table 3, and that plate's breaks are 7 -- so
+# W46's nine children came back as three brackets of 5, 2 and 4. It stays far
+# under one row (10px against 24.75), so it still cannot fuse two brackets
+# that are rows apart, which is the reading error the small value protects.
+GAPMAX = int(flag("--gapmax=", 0)) or None
 
 bmp = argv[1]
 bands = json.loads(argv[2])              # [[x0,x1], ...]
@@ -74,7 +80,7 @@ for x0, x1 in bands:
         xl, xr = cand["xl"], cand["xr"]
         if xr - xl > MAXWIDTH:           # too wide to be one rule
             continue
-        for r in b.rules_at(xl, xr, minrun=minrun, track=TRACK):
+        for r in b.rules_at(xl, xr, minrun=minrun, track=TRACK, gapmax=GAPMAX):
             if r["dens"] < 0.8:          # a column of type, not a rule
                 continue
             r["right"] = b.stubs(r, side="right")
@@ -86,8 +92,15 @@ for x0, x1 in bands:
             if ONGRID:
                 ys = [s["y"] for s in r["right"]]
                 gaps = [b - a for a, b in zip(ys, ys[1:])]
-                if any(abs(g / ROW - round(g / ROW)) > ONGRID or g < ROW * 0.5
-                       for g in gaps):
+                # The grid test is applied only to SHORT gaps. A row pitch is
+                # never exact, so the error accumulates: at 24.70px against a
+                # true 24.75, a legitimate 33-row gap lands 0.6 of a row off
+                # grid and the run is thrown away -- which is what happened to
+                # W04's bracket, one of the two this filter first "lost".
+                # Nothing is given up by the narrowing, because the junk this
+                # exists to reject is sub-row in the first place.
+                if any(g < ROW * 0.75 or (g < ROW * 6.5 and
+                       abs(g / ROW - round(g / ROW)) > ONGRID) for g in gaps):
                     continue
             found.append(r)
 
