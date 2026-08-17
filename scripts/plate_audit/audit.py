@@ -20,6 +20,14 @@ What it cannot decide
 """
 import json, os, sys, importlib.util, statistics
 
+ROW_T1 = 146.6
+# --row=N, as in brackets.py: the tolerance that decides whether a leader meets
+# a stub is a fraction of a row, and Table 3's row is a sixth of Table 1's.
+ROW_HINT = next((float(a.split("=")[1]) for a in sys.argv if a.startswith("--row=")),
+                ROW_T1)
+YMATCH = max(1, int(round(12 * ROW_HINT / ROW_T1)))
+sys.argv = [a for a in sys.argv if not a.startswith("--row=")]
+
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 mod_name = sys.argv[1]
 spec = importlib.util.spec_from_file_location("t", f"{REPO}/scripts/{mod_name}")
@@ -68,14 +76,15 @@ for gen in gens:
     slots = []
     for r in ink:
         leaders = [l for l in r["left"]
-                   if any(abs(l["y"] - s["y"]) < 12 for s in r["right"])]
+                   if any(abs(l["y"] - s["y"]) < YMATCH for s in r["right"])]
         if len(leaders) <= 1:
             slots.append((r, r["right"], leaders))
         else:                              # verticals of two groups abutting
             cuts = sorted(l["y"] for l in leaders)
             for i, c in enumerate(cuts):
                 hi = cuts[i + 1] if i + 1 < len(cuts) else 10 ** 9
-                slots.append((r, [s for s in r["right"] if c - 12 <= s["y"] < hi - 12],
+                slots.append((r, [s for s in r["right"]
+                                  if c - YMATCH <= s["y"] < hi - YMATCH],
                               [l for l in leaders if abs(l["y"] - c) < 1]))
     multi = [g for g in bycol[gen] if len(g[3]) > 1]
     singles = [g for g in bycol[gen] if len(g[3]) == 1]

@@ -41,6 +41,36 @@ script guess them: auto-clustering the detected x values returns the fold crease
 and a column of type among the real columns, and silently calls the crease a
 generation.
 
+Table 3, whose calibration is set out below, is read with:
+
+```bash
+python3 scripts/plate_audit/brackets.py /tmp/t3.bmp '[[0,3770]]' 12 \
+    --row=24.7 --track=1 --maxthick=6 --ongrid=0.25 > /tmp/t3.json
+```
+
+## The flags, and why each one exists
+
+Every window in `plate.py` was tuned on Table 1 and is stated as a fraction of
+its **row pitch**, 146.6px. `--row` multiplies them all. Table 3 sets **24.7px**
+to a row in a scan a ninth the pixel count, so leaving it at the default reads
+that plate with windows six times too wide. Measure it by autocorrelating the
+row-ink profile of a dense list; do not estimate it from the page height.
+
+The rest are **not** row-scaled, because they answer to the scan rather than to
+the type, and each was forced by a specific measurement:
+
+| flag | Table 1 | Table 3 | what it answers |
+|---|---|---|---|
+| `--row` | 146.6 | **24.7** | the plate's row pitch; scales every window |
+| `--track` | 0 | **1** | px a rule's window may re-centre per row |
+| `--xmerge` | 5 | 5 | px apart two fragments are still one rule |
+| `--maxwidth` | 45 | 45 | px beyond which a candidate is type, not a rule |
+| `--maxthick` | off | **6** | px deep beyond which a "stub" is a blot |
+| `--ongrid` | off | **0.25** | rows of slack before a run is off the grid |
+| `minrun` (positional) | 110 | **12** | px of contiguous ink that makes a rule |
+
+`--skew` exists and is **not used by either plate** — see the bow, below.
+
 `crop.py` cuts an exact native-resolution PNG for a human to read:
 
 ```bash
@@ -53,18 +83,86 @@ python3 scripts/plate_audit/crop.py /tmp/t1.bmp 9541 1090 2300 4710 out.png
 different paper, ink weight and scan scale, and the same settings that read
 Table 1 cleanly fragment Table 4's stubs.
 
-The cheap test is the **stub-to-stub gap distribution**, which on a correctly
-calibrated plate is sharply bimodal — one row and two rows, nothing else:
+The cheap test is the **stub-to-stub gap distribution**. What a correctly
+calibrated plate gives is a hard spike at one row, a smaller one at two, and
+then **nothing at all below one row**:
 
 | plate | gaps |
 |---|---|
-| Table 1, calibrated | 146 × 62, 292 × 5 |
+| Table 1, calibrated | 144–148 × 65, 290–292 × 5, then a sparse tail |
+| Table 3, calibrated | 24–26 × 43, 49–51 × 19, then a sparse tail |
 | Table 4, **not** calibrated | 22, 23, 24, 25, 26, 27, 28, 30, 33, 35, 37, 39 … |
 
 Table 4's spray of small gaps corrupts the measured row pitch, which then
 flags leaders that are fine — eight of them, four at a constant ~+176px against
 a nominal 146px row. **Those were artifacts of the rig, not findings about the
 plate.** Check the distribution before believing a single flag.
+
+**Read the test as "nothing under one row", not as "one row and two rows and
+nothing else".** That is how this file first stated it and it is wrong about
+its own plate: Table 1's calibrated tail runs 437, 582, 728, 872, 1020, 1022,
+1312, 1456, 1594, 1746 and 3499px. A group's children are only consecutive
+rows when nothing is printed between them, and on a deep plate a great deal
+is — Table 3's first bracket carries exactly two children, **169 rows apart**,
+because the whole of the elder's descent is set between them. A large gap is
+the plate's shape. A **sub-row** gap is the rig fragmenting.
+
+## Table 3, calibrated 2026-08-17 — what its scan does that Table 1's does not
+
+Three things, and none is a matter of turning a threshold down.
+
+**The plate BOWS, it does not skew.** Its left-hand rule runs x 683 at the top,
+686 at y 1000, 666 at y 3600 and 671 at the foot — 20px of travel that no
+straight line describes, so `--skew` was built, measured at −0.0051, and thrown
+away as the wrong model. No fixed window holds 20px either, and widening one to
+suit takes in the fold crease. `--track=1` lets a rule's own window re-centre a
+pixel a row, and it is what recovers the two longest rules whole: 4184px and
+3013px, against four fragments each before.
+
+Two things the tracker had to learn, both found by a bracket going missing:
+
+- **A 2px window cannot be tracked.** The col-7 bracket is exactly that — found
+  with the window held still, lost the moment it moves, because the first stub
+  it meets drags it off the rule. The traced window is padded to `2·track + 3`.
+- **A column carries several brackets, and between them there is nothing to
+  follow.** The window holds the x the last rule ended at while the bow has
+  moved the next one: the col-3 bracket for 5+6 sits at x 1215 under a rule
+  that finished at 1208. After a rule ends the window may jump once to
+  re-acquire, by at most its own width — far short of the 535px between
+  columns, so it can only ever find the same column's next rule.
+
+**The fold crease crosses a bracket column.** Table 3 is folded in four; two of
+its creases (x≈942, x≈1920) fall between columns and are dropped by `XTOL`, but
+the third runs at x≈2878–2960, **10px from the col-6 brackets at 2853–2863**.
+No x window separates them. What does is that the crease answers the density
+test in blots 15 to 94 rows deep where a stub is 2 to 4 (`--maxthick=6`), and
+that its blots fall wherever they fall while every real stub sits a whole
+number of rows from its neighbour (`--ongrid=0.25`). Together they take the
+plate from 8 junk runs and 39 sub-row gaps to **none**, and `--ongrid` rejects
+per **run**, not per stub — dropping the odd stub would let a blot be dressed
+up as a bracket, whereas dropping the run shows up in the audit as a count the
+transcription disagrees with, which is loud.
+
+**Its columns are not a grid.** Table 1's four column x values are worth ±80px
+of tolerance. Table 3's column 6 carries brackets at x 2786 *and* x 2854 — 68px
+apart, both real, each sitting the same 61–63px left of the children it
+brackets. So `XTOL` here is ~75, and a column's x is a range to be measured,
+not a number to be assumed.
+
+### Where that leaves it — 44 of 46, and the last two are unfinished business
+
+The transcription expects 46 groups of 2+ children: 1 in column 2, 3 in
+column 3, 11 in column 4, 19 in column 5, 11 in column 6, 1 in column 7.
+Calibrated, the ink gives **col 2: 1, col 3: 2, col 4: 10, col 5: 21, col 6: 9,
+col 7: 1**, plus 6 crease runs that `XTOL` drops. Columns 2 and 7 are exact;
+column 5 is over by two and column 6 short by two, which is most likely the
+column boundary between them being drawn in the wrong place rather than a
+finding about the plate.
+
+**Do not report any of that as a defect in the transcription.** It is the state
+of the *rig* on this plate. The columns still have to be measured by eye (they
+are guessed above from a 535px grid that column 6 is known to break), and only
+then is a flag from `audit.py` worth reading.
 
 ## Traps already paid for
 
