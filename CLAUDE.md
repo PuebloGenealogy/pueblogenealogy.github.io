@@ -1007,14 +1007,17 @@ Check two claims before spending a round on one: the heading does **not**
 truncate (the page's only `text-overflow:ellipsis` is on `.cbf-text`, the clan
 filter's button), and the columns are not "hidden" but panned to.
 
-**What is genuinely unrecorded is that `.lg-host-bar` is `position:sticky`,
-which does not stick HORIZONTALLY.** So the bar spans the viewport, not the
-panned document, and panning right to reach the `#` box slides it off to the
-left and leaves the top of the page bare. The masthead on a table page has no
-such problem because there the pan is scoped to `.scroll` and the document
-never moves. This is a **consequence** of the pan decision, not an argument
-against it, and it is fixable without touching the pan — the bar is host-side,
-in `write_search()`, so nothing upstream is involved.
+**The real half of that report was that `.lg-host-bar` is `position:sticky`,
+which does not stick HORIZONTALLY — FIXED 2026-08-17, and the fix is one
+declaration on `body`.** The bar spanned the viewport, not the panned document,
+so panning right to reach the `#` box slid it off to the left and left the top
+of the page bare. The masthead on a table page has no such problem because
+there the pan is scoped to `.scroll` and the document never moves. The cure is
+`body{width:fit-content;min-width:100%}` in `write_search()` — **no rule in the
+bar changes** — and `max-content` is the wrong tool that looks like the obvious
+one, since it would size the table to its no-wrap width and blow the pan out
+past the cards' own minimum. This was a **consequence** of the pan decision,
+never an argument against it.
 
 **Names still wrap there, deliberately.** Where a name may be divided is an
 editorial question, answered in `build.py` and published as `<wbr>` seams
@@ -1732,9 +1735,12 @@ to stay *allowed*, so the two must not be combined. Neither is deployed here.
   see it: 19 and 20 are both Bear, exactly like their mother, so clan descent
   cannot discriminate; the counts close either way. **Placement is unverified
   wherever the user has not personally read it against the scan** — which is
-  true of II (checked 2026-07-30) and now of IV's 5/6/7, and is not known to be
-  true of the rest. Treat a report of a "misaligned" or "broken" bracket as
-  possibly a data error, not automatically a rendering one.
+  true of II (checked 2026-07-30), IV's 5/6/7 (2026-08-10) and **the whole of
+  Genealogy I (2026-08-17: the user read the printed number against every one
+  of its 76 stubs and every number matched)**. **Genealogy III is the one plate
+  no human has read against its scan**, and it is the largest — 261 people, 72
+  unions, seven generations. Treat a report of a "misaligned" or "broken"
+  bracket as possibly a data error, not automatically a rendering one.
 - **Genealogy II is published and its reading is closed.** The user re-checked
   their full list on 2026-07-30 and reported **no remaining placement errors**.
   Everything they had flagged is resolved: **31, 32 and 97** via
@@ -1790,6 +1796,21 @@ child. The audit that works reads `_GROUPS`, takes the union's mother (or the
 `LEADER_ON_SPOUSE_ROW` spouse), finds `#p{first_child}`, walks up to its
 `.kids`, and asserts the bracket starts on **that named person's** line. 426
 checks across four plates, and it is cheap.
+
+**There is now a rig that measures the PLATE instead of the page —
+`scripts/plate_audit/`, added 2026-08-17.** It reads a plate's bracket
+verticals, the stubs entering each from the right and the leaders entering from
+the left, at 1:1 off a raw BMP, and holds them against `_GROUPS`. That is the
+one reference the DOM audit cannot have. It decides child counts per group, how
+many verticals a column carries at all, and which row each leader hangs off;
+it **cannot read type**, so a group of the right size whose members are
+misnumbered passes and a human still reads the crops. Validated on Genealogy IV
+with 20 restored to the 6+7 union — it names that defect and is silent on the
+corrected data. **Its parameters are per plate and do not transfer**: the test
+is that the stub-to-stub gaps come out sharply bimodal (Table 1: 146 × 62,
+292 × 5) rather than sprayed (Table 4, uncalibrated: 22, 23, 24, 25, 26 …), and
+an uncalibrated run produces confident flags that are the rig's own noise. Read
+its README before trusting a number from it.
 
 **An audit that compares two things which MOVE TOGETHER passes on the defect it
 exists to catch.** Found 2026-08-10 on `/search/`, and it is the same failure as
