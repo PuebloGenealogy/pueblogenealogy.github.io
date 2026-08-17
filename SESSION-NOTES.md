@@ -101,7 +101,7 @@ change a transcription unilaterally.**
 | Remove the empty state's `Clear filters` | small, needs you | Kept deliberately — the only moment a reader can see no control to undo. Offered three times |
 | Widen `/search/`'s Name column | small, needs you | Declined because `nowrap` would truncate a transcribed name; its numbers are stale again |
 | The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. Flagged, not objected to |
-| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. The fix attempt survives as commit **`938b8e8`**, reachable by SHA — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** |
+| **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. The fix attempt survives as commit **`938b8e8`** — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** **What keeps it reachable is the branch `handoff-2026-08-09-search-link-safari-scroll`, local and on origin** — its PR (#43) was closed unmerged, so GitHub never auto-deleted it. **Do not delete that branch in a stale-branch sweep**; it is the only ref holding the commit, and "reachable by SHA" stops being true the moment it goes |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — one settled the turned-comma question after the scan could not. `digitallibrary.amnh.org` 403s automated fetches |
 
 ## Decisions already made — don't re-litigate
