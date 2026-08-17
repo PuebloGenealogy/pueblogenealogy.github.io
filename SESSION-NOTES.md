@@ -117,8 +117,8 @@ host bar, below.
 
 | # | What | Where the fix lives | Verified |
 |---|---|---|---|
-| **4b** | **`.lg-host-bar` is `position:sticky`, which does not stick horizontally** — pan right and the bar slides off the left, leaving the top of the page bare. The one real find in #4, and independent of the pan decision | **this repo**, `write_search()` | yes — `make_chart.py:3725` |
-| **3** | **The per-page Find box jumps by internal id, not the printed number.** Typing `258` on III always reaches id 258, never Dzaiʼsdyui (id 256), whose line also prints `258.`; picking her from the dropdown fills the box with `1010`-style ids that appear nowhere in the edition. The cross-plate search gets this right, so the two surfaces disagree | **this repo** | yes — `make_chart.py:2345`, `:2350` |
+| ~~**4b**~~ | **DONE 2026-08-17.** `.lg-host-bar` was `position:sticky`, which does not stick horizontally. Fixed by widening `body` to `fit-content`/`min-width:100%` so the bar's containing block is as wide as the panned document. Measured: 257px of bare page at 375px, 218 at 414, 152 at 480 → **0 at all three**, threshold still 651px | **this repo**, `write_search()` | fixed |
+| ~~**3**~~ | **DONE 2026-08-17.** The Find box matched the typed number against the **id**. Now the plate's **printed** number wins and the id is the fallback; where two people print one number the second is named in `#find-note` with a link. Audited **710 distinct numbers across four plates, 0 failures**, all 3 shared numbers noted correctly | **this repo** | fixed |
 | **6b** | The sitemap/`noindex` contract is enforced by a comment. Correct today; house style is to abort on drift | **this repo** | yes |
 | **6c** | Dead dagger anchor. The card and register hardcode `#note-paternity`; III's note is `note-paternity-rule` and IV has none. **Dormant** — neither plate renders a dagger today | **this repo** | yes — `:2548`, `:2991`, `:296` |
 | **6d** | Find box placeholder clips at 375px: `Find: number or name ( /`. Cosmetic | **this repo** | not re-measured |

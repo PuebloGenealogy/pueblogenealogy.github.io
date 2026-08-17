@@ -2338,18 +2338,42 @@ function fold(s){return s.normalize("NFD").replace(/\p{M}+/gu,"")
 if(form&&input&&datalist){
   form.hidden=false;
   var opts=[].map.call(datalist.options,function(o){
-    return {id:o.value,folded:fold(o.textContent||"")}});
+    /* dataset.n is the number the plate PRINTS, carried only where it is
+       shared; everywhere else the id already is it. */
+    return {id:o.value,n:o.dataset.n||o.value,nm:o.dataset.nm||"",
+            folded:fold(o.textContent||"")}});
   form.addEventListener("submit",function(e){
     e.preventDefault();
     var q=input.value.trim();if(!q)return;
-    var id=null,m=q.match(/^\d+/);
-    if(m)id=m[0];
+    var id=null,also=null,m=q.match(/^\d+/);
+    if(m){
+      /* The PRINTED number first -- it is what the reader is holding, and the
+         plate prints one number on two people three times in the edition. The
+         id is only the fallback, which is what reaches the three people whose
+         printed number belongs to somebody else. Getting this order backwards
+         is the whole of the defect: an id lookup silently answers with one of
+         the two and offers no route to the other. */
+      var hits=[];
+      for(var j=0;j<opts.length;j++)if(opts[j].n===m[0])hits.push(opts[j]);
+      if(hits.length){id=hits[0].id;if(hits.length>1)also=hits[1]}
+      else id=m[0];
+    }
     if(!id){var f=fold(q);
       for(var i=0;i<opts.length;i++){
         if(opts[i].folded.indexOf(f)>=0){id=opts[i].id;break}}}
     var el=id&&doc.getElementById("p"+id);
     if(!el){note.textContent="No person “"+q+"” in this table.";return}
     note.textContent="";
+    /* The plate's own reuse of a number is worth surfacing, not hiding. Built
+       as nodes rather than innerHTML: the name is plate text, not ours. */
+    if(also){
+      note.appendChild(doc.createTextNode(
+        "The plate prints "+m[0]+" on two people — also "));
+      var a2=doc.createElement("a");
+      a2.href="#p"+also.id;a2.textContent=also.nm;
+      note.appendChild(a2);
+      note.appendChild(doc.createTextNode("."));
+    }
     if(location.hash!=="#p"+id)location.hash="#p"+id;
     /* Unconditional: finding the person already named by the hash fires no
        hashchange, and the row may have been deselected by a click since. */
@@ -2858,6 +2882,16 @@ def datalist_html(persons, drawn):
     """Finder suggestions: number, printed name, clan. Baseline fields only.
     Persons not drawn on the chart (unreachable from the founding couples --
     a reported data condition) are omitted: the finder cannot jump to them."""
+    # The numbers the plate prints on more than one person. Three times in the
+    # whole edition (II 101, III 258, III 259), and the finder has to be told
+    # about them or a reader holding the plate can reach only one of the two --
+    # see the `data-n` note below.
+    seen_n, shared = set(), set()
+    for pid in persons:
+        if pid in drawn:
+            n = str(persons[pid]["plate_number"])
+            (shared if n in seen_n else seen_n).add(n)
+
     opts = []
     for pid in sorted(persons):
         if pid not in drawn:
@@ -2873,7 +2907,22 @@ def datalist_html(persons, drawn):
         # reuses a number, and the suggestion list is the last place the
         # synthetic id was still visible.
         label = f"{p['plate_number']} · {nm}" + (f" · {p['clan']}" if p["clan"] else "")
-        opts.append(f'<option value="{pid}">{esc(label)}</option>')
+        # `data-n` is the number the plate PRINTS, and it is emitted only on the
+        # handful of options that need it: the script reads `dataset.n ||
+        # value`, so for the other ~710 the id already is the printed number and
+        # the markup is unchanged. Both members of a colliding pair carry it,
+        # including the one whose number and id agree, so the pair is symmetric
+        # and the script never has to reason about which kind it is holding.
+        # `data-nm` rides with it because the note names the OTHER person, and
+        # digging that name back out of the label would be parsing our own
+        # prose -- the mistake `_p()` exists to prevent. It is the label minus
+        # the number, clan included: both of III 259's are unnamed, so the name
+        # alone would offer the reader a choice between "———" and "———".
+        extra = ""
+        if str(p["plate_number"]) in shared:
+            who = nm + (f" · {p['clan']}" if p["clan"] else "")
+            extra = f' data-n="{esc(str(p["plate_number"]))}" data-nm="{esc(who)}"'
+        opts.append(f'<option value="{pid}"{extra}>{esc(label)}</option>')
     return '<datalist id="persons-list">' + "".join(opts) + "</datalist>"
 
 
@@ -3660,6 +3709,16 @@ def write_search(tables):
               "; /search/'s bar would overwrite the widget's own token")
         return False
 
+    # The host bar is only pinned while panning because we widen `body` below,
+    # and the widget's own `body` rule sets margin, background and colour but
+    # no width. The day it sets one, source order decides which wins and the
+    # bar silently goes back to sliding off the left edge -- which reads as a
+    # sticky bug and is not one.
+    if re.search(r"body\s*\{[^}]*\bwidth\s*:", html):
+        print("ABORTED: vendor/search/ now sets a width on `body`; "
+              "/search/'s host bar would stop covering the panned document")
+        return False
+
     out = DOCS / "search"
     out.mkdir(parents=True, exist_ok=True)
     for name in ("search.js", "search-index.json"):
@@ -3722,6 +3781,21 @@ def write_search(tables):
    and border added on rather than absorbed. It is the one rule here that is
    not the masthead's, and it exists to make the rest of them the masthead's. */
 .lg-host-bar,.lg-host-bar *{{box-sizing:border-box}}
+/* The document PANS below 651px -- the list is a table at every width (user,
+   2026-08-10) -- and `position:sticky` does not stick HORIZONTALLY. The bar's
+   containing block is body's content box, which is only the viewport's width,
+   so panning right to reach the `#` box slid the bar off to the left and left
+   the top of the page bare. A table page has no such problem: there the pan is
+   scoped to `.scroll` and the document itself never moves.
+   Widening body is the whole fix -- the bar then fills a containing block as
+   wide as the panned document, and no rule below changes. `fit-content` is
+   min(max-content, max(min-content, available)), so it lands on exactly the
+   min-content width the cards already overflow to, and `min-width:100%` keeps
+   body the viewport's width once the viewport is the wider of the two.
+   `max-content` is the WRONG tool and looks like the obvious one: it would
+   size the table to its no-wrap width, blowing the pan out well past the
+   cards' own minimum. Do not "simplify" this to it. */
+body{{width:fit-content;min-width:100%}}
 .lg-host-bar{{position:sticky;inset-block-start:0;z-index:40;
   min-height:var(--bar-h);
   display:flex;align-items:center;flex-wrap:wrap;gap:var(--s1) var(--s2);
