@@ -212,21 +212,46 @@ seeded with the local `docs/` build and `build.py` run **without** `--refresh`
 against it — sound only because `docs/` is reproducible and exactly those bytes
 ship in the same commit. Both are recorded in `CLAUDE.md` and `SOURCE.md`.
 
-### The deploy is BLOCKED, and this is the thing to check first next session
+### The deploy was blocked for 80 minutes by a GitHub outage, then landed
 
-`e510f05` is merged and on `main`, but **GitHub Pages never deployed it.** The
-deployment failed with a **503 from GitHub's own deployment API** — *"No server
-is currently available to service your request"* — during a **Partial System
-Outage** (Git Operations degraded). A re-run of the job sat in `queued` for 14+
-minutes without starting, and the documented force-rebuild,
-`gh api -X POST .../pages/builds`, returned the **same 503**. Nothing in the
-repo is wrong; the endpoint that creates deployments was refusing requests.
+**Resolved the same day; recorded because the shape recurs.** `e510f05` merged,
+but GitHub Pages would not deploy it: the deployment failed with a **503 from
+GitHub's own deployment API** — *"No server is currently available to service
+your request"* — during a **Partial System Outage**. A re-run of the job sat in
+`queued` for **78 minutes** without starting, and the documented force-rebuild,
+`gh api -X POST .../pages/builds`, returned the **same 503**. Later the same
+outage took the **merge** API too: four consecutive 503s on `gh pr merge`, and
+`gh pr view` failing identically. GitHub's own incident notes named the cause as
+*sporadic authentication failures*.
 
-So the live site is serving **`3ff5ed9`**, one publish behind. It is coherent —
-all pages 200 — and the three stale files (`genealogy-iii/index.html`,
-`search/search.js`, `search/search-index.json`) are stale *together*, so there
-is no half-deployed state in which the new script runs against the old index.
-**Gates 6, 7's live half and 8 are outstanding for this publish.**
+**What actually cleared it is worth knowing: not the re-run.** The stuck job was
+still `queued` at 1h18m when the next merge landed and triggered a **fresh**
+deployment, which succeeded in under 25 seconds. Pages deploys whatever `main`
+holds, so the new run carried the blocked commit with it. **A later push is a
+more reliable recovery than re-running a queued deployment**, and the stuck run
+never had to be rescued.
+
+Nothing in the repo was ever wrong, and the intermediate state was safe: the
+three stale files were stale *together*, so there was no moment when the new
+`search.js` ran against the old index.
+
+### Gate 8 validated the seeded-cache shortcut, byte for byte
+
+The post-publish `--refresh` re-fetched genuinely (`re-fetched`, not `cached in
+cache/`), passed all seven of that tool's gates, and — the check this publish
+actually needed — **produced all three files byte-identical to what was vendored
+from the hand-seeded cache**, `search-index.json` included, with `people`,
+`identities`, `namesakes` and `relationships` all equal and Juana rebuilt from
+the live site as `sex: "F", sexPrinted: "M"`.
+
+So the inverted build order is not just defensible in principle, it is
+*confirmed* for this instance. The warning stands anyway: it is sound only
+because `docs/` is reproducible and exactly those bytes shipped in the same
+commit, and this comparison is what proves it each time.
+
+**The publish is complete.** All seven pages plus `search.js` and
+`search-index.json` verified live by SHA-256; sitemap 5 `<loc>` with `/search/`
+absent; stale-identity count 0.
 
 ### Still open, needing upstream `laguna-search` plus a re-vendor
 
