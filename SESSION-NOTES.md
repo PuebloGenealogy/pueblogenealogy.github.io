@@ -5,46 +5,8 @@ History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
 Last updated **2026-08-17**, at the end of a session that took in an outside
-debug report, fixed seven of its nine findings — and could not deploy the last
-two, because GitHub was down.
-
-## THE FIRST THING TO DO: check whether the deploy landed
-
-**`main` is one commit ahead of the live site, and that is not a mistake to fix
-by rebuilding.** `e510f05` merged, but GitHub Pages **never deployed it**: the
-deployment failed with a **503 from GitHub's own API** during a Partial System
-Outage, a re-run sat `queued` for 14+ minutes, and the documented force-rebuild
-returned the same 503. Nothing in the repo is wrong.
-
-```bash
-gh run list --limit 3
-(cd docs && find . -name '*.html' | sed 's|^\./||') | while read -r p; do
-  live=$(curl -s "https://pueblogenealogy.github.io/$p" | shasum -a 256 | cut -d' ' -f1)
-  loc=$(shasum -a 256 "docs/$p" | cut -d' ' -f1)
-  [ "$live" = "$loc" ] && echo "OK   $p" || echo "STALE $p"
-done
-for f in search/search.js search/search-index.json; do
-  live=$(curl -s "https://pueblogenealogy.github.io/$f" | shasum -a 256 | cut -d' ' -f1)
-  loc=$(shasum -a 256 "docs/$f" | cut -d' ' -f1)
-  [ "$live" = "$loc" ] && echo "OK   $f" || echo "STALE $f"
-done
-```
-
-**If it landed on its own** — any later successful Pages run publishes whatever
-`main` holds — everything should read `OK`, and what remains is
-**`/publish` gates 6–8**: the status-code sweep, and then **gate 8's
-`--refresh`**, which matters more than usual this time (see *The one obligation
-still owed*).
-
-**If it is still stale**, re-run the deploy and wait:
-
-```bash
-gh run rerun 32050883791 --failed     # or: gh api -X POST repos/PuebloGenealogy/pueblogenealogy.github.io/pages/builds
-curl -s https://www.githubstatus.com/api/v2/summary.json | grep -o '"description":"[^"]*"' | head -1
-```
-
-**Do not rebuild, re-vendor, or "fix" anything to make this go away.** The
-three stale files are stale *together*, so there is no half-deployed state.
+debug report and fixed **seven of its nine findings**, all published and
+verified live.
 
 ## Start here in a new chat
 
@@ -64,47 +26,33 @@ document.fonts.ready` inside the iframe** before measuring anything about text.
 
 ## State
 
-**Nothing is half-finished in the code.** Working tree clean, no open PRs,
-`main` at `e510f05` and 0/0 with origin. `--public` exits 0 — 7 pages, 713
-drawn, 10 JSON-LD blocks valid — a rebuild reproduces `docs/` byte-identically
-from the committed source, and all four `self_check()`s pass.
+**Nothing is half-finished, and this time that is checked rather than
+asserted.** Working tree clean, no open PRs, `main` at the wrap commit and 0/0
+with origin. `--public` exits 0 — 7 pages, 713 drawn, 10 JSON-LD blocks valid —
+a rebuild reproduces `docs/` byte-identically from the committed source, and all
+four `self_check()`s pass.
 
-**What IS unfinished is the publish**, and only its live half: the bytes are
-committed and correct, GitHub could not serve them. See the top of this file.
+**The publish is complete and verified live**: all seven pages plus `search.js`
+and `search-index.json` by SHA-256, sitemap 5 `<loc>` with `/search/` absent,
+stale-identity count 0, and Juana live as `sex: "F", sexPrinted: "M"`.
+
+**Gate 8 is done and it validated the one risky thing in it.** That vendor drop
+was built from a **hand-seeded cache**, not from the live site — the change the
+index needed (`data-reading`) was in pages that were not yet live. The
+post-publish `--refresh` re-fetched genuinely and produced **all three files
+byte-identical** to what was vendored, so the shortcut is confirmed for this
+instance. It stays a shortcut, not a habit: `CLAUDE.md` records when it is
+admissible.
 
 Three build gates are newer than the last handoff, and all three were proved by
 feeding them bad input and confirming exit 1: the sitemap/`noindex` agreement
 check and `check_editorial_marks()` here, and `gate 1`'s ringed-reading check
 upstream.
 
-## The one obligation still owed
-
-**Gate 8's post-publish `--refresh`, and this time it is load-bearing rather
-than routine.** That vendor drop was **not** built from the live site: the
-change the index needed (`data-reading`) was in pages that were not yet live, so
-`cache/` was seeded with the local `docs/` build and `build.py` run *without*
-`--refresh`. That is sound only because `docs/` is reproducible and exactly
-those bytes are in `e510f05` — **and the `--refresh` run is what proves it.**
-
-So, once the deploy lands:
-
-```bash
-cd "../claude-random/Search by ChatGPT Sites - Claude Recreate/laguna-search"
-python3 build.py --refresh          # first line must read `re-fetched`
-```
-
-Then compare `dist/search-index.json` against `vendor/search/search-index.json`.
-**Expect them to differ only in `meta.generated`**, which is date-granular. If
-anything in `people`, `identities`, `namesakes` or `relationships` differs,
-**re-vendor from that run** — it means the seeded-cache shortcut produced an
-index that does not match the published pages, which is exactly the risk it
-carries.
-
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
-| **Finish the blocked publish** | small, unblocks itself | Gates 6–8. **Do this first**; instructions at the top of this file |
 | **Bracket placement on Genealogy I and III** | large, needs you | **DEFERRED FOUR TIMES now, not closed** — the largest correctness risk on the site. Method in full below. Nothing else on this list competes with it |
 | `/search/` #5 — the Death filter | small, **needs a decision** | Accepts letters where Birth strips them, both labelled *Year*. Either make it strip like Birth, or relabel it `Year or d.` and keep the power. Side effect worth knowing: `?d=d.` returns all 115 people with a recorded death. Upstream |
 | `/search/` #6a — `?open=` | small | Can name a row that is not open, so a shared URL reopens a row the sender was not looking at. Clear `this.open` when the index is past what has rendered, or render up to it. Upstream |
@@ -203,6 +151,14 @@ change a transcription unilaterally.
   deliberately-corrupted input after proving a gate fires, it discarded three
   uncommitted fixes in the same file. Revert an experiment with a **file copy**
   when the file carries other uncommitted work.
+
+And one about GitHub rather than about measuring: **when a Pages deployment is
+stuck `queued` during an outage, a later push clears it and a re-run does not.**
+The stuck job sat at 1h18m and never started; the next merge triggered a fresh
+deployment that succeeded in under 25 seconds and carried the blocked commit
+with it, because Pages deploys whatever `main` holds. `gh api -X POST
+.../pages/builds` returned the same 503 as everything else. Don't rescue the run
+— land something.
 
 ## Closed — do not re-raise
 
