@@ -322,7 +322,8 @@ is the gate working, not a false positive.
 
 **The preview pane cannot simulate a NARROW viewport that the page overflows —
 it widens to the content instead.** Found 2026-08-10. `resize_window` to 375px
-on a page whose content is **641px** wide at that width reports `innerWidth`
+on a page whose content was **641px** wide at that width — `/search/`, before
+the Sex column narrowed it to 617px later the same day — reports `innerWidth`
 **648**, not 375: there
 is no pan to photograph, because the pane grew to fit. So a phone check of
 anything wider than the phone must go in a **fixed-width iframe** — the same
@@ -723,6 +724,27 @@ Two consequences that are not obvious:
   ever matters, the fix here is a `data-reading` attribute, not a change to
   what is displayed.
 
+  **It already matters, and it is a factual error on the live site.** Verified
+  2026-08-17. `laguna-search` recovers a misprinted **clan** by *guessing* —
+  `nearest_clan()` in its `build.py` folds the printed value and takes the
+  single nearest clan within two edits from the vocabulary harvested off the
+  unringed entries, so `Bager` → Badger and `Chapparral Cock` → Chaparral Cock.
+  There is **no such vocabulary for sex**: `M.` and `F.` are both valid values
+  and neither is nearer the other, so the recovery has nothing to work with and
+  that builder deliberately files the printed letter under both `sex` and
+  `sexPrinted`. The consequence is **Genealogy III·37, Juana** — the edition
+  reads her F, the plate prints `M.`, and `/search/` holds her as male and will
+  not return her under *Sex = Female*. She is the **only** `sexPrinted` in the
+  whole index, so this is one record, not a class.
+  **Two things follow that a fresh reader will get backwards.** The fix cannot
+  start upstream: `build.py` builds the index by **parsing these published
+  pages** and reads no transcription module, so it has no `PERSONS` to take the
+  reading from — this repo has to emit `data-reading` **first**, and a build
+  gate asserting the index's `sex` matches `PERSONS` would abort every build
+  until it does. And fixing the data alone is invisible, because that widget's
+  **sex filter tests only one reading** where its clan filter tests both — see
+  the open thread in `SESSION-NOTES.md`.
+
 None of this constrains the edition's design — it constrains **silent** change.
 Restructure the register freely; just expect `laguna-search` to need its parser
 updated, and run its `tools/validate.py`, which compares all 713 entries and
@@ -964,6 +986,28 @@ Three things about that are load-bearing:
   from 124px to 71.78px of need, and the column from 124/124/104px across the
   three breakpoints to a single **80px** at all three — which is what moved the
   pan threshold below. Change an option's text and re-measure the column.
+
+**A report that `/search/` is "broken on phones" is re-litigating this decision,
+with ONE exception — and the exception is the host bar.** Added 2026-08-17,
+after an outside investigation raised it. Everything such a report will measure
+is right and already recorded: 375px of client width against **617px** of
+`scrollWidth`, the heading past the right edge, the *Find by table and number*
+half off-screen, the Clan and `Table · #` columns off-screen. All of that is
+what panning **is**, it was asked for, and the user confirmed it on their own
+phone. The prescribed cure — scope the overflow to an inner scroller, stack the
+search card's halves — is precisely the shape the first bullet above rules out.
+Check two claims before spending a round on one: the heading does **not**
+truncate (the page's only `text-overflow:ellipsis` is on `.cbf-text`, the clan
+filter's button), and the columns are not "hidden" but panned to.
+
+**What is genuinely unrecorded is that `.lg-host-bar` is `position:sticky`,
+which does not stick HORIZONTALLY.** So the bar spans the viewport, not the
+panned document, and panning right to reach the `#` box slides it off to the
+left and leaves the top of the page bare. The masthead on a table page has no
+such problem because there the pan is scoped to `.scroll` and the document
+never moves. This is a **consequence** of the pan decision, not an argument
+against it, and it is fixable without touching the pan — the bar is host-side,
+in `write_search()`, so nothing upstream is involved.
 
 **Names still wrap there, deliberately.** Where a name may be divided is an
 editorial question, answered in `build.py` and published as `<wbr>` seams

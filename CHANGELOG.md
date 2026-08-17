@@ -30,6 +30,17 @@ is selected. Both halves are upstream, in `laguna-search` `6eaedb0`: the
 wording of a filter option and the width of its column are the widget's own
 layout however it is served.
 
+**What the dash costs, recorded so nobody re-derives it as a bug.** A screen
+reader announces `—` as "dash" or as nothing, and `title` on an `<option>` is
+not reliably announced, so that option's meaning now depends on sight. The
+select's own `aria-label="Filter by sex"` is unchanged, so the control is still
+named — it is one option's label that went visual. This was raised with the
+user and the change was asked for anyway; **it is a decision, not an
+oversight.** The repair, if it is ever wanted, is a shorter *word* — not
+`label`, which replaces the dash rather than describing it, and not a revert to
+*Not recorded*, which would put 44px back into the column and the pan threshold
+back to 675px.
+
 ### The pan threshold is 651px, and any column moves it
 
 The narrow grid gave up 24px and the threshold moved by exactly that: **675px →
