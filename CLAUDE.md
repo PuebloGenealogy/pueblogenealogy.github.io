@@ -707,6 +707,7 @@ browser**, and changing it silently breaks a reader elsewhere:
 | `.num` `href="#pN"` + its text | the id and the **printed number**, the distinction that matters |
 | `.sex` `.name` `.alt` `.blank` `.age` `.clan` `.vital` | the fields |
 | `sic-ring` on `.sex` / `.clan` | that the value is the plate's misprint |
+| `data-reading` on a ringed `.sex` / `.clan` | the edition's own reading behind it. Six in the edition, all on Genealogy III. **Their gate 1 fails without it** — see below |
 | `.reg-rel[data-rel]`, `data-with`, `data-editorial`, `a.edmark` | every relation, and which attribution is editorial |
 | `.node` nesting depth, plus `.tree`'s `margin-inline-start` multiplier | **generation** — the register does not print it |
 | `.xref` directly after a `.line#pN` | that person's cross-reference; `xref-cell` belongs to nobody |
@@ -718,32 +719,38 @@ Two consequences that are not obvious:
   `d. in infancy` render identically. A parser cannot tell them apart; II·50
   reads back one period short. Nothing on this site is wrong — this is a cost
   paid by the consumer, recorded so nobody hunts it as a bug.
-- **The reading behind a misprint is not published.** `sic-ring` marks that
-  the printed sex or clan is wrong but never says what the transcription holds,
-  so a consumer can show the misprint and cannot recover the reading. If that
-  ever matters, the fix here is a `data-reading` attribute, not a change to
-  what is displayed.
+- **The reading behind a misprint IS published, as of 2026-08-17** — and the
+  history is worth keeping, because the obvious fix is the wrong way round.
+  `sic-ring` still marks that the printed sex or clan is what the plate shows,
+  and the display is unchanged: **the edition annotates a misprint, it does not
+  correct it**. What is new is `data-reading` on the ringed `.sex`/`.clan`
+  span, carrying the transcription's own reading. **Six attributes in the whole
+  edition**, all on Genealogy III — one sex (37) and two clans (50, 255) — each
+  in the chart line and the register entry, emitted by `person_line()`.
 
-  **It already matters, and it is a factual error on the live site.** Verified
-  2026-08-17. `laguna-search` recovers a misprinted **clan** by *guessing* —
-  `nearest_clan()` in its `build.py` folds the printed value and takes the
-  single nearest clan within two edits from the vocabulary harvested off the
-  unringed entries, so `Bager` → Badger and `Chapparral Cock` → Chaparral Cock.
-  There is **no such vocabulary for sex**: `M.` and `F.` are both valid values
-  and neither is nearer the other, so the recovery has nothing to work with and
-  that builder deliberately files the printed letter under both `sex` and
-  `sexPrinted`. The consequence is **Genealogy III·37, Juana** — the edition
-  reads her F, the plate prints `M.`, and `/search/` holds her as male and will
-  not return her under *Sex = Female*. She is the **only** `sexPrinted` in the
-  whole index, so this is one record, not a class.
-  **Two things follow that a fresh reader will get backwards.** The fix cannot
-  start upstream: `build.py` builds the index by **parsing these published
-  pages** and reads no transcription module, so it has no `PERSONS` to take the
-  reading from — this repo has to emit `data-reading` **first**, and a build
-  gate asserting the index's `sex` matches `PERSONS` would abort every build
-  until it does. And fixing the data alone is invisible, because that widget's
-  **sex filter tests only one reading** where its clan filter tests both — see
-  the open thread in `SESSION-NOTES.md`.
+  **Why it had to be added here, and why a gate landed first would have broken
+  every build.** `laguna-search` recovered a misprinted **clan** by *guessing*:
+  `nearest_clan()` folds the printed value and takes the single nearest clan
+  within two edits from the vocabulary harvested off unringed entries, so
+  `Bager` → Badger. There is **no such vocabulary for sex** — `M.` and `F.` are
+  both valid and neither is nearer the other — so it filed the printed letter
+  under both `sex` and `sexPrinted`, and **Genealogy III·37, Juana** was
+  published as a man and could not be found as a woman. The report that found
+  it prescribed fixing that builder to "take `sex` from `PERSONS`"; **it has no
+  `PERSONS`**, because it builds the index by *parsing these published pages*
+  and reads no transcription module. So the edition had to publish the reading
+  before anything downstream could read it, and a build gate asserting the
+  index's `sex` matches `PERSONS` would have aborted every build until it did.
+  **Generalise it: when a consumer cannot see something, check whether it is
+  published before designing a fix in the consumer.**
+
+  Two things now depend on the attribute, both upstream at `65b8254`: the
+  index takes `sex` from it (`nearest_clan()` demoted to a fallback for a page
+  built by an older version of this site), and that tool's **gate 1 refuses a
+  ringed field whose reading did not resolve** — asked only where the field is
+  ringed, since an empty sex is legitimate for someone with none recorded.
+  **So dropping `data-reading` from a ringed span now fails their build**, which
+  is the intended coupling and not a bug to route around.
 
 None of this constrains the edition's design — it constrains **silent** change.
 Restructure the register freely; just expect `laguna-search` to need its parser
@@ -1199,15 +1206,33 @@ stylesheet is inlined. Two consequences worth having in advance:
 - **`leak_report()` is still due on all three**, because the sweep is about
   what `docs/` will carry, not about what changed. Run it every time.
 
-**A THIRD shape closes the set, and it is the one that looks alarming and is
-not: `index.html` and `search.js` both move while `search-index.json` stays
-byte-identical.** Added 2026-08-10, the third re-vendor of that day — a change
+**A THIRD shape — and the set does NOT close here; see the fourth below.
+`index.html` and `search.js` both move while `search-index.json` stays
+byte-identical.** This is the one that looks alarming and is not. Added 2026-08-10, the third re-vendor of that day — a change
 to both the widget's markup and its stylesheet (the Clan menu, the search card,
 the theme control's move to the foot). Only **`search-index.json`** decides a
 `--refresh` obligation, because only it is built by parsing these pages; two
 files moving says nothing about whether the index is stale. **Confirm it at this
 end rather than inferring it** — the register-bearing diff on all four table
 pages was 0 lines that day, which is the test that actually settles it.
+
+**A FOURTH shape, added 2026-08-17: `search.js` and `search-index.json` both
+move while `index.html` is byte-identical** — a script-and-data change with the
+stylesheet untouched (the sex filter and Juana's record). Nothing about the file
+list decides a `--refresh` obligation; only the register-bearing diff does, and
+it was 0 that day too.
+
+**That re-vendor also inverted the BUILD ORDER, which is the part to plan for.**
+The index is built by fetching *these* pages — but the change the index needed
+(`data-reading`) was *in* those pages and not yet live, so a plain `--refresh`
+would have re-fetched a site without it and rebuilt the old index. What was done
+instead: seed `cache/` with the local `docs/` build, run `build.py` **without**
+`--refresh` against it, vendor the result, and ship both in one publish. **That
+is sound only because `docs/` is reproducible and exactly those bytes are
+published in the same commit** — the post-publish `--refresh` is what confirms
+it, and if that run ever disagrees, re-vendor from it. Do not reach for this
+shortcut for anything that is not shipping in the same publish; the ordinary
+rule is still publish first, then `--refresh`, then re-vendor.
 
 **And run `leak_report()` by hand over the three vendored files every time.**
 `check_published_pages()` only opens `.html`, so `search.js` (61 KB) and
