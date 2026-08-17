@@ -24,13 +24,15 @@ is a PR of its own, so expect exactly one open — and note that this is the
 case `CLAUDE.md` warns the `SessionStart` hook cannot flag, because notes
 committed alongside a build always look current.
 
-**There is no open thread.** The work the last two sessions were asked for is
-done, measured, published and verified. What is left is the list below, and its
-first item has been deferred twice.
+**The open thread is the debug findings of 2026-08-16**, brought into the
+project on 2026-08-17 and set out in full below. Nothing in them has been fixed
+yet. Two of the six were checked and found **wrong as prescribed**, and both
+would cost a session that followed them — read that section before touching
+either.
 
 ## Start here in a new chat
 
-1. This file.
+1. This file, and its *Open thread* section below.
 2. `CHANGELOG.md`'s two newest entries — the fourth records the publish and the
    dash; the third is the redesign it published, and is superseded in two
    places that the fourth names.
@@ -69,6 +71,76 @@ narrow grid gave up 24px, and the threshold moved by exactly that. The wider
 lesson is in `CHANGELOG.md`: the threshold is the **whole grid's** minimum, so
 any column's floor moves it — not only the Name column's, which is what the
 previous entry concluded.
+
+## Open thread — the debug findings of 2026-08-16
+
+**Provenance.** An outside investigation against `main` and the live site,
+delivered as two markdown files the user dropped in the repo root on
+2026-08-17. Their content is incorporated here; the raw files were moved out of
+the tree to `../debug-2026-08-16/`, because untracked files in the root make the
+`SessionStart` hook cry *UNCOMMITTED WORK* every session. **This section is now
+the authority, not those files** — two of their six findings were checked and do
+not survive as written.
+
+**Every claim below was verified at this end on 2026-08-17** unless it says
+otherwise. That mattered: the report is careful and mostly right, and the two
+places it is wrong are both places where following it costs real work.
+
+### The two corrections — read these first
+
+**#1's prescribed fix is impossible and its prescribed gate would break every
+build.** The report says to fix Juana upstream by taking `sex` from `PERSONS`.
+`laguna-search`'s `build.py` builds the index by **parsing these published
+pages** and reads no transcription module — it has no `PERSONS`. The clan path
+only looks like a precedent because `nearest_clan()` *guesses*: it takes the
+single nearest clan within two edits of the printed one, from the vocabulary
+harvested off unringed entries. Sex has no vocabulary — `M.` and `F.` are both
+valid — so that builder files the printed letter under both fields on purpose,
+and says so in a comment. **The order therefore reverses**: `data-reading` is
+emitted *here* first, then the parser reads it, then re-vendor, then the gate.
+Land the gate before the reading and the build aborts permanently. Full
+mechanism is now in `CLAUDE.md`, under *The reading behind a misprint is not
+published*.
+
+**#4 asks to revert a decision the user made on 2026-08-10.** Its measurements
+are right and match the recorded ones exactly — 375px of client width against
+617px of `scrollWidth` — but the document panning, the list holding its columns
+and the search card's halves staying on one line are all what was asked for, and
+the user confirmed it on their own phone. Its cure (inner scroller, stacked
+halves) is what the pan block in `CLAUDE.md` rules out, because an inner
+scroller becomes the sticky header's scroll container. Its `SEARCH THE TA…`
+claim does not hold either: the page's only `text-overflow:ellipsis` is on
+`.cbf-text`, the clan filter's button. **One part of #4 is new and real** — the
+host bar, below.
+
+### The findings, in the order to do them
+
+| # | What | Where the fix lives | Verified |
+|---|---|---|---|
+| **4b** | **`.lg-host-bar` is `position:sticky`, which does not stick horizontally** — pan right and the bar slides off the left, leaving the top of the page bare. The one real find in #4, and independent of the pan decision | **this repo**, `write_search()` | yes — `make_chart.py:3725` |
+| **3** | **The per-page Find box jumps by internal id, not the printed number.** Typing `258` on III always reaches id 258, never Dzaiʼsdyui (id 256), whose line also prints `258.`; picking her from the dropdown fills the box with `1010`-style ids that appear nowhere in the edition. The cross-plate search gets this right, so the two surfaces disagree | **this repo** | yes — `make_chart.py:2345`, `:2350` |
+| **6b** | The sitemap/`noindex` contract is enforced by a comment. Correct today; house style is to abort on drift | **this repo** | yes |
+| **6c** | Dead dagger anchor. The card and register hardcode `#note-paternity`; III's note is `note-paternity-rule` and IV has none. **Dormant** — neither plate renders a dagger today | **this repo** | yes — `:2548`, `:2991`, `:296` |
+| **6d** | Find box placeholder clips at 375px: `Find: number or name ( /`. Cosmetic | **this repo** | not re-measured |
+| **1** | **Juana, III·37, is male in the search index.** `sex:"M", sexPrinted:"M"`; the edition reads F. The only `sexPrinted` in the whole index | **here first** (`data-reading`), then upstream, then re-vendor | yes — read out of `vendor/search/search-index.json` |
+| **2** | **The sex filter tests only the printed value**, where the clan filter tests both. So #1 stays invisible until this lands too — they are one bug | upstream `search.js` | yes, from the report's line refs |
+| **5** | Death filter accepts letters, Birth strips them; both labelled *Year*. Side effect: `?d=d.` returns all 115 people with a recorded death, undocumented | upstream — **needs a decision** | yes, from the report |
+| **6a** | `?open=` can name a row that is not open, and sharing that URL reopens a row the sender was not looking at | upstream `search.js` | yes, from the report |
+
+**#5 is the only one that needs the user.** Either make Death strip non-digits
+like Birth, or keep the behaviour and relabel the field (`Year or d.`) so the
+extra power is discoverable. The current state — one field sanitised, one not,
+both labelled *Year* — is the only wrong answer.
+
+**Nothing is blocked.** `laguna-search`'s working copy is present at
+`../claude-random/Search by ChatGPT Sites - Claude Recreate/laguna-search`,
+clean at `6eaedb0`, which is exactly what `vendor/search/SOURCE.md` records.
+
+**What the report checked and found healthy** — do not re-investigate: build
+reproducibility; every internal link and anchor across all 7 pages; index
+fidelity on all 713 entries and every relation (#1 is the sole defect); the fold
+map; identity merging at 713 → 620; theme persistence across the `/search/`
+boundary; no console errors; the chart pages at 375px.
 
 ## Other things that could be picked up
 
@@ -150,6 +222,10 @@ change a transcription unilaterally.
 - **The count beside `Index` keeps `role="status"`.** It is a live readout.
 - **`--lg-tap` is the search card's floor.** The controls are written as the
   token, not as 44px, to say that this is as compact as the card may get.
+- **`/search/` panning at phone widths is the decision, not the defect.** The
+  2026-08-16 report reads it as "unusable on every phone" and prescribes an
+  inner scroller. It was re-raised, checked and stands — see the open thread.
+  The bar sliding off while panned is the separate, real half of that finding.
 - **Everything from the previous sessions still stands**: the list is a table at
   every width and the document pans; names wrap at editorial `<wbr>` seams; the
   default palette is light and CSS is what says so; Theme sits at the foot; the
