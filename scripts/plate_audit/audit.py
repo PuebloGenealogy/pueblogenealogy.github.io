@@ -190,10 +190,12 @@ for gen in gens:
     # founding couple has no reference on the plate at all. Give those the
     # leftover brackets in plate order, which is all the old matcher ever did.
     spare = [j for j in range(len(slots)) if j not in useds]
+    byposition = set()
     for i, g in enumerate(multi):
         if i not in pair and anchors[i] is None and spare:
             pair[i] = spare.pop(0)
             useds.add(pair[i])
+            byposition.add(i)
 
     for i, g in enumerate(multi):
         uid, mother, father, kids = g
@@ -210,10 +212,21 @@ for gen in gens:
             rows[kid] = s["y"]
         report.append({"uid": uid or "(none)", "mother": mother, "kids": kids,
                        "nstub": len(stubs), "x": r["x"],
+                       "y0": r["y0"], "y1": r["y1"],
                        "leader": leaders[0]["y"] if leaders else None})
         if len(stubs) != len(kids):
+            # Say which pairings are weak. A group whose mother has no stub of
+            # her own could only be given a bracket by POSITION, which is the
+            # basis that produced a whole column of false alarms on 2026-08-17
+            # and got two real errors dismissed alongside them. A count
+            # disagreement on such a pair is not evidence about the plate until
+            # the bracket is identified some other way.
+            how = ("  (PAIRED BY POSITION, not by leader - this pairing is a "
+                   f"guess, because {mother} has no stub of her own)"
+                   if i in byposition else "")
             problems.append(f"{uid or '(none)'}: the plate brackets {len(stubs)} "
-                            f"children, the transcription lists {len(kids)} {kids}")
+                            f"children, the transcription lists {len(kids)} "
+                            f"{kids}{how}")
     for j, (r, stubs, leaders) in enumerate(slots):
         if j in useds:
             continue
@@ -226,9 +239,14 @@ for gen in gens:
         report.append({"uid": g[0] or "(none)", "mother": g[1], "kids": g[3],
                        "nstub": None, "x": colof.get(gen, 0), "leader": None})
 
+def yr(e):
+    """Where on the plate to look -- the crop workflow needs y, not x."""
+    return f"{e['y0']}-{e['y1']}" if e.get("y0") is not None else "-"
+
+
 print(f"row pitch measured at {ROW:.1f}px; a leader is flagged past {YTOL:.0f}px\n")
 print(f"{'group':>7} {'mother':>6} {'children':<30} {'stubs':>5} "
-      f"{'leader y':>9} {'expected':>9} {'diff':>7}")
+      f"{'bracket y':>15} {'leader y':>9} {'expected':>9} {'diff':>7}")
 for e in report:
     if e["nstub"] is None:
         print(f"{e['uid']:>7} {e['mother']:>6} {str(e['kids']):<30} "
@@ -244,11 +262,11 @@ for e in report:
     diff = None if exp is None or e["leader"] is None else e["leader"] - exp
     if diff is None:
         print(f"{e['uid']:>7} {e['mother']:>6} {str(e['kids']):<30} {e['nstub']:>5} "
-              f"{e['leader'] or 0:>9.0f} {'-':>9} {'-':>7}   ({how})")
+              f"{yr(e):>15} {e['leader'] or 0:>9.0f} {'-':>9} {'-':>7}   ({how})")
         continue
     flag = "" if abs(diff) <= YTOL else "  <-- CHECK"
     print(f"{e['uid']:>7} {e['mother']:>6} {str(e['kids']):<30} {e['nstub']:>5} "
-          f"{e['leader']:>9.0f} {exp:>9.0f} {diff:>7.0f}{flag}   ({how})")
+          f"{yr(e):>15} {e['leader']:>9.0f} {exp:>9.0f} {diff:>7.0f}{flag}   ({how})")
     if flag:
         problems.append(f"{e['uid']}: leader sits {diff:+.0f}px from {anchor}'s line "
                         f"({ROW:.0f}px to a row) -- bracket may hang off the wrong person")
