@@ -1448,15 +1448,25 @@ to catch "58+59" links those too.
   whose marriage a group is; a leader **absent** from one partner's line means
   nothing on its own — read the other partner's line before concluding anyone
   was childless.
-  **What that does to 85/86/87 and Genealogy IV's 5/+6/+7 has NOT been
-  re-derived, and should not be assumed either way.** Both were argued partly
-  from "the second husband's line carries no rule", and in both the *other*
-  partner's line does carry the rule — which is exactly the configuration `W31`
-  shows is not decisive. Neither page is wrong today: each draws the plate's
-  own single bracket and attributes no father, which is what the plate states.
-  The question a future session may need to answer is narrower — whether those
-  brackets could equally be the **second** marriage's — and it is a question
-  about the ink, to be settled with crops, not from this paragraph.
+  **85/86/87 was re-checked against the scan the same day and the reading
+  STANDS — but on narrower evidence than this file used to claim.** Measured in
+  the 160px gap between the text and the bracket: 86's row carries a solid rule
+  (50/142/138/24 ink px at y 227–230), and **both husbands' rows are bare** —
+  85's and 87's alike, the constant 1–2px through y 231–253 being the bracket
+  vertical passing, not a leader. So there is one bracket and one leader, and it
+  sits on **86's** line, which she shares with *both* marriages: that line alone
+  names no father. What settles it is the contrast with **43 on this same
+  plate** — where a woman has issue by a second husband, the plate gives that
+  group its own leader on the second husband's line (45's, → 126), and 87's line
+  carries nothing at all. Clan cannot help: both marriages have the same mother,
+  so 184–189 are Turquoise either way. **State it that way** — the reading rests
+  on Parsons's practice with 43, not on "a spouse with no leader had no issue",
+  which `W31` disproves as a general rule.
+  **Genealogy IV's 5/+6/+7 has NOT been re-checked** and rests on the same
+  disproved general rule, so treat its basis as unconfirmed until someone reads
+  that scan. The page is not wrong either way: it draws the plate's own single
+  bracket. The question is only whether that bracket could equally be the
+  **second** marriage's, and it is a question about the ink.
 - **There is a SECOND kind of editorial claim now, and it is about identity, not
   paternity.** Added 2026-08-09 with `/search/`, and set out in METHOD.md's
   *Identity across plates*. Searching by name across four independent numberings

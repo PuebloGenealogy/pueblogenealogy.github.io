@@ -71,6 +71,7 @@ generalise `W31` into a rule.
 | | Effort | Notes |
 |---|---|---|
 | **Block 1's orthography** | large, needs you | The one half not done. This pass read membership, stub numbers and clan descent — **not** names, ages or diacritics |
+| **Genealogy IV's 5 / +6 / +7** | small | Its basis was the rule `W31` disproved — "a spouse with no leader had no issue". 85/86/87 was re-checked and stands; this one was not. Read the Table 4 scan at the bracket for 19, 20 and ask whether that group could equally be 6+7's. The page is not wrong either way |
 | Calibrate the rig for **Table 4** | medium | Still uncalibrated; its eight old flags were the rig's own noise. `--row` is the first thing to measure |
 | `/search/` #5 — the Death filter | small, **needs a decision** | Accepts letters where Birth strips them, both labelled *Year*. Either strip like Birth, or relabel `Year or d.`. Upstream |
 | `/search/` #6a — `?open=` | small | Can name a row that is not open, so a shared URL reopens a row the sender was not looking at. Upstream |
