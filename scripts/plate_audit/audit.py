@@ -20,6 +20,20 @@ What it cannot decide
 """
 import json, os, sys, importlib.util, statistics
 
+ROW_T1 = 146.6
+# --row=N, as in brackets.py: the tolerance that decides whether a leader meets
+# a stub is a fraction of a row, and Table 3's row is a sixth of Table 1's.
+ROW_HINT = next((float(a.split("=")[1]) for a in sys.argv if a.startswith("--row=")),
+                ROW_T1)
+# A leader and the stub it meets are the same rule, so the gap between the two
+# measured centres is ink thickness and centroid noise -- a few px whatever the
+# plate's scale. Row-scaled alone this comes to 2px on Table 3, tighter than
+# the 4px its leaders actually sit at, and then NOTHING matches: every bracket
+# reports no leader and the check that finds a bracket on the wrong row goes
+# quietly dead. Hence the floor.
+YMATCH = max(5, int(round(12 * ROW_HINT / ROW_T1)))
+sys.argv = [a for a in sys.argv if not a.startswith("--row=")]
+
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 mod_name = sys.argv[1]
 spec = importlib.util.spec_from_file_location("t", f"{REPO}/scripts/{mod_name}")
@@ -57,8 +71,68 @@ for g in groups:
 gens = sorted(bycol)
 colof = COLS
 
+# ---- row pitch, measured off the plate itself ------------------------------
+# Measured before the matching, because the matching needs it: a mother with no
+# stub of her own is placed one row under her partner.
+gaps = []
+for r in runs:
+    ys = [s["y"] for s in r["right"]]
+    gaps += [b - a for a, b in zip(ys, ys[1:])]
+# One row, not two: a '+' line between siblings makes some gaps a double.
+# Take the smallest real gap and keep everything within a quarter of it.
+real = [g for g in gaps if g > 0.5 * ROW_HINT]
+base = min(real) if real else 0
+ROW = statistics.median([g for g in real if g < base * 1.25]) if real else 0
+# The same tolerance the matcher pairs at. It has to be: a pair matched by
+# leader is inside half a row BY CONSTRUCTION, so a tighter flag here fires on
+# pairs that could not have been made any other way and says nothing. What
+# survives is meaningful in one direction only -- a leader flag can now appear
+# only on a group paired BY POSITION, where it is evidence that the guess is a
+# bad one, not evidence about the plate.
+YTOL = ROW * 0.5
+
+rows = {}
+
+
+def mother_row(uid, mother):
+    if mother in rows:
+        return rows[mother], "own stub"
+    u = UNION.get(uid)
+    if u:
+        # UNIONS is (uid, wife, husband, wife_order, husband_order, note), so
+        # the order that matters is the PARTNER's: it says which of his
+        # marriages this is.
+        partner, order = (u[2], u[4]) if u[1] == mother else (u[1], u[3])
+        if partner in rows:
+            if order == 1:
+                return rows[partner] + ROW, f"one row under {partner}"
+            # "One row under her partner" is a FIRST wife's rule. The plate
+            # sets a later wife below the whole of his earlier issue, which
+            # here is 31 rows, not one: 19's line is at y 3186 and 21's at
+            # y 3955. Anchoring her one row under him puts her on the first
+            # wife's row, where she loses the bracket to the group that
+            # really is there -- and then HER children never receive rows,
+            # and every group they mother falls to a positional guess. That
+            # single wrong offset is where eight of Genealogy III's nine
+            # count disagreements came from. Better to have no anchor than a
+            # confident wrong one.
+            return None, (f"wife {order} of {partner} - the plate sets her "
+                          f"below his earlier issue, not one row under him")
+    return None, "founding couple - no reference on the plate"
+
+
+def anchor_of(g):
+    """The row the plate hangs this group's bracket off, if it is known yet."""
+    uid, mother, father, kids = g
+    a = mother
+    if uid in ON_SPOUSE:
+        u = UNION[uid]
+        a = u[2] if u[1] == mother else u[1]
+    return mother_row(uid, a)[0], a
+
+
 # ---- match ink to expected groups ------------------------------------------
-rows, report, problems = {}, [], []
+report, problems = [], []
 for gen in gens:
     # A sibling bracket carries at least two stubs -- a single child is drawn
     # with no vertical at all. Anything shorter is a brace, a crease or an
@@ -68,61 +142,139 @@ for gen in gens:
     slots = []
     for r in ink:
         leaders = [l for l in r["left"]
-                   if any(abs(l["y"] - s["y"]) < 12 for s in r["right"])]
-        if len(leaders) <= 1:
-            slots.append((r, r["right"], leaders))
-        else:                              # verticals of two groups abutting
-            cuts = sorted(l["y"] for l in leaders)
-            for i, c in enumerate(cuts):
-                hi = cuts[i + 1] if i + 1 < len(cuts) else 10 ** 9
-                slots.append((r, [s for s in r["right"] if c - 12 <= s["y"] < hi - 12],
-                              [l for l in leaders if abs(l["y"] - c) < 1]))
+                   if any(abs(l["y"] - s["y"]) < YMATCH for s in r["right"])]
+        # Two groups abutting is a real thing and this splits the vertical
+        # between them -- but only on evidence that survives a coarse plate.
+        # Two groups cannot begin on the same row, so leaders closer together
+        # than a row are one leader measured twice, or crease noise; and a
+        # split that leaves a piece with fewer than two stubs has invented a
+        # bracket, since a single child is drawn with no vertical at all.
+        cuts = []
+        for y in sorted(l["y"] for l in leaders):
+            if not cuts or y - cuts[-1] >= ROW * 0.75:
+                cuts.append(y)
+        pieces = []
+        for i, c in enumerate(cuts):
+            hi = cuts[i + 1] if i + 1 < len(cuts) else 10 ** 9
+            pieces.append((r, [s for s in r["right"]
+                               if c - YMATCH <= s["y"] < hi - YMATCH],
+                           [l for l in leaders if abs(l["y"] - c) < 1]))
+        if len(cuts) <= 1 or any(len(p[1]) < 2 for p in pieces):
+            slots.append((r, r["right"], leaders[:1]))
+        else:
+            slots += pieces
     multi = [g for g in bycol[gen] if len(g[3]) > 1]
     singles = [g for g in bycol[gen] if len(g[3]) == 1]
-    if len(slots) != len(multi):
-        problems.append(f"generation {gen}: the plate draws {len(slots)} bracket "
-                        f"vertical(s) in this column, the transcription claims "
-                        f"{len(multi)} group(s) of 2+ children "
-                        f"({[g[0] or '(none)' for g in multi]})")
-    for g, (r, stubs, leaders) in zip(multi, slots):
+
+    # ---- pair each bracket with the group whose MOTHER stands on its leader
+    #
+    # Not by list order. `_GROUPS` order is not plate order, and pairing two
+    # lists by position mispairs everything after the first disagreement --
+    # Genealogy III's column 5 read "W23: plate 5, transcription 2" beside
+    # "W24: plate 2, transcription 5", one displacement dressed as two count
+    # errors, and block 2's column 4 hid two real errors the same way.
+    #
+    # This makes the leader test trivially true, and that is the trade. What it
+    # buys is three tests that are not:
+    #
+    #   * a matched pair whose CHILD COUNTS differ. Both of the errors found on
+    #     2026-08-17 were this and nothing else -- five stubs against three
+    #     children, two against five -- and neither was found by the leader
+    #     test, which had been the reason not to match this way.
+    #   * a bracket NO GROUP CLAIMS: its leader sits on a row the transcription
+    #     gives no issue to.
+    #   * a group with NO BRACKET: the transcription claims issue the plate
+    #     draws none for.
+    #
+    # A bracket genuinely hanging off the wrong person does not get absorbed by
+    # this. It fails to match within half a row and is reported twice over, as
+    # an unclaimed bracket beside a bracketless group.
+    anchors = {i: anchor_of(g)[0] for i, g in enumerate(multi)}
+    cand = []
+    for i, g in enumerate(multi):
+        if anchors[i] is None:
+            continue
+        for j, (r, stubs, leaders) in enumerate(slots):
+            if not leaders:
+                continue
+            d = abs(leaders[0]["y"] - anchors[i])
+            if d <= ROW * 0.5:
+                cand.append((d, i, j))
+    pair, usedg, useds = {}, set(), set()
+    for d, i, j in sorted(cand):                 # closest first, globally
+        if i in usedg or j in useds:
+            continue
+        pair[i] = j
+        usedg.add(i); useds.add(j)
+
+    # A group that could not be matched by leader takes a leftover bracket in
+    # plate order -- a mother who is nobody's bracketed child has no stub to
+    # stand on (III's 40), a founding couple has no reference on the plate, and
+    # a later wife has no row this can compute. That is all the old matcher
+    # ever did for anyone, and it is marked as a guess wherever it is used.
+    #
+    # This runs for EVERY unmatched group, not only the anchorless ones. A
+    # group left with no bracket at all passes no rows to its children, so its
+    # grandchildren cannot be anchored either, and one unmatched group high in
+    # a column costs the whole column below it.
+    spare = [j for j in range(len(slots)) if j not in useds]
+    byposition = set()
+    for i, g in enumerate(multi):
+        if i not in pair and spare:
+            pair[i] = spare.pop(0)
+            useds.add(pair[i])
+            byposition.add(i)
+
+    for i, g in enumerate(multi):
         uid, mother, father, kids = g
+        if i not in pair:
+            problems.append(f"{uid or '(none)'}: the transcription lists "
+                            f"{len(kids)} children {kids}, and no bracket in "
+                            f"this column hangs off {mother}'s line")
+            report.append({"uid": uid or "(none)", "mother": mother,
+                           "kids": kids, "nstub": 0, "x": colof.get(gen, 0),
+                           "leader": None})
+            continue
+        r, stubs, leaders = slots[pair[i]]
         for kid, s in zip(kids, stubs):
             rows[kid] = s["y"]
         report.append({"uid": uid or "(none)", "mother": mother, "kids": kids,
                        "nstub": len(stubs), "x": r["x"],
+                       "y0": r["y0"], "y1": r["y1"],
                        "leader": leaders[0]["y"] if leaders else None})
         if len(stubs) != len(kids):
+            # Say which pairings are weak. A group whose mother has no stub of
+            # her own could only be given a bracket by POSITION, which is the
+            # basis that produced a whole column of false alarms on 2026-08-17
+            # and got two real errors dismissed alongside them. A count
+            # disagreement on such a pair is not evidence about the plate until
+            # the bracket is identified some other way.
+            how = ("  (PAIRED BY POSITION, not by leader - this pairing is a "
+                   f"guess, because {mother} has no stub of her own)"
+                   if i in byposition else "")
             problems.append(f"{uid or '(none)'}: the plate brackets {len(stubs)} "
-                            f"children, the transcription lists {len(kids)} {kids}")
+                            f"children, the transcription lists {len(kids)} "
+                            f"{kids}{how}")
+    for j, (r, stubs, leaders) in enumerate(slots):
+        if j in useds:
+            continue
+        at = f"{leaders[0]['y']:.0f}" if leaders else "no leader detected"
+        problems.append(f"generation {gen}: the plate draws a bracket at "
+                        f"x {r['x']:.0f} y {r['y0']}-{r['y1']} over "
+                        f"{len(stubs)} children, and its leader ({at}) sits on "
+                        f"no row the transcription gives issue to")
     for g in singles:
         report.append({"uid": g[0] or "(none)", "mother": g[1], "kids": g[3],
                        "nstub": None, "x": colof.get(gen, 0), "leader": None})
 
-# ---- row pitch, measured off the plate itself ------------------------------
-gaps = []
-for r in runs:
-    ys = [s["y"] for s in r["right"]]
-    gaps += [b - a for a, b in zip(ys, ys[1:])]
-# One row, not two: a '+' line between siblings makes some gaps a double.
-# Take the smallest real gap and keep everything within a quarter of it.
-real = [g for g in gaps if g > 20]
-base = min(real) if real else 0
-ROW = statistics.median([g for g in real if g < base * 1.25]) if real else 0
-YTOL = ROW * 0.3
+def yr(e):
+    """Where on the plate to look -- the crop workflow needs y, not x."""
+    return f"{e['y0']}-{e['y1']}" if e.get("y0") is not None else "-"
 
-def mother_row(uid, mother):
-    if mother in rows:
-        return rows[mother], "own stub"
-    u = UNION.get(uid)
-    if u:
-        partner = u[2] if u[1] == mother else u[1]
-        if partner in rows:
-            return rows[partner] + ROW, f"one row under {partner}"
-    return None, "founding couple - no reference on the plate"
 
 print(f"row pitch measured at {ROW:.1f}px; a leader is flagged past {YTOL:.0f}px\n")
 print(f"{'group':>7} {'mother':>6} {'children':<30} {'stubs':>5} "
-      f"{'leader y':>9} {'expected':>9} {'diff':>7}")
+      f"{'bracket y':>15} {'leader y':>9} {'expected':>9} {'diff':>7}")
 for e in report:
     if e["nstub"] is None:
         print(f"{e['uid']:>7} {e['mother']:>6} {str(e['kids']):<30} "
@@ -138,11 +290,11 @@ for e in report:
     diff = None if exp is None or e["leader"] is None else e["leader"] - exp
     if diff is None:
         print(f"{e['uid']:>7} {e['mother']:>6} {str(e['kids']):<30} {e['nstub']:>5} "
-              f"{e['leader'] or 0:>9.0f} {'-':>9} {'-':>7}   ({how})")
+              f"{yr(e):>15} {e['leader'] or 0:>9.0f} {'-':>9} {'-':>7}   ({how})")
         continue
     flag = "" if abs(diff) <= YTOL else "  <-- CHECK"
     print(f"{e['uid']:>7} {e['mother']:>6} {str(e['kids']):<30} {e['nstub']:>5} "
-          f"{e['leader']:>9.0f} {exp:>9.0f} {diff:>7.0f}{flag}   ({how})")
+          f"{yr(e):>15} {e['leader']:>9.0f} {exp:>9.0f} {diff:>7.0f}{flag}   ({how})")
     if flag:
         problems.append(f"{e['uid']}: leader sits {diff:+.0f}px from {anchor}'s line "
                         f"({ROW:.0f}px to a row) -- bracket may hang off the wrong person")
