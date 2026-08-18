@@ -51,7 +51,7 @@ HOW THIS PLATE DIFFERS FROM TABLES 1, 2 AND 4
    SECOND_VISIT_OMITTED shape, four times over:
 
      7 + 8    issue drawn at the top of block 1; 8 recurs as a child of
-              236 + 237, where 7's line reads "For her descendants, see above"
+              230 + 231, where 7's line reads "For her descendants, see above"
      91 + 92  issue drawn under 27 + 29; 92 recurs as a child of 30 + 31,
               "For her descendants, see above"
      124 +125 issue drawn under 43; 125 recurs as a child of 72 + 73,
@@ -61,7 +61,18 @@ HOW THIS PLATE DIFFERS FROM TABLES 1, 2 AND 4
 
    166 and 167 are each printed twice as well, but with no descendants line.
    PERSON 8 IS WHAT JOINS THE PLATE'S TWO BLOCKS: he is the husband of 7 in
-   block 1 and a son of 236 + 237 in block 2.
+   block 1 and a son of 230 + 231 in block 2.
+
+   HE WAS READ AS A SON OF 236 + 237 UNTIL 2026-08-17, and so was 238. The
+   plate hangs one vertical off 230's line and five stubs enter it -- 232,
+   234, 236, 238 and 8, skipping 239, who is a spouse. 238 and 8 are set in
+   the same column as 232, 234 and 236, where children of 236 + 237 would be
+   indented one column further in, as 240 is; and 236's line carries no
+   leader to a bracket of her own. Nothing structural could see the error:
+   230, 236, 238 and 8 are all Parrot, so clan descent cannot discriminate,
+   and the counts close either way. It was found by the plate audit reporting
+   five stubs against three children and settled by the user reading the
+   scan. 236 + 237 have no recorded issue.
 
 3. TWO DESCENT BLOCKS, and the second one is INDENTED. 230 + 231 head a block
    the plate sets in the generation-2 column, not at the sheet's left edge --
@@ -371,7 +382,7 @@ _P = [
     (6,   2, "M", "",                      "", "",   "",               "",        "",           "", "name and clan both printed as dashes"),
     # ---- block 1, generation 3 -------------------------------------------
     (7,   3, "F", "Kyi˙waaid˙yuwitsʼă",   "", "",   "Corn",           "",        "",           "", "printed twice; drawn with issue at the head of block 1"),
-    (8,   3, "M", "Dzaaiʼy˙unăiʼ",         "", "",   "Parrot",         "",        "Acoma",      "", "printed twice; a son of 236+237 in block 2 and the husband of 7 in block 1"),
+    (8,   3, "M", "Dzaaiʼy˙unăiʼ",         "", "",   "Parrot",         "",        "Acoma",      "", "printed twice; a son of 230+231 in block 2 and the husband of 7 in block 1"),
     (9,   3, "M", "Garashdyiʼ",            "", "",   "Corn",           "",        "",           "", ""),
     (10,  3, "F", "Ais˙dyuwiʼtsʼa",        "", "",   "Lizard",         "",        "",           "", ""),
     (11,  3, "M", "Dyi˙ʼnă",               "", "",   "Corn",           "",        "",           "", ""),
@@ -612,8 +623,8 @@ _P += [
     (236, 3, "F", "Kiwaʼaitsʼă",           "", "",   "Parrot", "", "", "", ""),
     (237, 3, "M", "Kʼaiyaiʼᶦtyʼiʼ",        "", "",   "Lizard", "", "", "", ""),
     # ---- block 2, generation 4 -------------------------------------------
-    (238, 4, "M", "Ha˙d˙ăiʼyănyi",         "", "",   "Parrot", "", "", "", ""),
-    (239, 4, "F", "",                      "", "",   "Water",  "", "", "", "name printed as a dash; no issue recorded"),
+    (238, 3, "M", "Ha˙d˙ăiʼyănyi",         "", "",   "Parrot", "", "", "", ""),
+    (239, 3, "F", "",                      "", "",   "Water",  "", "", "", "name printed as a dash; no issue recorded"),
     (240, 4, "F", "Yo˙nimaitsʼă",          "", "48", "Parrot", "", "", "", ""),
     (241, 4, "M", "Tsaauʼs˙diyai", "Jefferson", "51", "Turkey", "", "", "", "English name printed in parentheses on the plate"),
     (242, 4, "M", "Shipʼaʼpʽ",             "", "",   "Parrot", "", "", "", "a full point is printed after the clan"),
@@ -747,7 +758,7 @@ UNIONS = [
     ("W63", 230, 231, 1, 1, ""),
     ("W64", 232, 233, 1, 1, ""),
     ("W65", 234, 235, 1, 1, "no issue recorded"),
-    ("W66", 236, 237, 1, 1, ""),
+    ("W66", 236, 237, 1, 1, "no issue recorded"),
     ("W67", 239, 238, 1, 1, "no issue recorded"),
     ("W68", 240, 241, 1, 1, ""),
     ("W69", 244, 243, 1, 1, ""),
@@ -808,9 +819,8 @@ _GROUPS = [
     ("W58", 162, 163, [222, 223]),
     ("W60", 178, 179, [224, 225, 226]),
     ("W62", 190, 191, [227, 228, 229]),
-    ("W63", 230, 231, [232, 234, 236]),
+    ("W63", 230, 231, [232, 234, 236, 238, 8]),
     ("W64", 232, 233, [240, 242, 243, 245, 246]),
-    ("W66", 236, 237, [238, 8]),
     ("W68", 240, 241, [248, 249, 251, 252, 253, 254]),
     ("W69", 244, 243, [153, 255, 256]),
     ("W71", 249, 250, [258, 259, 260]),
