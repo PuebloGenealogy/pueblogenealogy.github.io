@@ -6,7 +6,8 @@ This file answers one question only: *what would I pick up next?*
 
 Last updated **2026-08-18**, at the end of a session that read Genealogy III's
 **block 1**, re-checked the two readings `W31` had undermined, calibrated the
-plate-audit rig for **Table 4**, and published two changes.
+plate-audit rig for **Table 4**, published two changes, and closed out with
+PR #62 merged and the branch list tidied to two.
 
 ## Start here in a new chat
 
@@ -25,12 +26,13 @@ with `document.body.style.transform` rather than scrolling. **The pane caches
 
 ## State
 
-**Nothing is half-finished.** Working tree clean, `docs/` reproduces
-byte-identically from `--public`, and everything this session did is **live and
-verified page by page by SHA-256** — all seven pages `OK`, plus `search.js` and
-`search-index.json` checked by hand, because the build's leak sweep only opens
-`.html` and those two were exactly what changed. Sitemap 5 `<loc>`,
-stale-identity count 0.
+**Nothing is half-finished, and nothing is in flight.** `main` at **`5fc06a7`**,
+working tree clean, **no open PRs**, `0 0` against `origin/main`, and `docs/`
+reproduces byte-identically from `--public`. Everything the last session did is
+**live and verified page by page by SHA-256** — all seven pages `OK`, plus
+`search.js` and `search-index.json` checked by hand, because the build's leak
+sweep only opens `.html` and those two were exactly what changed. Sitemap 5
+`<loc>`, stale-identity count 0.
 
 `laguna-search` is at **`80e0d2d`**, pushed. The post-publish `--refresh`
 reported `re-fetched`, passed all seven of its gates, and returned all three
@@ -46,6 +48,21 @@ git rev-list --left-right --count origin/main...HEAD
 ```
 
 Counts unchanged: 713 entries, 620 distinct people, 261/72/192 on III.
+
+### Branches — TWO, and the second one is load-bearing
+
+`main`, and **`handoff-2026-08-09-search-link-safari-scroll`** (local and on
+`origin`, at `d260b72`). That second branch is **not** stale and must not be
+swept: it is the only thing keeping **`938b8e8`** — the unverified Safari
+scroll fix — reachable. See the Safari row below.
+
+Everything else was cleaned up on 2026-08-18: `plate-audit-w31-leader-row` and
+`search-sic-reading-open-param` were deleted after `git merge-base
+--is-ancestor` confirmed both were fully reachable from `main`, and PR #62's
+branch was deleted by GitHub on merge. **If a future sweep makes you re-check
+one of these, the test is the ancestor check, not the diff**: `git diff main
+<branch>` reported 1154 and 492 lines for those two and they contained nothing
+unique — the lines were deletions, meaning the branch was *behind* `main`.
 
 ## The open thread — block 1's orthography
 
