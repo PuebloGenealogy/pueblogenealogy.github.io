@@ -683,14 +683,28 @@ PLATE_MISPRINTS = {
 # husband carries his own leader; every other plate in the edition hangs every
 # bracket on the mother's row and declares none of these.
 #
-# W26 is the only one on this plate: 43 has two husbands and issue by both, and
-# the plate puts 124's leader on her line and 126's on 45's. Without this entry
-# both groups claim row 0, the second cannot start there, and make_chart.py's
-# push logic moves 43's own line down five rows to meet it -- stranding 124's
-# bracket on 15's line, so the page says 124 is 14+15's child. Found 2026-07-31
-# on the first full preview; the same failure CLAUDE.md records for Gen. II's
-# 169, which was sidestepped there because Parsons prints her twice.
-LEADER_ON_SPOUSE_ROW = {"W26"}
+# W26 is the STRUCTURAL case: 43 has two husbands and issue by both, and the
+# plate puts 124's leader on her line and 126's on 45's. Without this entry both
+# groups claim row 0, the second cannot start there, and make_chart.py's push
+# logic moves 43's own line down five rows to meet it -- stranding 124's bracket
+# on 15's line, so the page says 124 is 14+15's child. Found 2026-07-31 on the
+# first full preview; the same failure CLAUDE.md records for Gen. II's 169,
+# which was sidestepped there because Parsons prints her twice.
+#
+# W31 is the FIDELITY case, added 2026-08-17 when block 1 was read against the
+# scan. 58 + 59 -> 143, 144, and the plate draws that leader from 59's line, not
+# 58's: at native x 2020-2820, y 2795-2900, magnified 3x, 58's "Badger" line
+# carries no rule and 59's "Chaparral Cock" line carries the one that meets the
+# bracket. Nothing structural turns on it -- 58 has one marriage, so the row
+# disambiguates nothing, and the parentage in CHILDREN is untouched. It is here
+# because the chart reproduces the plate.
+#
+# The plate is NOT consistent about this, which is why the entry is a reading
+# and not a rule: ten rows below, 60 + 61 -> 145 is the identical shape -- one
+# woman, one husband, issue -- and that leader sits on 60's OWN line. Do not
+# generalise W31 into "Genealogy III hangs single-marriage leaders off the
+# husband"; it does so here and not there. Each one is read off the ink.
+LEADER_ON_SPOUSE_ROW = {"W26", "W31"}
 
 # (union_id, wife_id, husband_id, wife_order, husband_order, note)
 UNIONS = [
