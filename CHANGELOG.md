@@ -3,7 +3,96 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-17 (latest) — Genealogy I read against its plate, and a rig for doing it
+## 2026-08-17 (latest) — five people were on the wrong parents in Genealogy III
+
+**The first placement errors found on Genealogy III, and the first correction
+to a published plate since Genealogy IV's 20 on 2026-08-10.** Both are in
+block 2, both were settled by the user reading the scan at 1:1, and both were
+invisible to every check in this repo.
+
+- **238 and 8 are 230+231's sons, not 236+237's.** The plate hangs one vertical
+  off 230's line and five stubs enter it — 232, 234, 236, 238, 8 — skipping
+  239, who is a spouse. 238 and 8 are set in the same column as 232, 234 and
+  236, where children of 236+237 are indented one column further in.
+- **243, 245 and 246 are 236+237's, not 232+233's.** Block 2's column 4 carries
+  **two** brackets and the leaders say whose they are: the upper takes 240 and
+  242 with its leader on 232's row (y 4674 against 232's stub at 4675), the
+  lower takes 243, 245 and 246 with its leader on 236's row (y 4899 against
+  4903).
+
+238 and his wife 239 move from generation 4 to 3. **Person 8's generation was
+already 3 and had been contradicting the old reading in plain sight**: as 7's
+husband in block 1 he is 3, as a child of 236 he would have been 4. The file
+held both readings at once and nothing compared them.
+
+**Why nothing caught it.** Every person involved is Parrot, so matrilineal clan
+descent cannot discriminate — the same blindness that let Genealogy IV ship
+with 20 on the wrong marriage. The counts close identically either way: 261
+persons, 72 unions, 192 child links before and after, with all four
+`self_check()`s passing on both the wrong readings and the right one.
+
+**How the second one was nearly missed.** The audit reported it in the same run
+— *"W64: the plate brackets 2 children, the transcription lists 5"* — and it
+was dismissed as pairing noise, because a genuine mispairing had just been
+demonstrated in another column. Two of that run's flags were real and were read
+as one. The lesson is in the tool now: a pairing made by position is labelled
+as a guess, so it can be told from one made by identity.
+
+### The plate audit is calibrated for Table 3
+
+Table 3 sets **24.75px to a row** against Table 1's 146.6, in a scan a ninth
+the pixel count, so every window in `plate.py` is now a fraction of the row
+pitch multiplied by `--row`. The default is Table 1's and Table 1 is
+unaffected — 24 groups, 20 with a bracket vertical, 76 stubs, no disagreement,
+throughout every change below.
+
+Three things about this plate are not threshold tuning:
+
+- **It bows rather than skews** — one rule runs x 683 at the top, 686 at
+  y 1000, 666 at y 3600, 671 at the foot. `--skew` was built for it, measured
+  at −0.0051 and kept only as the model that does not fit. `--track` lets a
+  rule's window re-centre a pixel a row and recovers the two longest rules
+  whole, 4184px and 3013px, against four fragments each.
+- **Its third fold crease crosses column 6**, x 2878–2960 against brackets at
+  2853–2863. No x window separates them; `--maxthick` and `--ongrid` do, on the
+  grounds that a crease answers the density test in blots 15–94 rows deep where
+  a stub is 2–4, and its blots do not land on the row grid.
+- **Its columns are not a grid.** Column 6 carries brackets at x 2786 *and*
+  x 2854, both real, each 61–63px left of the children it brackets.
+
+`audit.py` now pairs a bracket with the group whose **mother stands on its
+leader**, not by list order. That trades away the leader test — which found
+neither error — for three that are not tautological: mismatched child counts,
+a bracket no group claims, and a group with no bracket.
+
+**One anchor bug cost eight flags.** `mother_row` placed any stubless mother
+one row under her partner, which is a *first* wife's rule; the plate sets a
+later wife below the whole of his earlier issue — 19's line at y 3186, his
+second wife 21's at y 3955, 31 rows. W12 therefore landed on W11's row, lost
+the bracket, matched nothing, and passed no rows to 74, 76, 78, 79 — so every
+group they mother fell to a positional guess. `UNIONS`'s fifth field is the
+husband's marriage number and now decides it.
+
+### What is NOT claimed
+
+**Genealogy III is not verified.** The audit decides counts, columns and leader
+rows; it cannot read type, so a group of the right size whose members are
+misnumbered passes silently. Block 1 produced **no new finding**, which is not
+the same as being correct — its one identity-matched count disagreement is
+W13, the over-drawn rule where 22's vertical runs past 82 to reach 83, who is
+25's child, already confirmed 2026-07-31. **Column 6's six groups sit under the
+fold crease and are invisible to the tool**; they can only be read from crops.
+
+### Deploy
+
+Published from `6c1b8d2` (PR #60), all seven pages verified by SHA-256 against
+the local build. The search index was re-vendored under gate 8 — `--refresh`
+reported `re-fetched`, all seven of that tool's gates passed, and
+`index.html`/`search.js` came back byte-identical while `search-index.json`
+moved by exactly the correction: 11 `relationships` records and 2 `people`.
+`leak_report()` run by hand over all three vendored files: clean.
+
+## 2026-08-17 — Genealogy I read against its plate, and a rig for doing it
 
 **Genealogy I is now the second plate a human has read against the scan, and
 the first read stub by stub.** The user read the printed number against every

@@ -9,6 +9,27 @@ next time they are re-vendored, exactly as `docs/` is.
 | Vendored from | `dist/`, at `65b8254` |
 | Vendored on | 2026-08-17 |
 
+## 2026-08-17 (second) — five people moved parents, and only the index moved
+
+**A re-vendor where the source project did not change at all.** `laguna-search`
+is still at `65b8254`; what changed is its *input*, because this site published
+a correction to Genealogy III's block 2 — 238 and 8 are 230+231's sons rather
+than 236+237's, and 243, 245 and 246 are 236+237's rather than 232+233's.
+
+So `index.html` and `search.js` came back **byte-identical** and only
+`search-index.json` moved, which is the shape CLAUDE.md records for a data
+change. The diff is exactly the correction and nothing else: **11
+`relationships` records** (III-8, 230, 231, 232, 233, 236, 237, 238, 243, 245,
+246) and **2 `people`** (238 and 239, generation 4 → 3). `meta` is unchanged,
+including `generated`, because it is date-granular and this is the same day.
+
+**Do not read the unchanged commit hash as meaning the re-vendor was
+unnecessary.** The index is built by fetching these pages and parsing them, so
+it goes stale on a data change here whether or not that project moves. The
+`--refresh` run reported `re-fetched`, and its seven gates passed.
+
+`leak_report()` run by hand over all three files: clean.
+
 ## 2026-08-17 — Juana is a woman, and the reading is read rather than guessed
 
 **A data error on the public site, and the first re-vendor that had to be
