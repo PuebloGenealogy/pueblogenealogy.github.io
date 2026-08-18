@@ -83,7 +83,13 @@ for r in runs:
 real = [g for g in gaps if g > 0.5 * ROW_HINT]
 base = min(real) if real else 0
 ROW = statistics.median([g for g in real if g < base * 1.25]) if real else 0
-YTOL = ROW * 0.3
+# The same tolerance the matcher pairs at. It has to be: a pair matched by
+# leader is inside half a row BY CONSTRUCTION, so a tighter flag here fires on
+# pairs that could not have been made any other way and says nothing. What
+# survives is meaningful in one direction only -- a leader flag can now appear
+# only on a group paired BY POSITION, where it is evidence that the guess is a
+# bad one, not evidence about the plate.
+YTOL = ROW * 0.5
 
 rows = {}
 
@@ -93,9 +99,25 @@ def mother_row(uid, mother):
         return rows[mother], "own stub"
     u = UNION.get(uid)
     if u:
-        partner = u[2] if u[1] == mother else u[1]
+        # UNIONS is (uid, wife, husband, wife_order, husband_order, note), so
+        # the order that matters is the PARTNER's: it says which of his
+        # marriages this is.
+        partner, order = (u[2], u[4]) if u[1] == mother else (u[1], u[3])
         if partner in rows:
-            return rows[partner] + ROW, f"one row under {partner}"
+            if order == 1:
+                return rows[partner] + ROW, f"one row under {partner}"
+            # "One row under her partner" is a FIRST wife's rule. The plate
+            # sets a later wife below the whole of his earlier issue, which
+            # here is 31 rows, not one: 19's line is at y 3186 and 21's at
+            # y 3955. Anchoring her one row under him puts her on the first
+            # wife's row, where she loses the bracket to the group that
+            # really is there -- and then HER children never receive rows,
+            # and every group they mother falls to a positional guess. That
+            # single wrong offset is where eight of Genealogy III's nine
+            # count disagreements came from. Better to have no anchor than a
+            # confident wrong one.
+            return None, (f"wife {order} of {partner} - the plate sets her "
+                          f"below his earlier issue, not one row under him")
     return None, "founding couple - no reference on the plate"
 
 
@@ -185,14 +207,20 @@ for gen in gens:
         pair[i] = j
         usedg.add(i); useds.add(j)
 
-    # A group with no anchor cannot be matched this way -- a mother who is
-    # nobody's bracketed child has no stub to stand on (III's 40), and a
-    # founding couple has no reference on the plate at all. Give those the
-    # leftover brackets in plate order, which is all the old matcher ever did.
+    # A group that could not be matched by leader takes a leftover bracket in
+    # plate order -- a mother who is nobody's bracketed child has no stub to
+    # stand on (III's 40), a founding couple has no reference on the plate, and
+    # a later wife has no row this can compute. That is all the old matcher
+    # ever did for anyone, and it is marked as a guess wherever it is used.
+    #
+    # This runs for EVERY unmatched group, not only the anchorless ones. A
+    # group left with no bracket at all passes no rows to its children, so its
+    # grandchildren cannot be anchored either, and one unmatched group high in
+    # a column costs the whole column below it.
     spare = [j for j in range(len(slots)) if j not in useds]
     byposition = set()
     for i, g in enumerate(multi):
-        if i not in pair and anchors[i] is None and spare:
+        if i not in pair and spare:
             pair[i] = spare.pop(0)
             useds.add(pair[i])
             byposition.add(i)
