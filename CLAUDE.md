@@ -1257,6 +1257,14 @@ next-day one differs by that one field and nothing else. A handoff reading
 "identical apart from `meta.generated`" is recording the clock moving, not the
 index drifting.
 
+**And do not take one on that project's COMMIT HASH either.** Added 2026-08-17.
+The index is built by fetching *these* pages, so a data change here stales it
+while `laguna-search` stands still: that day's re-vendor came from the same
+commit as the one before it, `65b8254`, and `search-index.json` still moved by
+11 `relationships` records and 2 `people`. An unchanged source commit is
+evidence about that project, not about the index. The gate is *"always when a
+plate's data changes"*, and it means always.
+
 ## The four `_FOLD` maps are one map — keep them identical
 
 **Found 2026-08-03, fixed 2026-08-08.** The four transcription modules each
@@ -1298,7 +1306,12 @@ to catch "58+59" links those too.
   caught errors in Table 1 and three brackets on Genealogy II.
   **But it only discriminates where the candidate mothers have DIFFERENT
   clans**, which is most of the time and not all of it. It said nothing about
-  person 31, who is Water exactly as the couple whose bracket he sits inside.
+  person 31, who is Water exactly as the couple whose bracket he sits inside;
+  nor about Genealogy IV's 19 and 20, both Bear like their mother; nor about
+  Genealogy III's block 2, where 230, 232, 236, 238, 8 and all five children
+  moved between them are **Parrot throughout**. Three placement errors, three
+  times blind — and two of them shipped. **Where a mother and the alternative
+  share a clan, assume no structural check is watching at all.**
   The earlier phrasing here — "independently checks every bracket reading" —
   overstated it, and `self_check()` reporting *all structural checks pass* is
   narrower than it sounds: it verifies clan descent, that nobody is a child
@@ -1737,10 +1750,26 @@ to stay *allowed*, so the two must not be combined. Neither is deployed here.
   wherever the user has not personally read it against the scan** — which is
   true of II (checked 2026-07-30), IV's 5/6/7 (2026-08-10) and **the whole of
   Genealogy I (2026-08-17: the user read the printed number against every one
-  of its 76 stubs and every number matched)**. **Genealogy III is the one plate
-  no human has read against its scan**, and it is the largest — 261 people, 72
-  unions, seven generations. Treat a report of a "misaligned" or "broken"
-  bracket as possibly a data error, not automatically a rendering one.
+  of its 76 stubs and every number matched)**. Treat a report of a "misaligned"
+  or "broken" bracket as possibly a data error, not automatically a rendering
+  one.
+  **Genealogy III's BLOCK 2 is read and corrected as of 2026-08-17; its
+  BLOCK 1 is not, and the distinction is the whole of what is known.** Block 2
+  gave up **two placement errors on one bracket column**, both settled by the
+  user reading the scan and both published (PR #60): 238 and 8 are 230+231's
+  sons rather than 236+237's, and 243, 245 and 246 are 236+237's rather than
+  232+233's. Block 1 was run through the calibrated plate audit and produced
+  **no new finding, which is not the same as being correct** — the audit
+  cannot read type, so a group of the right size whose members are misnumbered
+  passes silently, and **column 6's six groups sit under the fold crease where
+  the tool is blind altogether**. Block 1 is 4300 of the plate's 5503px.
+  **Genealogy III is therefore still the least verified plate**, and the one
+  place to spend a reading.
+  **Both of block 2's errors were Parrot throughout** — 230, 232, 236, 238, 8
+  and all five children — so this is the third time clan descent has been
+  unable to see a placement error, after Genealogy IV's Bear and Genealogy
+  II's 31. When a mother and her candidate alternative share a clan, assume
+  **no** structural check is watching.
 - **Genealogy II is published and its reading is closed.** The user re-checked
   their full list on 2026-07-30 and reported **no remaining placement errors**.
   Everything they had flagged is resolved: **31, 32 and 97** via
@@ -1806,11 +1835,47 @@ many verticals a column carries at all, and which row each leader hangs off;
 it **cannot read type**, so a group of the right size whose members are
 misnumbered passes and a human still reads the crops. Validated on Genealogy IV
 with 20 restored to the 6+7 union — it names that defect and is silent on the
-corrected data. **Its parameters are per plate and do not transfer**: the test
-is that the stub-to-stub gaps come out sharply bimodal (Table 1: 146 × 62,
-292 × 5) rather than sprayed (Table 4, uncalibrated: 22, 23, 24, 25, 26 …), and
+corrected data, and on **Genealogy III, where it found two real placement
+errors in block 2** on 2026-08-17. **Its parameters are per plate and do not
+transfer**: the test is that the stub-to-stub gaps hold **nothing below one
+row** (Table 1: 144–148 × 65, 290–292 × 5; Table 3: 24–26 × 43, 49–51 × 19)
+rather than spraying sub-row (Table 4, uncalibrated: 22, 23, 24, 25, 26 …), and
 an uncalibrated run produces confident flags that are the rig's own noise. Read
-its README before trusting a number from it.
+its README before trusting a number from it — **Table 3 is calibrated there and
+Table 4 still is not**.
+
+**Three things about that calibration are worth knowing before touching another
+plate**, because each is a property of a scan rather than a threshold. A plate
+can **bow** rather than skew — Table 3's left-hand rule runs x 683, 686, 666,
+671 down its length, which no straight line and no fixed window follows, and
+`--track` re-centres a rule's own window a pixel a row. A **fold crease can
+cross a bracket column** — Table 3's third runs 10px from column 6's brackets,
+so no x window separates them and `--maxthick` / `--ongrid` do it instead, on
+the grounds that a crease blots 15–94 rows deep where a stub is 2–4 and lands
+off the row grid. And **columns are not necessarily a grid**: Table 3's column
+6 carries brackets at x 2786 *and* 2854, both real, each 61–63px left of its
+own children.
+
+**The audit pairs a bracket to the group whose MOTHER stands on its leader, and
+that is deliberate even though it makes the leader test tautological.** Pairing
+by `_GROUPS` order is what hid block 2's two errors — one displacement mispairs
+everything after it, so the run reported them as "W23: plate 5, transcription
+2" beside "W24: plate 2, transcription 5" and both were dismissed as noise.
+What the identity pairing buys is three tests with teeth: **mismatched child
+counts** (which is what found both errors, and the leader test found neither),
+a bracket **no group claims**, and a group with **no bracket**. A pairing it
+cannot make by identity falls back to position and **says so in the output** —
+treat those lines as guesses, because that is exactly the basis that produced
+the false alarms.
+
+**A mother with no stub of her own cannot be anchored, and a LATER WIFE is the
+case that bites.** The plate sets a second wife below the whole of her
+husband's earlier issue — Genealogy III's 19 at y 3186, his second wife 21 at
+y 3955, 31 rows, not one. Placing her one row under him puts her on the first
+wife's row, where she loses the bracket to the group genuinely there and then
+passes no rows to her own children, so every group they mother falls to a
+guess: one wrong offset cost eight of nine flags. `UNIONS`'s fifth field is the
+husband's marriage number and is what settles it.
 
 **An audit that compares two things which MOVE TOGETHER passes on the defect it
 exists to catch.** Found 2026-08-10 on `/search/`, and it is the same failure as
