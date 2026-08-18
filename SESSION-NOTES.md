@@ -4,16 +4,17 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-18**, at the end of a session that read **Genealogy III's
-block 1** against the scan, re-checked the two readings `W31` had undermined,
-calibrated the plate-audit rig for **Table 4**, and published two changes.
+Last updated **2026-08-18**, at the end of a session that read Genealogy III's
+**block 1**, re-checked the two readings `W31` had undermined, calibrated the
+plate-audit rig for **Table 4**, and published two changes.
 
 ## Start here in a new chat
 
-1. This file. **There is no open thread on any plate** — see *State*.
-2. `scripts/plate_audit/README.md` before running anything in it. Table 3 is
-   calibrated; **Table 4 still is not**.
-3. `CHANGELOG.md`'s newest entry — this session.
+1. This file.
+2. `scripts/plate_audit/README.md` **before running anything in it**. All three
+   plates it has been pointed at are calibrated now — Table 1, Table 3 and
+   Table 4 — and each set of parameters is per plate.
+3. `CHANGELOG.md`'s two newest entries.
 
 Preview: `preview_start`, config name `site`, serves `docs/` on
 `http://localhost:4173`. **If a screenshot comes back blank, read `innerWidth`
@@ -24,53 +25,51 @@ with `document.body.style.transform` rather than scrolling. **The pane caches
 
 ## State
 
-**Nothing is half-finished.** Working tree clean, `main` at **`630d7c2`**, and
-everything is **live and verified page by page by SHA-256** — all seven pages
-`OK`, plus `search.js` and `search-index.json` checked by hand because the
-build's sweep never opens them. Stale-identity count 0, sitemap 5 `<loc>`.
+**Nothing is half-finished.** Working tree clean, `docs/` reproduces
+byte-identically from `--public`, and everything this session did is **live and
+verified page by page by SHA-256** — all seven pages `OK`, plus `search.js` and
+`search-index.json` checked by hand, because the build's leak sweep only opens
+`.html` and those two were exactly what changed. Sitemap 5 `<loc>`,
+stale-identity count 0.
 
-`laguna-search` is at **`80e0d2d`**, committed **and pushed** (both commits
-were sitting local until the end — check, never assume). The post-publish
-`--refresh` reported `re-fetched`, passed all seven of its gates, and returned
-all three `dist/` files **byte-identical** to `vendor/search/`.
+`laguna-search` is at **`80e0d2d`**, pushed. The post-publish `--refresh`
+reported `re-fetched`, passed all seven of its gates, and returned all three
+`dist/` files **byte-identical** to `vendor/search/`.
 
-**Take that from the repo, not from here** — it is the least reliable sentence
-in this file:
+**Take all of that from the repo, not from here** — it is the least reliable
+paragraph in this file, and this session proved it again: `laguna-search`'s two
+commits were sitting local with a clean `git status` until the end.
 
 ```bash
 gh pr list --state open
 git rev-list --left-right --count origin/main...HEAD
 ```
 
-Counts unchanged: 261 persons, 72 unions, 192 child links on III; 713 entries,
-620 distinct people overall.
+Counts unchanged: 713 entries, 620 distinct people, 261/72/192 on III.
 
-`laguna-search` is clean at `44e3d7b` and **was re-run with `--refresh` after
-the publish** — cache re-fetched, all seven of its gates passed, and all three
-of its `dist/` files came back **byte-identical** to `vendor/search/`. No
-re-vendor was due, and that was established twice: the publish's diff of the
-table page carried **0** register-bearing changes.
+## The open thread — block 1's orthography
 
-## What was read, and what it settled
+**Genealogy III's block 1 has been read for PLACEMENT and not for
+ORTHOGRAPHY.** That distinction is the whole of what is known, and it is easy
+to lose: the 2026-08-17 pass checked which stubs hang off which bracket, the
+number printed against each stub, and every group's clan against its mother.
+It did **not** re-read names, ages or diacritics. That is the one reading still
+owed on this plate, and block 1 is 4300 of its 5503px.
 
-**Genealogy III's block 1 — 4300 of the plate's 5503px — had never been read by
-a human. It has now been, group by group, and the transcription is right at
-every group.** All 15 of the calibrated audit's problems are explained and none
-is a defect; the full account is in `CHANGELOG.md` and the short version in
-`scripts/plate_audit/README.md`. In brief: the six "bracketless" groups are real
-brackets the fold crease hides, the four count disagreements are the rig losing
-a stub across a tall *See Gen.* row, and three of the four leader flags are its
-row model tripping over the same rows.
+Three things that would otherwise surface late:
 
-**The 15 are now a known-clean baseline.** A 16th problem, or a change in which
-W-ids appear, is the signal — re-run and **diff the list**, don't read it fresh.
+- **Never run OCR.** It drops the diacritics, which are the object of this pass.
+- **Crops read cleanly to ~5–8x; past that the upscaler invents letterform.**
+  If a mark will not resolve, **ask for a photograph** — that is what settled
+  the turned-comma question after the scan could not, and it is hours rather
+  than weeks. Measure marks, don't eyeball them: height in rows, horizontal
+  centroid of the bottom third minus the top third, and ink mass top vs bottom.
+- **A character new to a name is not a one-line edit.** Four `_FOLD` maps here,
+  plus `NAME_VOWELS` **or** `NAME_MARKS` and the `FOLD` map in `laguna-search`
+  — and it can create a fourth namesake collision that stops their build. That
+  gate is deliberately noisy; expect to adjudicate a pair.
 
-**The one real finding was about the ink, not the reading:** the plate hangs
-58 + 59 → 143, 144 off the **husband's** line. `W31` joined `W26` in
-`LEADER_ON_SPOUSE_ROW` — presentational only, parentage untouched — and shipped.
-**The plate is not consistent about it**: 60 + 61 → 145 is the identical shape
-with the leader on 60's own line. Both are now drawn as printed. Do not
-generalise `W31` into a rule.
+The crops are regenerated with the commands in *Regenerating the crops* below.
 
 ## Regenerating the crops
 
@@ -91,8 +90,8 @@ python3 scripts/plate_audit/crop.py /tmp/t3.bmp    0 4440 2300 1080 /tmp/b2-1.pn
 python3 scripts/plate_audit/crop.py /tmp/t3.bmp 1470 4440 2300 1080 /tmp/b2-1r.png
 ```
 
-**A column-6 strip that carries the mother's column beside it** is what settled
-the six groups the crease hides — `crop.py /tmp/t3.bmp 2250 <y> 1150 1450` at
+**A column-6 strip carrying the mother's column beside it** is what settled the
+six groups the crease hides — `crop.py /tmp/t3.bmp 2250 <y> 1150 1450` at
 y = 150, 1550, 2950 and (h=1100) 4400.
 
 Table 4 is `sips -s format bmp sources/parsons-1923-table-4.jpg`; it is
@@ -102,77 +101,68 @@ Table 4 is `sips -s format bmp sources/parsons-1923-table-4.jpg`; it is
 
 | | Effort | Notes |
 |---|---|---|
-| **Block 1's orthography** | large, needs you | The one half not done. This pass read membership, stub numbers and clan descent — **not** names, ages or diacritics |
+| **Block 1's orthography** | large, needs you | The open thread, above |
 | `/search/` #5 — the Death filter | small, **needs a decision** | Accepts letters where Birth strips them, both labelled *Year*. Either strip like Birth, or relabel `Year or d.`. Upstream |
 | The `/search/` provenance line's home | small, needs you | Offered four times, not taken up |
-| Remove the empty state's `Clear filters` | small, needs you | Kept deliberately. Offered four times |
-| Widen `/search/`'s Name column | small, needs you | Declined because `nowrap` would truncate a transcribed name |
+| Remove the empty state's `Clear filters` | small, needs you | Kept deliberately — the only moment a reader can see no control to undo. Offered four times |
+| Widen `/search/`'s Name column | small, needs you | Declined because `nowrap` would truncate a transcribed name; its numbers are stale again |
 | The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. Flagged, not objected to |
 | **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. The fix attempt survives as commit **`938b8e8`** — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** **What keeps it reachable is the branch `handoff-2026-08-09-search-link-safari-scroll`, local and on origin. Do not delete that branch in a stale-branch sweep** |
-| A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first** — one settled the turned-comma question after the scan could not. `digitallibrary.amnh.org` 403s automated fetches |
+| A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first.** `digitallibrary.amnh.org` 403s automated fetches |
 
 ## Decisions already made — don't re-litigate
 
 - **`W31` is a reading, not a rule.** The plate hangs some single-marriage
-  leaders off the husband and some off the wife, ten rows apart. Each is read
-  off the ink; don't sweep for more by pattern.
+  leaders off the husband and some off the wife, ten rows apart (58+59 against
+  60+61). Each is read off the ink; **do not sweep for more by pattern.**
+- **"A spouse with no leader had no recorded issue" is FALSE** and must not be
+  restated. 58 has no leader on her own line and two children. Where it was
+  used — Gen. III's 85/86/87 and Gen. IV's 5/+6/+7 — both readings were
+  re-measured and **both stand**, on the bases now recorded in `CLAUDE.md` and
+  in `V04`'s note.
+- **The row pitch is rarely what is wrong with an uncalibrated plate.** Table 4
+  measured 145.8 against Table 1's 146.6. It was **the band**: a full-width one
+  reads that plate's printed borders as brackets, and a band must hold the rule
+  plus the 110px stub reach on **both** sides.
+- **`--overshoot` widens the LEFT side only**, so it cannot rescue a stub above
+  a rule's detected top. That is Table 4's `V01`, and it cascades into four of
+  its ten problems.
 - **The audit pairs a bracket to the group whose mother stands on its leader**,
-  which makes the leader test tautological on purpose. Pairing by `_GROUPS`
-  order is what hid 2026-08-17's two block-2 errors. **Do not "restore" the
-  leader check by reverting the pairing.**
-- **A pairing made by position is labelled as a guess in the output**, and the
-  label is load-bearing — all four of block 1's count disagreements were the rig
-  being wrong, exactly as the label warned.
-- **Calibration is per plate and the numbers do not transfer.** Table 3 needs
-  `--row=24.75 --track=1 --maxthick=6 --ongrid=0.25 --gapmax=10 --overshoot=18`;
-  Table 1's defaults are unchanged and must keep reading 24 groups / 20
-  verticals / 76 stubs / no disagreement.
-- **`--skew` exists and fits nothing.** Table 3 bows rather than skews.
-  `--track` is the one that works.
-- **`--overshoot` widens the LEFT side only.** Widening the right breaks correct
-  child counts — measured, 33 problems to 37.
-- **The misprint display stays the plate's.** `/search/` and the chart both show
-  the misprinted `M.`/`Bager`/`Chapparral Cock`, ringed.
+  which makes the leader test tautological on purpose. **Do not "restore" the
+  leader check by reverting the pairing** — pairing by `_GROUPS` order is what
+  hid block 2's two real errors.
+- **A pairing made by position is labelled a guess in the output**, and the
+  label is load-bearing: every one of block 1's four count disagreements, and
+  Table 4's, was the rig being wrong.
+- **Calibration is per plate and the numbers do not transfer.**
+- **The misprint display stays the plate's**, in the chart and on `/search/`.
+  `data-reading` publishes the reading beside it; the tooltip now names it.
 - **`/search/` panning at phone widths is the decision, not the defect.**
-- **Find matches the printed number**, and the id is only the fallback.
 - **The upstream-vs-host test decides where a `/search/` change goes.** Would
   the widget standing alone want it?
 - **Everything from previous sessions still stands**: the list is a table at
-  every width and the document pans; names wrap at editorial `<wbr>` seams; the
-  default palette is light and CSS is what says so; Theme sits at the foot; a
-  row's height is stated, not inferred; `laguna-search` stays a separate private
-  repo; `/search/` is absent from `sitemap.xml`.
+  every width; names wrap at editorial `<wbr>` seams; the default palette is
+  light and CSS is what says so; Theme sits at the foot; a row's height is
+  stated, not inferred; `laguna-search` stays a separate private repo;
+  `/search/` is absent from `sitemap.xml`.
 
 ## Closed — do not re-raise
 
+- **Genealogy III block 1's PLACEMENT** — read 2026-08-17, right at every
+  group; all 15 audit problems explained. Its orthography is the open thread.
+- **85/86/87 (Gen. III) and 5/+6/+7 (Gen. IV)** — re-checked 2026-08-17, both
+  stand. **Do not re-justify either as "a spouse with no leader had no issue".**
 - **The plate-audit rig for Table 4** — calibrated 2026-08-18; its 10 problems
-  are all explained and none is a defect. Command and account in
-  `scripts/plate_audit/README.md`. **Do not re-derive `--row`**: 145.8, from the
-  stub grid, and the pitch was never what was wrong.
-- **`/search/`'s sic tooltip and `?open=`** — both fixed upstream and
-  published 2026-08-18. The tooltip names the reading; the displayed value is
-  still the plate's, which is the decision and is not to be revisited.
-- **Genealogy III block 1** — read against the scan 2026-08-17. The
-  transcription is right at every group; all 15 audit problems explained.
-- **85/86/87 (Gen. III) and 5/+6/+7 (Gen. IV)** — both re-checked against the
-  scans 2026-08-17 after `W31` disproved the rule they leaned on, and **both
-  readings stand**. Measured in each case: the mother's row carries a solid
-  rule, **both husbands' rows are bare**, so the one leader names no father by
-  itself. 85/86/87 is settled by Gen. III's own 43; 5/+6/+7 has no such example
-  on Table 4 and its basis is **cross-plate**, propped up locally by the bracket
-  being drawn inside 5's block. Bases are recorded in `CLAUDE.md` and in V04's
-  note. **Do not re-justify either as "a spouse with no leader had no issue".**
-- **Genealogy III block 2's parentage** — read and published 2026-08-17. Do not
-  re-open 230+231, 232+233 or 236+237.
+  are all explained. **Do not re-derive `--row`**: 145.8.
+- **`/search/`'s sic tooltip and `?open=`** — fixed upstream and published
+  2026-08-18.
+- **Genealogy III block 2's parentage** — read and published 2026-08-17.
 - **Genealogy I's placement** — read stub by stub 2026-08-17, all 76 matched.
-- **De-indexing** — closed 2026-08-08. Not important, nothing to be done.
+- **De-indexing** — closed 2026-08-08. Nothing to be done.
 - **Wikidata** — removed 2026-08-08. Do not reconstruct it or offer it.
-- **Custom domain** — closed 2026-07-31. `pueblogenealogy.github.io`
-  permanently; durability beats portability.
+- **Custom domain** — closed 2026-07-31. Durability beats portability.
 - **Releases and Zenodo** — closed 2026-08-08. A doi reappearing is a
   regression.
-- **The second sort on Genealogy III** — settled at all five instances, U+02BD,
-  published. Do not re-crop the scan.
-- **Genealogy II's placements** — the user re-checked their full list on
-  2026-07-30 and reported no remaining errors.
+- **The second sort on Genealogy III** — settled at all five instances, U+02BD.
+- **Genealogy II's placements** — no remaining errors, 2026-07-30.
 - **Phonetic glyph rendering** — proven from the cmap and checked on device.

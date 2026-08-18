@@ -168,6 +168,42 @@ file holds. Likewise 255's `Bager` and 37's `M.`, both already in
 was membership and placement — which stubs hang off which bracket, and each
 group's clan descent against its mother.
 
+### The two readings `W31` undermined, both re-checked and both standing
+
+`W31` disproved a rule this repo had been stating as fact — *"a spouse with no
+leader had no recorded issue"* — because **58 has no leader on her own line and
+two children**. Two earlier readings had leaned on it, and both were re-measured
+against the scans the same day. **Neither changed; only the justification on
+record did**, and no parentage moved on either plate.
+
+- **Genealogy III's 85/86/87 stands.** In the 160px gap between the text and the
+  bracket, 86's row carries a solid rule (50/142/138/24 ink px at y 227–230) and
+  **both husbands' rows are bare** — 85's and 87's alike, the constant 1–2px
+  through y 231–253 being the bracket vertical passing rather than a leader. One
+  bracket, one leader, on the line 86 shares with *both* marriages, so it names
+  no father by itself. What settles it is the contrast with **43 on the same
+  plate**: where a woman has issue by a second husband, Parsons gives that group
+  its own leader on the second husband's line (45's, → 126), and 87's line
+  carries nothing.
+- **Genealogy IV's 5 / +6 / +7 stands, on evidence one step weaker.** Same
+  configuration, measured in a 750px gap: 6's row solid at **750/750** ink px
+  (y 6099–6116), both husbands' rows nothing above 3px across y 5880–6420. But
+  **Table 4 never demonstrates its own convention** — its only other second
+  marriage with issue is `V07`, where the second spouse is the *mother*, whose
+  line carries the bracket anyway. So the argument reaches **across to Genealogy
+  III's 43**, a cross-plate inference of exactly the kind this repo warns against
+  elsewhere. What holds it up locally is that the bracket is drawn inside **5's
+  block**, he being its primary with 6 and 7 both `+` lines under him.
+
+**Clan descent was blind in both** — each pair of marriages shares the mother, so
+184–189 are Turquoise and 19–20 are Bear whichever husband is the father. That
+is now the third and fourth time a structural check could not see a paternity
+question, after block 2's Parrot and Genealogy IV's Bear.
+
+`V04`'s note and `CLAUDE.md` both now state these bases explicitly, and both
+carry an instruction **not** to re-justify either as "a spouse with no leader had
+no issue".
+
 ## 2026-08-17 — five people were on the wrong parents in Genealogy III
 
 **The first placement errors found on Genealogy III, and the first correction

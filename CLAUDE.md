@@ -744,13 +744,23 @@ Two consequences that are not obvious:
   **Generalise it: when a consumer cannot see something, check whether it is
   published before designing a fix in the consumer.**
 
-  Two things now depend on the attribute, both upstream at `65b8254`: the
-  index takes `sex` from it (`nearest_clan()` demoted to a fallback for a page
-  built by an older version of this site), and that tool's **gate 1 refuses a
-  ringed field whose reading did not resolve** — asked only where the field is
-  ringed, since an empty sex is legitimate for someone with none recorded.
+  **Three** things now depend on the attribute: the index takes `sex` from it
+  (`nearest_clan()` demoted to a fallback for a page built by an older version
+  of this site); that tool's **gate 1 refuses a ringed field whose reading did
+  not resolve** — asked only where the field is ringed, since an empty sex is
+  legitimate for someone with none recorded; and since 2026-08-18 (`80e0d2d`)
+  the `sic` **tooltip names the reading** — *"the edition reads Badger"* rather
+  than *"the edition's reading differs"*, which told a reader something was
+  wrong without telling them what.
   **So dropping `data-reading` from a ringed span now fails their build**, which
   is the intended coupling and not a bug to route around.
+  **What the tooltip did NOT change is the displayed value**, and that is the
+  half to protect: `sexOf()` / `clanOf()` still show the plate's `M.` and
+  `Bager`, ringed. The edition annotates a misprint; it does not correct one,
+  there or here. Note also the copy trap it surfaced — **a sex reading is a
+  label carrying its own period (`F.`) while a clan is a bare word**, so
+  appending one unconditionally gives *"reads F.."*. That is `dotted()`'s rule
+  turning up in a second codebase.
 
 None of this constrains the edition's design — it constrains **silent** change.
 Restructure the register freely; just expect `laguna-search` to need its parser
@@ -1809,8 +1819,14 @@ to stay *allowed*, so the two must not be combined. Neither is deployed here.
   cannot read type, so a group of the right size whose members are misnumbered
   passes silently, and **column 6's six groups sit under the fold crease where
   the tool is blind altogether**. Block 1 is 4300 of the plate's 5503px.
-  **Genealogy III is therefore still the least verified plate**, and the one
-  place to spend a reading.
+  **BLOCK 1 WAS THEN READ, 2026-08-17, and the transcription is right at every
+  group** — membership, the number printed against each stub, and clan descent,
+  including the six column-6 groups the crease hides, which are real brackets
+  with the right counts and clans. All 15 of the calibrated audit's problems
+  are explained and none is a defect; they are a known-clean baseline now, so a
+  16th problem is the signal. **What block 1 has still NOT had is its
+  orthography checked** — names, ages and diacritics were not re-read, and that
+  is the one reading still owed on this plate.
   **Both of block 2's errors were Parrot throughout** — 230, 232, 236, 238, 8
   and all five children — so this is the third time clan descent has been
   unable to see a placement error, after Genealogy IV's Bear and Genealogy
@@ -1885,10 +1901,45 @@ corrected data, and on **Genealogy III, where it found two real placement
 errors in block 2** on 2026-08-17. **Its parameters are per plate and do not
 transfer**: the test is that the stub-to-stub gaps hold **nothing below one
 row** (Table 1: 144–148 × 65, 290–292 × 5; Table 3: 24–26 × 43, 49–51 × 19)
-rather than spraying sub-row (Table 4, uncalibrated: 22, 23, 24, 25, 26 …), and
-an uncalibrated run produces confident flags that are the rig's own noise. Read
-its README before trusting a number from it — **Table 3 is calibrated there and
-Table 4 still is not**.
+rather than spraying sub-row, and an uncalibrated run produces confident flags
+that are the rig's own noise. Read its README before trusting a number from it.
+**All three transcribed plates it has been pointed at are now calibrated there**
+— Table 1, Table 3 and, since 2026-08-18, **Table 4** (144–148 × 27,
+290–292 × 2, then a sparse tail).
+
+**Table 4's calibration overturned what this file predicted would be wrong, and
+the lesson generalises: the row pitch is rarely the problem.** It measured
+145.8 against Table 1's default of 146.6, half a percent apart. What was wrong
+was **the band**. A full-width band — which Table 3 tolerates — reads that
+plate's own printed verticals at x 2850–2975 and 7704–7789 as brackets, one of
+them a 3306px run carrying **74 "stubs" 12px apart**, and that is the entire
+sub-row spray previously blamed on ink fragmentation. Two further band rules
+came out of it, both cheap to re-lose:
+
+- **A band must hold the rule PLUS the 110px stub reach on BOTH sides.**
+  `stubs()` gives up when the remaining width is under 0.6 of the reach, so a
+  230px band cost `V05` **all five** of its stubs and reported zero on a bracket
+  that plainly has five — which looks exactly like an ink problem and is not.
+- **`--overshoot` widens the LEFT side only**, so it cannot rescue a *stub*
+  that sits above a rule's detected top. On Table 4 that is `V01`, whose
+  vertical runs y 716–5995 with its two children **36 rows apart**; the rig
+  starts it at 845 and reads the top stub as a *leader*. `V01` then pairs by
+  position, takes `V11`'s bracket, and the displacement cascades into `V11` and
+  `V03` — four of Table 4's ten problems from one missing stub.
+
+**Table 4 SKEWS where Table 3 bows** — x 3195 at y 722 to 3132 at y 5800,
+near-constant at −0.012 px per px of y. So `--skew` finally has a plate its
+linear model describes, even though `--track=1` absorbs it and the flag is
+still not passed.
+
+**And its four constant ~+175px leader flags are the four Johnsons**, not the
+plate: 8, 10, 15 and 17 carry an English name printed on its **own row**, so
+each wife sits two rows under her husband where the audit's model assumes one.
+Its two count disagreements are the plate collapsing `36-43. 8 children
+deceased` and `50-53. 4 children deceased` onto one line each, both already in
+`PLATE_NOTES`. **All ten are explained and none is a defect**, so Table 4 is a
+known-clean baseline exactly as Table 3's fifteen are: diff the list, don't
+read it fresh.
 
 **Three things about that calibration are worth knowing before touching another
 plate**, because each is a property of a scan rather than a threshold. A plate
