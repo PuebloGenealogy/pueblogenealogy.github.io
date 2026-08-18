@@ -149,20 +149,34 @@ apart, both real, each sitting the same 61–63px left of the children it
 brackets. So `XTOL` here is ~75, and a column's x is a range to be measured,
 not a number to be assumed.
 
-### Where that leaves it — 44 of 46, and the last two are unfinished business
+### Where that leaves it — two real findings, and column 6 still unreadable
 
-The transcription expects 46 groups of 2+ children: 1 in column 2, 3 in
-column 3, 11 in column 4, 19 in column 5, 11 in column 6, 1 in column 7.
-Calibrated, the ink gives **col 2: 1, col 3: 2, col 4: 10, col 5: 21, col 6: 9,
-col 7: 1**, plus 6 crease runs that `XTOL` drops. Columns 2 and 7 are exact;
-column 5 is over by two and column 6 short by two, which is most likely the
-column boundary between them being drawn in the wrong place rather than a
-finding about the plate.
+Calibrated, the rig found **two placement errors in Genealogy III's block 2**
+on 2026-08-17, both confirmed by the user against the scan and published: 238
+and 8 are 230+231's sons rather than 236+237's, and 243, 245 and 246 are
+236+237's rather than 232+233's. Both surfaced as **child-count
+disagreements** and neither was visible to the leader test — which is why
+`audit.py` now pairs by identity and reports counts.
 
-**Do not report any of that as a defect in the transcription.** It is the state
-of the *rig* on this plate. The columns still have to be measured by eye (they
-are guessed above from a 535px grid that column 6 is known to break), and only
-then is a flag from `audit.py` worth reading.
+Against the corrected transcription the run reports **15 problems, none of
+them a new finding**:
+
+| | what it is |
+|---|---|
+| W13 | the only count disagreement paired by IDENTITY, and already explained — 22's vertical is over-drawn past 82 to reach 83, who is 25's child (confirmed 2026-07-31) |
+| W12, W37, W40, W52 | count disagreements **paired by position**, which the output labels. Guesses |
+| W53–W55, W58, W60, W71 | bracketless, every one in column 6 under the crease |
+| W19, W31, W69, W47 | leader flags, all on positional pairs — evidence about the guess, not the plate |
+
+**Count them with `grep -cE "^  - "`.** This section said 14 for an hour
+because the number was read off a `tail -14` that had truncated the list.
+
+**Column 6 cannot be read by this tool at all** — six of its groups never match
+— and that is the crease, not a setting. It needs crops and a human.
+
+**Do not report any of the 15 as a defect in the transcription.** A positional
+pairing is exactly the basis on which one of the two real errors above was
+nearly dismissed.
 
 ## Traps already paid for
 

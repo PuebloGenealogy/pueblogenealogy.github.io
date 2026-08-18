@@ -92,6 +92,22 @@ reported `re-fetched`, all seven of that tool's gates passed, and
 moved by exactly the correction: 11 `relationships` records and 2 `people`.
 `leak_report()` run by hand over all three vendored files: clean.
 
+**That re-vendor came from the SAME `laguna-search` commit as the one before
+it**, `65b8254`, because only its *input* changed. Gate 8 now says so in
+`CLAUDE.md`: do not take a re-vendor decision on that project's commit hash
+any more than on `meta.generated`.
+
+### What went into `CLAUDE.md` (`c1a73c0`)
+
+The durable half, so it is not re-derived: that block 2 is read and block 1 is
+not; the three calibration surprises (a plate can bow rather than skew, a
+crease can cross a bracket column, columns are not necessarily a grid); why the
+audit pairs by mother-on-leader despite that making the leader test
+tautological; the later-wife anchor; and the third blind case for clan descent.
+The bimodality test recorded there was also **wrong about Table 1's own data**
+— it is "nothing below one row", not "one row and two rows, nothing else",
+whose tail runs 437 to 3499px.
+
 ## 2026-08-17 — Genealogy I read against its plate, and a rig for doing it
 
 **Genealogy I is now the second plate a human has read against the scan, and
