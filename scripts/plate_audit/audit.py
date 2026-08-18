@@ -144,41 +144,68 @@ for gen in gens:
     multi = [g for g in bycol[gen] if len(g[3]) > 1]
     singles = [g for g in bycol[gen] if len(g[3]) == 1]
 
-    # Put the expected groups in the order the PLATE sets them -- by the row
-    # each one's mother stands on -- rather than the order `_GROUPS` happens to
-    # list them in. Ink is already sorted by y, and pairing the two lists by
-    # position silently mispairs every group after the first that disagrees:
-    # Genealogy III's column 5 read "W23: plate 5, transcription 2" beside
-    # "W24: plate 2, transcription 5", which is one swap wearing the costume of
-    # two count errors.
+    # ---- pair each bracket with the group whose MOTHER stands on its leader
     #
-    # This orders by the mother's row; it does NOT match a bracket to whichever
-    # leader is nearest, which would be circular -- the leader check exists to
-    # find a bracket hanging off the wrong row, and a matcher free to choose
-    # its partner would simply choose the row it landed on and report 0. The
-    # mother's own row is measured from her stub in the PARENT bracket, which
-    # is a different piece of ink from the leader being tested. A bracket out
-    # by a row still sorts into the same place, because rows are 25px and
-    # groups are hundreds apart.
-    # Only the groups whose anchor is known are reordered, and they are sorted
-    # among THEIR OWN positions -- the rest stay exactly where they were. An
-    # all-or-nothing guard is no use here: a mother who is nobody's bracketed
-    # child has no stub to stand on (III's 40 is one), and one unknown anchor
-    # would leave the whole column in file order.
-    known = [i for i, g in enumerate(multi) if anchor_of(g)[0] is not None]
-    if known:
-        placed = sorted((multi[i] for i in known),
-                        key=lambda g: anchor_of(g)[0])
-        for slot, g in zip(known, placed):
-            multi[slot] = g
+    # Not by list order. `_GROUPS` order is not plate order, and pairing two
+    # lists by position mispairs everything after the first disagreement --
+    # Genealogy III's column 5 read "W23: plate 5, transcription 2" beside
+    # "W24: plate 2, transcription 5", one displacement dressed as two count
+    # errors, and block 2's column 4 hid two real errors the same way.
+    #
+    # This makes the leader test trivially true, and that is the trade. What it
+    # buys is three tests that are not:
+    #
+    #   * a matched pair whose CHILD COUNTS differ. Both of the errors found on
+    #     2026-08-17 were this and nothing else -- five stubs against three
+    #     children, two against five -- and neither was found by the leader
+    #     test, which had been the reason not to match this way.
+    #   * a bracket NO GROUP CLAIMS: its leader sits on a row the transcription
+    #     gives no issue to.
+    #   * a group with NO BRACKET: the transcription claims issue the plate
+    #     draws none for.
+    #
+    # A bracket genuinely hanging off the wrong person does not get absorbed by
+    # this. It fails to match within half a row and is reported twice over, as
+    # an unclaimed bracket beside a bracketless group.
+    anchors = {i: anchor_of(g)[0] for i, g in enumerate(multi)}
+    cand = []
+    for i, g in enumerate(multi):
+        if anchors[i] is None:
+            continue
+        for j, (r, stubs, leaders) in enumerate(slots):
+            if not leaders:
+                continue
+            d = abs(leaders[0]["y"] - anchors[i])
+            if d <= ROW * 0.5:
+                cand.append((d, i, j))
+    pair, usedg, useds = {}, set(), set()
+    for d, i, j in sorted(cand):                 # closest first, globally
+        if i in usedg or j in useds:
+            continue
+        pair[i] = j
+        usedg.add(i); useds.add(j)
 
-    if len(slots) != len(multi):
-        problems.append(f"generation {gen}: the plate draws {len(slots)} bracket "
-                        f"vertical(s) in this column, the transcription claims "
-                        f"{len(multi)} group(s) of 2+ children "
-                        f"({[g[0] or '(none)' for g in multi]})")
-    for g, (r, stubs, leaders) in zip(multi, slots):
+    # A group with no anchor cannot be matched this way -- a mother who is
+    # nobody's bracketed child has no stub to stand on (III's 40), and a
+    # founding couple has no reference on the plate at all. Give those the
+    # leftover brackets in plate order, which is all the old matcher ever did.
+    spare = [j for j in range(len(slots)) if j not in useds]
+    for i, g in enumerate(multi):
+        if i not in pair and anchors[i] is None and spare:
+            pair[i] = spare.pop(0)
+            useds.add(pair[i])
+
+    for i, g in enumerate(multi):
         uid, mother, father, kids = g
+        if i not in pair:
+            problems.append(f"{uid or '(none)'}: the transcription lists "
+                            f"{len(kids)} children {kids}, and no bracket in "
+                            f"this column hangs off {mother}'s line")
+            report.append({"uid": uid or "(none)", "mother": mother,
+                           "kids": kids, "nstub": 0, "x": colof.get(gen, 0),
+                           "leader": None})
+            continue
+        r, stubs, leaders = slots[pair[i]]
         for kid, s in zip(kids, stubs):
             rows[kid] = s["y"]
         report.append({"uid": uid or "(none)", "mother": mother, "kids": kids,
@@ -187,6 +214,14 @@ for gen in gens:
         if len(stubs) != len(kids):
             problems.append(f"{uid or '(none)'}: the plate brackets {len(stubs)} "
                             f"children, the transcription lists {len(kids)} {kids}")
+    for j, (r, stubs, leaders) in enumerate(slots):
+        if j in useds:
+            continue
+        at = f"{leaders[0]['y']:.0f}" if leaders else "no leader detected"
+        problems.append(f"generation {gen}: the plate draws a bracket at "
+                        f"x {r['x']:.0f} y {r['y0']}-{r['y1']} over "
+                        f"{len(stubs)} children, and its leader ({at}) sits on "
+                        f"no row the transcription gives issue to")
     for g in singles:
         report.append({"uid": g[0] or "(none)", "mother": g[1], "kids": g[3],
                        "nstub": None, "x": colof.get(gen, 0), "leader": None})

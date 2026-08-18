@@ -26,7 +26,7 @@ from plate import Band, ROW_T1
 # is a fraction of. Table 3 sets 24.7px to a row against Table 1's 146.6, so
 # leaving it at the default reads Table 3 with windows six times too wide.
 FLAGS = ("--row=", "--xmerge=", "--maxwidth=", "--skew=", "--track=",
-         "--maxthick=", "--ongrid=", "--gapmax=")
+         "--maxthick=", "--ongrid=", "--gapmax=", "--overshoot=")
 argv = [a for a in sys.argv if not a.startswith(FLAGS)]
 
 
@@ -64,6 +64,16 @@ ONGRID = flag("--ongrid=", 0.0)
 # under one row (10px against 24.75), so it still cannot fuse two brackets
 # that are rows apart, which is the reading error the small value protects.
 GAPMAX = int(flag("--gapmax=", 0)) or None
+# --overshoot is how far past a rule's own ends the stub search reaches. Row
+# scaled it is 8px here, and Table 3 needs more for a reason worth writing
+# down: its leaders arrive 2-3px ABOVE the first stub, and the top of a faint
+# vertical is detected up to 12px below where its leader enters. At 8 the
+# leader falls outside the window, `left` comes back empty, and the bracket
+# then matches nothing -- which reads as a bracket the transcription does not
+# claim beside a group the plate does not bracket, two complaints from one
+# missed rule. Keep it under a row (24.75) or the search takes in the group
+# above.
+OVERSHOOT = int(flag("--overshoot=", 0)) or None
 
 bmp = argv[1]
 bands = json.loads(argv[2])              # [[x0,x1], ...]
@@ -83,8 +93,12 @@ for x0, x1 in bands:
         for r in b.rules_at(xl, xr, minrun=minrun, track=TRACK, gapmax=GAPMAX):
             if r["dens"] < 0.8:          # a column of type, not a rule
                 continue
+            # The extra reach goes to the LEFT side only. Leaders are what the
+            # tight window loses; widening the right side instead picks up the
+            # last stub of the group above and breaks child counts that were
+            # correct -- measured, 33 problems to 37.
             r["right"] = b.stubs(r, side="right")
-            r["left"] = b.stubs(r, side="left")
+            r["left"] = b.stubs(r, side="left", overshoot=OVERSHOOT)
             if MAXTHICK:
                 r["right"] = [s for s in r["right"] if s["thick"] <= MAXTHICK]
                 r["left"] = [s for s in r["left"] if s["thick"] <= MAXTHICK]
