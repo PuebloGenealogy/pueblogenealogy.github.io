@@ -174,6 +174,30 @@ because the number was read off a `tail -14` that had truncated the list.
 **Column 6 cannot be read by this tool at all** — six of its groups never match
 — and that is the crease, not a setting. It needs crops and a human.
 
+**It got one on 2026-08-17, and all 15 are now explained.** Block 1 was read
+group by group against the scan and the transcription is right at every group.
+The six bracketless groups are real brackets the crease hides — counts and clans
+all match. The four count disagreements are the rig losing a stub across a tall
+row: W12 is 4 not 3, W37 is 6 not 5, W40 is 8 not 6, W52 is 7 not 2, and the
+culprit each time is a *See Gen.* continuation row, or 155's "For first
+husband…" prose block, widening a gap. W19 and W69's leaders are on the
+mother's **own** line, verified at 3x — the offset is the continuation row under
+32 and under 243 — and W47 is 92 printed twice, the leader on her first
+occurrence.
+
+**One flag was real, and it was not a reading error:** W31, where the plate
+hangs 58 + 59's bracket off the **husband's** line. Encoded as
+`LEADER_ON_SPOUSE_ROW = {"W26", "W31"}` and published the same day. The plate is
+not consistent about it — 60 + 61 → 145 is the same shape with the leader on
+60's own line — so this is a per-union reading, never a rule to generalise.
+
+**So the 15 are now a known-clean baseline.** A 16th problem, or a change in
+which W-ids appear, is the signal. Re-run with the calibration above and **diff
+the list**, rather than reading it fresh. The half this tool cannot do — the
+number printed against each stub — **was** done for block 1 in that pass, which
+is what makes the baseline trustworthy. What was not done is the orthography:
+names, ages and diacritics were not re-read.
+
 **Do not report any of the 15 as a defect in the transcription.** A positional
 pairing is exactly the basis on which one of the two real errors above was
 nearly dismissed.

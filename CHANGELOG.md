@@ -3,7 +3,78 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-17 (latest) — five people were on the wrong parents in Genealogy III
+## 2026-08-17 (latest) — Genealogy III's block 1 is read, and it holds
+
+**Block 1 was 4300 of the plate's 5503px and no human had read it.** It has now
+been read group by group against the scan, and **the transcription is right at
+every group** — no placement error, no miscount, no misattached bracket. The
+plate's own numbering was checked where the audit could not see it.
+
+**All 15 of the calibrated audit's problems are explained, and none is a defect
+in the data.** Recorded so nobody re-derives them:
+
+- **The six "bracketless" groups are real brackets, hidden by the fold crease.**
+  W53 116→212,213 · W54 125→214–217 · W55 153→218,219 · W58 162→222,223 ·
+  W60 178→224–226 · W71 249→258–260. Every count matches and every group's clan
+  equals its mother's — Parrot, Lizard, Badger, Lizard, Water, Parrot. The
+  crease runs 10px from the col-6 brackets, which is why the rig drops the runs;
+  the ink is unambiguous at native resolution.
+- **All four count disagreements are the rig losing a stub across a tall row.**
+  W12 21→74,76,78,79 is 4 on the plate, not 3 (the gap under 74's *See Gen.*
+  rows); W37 68→152,154,156,157,158,159 is 6, not 5 (155's "For first husband…"
+  prose block breaks the vertical); W40 74→170–177 is 8, not 6; W52 115→205–211
+  is 7, not 2. Three of the four were labelled PAIRED BY POSITION, and the label
+  was right to distrust them — in the direction of the rig being wrong.
+- **Three of the four leader flags are the rig's row model, not the plate.**
+  W19 (33) and W69 (244) both draw the leader from the **mother's own line**,
+  verified at 3x; the offset is the *See Gen.* continuation row under 32 and
+  under 243. W47 (92) is 92 being printed twice — the leader hangs off her first
+  occurrence, 204px above the second.
+- **W13 is the known over-drawn vertical**, confirmed again: 22's runs past 82
+  to reach 83, whose stub is fed by **25's** leader.
+
+**One real finding, and it is about the ink rather than the reading: 58 + 59 ->
+143, 144 hangs off the HUSBAND's line.** At native x 2020–2820, y 2795–2900,
+magnified 3x, 58's "Badger" line carries no rule and 59's "Chaparral Cock" line
+carries the one that meets the bracket. `W31` joins `W26` in
+`LEADER_ON_SPOUSE_ROW`, which is presentational only — it skips the `mother_row`
+reset in `make_chart.py` and leaves the parentage in `CHILDREN` untouched.
+Nothing structural turned on it: 58 has one marriage, so the row disambiguates
+nothing. It moved because the chart reproduces the plate.
+
+**The plate is not consistent about this, so the entry is a reading and not a
+rule.** Ten rows below, 60 + 61 -> 145 is the identical shape — one woman, one
+husband, issue — and that leader sits on 60's **own** line. Both are now drawn
+as printed. Do not generalise `W31` into "Genealogy III hangs single-marriage
+leaders off the husband"; it does so there and not here, and each one is read
+off the ink.
+
+**Measured after the rebuild:** all 57 groups still sit on their group's first
+`.line` (worst 0.094px; W31 itself 0.000px onto 59's row), **no** node's first
+`.line` is displaced from its top — the check that catches a stranded group —
+and every generation lands on the 425.59px column grid, the two x values per
+depth at generations 1–5 being the second descent block's documented one-column
+indent rather than drift.
+
+**No re-vendor was due and this was established twice, not assumed.** The
+publish's diff of the table page carried **0** register-bearing changes
+(`.reg`, `.reg-rel`, `.num`, `.xref`, `sic-ring`) — the built page changed by
+exactly one line, `lead-line` moving from p58 to p59 plus one `--lh` of top
+margin on the child group. `build.py --refresh` was then run over the live
+pages, all seven of its gates passed, and **all three of `dist/`'s files came
+back byte-identical** to `vendor/search/`.
+
+**Also confirmed, not changed:** the plate prints **258 and 259 twice**, once in
+249's block and once in 244's. That is already recorded — ids 256 and 257 carry
+the note and `DUPLICATE_PLATE_NUMBERS` maps them — and the ink matches what the
+file holds. Likewise 255's `Bager` and 37's `M.`, both already in
+`PLATE_MISPRINTS`.
+
+**What was NOT checked:** names, ages and diacritics were not re-read. This pass
+was membership and placement — which stubs hang off which bracket, and each
+group's clan descent against its mother.
+
+## 2026-08-17 — five people were on the wrong parents in Genealogy III
 
 **The first placement errors found on Genealogy III, and the first correction
 to a published plate since Genealogy IV's 20 on 2026-08-10.** Both are in

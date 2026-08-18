@@ -1350,6 +1350,16 @@ to catch "58+59" links those too.
   **'+' spouse's** line, which is what Genealogy III does for a second husband
   (its leader sits on the line of the parent whose marriage the group is).
   Validated by `self_check()`; Tables 1, 2 and 4 declare none.
+  **It is not only for second husbands, and since 2026-08-17 it holds a second
+  entry that is purely a fidelity reading.** `W31` — 58 + 59 → 143, 144 — is a
+  **single** marriage whose leader the plate simply draws from the husband's
+  line: 58's "Badger" line carries no rule and 59's "Chaparral Cock" line
+  carries the one that meets the bracket (native x 2020–2820, y 2795–2900, at
+  3x). Nothing structural turned on it; the flag skips the `mother_row` reset
+  and leaves `CHILDREN` untouched, so it moved only because the chart
+  reproduces the plate. **Do not generalise it**: ten rows below, 60 + 61 → 145
+  is the identical shape with the leader on 60's **own** line. The plate is
+  inconsistent here, so every entry is read off the ink, one union at a time.
   **No gate can see this defect.** The build reported all 261 drawn and 0 px
   column drift, and both were true — drift measures *columns*. The check that
   finds it is **"is any node's first `.line` displaced from that node's top?"**,
@@ -1426,10 +1436,27 @@ to catch "58+59" links those too.
   in either case; neither is a precedent for "improving" it.
   **Genealogy III needs none of this, and that is a finding about the plate, not
   an oversight.** It marks paternity itself: the leader rule reaching a bracket
-  sits on the line of the parent whose marriage the group belongs to, so a
-  spouse with no leader had no recorded issue. 85/86/87 is Table 1's 83–85 shape
-  and still needs no attribution, because 86's leader is on her own line and 87
-  has none. Don't reach for the attribution machinery on this plate.
+  sits on the line of the parent whose marriage the group belongs to. 85/86/87
+  is Table 1's 83–85 shape and still needs no attribution, because 86's leader
+  is on her own line and 87 has none. Don't reach for the attribution machinery
+  on this plate.
+  **But the converse does NOT hold, and that was over-stated here until
+  2026-08-17.** This paragraph read "so a spouse with no leader had no recorded
+  issue", and block 1 falsifies it: **58 has no leader on her own line and two
+  children**, 143 and 144, because the plate draws that group's leader from her
+  husband 59 (see `LEADER_ON_SPOUSE_ROW`'s `W31`). So a leader present names
+  whose marriage a group is; a leader **absent** from one partner's line means
+  nothing on its own — read the other partner's line before concluding anyone
+  was childless.
+  **What that does to 85/86/87 and Genealogy IV's 5/+6/+7 has NOT been
+  re-derived, and should not be assumed either way.** Both were argued partly
+  from "the second husband's line carries no rule", and in both the *other*
+  partner's line does carry the rule — which is exactly the configuration `W31`
+  shows is not decisive. Neither page is wrong today: each draws the plate's
+  own single bracket and attributes no father, which is what the plate states.
+  The question a future session may need to answer is narrower — whether those
+  brackets could equally be the **second** marriage's — and it is a question
+  about the ink, to be settled with crops, not from this paragraph.
 - **There is a SECOND kind of editorial claim now, and it is about identity, not
   paternity.** Added 2026-08-09 with `/search/`, and set out in METHOD.md's
   *Identity across plates*. Searching by name across four independent numberings
