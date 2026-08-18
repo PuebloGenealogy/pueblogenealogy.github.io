@@ -498,11 +498,28 @@ function relationRow(ctx, person, label, refs, { editorial, editorialRefs } = {}
       })));
 }
 
-function sicMark(what) {
+/**
+ * The plate's value is what is shown; this says so, and NAMES what the edition
+ * reads instead.
+ *
+ * "the edition's reading differs" told a reader that something was wrong
+ * without telling them what, and there is no reason for the coyness: the
+ * reading is published on the ringed span as `data-reading`, added to the
+ * edition on 2026-08-17 precisely so it could be read. Falls back to the old
+ * wording if a reading did not resolve -- gate 1 refuses to build in that
+ * case, so the fallback should be unreachable.
+ */
+function sicMark(what, reading) {
+  // The sex reading is a LABEL and carries its own period -- "F." -- while a
+  // clan is a bare word. Appending unconditionally gives "the edition reads
+  // F..", so append only where it is missing: the same rule the edition's own
+  // dotted() follows, for the same reason.
+  const said = reading
+    ? `the edition reads ${reading}${reading.endsWith(".") ? "" : "."}`
+    : "the edition's reading differs.";
   return el("span", {
     class: "sic",
-    title: `The plate prints this ${what}; the edition's reading differs. ` +
-      "Both are searchable.",
+    title: `The plate prints this ${what}; ${said} Both are searchable.`,
   }, "sic");
 }
 
@@ -519,11 +536,14 @@ function entryColumn(ctx, person) {
 
   const fields = [
     ["Name", name || "———", name ? copyButton(name) : null],
-    ["Sex", sexText(person), person.sexPrinted ? sicMark("sex") : null],
+    ["Sex", sexText(person),
+      person.sexPrinted
+        ? sicMark("sex", SEX_LABEL[person.sex] || person.sex) : null],
     ["Birth", birth.text, birth.estimated ? estimateMark(birth.why) : null],
     ["Death", death.text, null],
     ["Age", person.age && `${person.age} at recording`, null],
-    ["Clan", clanOf(person), person.clanPrinted ? sicMark("clan") : null],
+    ["Clan", clanOf(person),
+      person.clanPrinted ? sicMark("clan", person.clan) : null],
     ["Origin", person.origin, null],
     ["Generation", person.generation, null],
   ].filter(([, value]) => value !== "" && value != null);
@@ -1146,7 +1166,13 @@ class PersonList {
   restoreOpen() {
     const index = this.matches.findIndex((g) => g.key === this.open);
     if (index < 0) { this.open = ""; return; }
-    if (index < this.rendered) this.rows()[index].setOpen(true);
+    // Past the rendered window the row cannot be opened without rendering as
+    // far as it, which would move the page under the reader. So it is NOT
+    // open -- and `open` has to stop claiming otherwise, because it is written
+    // straight to the URL: left set, a shared link reopens a row the sender
+    // was not looking at. Clearing it loses nothing that was ever on screen.
+    if (index >= this.rendered) { this.open = ""; return; }
+    this.rows()[index].setOpen(true);
   }
 
   renderMore() {

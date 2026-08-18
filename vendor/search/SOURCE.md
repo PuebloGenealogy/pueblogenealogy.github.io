@@ -6,8 +6,38 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `65b8254` |
-| Vendored on | 2026-08-17 |
+| Vendored from | `dist/`, at `80e0d2d` |
+| Vendored on | 2026-08-18 |
+
+## 2026-08-18 — the sic tooltip names the reading, and `?open=` stops lying
+
+Two small upstream fixes (`11a2960`), both of which the widget standing alone
+wants, so neither is a host injection.
+
+- **The `sic` tooltip names what the edition reads** — *"The plate prints this
+  clan; the edition reads Badger"* against the old *"the edition's reading
+  differs"*, which told a reader something was wrong without telling them what.
+  The coyness had a cause and it is gone: the reading is published on the ringed
+  span as `data-reading` (added here 2026-08-17), and the index already takes
+  `sex` from it. Falls back to the old wording if a reading did not resolve —
+  gate 1 refuses to build in that case, so the fallback should be unreachable.
+  **The displayed value is unchanged**: `sexOf()`/`clanOf()` still show the
+  plate's, because the edition annotates a misprint rather than correcting it.
+- **`restoreOpen()` no longer leaves `open` naming a closed row.** It cleared
+  the key when the row left the matches but not when the row merely fell past
+  the rendered window — where it is deliberately *not* opened, since opening it
+  would mean rendering as far as it and moving the page under the reader. The
+  key went on to the URL regardless, so a link shared after a re-filter could
+  reopen a row the sender was not looking at.
+
+**Shape: the FOURTH one again** — `search.js` and `search-index.json` move
+while **`index.html` is byte-identical** (a script change, stylesheet
+untouched). **No `--refresh` obligation**: the index's only difference is
+`meta.generated`, 2026-08-17 → 2026-08-18, which is the clock and not the index
+drifting — `identities`, `namesakes`, `people` and `relationships` are all
+byte-identical. Nothing at this end moved the register markup.
+
+`leak_report()` run by hand over all three files: clean.
 
 ## 2026-08-17 (second) — five people moved parents, and only the index moved
 
