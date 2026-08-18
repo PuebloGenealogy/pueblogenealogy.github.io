@@ -4,9 +4,9 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-17**, at the end of a session that read **Genealogy III's
-block 1** against the scan, found the transcription right at every group, and
-published one change.
+Last updated **2026-08-18**, at the end of a session that read **Genealogy III's
+block 1** against the scan, re-checked the two readings `W31` had undermined,
+calibrated the plate-audit rig for **Table 4**, and published two changes.
 
 ## Start here in a new chat
 
@@ -24,9 +24,15 @@ with `document.body.style.transform` rather than scrolling. **The pane caches
 
 ## State
 
-**Nothing is half-finished.** Working tree clean, `main` at **`bac9c4f`**, and
-the change is **live and verified page by page by SHA-256**, all seven pages
-`OK`, stale-identity count 0, sitemap 5 `<loc>`.
+**Nothing is half-finished.** Working tree clean, `main` at **`630d7c2`**, and
+everything is **live and verified page by page by SHA-256** — all seven pages
+`OK`, plus `search.js` and `search-index.json` checked by hand because the
+build's sweep never opens them. Stale-identity count 0, sitemap 5 `<loc>`.
+
+`laguna-search` is at **`80e0d2d`**, committed **and pushed** (both commits
+were sitting local until the end — check, never assume). The post-publish
+`--refresh` reported `re-fetched`, passed all seven of its gates, and returned
+all three `dist/` files **byte-identical** to `vendor/search/`.
 
 **Take that from the repo, not from here** — it is the least reliable sentence
 in this file:
@@ -98,8 +104,6 @@ Table 4 is `sips -s format bmp sources/parsons-1923-table-4.jpg`; it is
 |---|---|---|
 | **Block 1's orthography** | large, needs you | The one half not done. This pass read membership, stub numbers and clan descent — **not** names, ages or diacritics |
 | `/search/` #5 — the Death filter | small, **needs a decision** | Accepts letters where Birth strips them, both labelled *Year*. Either strip like Birth, or relabel `Year or d.`. Upstream |
-| `/search/` #6a — `?open=` | small | Can name a row that is not open, so a shared URL reopens a row the sender was not looking at. Upstream |
-| The `sic` tooltip could name the reading | tiny | `data-reading` exists, so *"the edition reads F"* beats *"the edition's reading differs"*. Upstream copy, never raised with the user |
 | The `/search/` provenance line's home | small, needs you | Offered four times, not taken up |
 | Remove the empty state's `Clear filters` | small, needs you | Kept deliberately. Offered four times |
 | Widen `/search/`'s Name column | small, needs you | Declined because `nowrap` would truncate a transcribed name |
@@ -141,10 +145,13 @@ Table 4 is `sips -s format bmp sources/parsons-1923-table-4.jpg`; it is
 
 ## Closed — do not re-raise
 
-- **The plate-audit rig for Table 4** — calibrated 2026-08-17; its 10 problems
+- **The plate-audit rig for Table 4** — calibrated 2026-08-18; its 10 problems
   are all explained and none is a defect. Command and account in
   `scripts/plate_audit/README.md`. **Do not re-derive `--row`**: 145.8, from the
   stub grid, and the pitch was never what was wrong.
+- **`/search/`'s sic tooltip and `?open=`** — both fixed upstream and
+  published 2026-08-18. The tooltip names the reading; the displayed value is
+  still the plate's, which is the decision and is not to be revisited.
 - **Genealogy III block 1** — read against the scan 2026-08-17. The
   transcription is right at every group; all 15 audit problems explained.
 - **85/86/87 (Gen. III) and 5/+6/+7 (Gen. IV)** — both re-checked against the

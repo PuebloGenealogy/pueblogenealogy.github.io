@@ -3,7 +3,101 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-17 (latest) — Genealogy III's block 1 is read, and it holds
+## 2026-08-18 (latest) — the rig learns Table 4, and `/search/` says what it reads
+
+Two unrelated pieces of work, one of which reaches the site.
+
+### The plate-audit rig is calibrated for Table 4
+
+**Its 10 problems are all explained and none is a defect**, so Table 4 joins
+Table 3 as a **known-clean baseline**: an 11th problem, or a change in which
+V-ids appear, is the signal. Diff the list rather than reading it fresh.
+
+**The row pitch was never the problem**, which is what the README had predicted
+it would be. Measured at **145.8** off the stub grid against Table 1's default
+of 146.6 — within half a percent, and page-type autocorrelation gave a
+misleading 146.7 because two-line entries broke the periodicity. Two other
+things were wrong:
+
+- **A full-width band reads the plate's own printed borders as brackets.**
+  Table 4 carries long verticals at x 2850–2975 and 7704–7789; one is a 3306px
+  run with **74 "stubs" 12px apart**, and that is the entire sub-row gap spray
+  this repo had attributed to ink fragmentation. Narrow bands drop it and the
+  spray goes to **none** — 144–148 × 27, 290–292 × 2, then a sparse tail.
+- **A band must hold the rule PLUS the 110px stub reach on BOTH sides.** The
+  first narrow bands tried were 230px wide and cost `V05` **all five** of its
+  stubs, because `stubs()` gives up when the remaining width is under 0.6 of the
+  reach. It reports zero stubs on a bracket that plainly has five, and it looks
+  exactly like an ink problem.
+
+Three findings about the plate. **It SKEWS where Table 3 bows** — x 3195 at
+y 722 to 3132 at y 5800, near-constant at −0.012 px per px of y — so `--skew`
+finally has a plate its linear model fits, even though `--track=1` absorbs it
+and the flag is still not passed. **The four leader flags at a constant ~+175px
+are the four Johnsons**: 8, 10, 15 and 17 carry an English name printed on its
+**own row**, so each wife sits two rows under her husband where the audit's
+model assumes one. And **V08 and V09's count disagreements are the plate
+collapsing `36-43. 8 children deceased` and `50-53. 4 children deceased` onto
+one line each**, both already in `PLATE_NOTES`.
+
+The remaining four problems have **one root cause**: `V01`'s vertical runs
+y 716–5995 with its two children **36 rows apart**, the rig starts it at 845,
+and the top stub at 721 falls outside the right-hand window. `--overshoot`
+cannot rescue it — **that flag widens the LEFT side only**, by design — so the
+stub is read as a *leader* instead. `V01` then pairs by position, takes `V11`'s
+bracket, and the displacement cascades into `V11` and `V03`. That is this
+repo's own warning about positional pairing, reproduced from a single missing
+stub.
+
+### `/search/` names the reading behind a misprint
+
+Two upstream fixes in `laguna-search` (`80e0d2d`), both of which the widget
+standing alone wants, so neither is a host injection.
+
+- **The `sic` tooltip names what the edition reads** — *"The plate prints this
+  clan; the edition reads Badger"*, against *"the edition's reading differs"*,
+  which told a reader something was wrong without telling them what. The
+  coyness had a cause and it is gone: `data-reading` was added to the ringed
+  span on 2026-08-17 and the index already takes `sex` from it. **The displayed
+  value is unchanged** — still `Bager` and `M.`, ringed — because the edition
+  annotates a misprint rather than correcting it.
+- **`?open=` no longer names a row that is not open.** `restoreOpen()` cleared
+  the key when the row left the matches but **not** when it merely fell past the
+  rendered window, where the row is deliberately not opened (opening it would
+  mean rendering as far as it and moving the page under the reader). The key
+  reached the URL regardless, so a link shared after a re-filter could reopen a
+  row the sender was not looking at.
+
+**A defect in the first attempt, worth keeping.** The sex reading is a *label*
+carrying its own period — `F.` — while a clan is a bare word, so appending
+unconditionally produced *"the edition reads F.. Both are searchable."* Fixed
+by appending only where it is missing, which is exactly the rule the edition's
+own `dotted()` follows.
+
+Verified in the browser on III·255 and III·37, and all three `open` paths
+exercised: a row that survives a re-filter stays open and keeps `open=` (IV-35
+under a table-IV filter); a row that leaves the matches clears; a row pushed
+past the 60-row window by a re-sort now clears.
+
+**Re-vendor shape: the fourth one** — `search.js` and `search-index.json` move
+while `index.html` is byte-identical. **No `--refresh` obligation was owed**:
+the index differed only in `meta.generated`, which is the clock, with
+`identities`, `namesakes`, `people` and `relationships` byte-identical. The
+post-publish `--refresh` was run anyway, reported `re-fetched`, passed all
+seven of its gates, and returned **all three files byte-identical** to what is
+vendored. Gate 8's register-bearing diff was **0**. `leak_report()` run by hand
+over all three vendored files and all three built ones: clean.
+
+### A note on the build date
+
+An earlier commit this session picked up a `docs/` diff that was **only** the
+build stamping `2026-08-18` into `dateModified` and the sitemap's `lastmod`,
+with nothing about the edition changed. It was amended out rather than shipped:
+a modification date the content has not earned is a small false claim, and
+`docs/` should keep reflecting the last real content change. The date **is**
+included in this publish, because the site genuinely changes here.
+
+## 2026-08-17 — Genealogy III's block 1 is read, and it holds
 
 **Block 1 was 4300 of the plate's 5503px and no human had read it.** It has now
 been read group by group against the scan, and **the transcription is right at
