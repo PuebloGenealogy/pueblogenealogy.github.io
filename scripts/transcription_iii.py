@@ -66,13 +66,21 @@ HOW THIS PLATE DIFFERS FROM TABLES 1, 2 AND 4
    HE WAS READ AS A SON OF 236 + 237 UNTIL 2026-08-17, and so was 238. The
    plate hangs one vertical off 230's line and five stubs enter it -- 232,
    234, 236, 238 and 8, skipping 239, who is a spouse. 238 and 8 are set in
-   the same column as 232, 234 and 236, where children of 236 + 237 would be
-   indented one column further in, as 240 is; and 236's line carries no
-   leader to a bracket of her own. Nothing structural could see the error:
+   the same column as 232, 234 and 236, where children of 236 + 237 are
+   indented one column further in. Nothing structural could see the error:
    230, 236, 238 and 8 are all Parrot, so clan descent cannot discriminate,
    and the counts close either way. It was found by the plate audit reporting
    five stubs against three children and settled by the user reading the
-   scan. 236 + 237 have no recorded issue.
+   scan.
+
+   THE SAME CORRECTION MOVED THREE PEOPLE THE OTHER WAY. Block 2's column 4
+   carries TWO brackets, not one, and the leaders say whose they are: the
+   upper vertical takes 240 and 242 with its leader on 232's row, the lower
+   takes 243, 245 and 246 with its leader on 236's row. All five had been
+   given to 232 + 233. Measured on the scan: 232's own stub at y 4675 against
+   that bracket's leader at 4674, and 236's at y 4903 against 4899. Again no
+   check in this repo could have seen it -- 232, 236 and all five children
+   are Parrot.
 
 3. TWO DESCENT BLOCKS, and the second one is INDENTED. 230 + 231 head a block
    the plate sets in the generation-2 column, not at the sheet's left edge --
@@ -758,7 +766,7 @@ UNIONS = [
     ("W63", 230, 231, 1, 1, ""),
     ("W64", 232, 233, 1, 1, ""),
     ("W65", 234, 235, 1, 1, "no issue recorded"),
-    ("W66", 236, 237, 1, 1, "no issue recorded"),
+    ("W66", 236, 237, 1, 1, ""),
     ("W67", 239, 238, 1, 1, "no issue recorded"),
     ("W68", 240, 241, 1, 1, ""),
     ("W69", 244, 243, 1, 1, ""),
@@ -820,7 +828,8 @@ _GROUPS = [
     ("W60", 178, 179, [224, 225, 226]),
     ("W62", 190, 191, [227, 228, 229]),
     ("W63", 230, 231, [232, 234, 236, 238, 8]),
-    ("W64", 232, 233, [240, 242, 243, 245, 246]),
+    ("W64", 232, 233, [240, 242]),
+    ("W66", 236, 237, [243, 245, 246]),
     ("W68", 240, 241, [248, 249, 251, 252, 253, 254]),
     ("W69", 244, 243, [153, 255, 256]),
     ("W71", 249, 250, [258, 259, 260]),
