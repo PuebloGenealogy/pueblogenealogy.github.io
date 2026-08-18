@@ -71,7 +71,6 @@ generalise `W31` into a rule.
 | | Effort | Notes |
 |---|---|---|
 | **Block 1's orthography** | large, needs you | The one half not done. This pass read membership, stub numbers and clan descent — **not** names, ages or diacritics |
-| **Genealogy IV's 5 / +6 / +7** | small | Its basis was the rule `W31` disproved — "a spouse with no leader had no issue". 85/86/87 was re-checked and stands; this one was not. Read the Table 4 scan at the bracket for 19, 20 and ask whether that group could equally be 6+7's. The page is not wrong either way |
 | Calibrate the rig for **Table 4** | medium | Still uncalibrated; its eight old flags were the rig's own noise. `--row` is the first thing to measure |
 | `/search/` #5 — the Death filter | small, **needs a decision** | Accepts letters where Birth strips them, both labelled *Year*. Either strip like Birth, or relabel `Year or d.`. Upstream |
 | `/search/` #6a — `?open=` | small | Can name a row that is not open, so a shared URL reopens a row the sender was not looking at. Upstream |
@@ -119,6 +118,14 @@ generalise `W31` into a rule.
 
 - **Genealogy III block 1** — read against the scan 2026-08-17. The
   transcription is right at every group; all 15 audit problems explained.
+- **85/86/87 (Gen. III) and 5/+6/+7 (Gen. IV)** — both re-checked against the
+  scans 2026-08-17 after `W31` disproved the rule they leaned on, and **both
+  readings stand**. Measured in each case: the mother's row carries a solid
+  rule, **both husbands' rows are bare**, so the one leader names no father by
+  itself. 85/86/87 is settled by Gen. III's own 43; 5/+6/+7 has no such example
+  on Table 4 and its basis is **cross-plate**, propped up locally by the bracket
+  being drawn inside 5's block. Bases are recorded in `CLAUDE.md` and in V04's
+  note. **Do not re-justify either as "a spouse with no leader had no issue".**
 - **Genealogy III block 2's parentage** — read and published 2026-08-17. Do not
   re-open 230+231, 232+233 or 236+237.
 - **Genealogy I's placement** — read stub by stub 2026-08-17, all 76 matched.

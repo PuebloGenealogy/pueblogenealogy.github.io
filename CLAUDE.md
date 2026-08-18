@@ -1462,11 +1462,20 @@ to catch "58+59" links those too.
   so 184–189 are Turquoise either way. **State it that way** — the reading rests
   on Parsons's practice with 43, not on "a spouse with no leader had no issue",
   which `W31` disproves as a general rule.
-  **Genealogy IV's 5/+6/+7 has NOT been re-checked** and rests on the same
-  disproved general rule, so treat its basis as unconfirmed until someone reads
-  that scan. The page is not wrong either way: it draws the plate's own single
-  bracket. The question is only whether that bracket could equally be the
-  **second** marriage's, and it is a question about the ink.
+  **Genealogy IV's 5/+6/+7 was re-checked the same day and also STANDS, on
+  evidence one step weaker again.** Measured in the 750px gap: 6's row is solid
+  ink (750/750 at y 6099–6116) and **both husbands' rows carry nothing** above
+  3px — the same configuration as 85/86/87, so the single leader sits on the
+  line 6 shares with both marriages and names no father by itself. The
+  difference is that **Table 4 never demonstrates its own convention**: its only
+  other second marriage with issue is V07, where the second spouse is the
+  *mother*, whose line carries the bracket anyway. So the "Parsons marks a
+  second husband's issue when she means to" argument has to reach **across to
+  Genealogy III's 43**, and a cross-plate inference is exactly what this file
+  warns against elsewhere. What holds it up locally is that the bracket is drawn
+  inside **5's block**, he being its primary with 6 and 7 both '+' lines under
+  him. Keep the reading; state the basis as cross-plate, and never as "a spouse
+  with no leader had no issue".
 - **There is a SECOND kind of editorial claim now, and it is about identity, not
   paternity.** Added 2026-08-09 with `/search/`, and set out in METHOD.md's
   *Identity across plates*. Searching by name across four independent numberings

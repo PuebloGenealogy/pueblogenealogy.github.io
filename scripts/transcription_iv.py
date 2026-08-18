@@ -137,10 +137,25 @@ UNIONS = [
      "vertical spanning 19 and 20 with a SINGLE leader entering it at 19's "
      "row, from 6's line; 7's line ends after 'Parrot' and carries no rule at "
      "all. Splitting the bracket asserted a paternity the plate does not "
-     "state, and drew a leader on 7's line the plate does not print. Same "
-     "shape as Genealogy III's 85/86/87 -- a spouse with no leader had no "
-     "recorded issue. Nothing structural could see it: 19 and 20 are both "
-     "Bear, exactly like their mother, so clan descent cannot separate them", 5),
+     "state, and drew a leader on 7's line the plate does not print. Nothing "
+     "structural could see it: 19 and 20 are both Bear, exactly like their "
+     "mother, so clan descent cannot separate them. "
+     "RE-MEASURED 2026-08-17, and the BASIS restated: in the 750px gap "
+     "between the text and the bracket, 6's row is solid ink (750/750 at "
+     "y 6099-6116) and BOTH husbands' rows carry nothing above 3px. So the "
+     "one leader sits on the line 6 shares with BOTH marriages, and names no "
+     "father on its own. The reading that 19 and 20 are 5's rests on two "
+     "things, neither of them the old justification: Parsons marks a second "
+     "husband's issue when she means to -- Gen. III's 43 gives her second "
+     "husband 45 his own leader -- and this bracket is drawn inside 5's "
+     "block, he being its primary with 6 and 7 both '+' lines under him. "
+     "NOTE the first argument is CROSS-PLATE: Table 4 never demonstrates its "
+     "own convention, since its only other second marriage with issue (V07) "
+     "has the second spouse as the MOTHER, whose line carries the bracket "
+     "anyway. Do NOT restate this as 'a spouse with no leader had no recorded "
+     "issue' -- Gen. III's 58, who has no leader on her own line and two "
+     "children, disproves that as a general rule (see LEADER_ON_SPOUSE_ROW's "
+     "W31 there)", 5),
     ("V05",  9,  8, 1, 1, ""),
     ("V06", 11, 10, 1, 1, ""),
     ("V07", 12, 10, 1, 2, "second wife of 10"),
