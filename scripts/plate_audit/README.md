@@ -69,7 +69,19 @@ the type, and each was forced by a specific measurement:
 | `--ongrid` | off | **0.25** | rows of slack before a run is off the grid |
 | `minrun` (positional) | 110 | **12** | px of contiguous ink that makes a rule |
 
-`--skew` exists and is **not used by either plate** — see the bow, below.
+`--skew` is **not used by Tables 1 or 3** — see the bow, below. Table 4 is the
+plate it was built for and it is still not needed there, because `--track`
+absorbs the same drift; see *Table 4* below.
+
+Table 4, whose calibration is set out below, is read with:
+
+```bash
+python3 scripts/plate_audit/brackets.py /tmp/t4.bmp \
+    '[[2990,3400],[6060,6450],[9100,9500]]' 140 \
+    --row=145.8 --track=1 --xmerge=20 --maxwidth=70 --overshoot=140 > /tmp/t4.json
+python3 scripts/plate_audit/audit.py transcription_iv.py /tmp/t4.json \
+    2:3160,3:6193,4:9260 80 --row=145.8
+```
 
 `crop.py` cuts an exact native-resolution PNG for a human to read:
 
@@ -91,7 +103,8 @@ then **nothing at all below one row**:
 |---|---|
 | Table 1, calibrated | 144–148 × 65, 290–292 × 5, then a sparse tail |
 | Table 3, calibrated | 24–26 × 43, 49–51 × 19, then a sparse tail |
-| Table 4, **not** calibrated | 22, 23, 24, 25, 26, 27, 28, 30, 33, 35, 37, 39 … |
+| Table 4, calibrated | 144–148 × 27, 290–292 × 2, then a sparse tail |
+| Table 4, **before** calibration | 9.5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 … |
 
 Table 4's spray of small gaps corrupts the measured row pitch, which then
 flags leaders that are fine — eight of them, four at a constant ~+176px against
@@ -201,6 +214,59 @@ names, ages and diacritics were not re-read.
 **Do not report any of the 15 as a defect in the transcription.** A positional
 pairing is exactly the basis on which one of the two real errors above was
 nearly dismissed.
+
+## Table 4, calibrated 2026-08-17 — what its scan does that the others do not
+
+**Its row pitch was never the problem.** Measured at **145.8** from the stub
+grid (431 long baselines of page type gave 146.7, and the stub gaps are the
+better measure: 1312/9, 1166/8, 1019/7 all land on 145.6–145.8). Table 1's
+default of 146.6 was already within half a percent. What made the plate look
+uncalibrated was two other things.
+
+**A full-width band reads the plate's own borders as brackets.** Table 3 can be
+read with `'[[0,3770]]'` because its junk is the fold crease. Table 4 has long
+printed verticals at x 2850–2975 and 7704–7789 that answer every density test:
+one is a 3306px run carrying **74 "stubs" 12px apart**, which is the entire
+sub-row spray this file used to attribute to fragmentation. Narrow bands drop
+it, exactly as Table 1's do, and the spray goes to **none**.
+
+**A band must hold the rule PLUS the stub reach on BOTH sides.** The first
+narrow bands tried here were 230px wide and cost `V05` all five of its stubs —
+`stubs()` gives up when `b - a < reach * 0.6`, and 62px of band to the right of
+the rule is under the 110px reach. It reports **zero stubs on a bracket that
+plainly has five**, which looks exactly like an ink problem and is not. Allow
+the rule's whole x drift plus ~150px each side.
+
+**The plate SKEWS where Table 3 bows, and it is the one plate `--skew` was built
+for.** Its generation-2 rule runs x ≈ 3195 at y 722 and 3132 at y 5800 — 63px,
+and the per-200px differences are near-constant at −0.012 px per px of y, which
+is a straight line and not Table 3's bow. `--track=1` absorbs it in practice, so
+`--skew` is still not passed; the point is that the drift here has a model, and
+Table 3's does not.
+
+### The 10 problems it reports, none of them a defect
+
+| | what it is |
+|---|---|
+| V01 count, V11 bracketless, V02 and V03 leaders | **one root cause** — see below |
+| V08 (plate 5, transcription 12), V09 (plate 7, transcription 10) | the plate collapses **`36-43. 8 children deceased`** and **`50-53. 4 children deceased`** onto ONE line each. Both are in `PLATE_NOTES`; the stub count is right and the child count is right |
+| V05, V06, V09, V10 leaders, all ~**+175px** against a 147px row | the **four Johnsons**. 8, 10, 15 and 17 carry an English name — `(Hugh Johnson)` — printed on its **own row**, so each wife sits TWO rows under her husband, not one. The audit's expected-leader model assumes one |
+
+**The single root cause behind the first four is V01's top stub.** Its vertical
+runs y 716–5995 with children 36 rows apart — 3 at the top, 5 at the bottom —
+and the rig starts it at y 845, so the stub at 721 falls outside the right-hand
+window. `--overshoot` cannot rescue it: **that flag widens the LEFT side only**,
+by design, so the stub is seen as a *leader* at 728 instead. V01 then pairs by
+position, takes V11's bracket, and the displacement cascades — V11 is left
+bracketless and V03's expected leader is computed off the wrong stub, 1088px
+out. This is the README's own warning about positional pairing, reproduced from
+a single missing stub.
+
+**V02's remaining leader flag is person 3 being printed twice**, so the expected
+row is taken from the lower occurrence and the measurement comes back −6042px.
+
+**So Table 4's 10 are a known-clean baseline, like Table 3's 15.** An 11th
+problem, or a change in which V-ids appear, is the signal. Diff the list.
 
 ## Traps already paid for
 

@@ -66,12 +66,37 @@ W-ids appear, is the signal — re-run and **diff the list**, don't read it fres
 with the leader on 60's own line. Both are now drawn as printed. Do not
 generalise `W31` into a rule.
 
+## Regenerating the crops
+
+The scratchpad does not survive a session. Table 3, block 1 in three chunks x
+two overlapping strips, plus block 2 — native resolution, 830px of horizontal
+overlap, and **chunk rather than magnify**: anything taller than ~1500px is
+downscaled on display, which is what makes it illegible.
+
+```bash
+sips -s format bmp sources/parsons-1923-table-3.jpg --out /tmp/t3.bmp
+python3 scripts/plate_audit/crop.py /tmp/t3.bmp    0  150 2300 1480 /tmp/b1-1.png
+python3 scripts/plate_audit/crop.py /tmp/t3.bmp 1470  150 2300 1480 /tmp/b1-1r.png
+python3 scripts/plate_audit/crop.py /tmp/t3.bmp    0 1590 2300 1480 /tmp/b1-2.png
+python3 scripts/plate_audit/crop.py /tmp/t3.bmp 1470 1590 2300 1480 /tmp/b1-2r.png
+python3 scripts/plate_audit/crop.py /tmp/t3.bmp    0 3030 2300 1450 /tmp/b1-3.png
+python3 scripts/plate_audit/crop.py /tmp/t3.bmp 1470 3030 2300 1450 /tmp/b1-3r.png
+python3 scripts/plate_audit/crop.py /tmp/t3.bmp    0 4440 2300 1080 /tmp/b2-1.png
+python3 scripts/plate_audit/crop.py /tmp/t3.bmp 1470 4440 2300 1080 /tmp/b2-1r.png
+```
+
+**A column-6 strip that carries the mother's column beside it** is what settled
+the six groups the crease hides — `crop.py /tmp/t3.bmp 2250 <y> 1150 1450` at
+y = 150, 1550, 2950 and (h=1100) 4400.
+
+Table 4 is `sips -s format bmp sources/parsons-1923-table-4.jpg`; it is
+12255 x 8409, so crop at native and chunk hard.
+
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
 | **Block 1's orthography** | large, needs you | The one half not done. This pass read membership, stub numbers and clan descent — **not** names, ages or diacritics |
-| Calibrate the rig for **Table 4** | medium | Still uncalibrated; its eight old flags were the rig's own noise. `--row` is the first thing to measure |
 | `/search/` #5 — the Death filter | small, **needs a decision** | Accepts letters where Birth strips them, both labelled *Year*. Either strip like Birth, or relabel `Year or d.`. Upstream |
 | `/search/` #6a — `?open=` | small | Can name a row that is not open, so a shared URL reopens a row the sender was not looking at. Upstream |
 | The `sic` tooltip could name the reading | tiny | `data-reading` exists, so *"the edition reads F"* beats *"the edition's reading differs"*. Upstream copy, never raised with the user |
@@ -116,6 +141,10 @@ generalise `W31` into a rule.
 
 ## Closed — do not re-raise
 
+- **The plate-audit rig for Table 4** — calibrated 2026-08-17; its 10 problems
+  are all explained and none is a defect. Command and account in
+  `scripts/plate_audit/README.md`. **Do not re-derive `--row`**: 145.8, from the
+  stub grid, and the pitch was never what was wrong.
 - **Genealogy III block 1** — read against the scan 2026-08-17. The
   transcription is right at every group; all 15 audit problems explained.
 - **85/86/87 (Gen. III) and 5/+6/+7 (Gen. IV)** — both re-checked against the
