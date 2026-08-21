@@ -26,17 +26,35 @@ with `document.body.style.transform` rather than scrolling. **The pane caches
 
 ## State
 
-**Nothing is half-finished, and nothing is in flight.** `main` at **`5fc06a7`**,
-working tree clean, **no open PRs**, `0 0` against `origin/main`, and `docs/`
-reproduces byte-identically from `--public`. Everything the last session did is
-**live and verified page by page by SHA-256** — all seven pages `OK`, plus
-`search.js` and `search-index.json` checked by hand, because the build's leak
-sweep only opens `.html` and those two were exactly what changed. Sitemap 5
-`<loc>`, stale-identity count 0.
+**Published 2026-08-21. `main` at `8a092d5`, pushed, working tree clean, and
+`docs/` reproduces byte-identically from `--public`.** Two commits went out
+together: Genealogy III block 1's orthography (docs of record only) and the
+`/search/` Death filter (upstream + re-vendor). GitHub's `pages build and
+deployment` run for `8a092d5` completed **success** at 19:15:28Z.
 
-`laguna-search` is at **`80e0d2d`**, pushed. The post-publish `--refresh`
-reported `re-fetched`, passed all seven of its gates, and returned all three
-`dist/` files **byte-identical** to `vendor/search/`.
+**The by-hash live verification is OWED, and could not be run.** That session's
+egress policy blocked `pueblogenealogy.github.io:443` — a 403 at the proxy on
+CONNECT — so Gate 6's page-by-page SHA-256 check never ran, and neither did the
+`--refresh` over in `laguna-search`. **A successful Pages run is not that
+check**: this file's own procedure says to verify by hash because the Pages API
+misreports the deployed commit. Run both from a machine that can reach the site:
+
+```bash
+(cd docs && find . -name '*.html' | sed 's|^\./||') | while read -r f; do
+  live=$(curl -s "https://pueblogenealogy.github.io/$f" | shasum -a 256 | cut -d' ' -f1)
+  [ "$live" = "$(shasum -a 256 "docs/$f" | cut -d' ' -f1)" ] && echo "OK   $f" || echo "DIFF $f"
+done
+python3 build.py --refresh          # in the laguna-search checkout
+```
+
+The `--refresh` should return all three `dist/` files byte-identical to
+`vendor/search/` apart from `meta.generated`; if it disagrees, re-vendor from
+it.
+
+`laguna-search` is at **`58965e5`**, pushed — but on branch
+**`claude/resume-jntfyn`**, not `main`. `vendor/search/SOURCE.md` records the
+SHA with that caveat. **Merging it there is the one loose end**; the site is
+already serving that build.
 
 **Take all of that from the repo, not from here** — it is the least reliable
 paragraph in this file, and this session proved it again: `laguna-search`'s two

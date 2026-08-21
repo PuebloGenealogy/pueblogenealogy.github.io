@@ -5,6 +5,13 @@ Newest first.
 
 ## 2026-08-21 (latest) — the Death filter says what it accepts
 
+**Published the same day**, `8a092d5`; GitHub's `pages build and deployment`
+run for that commit reported success. **The by-hash live check is owed**: this
+session's egress policy blocked `pueblogenealogy.github.io:443` at the proxy,
+so Gate 6's page-by-page SHA-256 comparison could not run, and a successful
+Pages run is explicitly not that check. `SESSION-NOTES.md` carries the two
+commands to run from a machine that can reach the site.
+
 **`/search/` #5 is closed, by relabelling rather than by stripping.** The two
 year fields were both labelled *Year* and are not symmetric, and the reason
 turned out to decide the fix: Birth filters the birth **number**, so a letter
