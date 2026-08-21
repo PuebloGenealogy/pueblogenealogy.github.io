@@ -59,6 +59,21 @@ bytes are what is published. **A `--refresh` run from a machine that can reach
 the site is still due**, and should return the three files byte-identical apart
 from `meta.generated`.
 
+**Closed out the same day.** `laguna-search`'s branch was fast-forwarded into
+its `main` (`58965e5`), so `vendor/search/SOURCE.md` no longer carries a
+branch caveat behind the vendored build. **Deleting the two merged
+`claude/resume-jntfyn` branches failed**: the remote answered **HTTP 403 to a
+delete-push** in both repos while accepting ordinary pushes. Local branches are
+gone; `origin` still carries both, each fully merged by fast-forward and
+holding no unique commit, with the one-line fix recorded in `SESSION-NOTES.md`.
+
+**Two environment limits are now in `CLAUDE.md` → *Environment*, because they
+change what a publish can claim.** A remote session may have **no route to the
+published site** — 403 on CONNECT, which removes `/publish` gate 6 and the
+post-publish `--refresh` — and may be **refused a delete-push**. It gains
+Pillow and a real headless Chromium in exchange, which is what made the plate
+crops and the 375px measurements possible without `sips` or the preview pane.
+
 ## 2026-08-21 — Genealogy III block 1's orthography, read and clean
 
 **The open thread is closed and nothing changed.** Block 1's placement was read

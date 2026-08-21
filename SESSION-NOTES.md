@@ -4,10 +4,11 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-18**, at the end of a session that read Genealogy III's
-**block 1**, re-checked the two readings `W31` had undermined, calibrated the
-plate-audit rig for **Table 4**, published two changes, and closed out with
-PR #62 merged and the branch list tidied to two.
+Last updated **2026-08-21**, at the end of a session that read Genealogy III
+block 1's **orthography** — the last reading owed on any plate, and it needed no
+correction — fixed `/search/`'s **Death filter**, published both, and merged the
+upstream change. It ran **remotely**, on Claude Code on the web, which is why
+two of the publish checks are recorded as owed rather than done.
 
 ## Start here in a new chat
 
@@ -16,6 +17,11 @@ PR #62 merged and the branch list tidied to two.
    plates it has been pointed at are calibrated now — Table 1, Table 3 and
    Table 4 — and each set of parameters is per plate.
 3. `CHANGELOG.md`'s two newest entries.
+4. **If this session is running remotely** — Claude Code on the web rather than
+   the Mac — read `CLAUDE.md` → *Environment* first. There may be no route to
+   the published site at all, which removes `/publish` gate 6, and a
+   delete-push may be refused; in exchange Pillow and a headless Chromium are
+   available, which the Mac does not have.
 
 Preview: `preview_start`, config name `site`, serves `docs/` on
 `http://localhost:4173`. **If a screenshot comes back blank, read `innerWidth`
@@ -26,7 +32,7 @@ with `document.body.style.transform` rather than scrolling. **The pane caches
 
 ## State
 
-**Published 2026-08-21. `main` at `8a092d5`, pushed, working tree clean, and
+**Published 2026-08-21. `main` at `8fc5ef3`, pushed, working tree clean, and
 `docs/` reproduces byte-identically from `--public`.** Two commits went out
 together: Genealogy III block 1's orthography (docs of record only) and the
 `/search/` Death filter (upstream + re-vendor). GitHub's `pages build and
@@ -96,7 +102,17 @@ one of these, the test is the ancestor check, not the diff**: `git diff main
 <branch>` reported 1154 and 492 lines for those two and they contained nothing
 unique — the lines were deletions, meaning the branch was *behind* `main`.
 
-## The open thread — none
+## The open thread — two checks the last session could not run
+
+**Do these first, from the Mac, and they take a minute.** The 2026-08-21
+publish went out from a remote session with no route to the published site, so
+`/publish` gate 6 never ran and neither did `laguna-search`'s post-publish
+`--refresh`. Both commands are in *State* above. Until the hash check passes,
+**the correct thing to say about that publish is "deployed, not verified"** —
+GitHub's Pages run reported success for `8a092d5`, and this repo does not treat
+that as the check. If either disagrees, re-vendor from the `--refresh` run.
+
+**Nothing else is in flight**, and no reading is owed on any plate:
 
 **Genealogy III's block 1 was read for ORTHOGRAPHY on 2026-08-21, and nothing
 changed.** All 229 entries of ids 1–229 held against the scan — name, sex
@@ -133,6 +149,29 @@ y = 150, 1550, 2950 and (h=1100) 4400.
 
 Table 4 is `sips -s format bmp sources/parsons-1923-table-4.jpg`; it is
 12255 x 8409, so crop at native and chunk hard.
+
+**None of that works remotely — there is no `sips` — and the replacement is
+better for reading TYPE, so keep it.** `pip3 install pillow`, then crop
+straight from the JPEG with `Image.crop().resize(..., Image.NEAREST)`, which
+invents nothing, exactly as `crop.py` does not. What made the 2026-08-21
+orthography pass tractable was **not** eyeballing where the lines are:
+
+- **Plan the tiles from an ink-row profile**, one generation band at a time —
+  count dark pixels per row inside the band's x range, group runs of ≥6 into
+  text lines, then pack lines into tiles ≤420 native px tall. It found 276 text
+  lines in block 1, which reconciles against 229 people plus their
+  cross-reference rows, 155's four continuation lines, `(Sister of 10)`, the
+  six second-occurrence lines and the plate title. **A reconciling count is
+  what licenses trusting the rest**, the same argument as the `_diag.html`
+  DOM tally.
+- **Two magnifications, not one.** 380 native px at **4x** (1520px, which is
+  as much as a vision read carries) over the number-sex-name field, and 2.8x
+  over the tail for age, clan and cross-reference. Re-crop a name at **6–7x**
+  the moment a mark is ambiguous — that is what settled 60's `Kʼapokaʼă`,
+  where 4x read the second apostrophe as a raised dot.
+- Generation columns for Table 3, native x of the right-aligned number:
+  g1 145 · g2 755 · g3 1293 · g4 1833 · g5 2377 · g6 2920 · g7 3467. Band
+  x from `col − 60`; a full line runs about 370px.
 
 ## Other things that could be picked up
 

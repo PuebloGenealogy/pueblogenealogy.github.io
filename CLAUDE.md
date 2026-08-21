@@ -1586,6 +1586,30 @@ the plate.
 The repo lives under Google Drive, whose sync daemon can touch `.git` mid-write;
 if git reports object corruption, that is the likely cause.
 
+**A REMOTE session is a different machine, and two of its limits change what
+the publish procedure can do.** Found 2026-08-21, working from Claude Code on
+the web. Neither is a fault to debug — both are egress policy, and the proxy's
+own README says to report a 403 rather than route around it.
+
+- **There may be no route to the published site.** `pueblogenealogy.github.io:443`
+  answered **403 to CONNECT**, so `curl` returns `000` and `build.py --refresh`
+  dies in `urllib`. That takes out `/publish` **gate 6 entirely** — the 200
+  sweep, the sitemap `<loc>` count and the page-by-page SHA-256 comparison —
+  and the post-publish `--refresh` with it. **A green `pages build and
+  deployment` run is not a substitute**: this repo verifies by hash precisely
+  because the Pages API misreports the deployed commit. Push, then record both
+  checks as owed and name the commands; do not write "verified".
+- **A delete-push is refused.** `git push origin --delete <branch>` returned
+  **HTTP 403** in both repos while ordinary pushes went through, so a merged
+  branch cannot be cleaned up from there. Delete the local one, say so, and
+  leave the remote for a machine that can.
+
+What a remote session gains, which the Mac does not have: **Pillow and a real
+headless Chromium** (Playwright at `/opt/pw-browsers`), so a plate can be
+cropped without `sips` and `/search/` can be measured at an actual 375px
+viewport — where the desktop preview pane widens to the content instead. See
+*The preview pane cannot simulate a NARROW viewport*.
+
 **PRs here are squash-merged, so `git branch --no-merged` is not a test of
 whether a branch holds unmerged work.** A squash puts the branch's *content*
 on `main` as a new single-parent commit; the branch's own commit is never an
