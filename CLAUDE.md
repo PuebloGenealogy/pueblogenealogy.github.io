@@ -1599,6 +1599,19 @@ own README says to report a 403 rather than route around it.
   deployment` run is not a substitute**: this repo verifies by hash precisely
   because the Pages API misreports the deployed commit. Push, then record both
   checks as owed and name the commands; do not write "verified".
+  **It is a standing property of the environment, not a transient state — do
+  not burn a turn re-testing it hopefully.** Re-measured 2026-08-21 from a
+  second remote session: two `curl`s ten seconds apart, both `000`, and
+  `$HTTPS_PROXY/__agentproxy/status` recorded a fresh `connect_rejected` for
+  each with the same *gateway answered 403 to CONNECT* against that host. The
+  status endpoint is the thing to read, because **`curl` hides the body of a
+  failed CONNECT** and `000` alone cannot tell a policy denial from an outage;
+  check the timestamps against `date -u` or you are reading the *previous*
+  session's failure. The remedy is not in the session: either run the two
+  checks from the Mac, or widen the environment's egress policy — which is set
+  when the environment is created, covers `laguna-search`'s fetch target as the
+  same host, and is documented at
+  `https://code.claude.com/docs/en/claude-code-on-the-web`.
 - **A delete-push is refused.** `git push origin --delete <branch>` returned
   **HTTP 403** in both repos while ordinary pushes went through, so a merged
   branch cannot be cleaned up from there. Delete the local one, say so, and
