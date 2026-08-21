@@ -1824,9 +1824,19 @@ to stay *allowed*, so the two must not be combined. Neither is deployed here.
   including the six column-6 groups the crease hides, which are real brackets
   with the right counts and clans. All 15 of the calibrated audit's problems
   are explained and none is a defect; they are a known-clean baseline now, so a
-  16th problem is the signal. **What block 1 has still NOT had is its
-  orthography checked** — names, ages and diacritics were not re-read, and that
-  is the one reading still owed on this plate.
+  16th problem is the signal. **Its ORTHOGRAPHY was then read too, 2026-08-21,
+  and every one of block 1's 229 entries matches the transcription** — name,
+  sex letter, age, clan, vital note and cross-reference, ids 1–229, read off
+  the scan column by column at 4x with 6–7x confirmation on nine mark-dense
+  names. **Nothing was corrected, and no reading is now owed on this plate.**
+  Two things that pass are worth not re-finding: 27's death note is set
+  `d .1917.` with the point after the *d* displaced, which is compositor
+  spacing and not a character the data gets wrong; and **153 carries a mixed
+  record on purpose** — the spelling of her first occurrence with the age from
+  her second, exactly as her `plate_note` says, because the plate prints her
+  twice and differently. The one thing this pass could NOT settle is a glyph
+  the scan cannot resolve at all: see the magnification floor, and the five
+  U+02BD instances that a photograph, not a bigger crop, closed.
   **Both of block 2's errors were Parrot throughout** — 230, 232, 236, 238, 8
   and all five children — so this is the third time clan descent has been
   unable to see a placement error, after Genealogy IV's Bear and Genealogy

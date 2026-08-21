@@ -208,8 +208,9 @@ not consistent about it — 60 + 61 → 145 is the same shape with the leader on
 which W-ids appear, is the signal. Re-run with the calibration above and **diff
 the list**, rather than reading it fresh. The half this tool cannot do — the
 number printed against each stub — **was** done for block 1 in that pass, which
-is what makes the baseline trustworthy. What was not done is the orthography:
-names, ages and diacritics were not re-read.
+is what makes the baseline trustworthy. The orthography — names, ages,
+diacritics — was read separately on 2026-08-21, all 229 of block 1's entries,
+and matched the transcription at every one.
 
 **Do not report any of the 15 as a defect in the transcription.** A positional
 pairing is exactly the basis on which one of the two real errors above was

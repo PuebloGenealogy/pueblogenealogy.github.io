@@ -200,6 +200,17 @@ and it has now been run over EVERY id on the plate, in three stretches:
       same person, HAS one. The plates disagree and this file records what
       THIS plate prints; the divergence is in 192's plate_note.
 
+BLOCK 1 WAS READ A SECOND TIME, BY A SECOND READER, 2026-08-21, AND NOTHING
+CHANGED. All 229 entries of ids 1-229 -- name, sex letter, age, clan, vital
+note and cross-reference -- held against the scan, read column by column at 4x
+(380 native px rendered to 1520) with 6-7x re-crops on nine mark-dense names:
+20, 45, 54, 60, 87, 102, 143, 168 and the ˙/ʼ cluster at 11. Not one
+correction. Two things that LOOK like discrepancies and are not, recorded so
+they are not re-found: 27's death note is set `d .1917.`, the point after the
+italic d displaced by the compositor, which is spacing and not a character;
+and 153's record is deliberately mixed -- the spelling of her first occurrence
+with the age from her second -- as her plate_note already says.
+
 Note 45 also lost a breve: the plate prints Wi˙ʼsh˙gă, not Wĭ˙ʼsh˙gă. And note
 that a name being spelled one way here is not a claim it is spelled that way
 where the plate prints the person twice -- 152 and 153 differ between their two

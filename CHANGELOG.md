@@ -3,7 +3,44 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-18 (latest) — the rig learns Table 4, and `/search/` says what it reads
+## 2026-08-21 (latest) — Genealogy III block 1's orthography, read and clean
+
+**The open thread is closed and nothing changed.** Block 1's placement was read
+on 2026-08-17; its orthography — names, ages, diacritics — had not been
+re-read since the original 5x pass of 2026-07-31, and that was the one reading
+still owed on this plate. **All 229 entries, ids 1–229, now hold against the
+scan**: name, sex letter, age, clan, vital note and cross-reference. **Not one
+correction.** `transcription_iii.py`'s `ORTHOGRAPHY_VERIFIED = True` is now a
+claim two readers have made, and no reading is open on any plate.
+
+**Method, because the constraint was the display and not the scan.** The plate
+was read column by column against `PERSONS`, generation band by generation
+band, in tiles of 380 native px rendered at **4x** (1520px, which is as much as
+a vision read carries) for the number-sex-name field, plus a 2.8x pass over the
+tail for age, clan and cross-reference. Nine mark-dense names were re-cropped
+at **6–7x** to settle `˙` U+02D9 against `ʼ` U+02BC, the distinction the
+original pass records as invisible at 1.5x: 11, 20, 45, 54, 60, 87, 102, 143
+and 168. All nine matched. The tiles were planned from an **ink-row profile**
+of each generation band rather than by eye — 276 text lines found in block 1,
+which reconciles with 229 people plus their cross-reference rows, the four
+`See Gen.` continuation lines under 155, `(Sister of 10)`, the six
+second-occurrence lines (91/92, 124/125, 166/167) and the plate's own title.
+
+**Two things that look like discrepancies and are not**, recorded here and in
+the module so they are not re-found. 27's death note is set **`d .1917.`** with
+the point after the italic *d* displaced — compositor spacing, not a character
+the data gets wrong. And **153's record is deliberately mixed**: the spelling of
+her first occurrence with the age from her second, because the plate prints her
+twice and differently, exactly as her `plate_note` says. Reading the first
+occurrence alone makes `age=30` look unsupported; it is the second one that
+carries it.
+
+Docs of record only — `CLAUDE.md`, `scripts/plate_audit/README.md` and
+`transcription_iii.py`'s docstring. **No data changed, so `docs/` is untouched
+and nothing is due to publish**; the module's `self_check()` still reports 261
+persons, 72 unions, 192 child links, all structural checks passing.
+
+## 2026-08-18 — the rig learns Table 4, and `/search/` says what it reads
 
 Two unrelated pieces of work, one of which reaches the site.
 
