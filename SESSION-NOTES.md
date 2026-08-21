@@ -51,10 +51,8 @@ The `--refresh` should return all three `dist/` files byte-identical to
 `vendor/search/` apart from `meta.generated`; if it disagrees, re-vendor from
 it.
 
-`laguna-search` is at **`58965e5`**, pushed — but on branch
-**`claude/resume-jntfyn`**, not `main`. `vendor/search/SOURCE.md` records the
-SHA with that caveat. **Merging it there is the one loose end**; the site is
-already serving that build.
+`laguna-search` is at **`58965e5`** on its **`main`**, merged and pushed
+2026-08-21 — the same build the site is serving.
 
 **Take all of that from the repo, not from here** — it is the least reliable
 paragraph in this file, and this session proved it again: `laguna-search`'s two
@@ -67,7 +65,23 @@ git rev-list --left-right --count origin/main...HEAD
 
 Counts unchanged: 713 entries, 620 distinct people, 261/72/192 on III.
 
-### Branches — TWO, and the second one is load-bearing
+### Branches — THREE on `origin`, and only one of them is load-bearing
+
+**`claude/resume-jntfyn` exists on `origin` in BOTH repos and is fully merged
+into each `main` by fast-forward — delete it in both.** It could not be deleted
+on 2026-08-21: that session's git proxy answered **HTTP 403 to a delete-push**
+in both repos while accepting ordinary pushes, which is a policy denial and not
+a permissions problem at GitHub. Nothing is at risk while it sits there — it
+contains no unique commit, so `git merge-base --is-ancestor` and a plain `git
+diff main claude/resume-jntfyn` both come back empty — but it is exactly the
+shape CLAUDE.md warns turns into a revert if anything is ever branched off it
+or if `main` moves far enough. Delete it from a machine that can:
+
+```bash
+git push origin --delete claude/resume-jntfyn      # in both checkouts
+```
+
+Then this heading goes back to TWO.
 
 `main`, and **`handoff-2026-08-09-search-link-safari-scroll`** (local and on
 `origin`, at `d260b72`). That second branch is **not** stale and must not be

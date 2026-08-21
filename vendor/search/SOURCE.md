@@ -9,10 +9,10 @@ next time they are re-vendored, exactly as `docs/` is.
 | Vendored from | `dist/`, at `58965e5` |
 | Vendored on | 2026-08-21 |
 
-**`58965e5` is on `claude/resume-jntfyn` over there, not yet on `main`.** It is
-pushed, so the SHA resolves; a reader checking out that project's `main` will
-not find this `dist/` until the branch is merged. Merge it, then this line can
-lose the caveat rather than the SHA.
+`58965e5` is on that project's **`main`**, merged 2026-08-21. Its
+`claude/resume-jntfyn` branch is fully contained in `main` and is awaiting
+deletion — see `SESSION-NOTES.md`; the session that merged it could not delete
+a remote branch.
 
 ## 2026-08-21 — the Death filter says what it accepts
 
