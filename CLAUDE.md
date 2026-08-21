@@ -1187,6 +1187,21 @@ where the count is and not only inside a row a reader may never open — see
 the list, and don't type a count into either copy: that is the shape of claim
 that outlived its truth in `SITE_DESCRIPTION`.
 
+**That placement is CLOSED as of 2026-08-21 — the user chose to leave it exactly
+where it is, and it had been offered four times before that.** The ambiguity
+being closed is that three blocks on this site answer to the name *provenance*:
+`/search/`'s own footer note, the landing page's *Provenance and use*, and each
+chart page's folded *Provenance* section. `/search/`'s footer note **is** that
+page's provenance block, so the line is already where it was asked to be, and
+the landing page stays silent on identity joins by decision rather than by
+oversight. **Do not offer to move it again**, and note what the move would have
+cost had it been taken: `write_search()` wraps the vendored page and never
+rewrites it, so removing the paragraph is an **upstream** change in
+`laguna-search` — which the upstream-vs-host test refuses, because a finding aid
+standing alone wants to state what its index holds and which of its joins are
+its own. The counts would then have to be recomputed here, beside the
+`.c-across` row that says *entries* where this line says *people*.
+
 **`/search/` is deliberately absent from `sitemap.xml`.** The page ships
 `<meta name="robots" content="noindex">`, and advertising it in a sitemap while
 asking robots to skip it is a contradictory signal, not a stronger one. This is

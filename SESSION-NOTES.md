@@ -194,7 +194,6 @@ orthography pass tractable was **not** eyeballing where the lines are:
 
 | | Effort | Notes |
 |---|---|---|
-| The `/search/` provenance line's home | small, needs you | Offered four times, not taken up |
 | Remove the empty state's `Clear filters` | small, needs you | Kept deliberately — the only moment a reader can see no control to undo. Offered four times |
 | Widen `/search/`'s Name column | small, needs you | Declined because `nowrap` would truncate a transcribed name; its numbers are stale again |
 | The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. Flagged, not objected to |
@@ -239,6 +238,12 @@ orthography pass tractable was **not** eyeballing where the lines are:
 
 ## Closed — do not re-raise
 
+- **The `/search/` provenance line's home** — closed 2026-08-21 by the user:
+  **leave it exactly where it is**, the second `.foot-note` in that page's own
+  footer. `/search/`'s footer note *is* its provenance block, so the line is
+  already where "put it in provenance" asked for it, and the landing page's
+  *Provenance and use* stays silent on identity joins by decision. Offered four
+  times before this; **do not offer a fifth.** No code changed.
 - **Genealogy III block 1** — PLACEMENT read 2026-08-17, right at every group,
   all 15 audit problems explained; **ORTHOGRAPHY read 2026-08-21**, all 229
   entries, no corrections. Nothing is owed on this plate.
