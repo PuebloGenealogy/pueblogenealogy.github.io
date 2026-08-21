@@ -1003,6 +1003,18 @@ Three things about that are load-bearing:
   from 124px to 71.78px of need, and the column from 124/124/104px across the
   three breakpoints to a single **80px** at all three — which is what moved the
   pan threshold below. Change an option's text and re-measure the column.
+  **A PLACEHOLDER is the same kind of input read the other way round**, added
+  2026-08-21: it does not widen its column, it gets **clipped** by it. Death's
+  input is 62px at the narrow layout with **47.2px inside the padding**, so
+  when that field was relabelled to name what it accepts, *"Year or d."* (52px)
+  clipped to `Year or d` — losing the period that IS the value — and
+  *"Year / d."* fit by 1.2px, which is no margin. It ships as **`Year/d.`**,
+  40px with the face loaded and 37.6px in the fallback stack, and the sentence
+  it abbreviates lives in the `aria-label`, which has no width. **Measure a
+  label against the narrow layout, in both the loaded face and the fallback,
+  and check the subset carries every character in it** — `/` is in both faces;
+  a character that is not would substitute silently in the one string on the
+  page nothing else proofreads.
 
 **A report that `/search/` is "broken on phones" is re-litigating this decision,
 with ONE exception — and the exception is the host bar.** Added 2026-08-17,

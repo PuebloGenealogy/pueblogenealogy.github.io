@@ -64,29 +64,17 @@ one of these, the test is the ancestor check, not the diff**: `git diff main
 <branch>` reported 1154 and 492 lines for those two and they contained nothing
 unique — the lines were deletions, meaning the branch was *behind* `main`.
 
-## The open thread — block 1's orthography
+## The open thread — none
 
-**Genealogy III's block 1 has been read for PLACEMENT and not for
-ORTHOGRAPHY.** That distinction is the whole of what is known, and it is easy
-to lose: the 2026-08-17 pass checked which stubs hang off which bracket, the
-number printed against each stub, and every group's clan against its mother.
-It did **not** re-read names, ages or diacritics. That is the one reading still
-owed on this plate, and block 1 is 4300 of its 5503px.
+**Genealogy III's block 1 was read for ORTHOGRAPHY on 2026-08-21, and nothing
+changed.** All 229 entries of ids 1–229 held against the scan — name, sex
+letter, age, clan, vital note and cross-reference — read column by column at 4x
+with 6–7x re-crops on nine mark-dense names. That was the last reading owed on
+any plate, so **there is no open thread**; the list below is all there is, and
+every item on it needs the user.
 
-Three things that would otherwise surface late:
-
-- **Never run OCR.** It drops the diacritics, which are the object of this pass.
-- **Crops read cleanly to ~5–8x; past that the upscaler invents letterform.**
-  If a mark will not resolve, **ask for a photograph** — that is what settled
-  the turned-comma question after the scan could not, and it is hours rather
-  than weeks. Measure marks, don't eyeball them: height in rows, horizontal
-  centroid of the bottom third minus the top third, and ink mass top vs bottom.
-- **A character new to a name is not a one-line edit.** Four `_FOLD` maps here,
-  plus `NAME_VOWELS` **or** `NAME_MARKS` and the `FOLD` map in `laguna-search`
-  — and it can create a fourth namesake collision that stops their build. That
-  gate is deliberately noisy; expect to adjudicate a pair.
-
-The crops are regenerated with the commands in *Regenerating the crops* below.
+The crop commands are kept below: they are what a future reading of this plate
+starts from, and the scratchpad does not survive a session.
 
 ## Regenerating the crops
 
@@ -118,8 +106,6 @@ Table 4 is `sips -s format bmp sources/parsons-1923-table-4.jpg`; it is
 
 | | Effort | Notes |
 |---|---|---|
-| **Block 1's orthography** | large, needs you | The open thread, above |
-| `/search/` #5 — the Death filter | small, **needs a decision** | Accepts letters where Birth strips them, both labelled *Year*. Either strip like Birth, or relabel `Year or d.`. Upstream |
 | The `/search/` provenance line's home | small, needs you | Offered four times, not taken up |
 | Remove the empty state's `Clear filters` | small, needs you | Kept deliberately — the only moment a reader can see no control to undo. Offered four times |
 | Widen `/search/`'s Name column | small, needs you | Declined because `nowrap` would truncate a transcribed name; its numbers are stale again |
@@ -165,8 +151,9 @@ Table 4 is `sips -s format bmp sources/parsons-1923-table-4.jpg`; it is
 
 ## Closed — do not re-raise
 
-- **Genealogy III block 1's PLACEMENT** — read 2026-08-17, right at every
-  group; all 15 audit problems explained. Its orthography is the open thread.
+- **Genealogy III block 1** — PLACEMENT read 2026-08-17, right at every group,
+  all 15 audit problems explained; **ORTHOGRAPHY read 2026-08-21**, all 229
+  entries, no corrections. Nothing is owed on this plate.
 - **85/86/87 (Gen. III) and 5/+6/+7 (Gen. IV)** — re-checked 2026-08-17, both
   stand. **Do not re-justify either as "a spouse with no leader had no issue".**
 - **The plate-audit rig for Table 4** — calibrated 2026-08-18; its 10 problems
@@ -175,6 +162,11 @@ Table 4 is `sips -s format bmp sources/parsons-1923-table-4.jpg`; it is
   2026-08-18.
 - **Genealogy III block 2's parentage** — read and published 2026-08-17.
 - **Genealogy I's placement** — read stub by stub 2026-08-17, all 76 matched.
+- **`/search/` #5, the Death filter** — closed 2026-08-21 by the user: relabel,
+  do not strip. It ships as placeholder `Year/d.` with the sentence in the
+  spoken label, and `inputmode` split so a phone can type the `d`. Stripping
+  letters was rejected on measurement — `d` is the only route to the 103
+  entries recorded as dead with no year printed.
 - **De-indexing** — closed 2026-08-08. Nothing to be done.
 - **Wikidata** — removed 2026-08-08. Do not reconstruct it or offer it.
 - **Custom domain** — closed 2026-07-31. Durability beats portability.

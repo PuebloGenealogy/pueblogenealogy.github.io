@@ -6,8 +6,64 @@ next time they are re-vendored, exactly as `docs/` is.
 | | |
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
-| Vendored from | `dist/`, at `80e0d2d` |
-| Vendored on | 2026-08-18 |
+| Vendored from | `dist/`, at `58965e5` |
+| Vendored on | 2026-08-21 |
+
+**`58965e5` is on `claude/resume-jntfyn` over there, not yet on `main`.** It is
+pushed, so the SHA resolves; a reader checking out that project's `main` will
+not find this `dist/` until the branch is merged. Merge it, then this line can
+lose the caveat rather than the SHA.
+
+## 2026-08-21 — the Death filter says what it accepts
+
+**One upstream fix (`58965e5`), and it is a label rather than a behaviour.**
+The two year fields were both labelled *Year* and are not symmetric: Birth
+filters the birth **number**, so a letter can never match and is stripped on
+input, while Death substring-matches the **rendered cell** — `d.` or
+`d. 1918` — so `d` is the one way to reach every entry recorded as dead. That
+matters more than it sounds: **24 carry a printed year and 103 more have no
+year to type**, so stripping letters to make the shared label honest would have
+deleted the only route to those 103. The user chose to relabel.
+
+- **The placeholder reads `Year/d.`**, and the spoken label is *"Filter by
+  death year, or d. for any recorded death"*.
+- **`inputmode` follows the same split.** It was `numeric` on both, which on a
+  phone offers a keypad with **no `d` on it** — the letter route was
+  mislabelled *and* unreachable on the device most likely to need it. Birth
+  keeps the keypad.
+
+**The wording is a measurement, not a preference** — the same lesson the Sex
+option's dash taught, one control along. The placeholder has to be COMPLETE at
+the narrow layout, where the column is 62px with **47.2px inside the padding**:
+*"Year or d."* measures **52px** and clips to `Year or d`, losing the period
+that IS the value, and *"Year / d."* fits by **1.2px**, which is no margin at
+all. `Year/d.` is **40px** with the face loaded and **37.6px** in the fallback
+stack. Verified unclipped at 1280, 1000, 900, 700 and 375px, and `/` is in both
+faces of the subset, so nothing substitutes. **The pan threshold did not move**:
+617px of `scrollWidth` at 375px, as recorded.
+
+Checked in the built page: `d` gives **115 of 620 people**, `1918` gives 5, and
+Birth still strips letters (`18x7` → `187`).
+
+**Shape: the FOURTH one, minus the data** — `search.js` moves, `index.html` is
+byte-identical (a script change, stylesheet untouched), and
+`search-index.json`'s only difference is `meta.generated`, 2026-08-18 →
+2026-08-21, which is the clock. `identities`, `namesakes`, `people` and
+`relationships` are byte-identical, field by field. **No `--refresh`
+obligation**, and the register-bearing diff at this end is 0 lines on all four
+table pages.
+
+**The index was built from a cache seeded by hand, because this session cannot
+reach the site.** Egress policy blocks `pueblogenealogy.github.io:443`, so
+`--refresh` fails at the proxy; `cache/` was seeded from the local `docs/`
+build instead, which is the same shortcut the 2026-08-17 entry describes and is
+sound on the same grounds — `docs/` is reproducible and those bytes are the
+published state. **A `--refresh` run is still owed** from a machine that can
+reach the site; it should return these three files byte-identical apart from
+`meta.generated`.
+
+`leak_report()` run by hand over all three files, in `vendor/search/` and in
+`docs/search/`: clean.
 
 ## 2026-08-18 — the sic tooltip names the reading, and `?open=` stops lying
 

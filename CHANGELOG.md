@@ -3,7 +3,56 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-21 (latest) — Genealogy III block 1's orthography, read and clean
+## 2026-08-21 (latest) — the Death filter says what it accepts
+
+**`/search/` #5 is closed, by relabelling rather than by stripping.** The two
+year fields were both labelled *Year* and are not symmetric, and the reason
+turned out to decide the fix: Birth filters the birth **number**, so a letter
+can never match and is stripped on input, while Death substring-matches the
+**rendered cell** — `d.` or `d. 1918` — so typing `d` is the one way to reach
+every entry recorded as dead. **24 entries carry a printed death year; 103 more
+have no year to type.** Stripping letters would have made the shared label
+honest by deleting the only route to those 103, which is the wrong way round.
+The user chose to relabel.
+
+Upstream in `laguna-search` (`58965e5`, on `claude/resume-jntfyn` there, not yet
+merged), because the widget standing alone wants it too:
+
+- **The placeholder reads `Year/d.`**; the spoken label is *"Filter by death
+  year, or d. for any recorded death"*.
+- **`inputmode` follows the same split.** It was `numeric` on both fields,
+  which on a phone offers a keypad with **no `d` on it** — the letter route was
+  mislabelled *and* unreachable on the device most likely to need it. Birth
+  keeps the keypad.
+
+**The wording is a measurement.** The placeholder must be complete at the
+narrow layout, where the Death column is 62px with 47.2px inside the padding:
+*"Year or d."* is **52px** and clips to `Year or d`, losing the period that is
+the value; *"Year / d."* fits by **1.2px**, which is no margin; `Year/d.` is
+**40px** loaded and **37.6px** in the fallback stack. Unclipped at 1280, 1000,
+900, 700 and 375px, `/` is in both faces of the subset so nothing substitutes,
+and **the pan threshold is unmoved** at 617px of `scrollWidth` at 375px. In the
+built page `d` gives 115 of 620 people, `1918` gives 5, and Birth still strips
+letters (`18x7` → `187`).
+
+Re-vendored: `search.js` moves, `index.html` is byte-identical, and
+`search-index.json` differs only in `meta.generated` — **no `--refresh`
+obligation**, and the register-bearing diff here is 0 lines on all four table
+pages. `leak_report()` run by hand over all three files in both
+`vendor/search/` and `docs/search/`: clean. The rebuild also moved the date in
+`sitemap.xml` and in each page's structured data, which is the clock and
+nothing else.
+
+**One thing is owed and cannot be done from here.** The index is built by
+fetching the published pages, and this session's egress policy blocks
+`pueblogenealogy.github.io:443`, so `--refresh` fails at the proxy. `cache/` was
+seeded from the local `docs/` build instead — the shortcut `CLAUDE.md` records
+for the inverted build order, sound because `docs/` is reproducible and those
+bytes are what is published. **A `--refresh` run from a machine that can reach
+the site is still due**, and should return the three files byte-identical apart
+from `meta.generated`.
+
+## 2026-08-21 — Genealogy III block 1's orthography, read and clean
 
 **The open thread is closed and nothing changed.** Block 1's placement was read
 on 2026-08-17; its orthography — names, ages, diacritics — had not been

@@ -905,10 +905,25 @@ class PersonList {
     return button;
   }
 
-  yearField(cls, label, key) {
+  /*
+   * The two year fields are NOT symmetric, and the labels have to say so.
+   * Birth filters the birth NUMBER, so a letter can never match and is
+   * stripped on input. Death substring-matches the rendered cell -- "d." or
+   * "d. 1918" -- so `d` is the one way to reach every entry recorded as dead:
+   * 24 carry a printed year, and 103 more have no year to type. Stripping
+   * letters here would make the shared "Year" label honest by deleting the
+   * only route to those 103, which is the wrong way round.
+   *
+   * `inputmode` follows the same split. It was "numeric" on both, which on a
+   * phone offers a keypad with no `d` on it -- the letter route was labelled
+   * wrongly AND unreachable on the device most likely to need it.
+   */
+  yearField(cls, label, key, { placeholder = "Year", accepts = "" } = {}) {
+    const numeric = key === "birth";
     const input = el("input", {
-      type: "text", inputmode: "numeric", maxlength: "4", placeholder: "Year",
-      "aria-label": `Filter by ${label.toLowerCase()} year`,
+      type: "text", inputmode: numeric ? "numeric" : "text",
+      maxlength: "4", placeholder,
+      "aria-label": `Filter by ${label.toLowerCase()} year${accepts}`,
     });
     const run = debounce(() => this.patch({ [key]: input.value }), DEBOUNCE_MS);
     input.addEventListener("input", () => {
@@ -960,7 +975,17 @@ class PersonList {
         el("div", { class: "field field-sex" },
           el("span", { class: "field-label", text: "Sex" }), sexSelect),
         this.yearField("field-birth", "Birth", "birth"),
-        this.yearField("field-death", "Death", "death"),
+        // "Year/d." and not "Year or d.": the placeholder has to be COMPLETE
+        // at the narrow layout, where the column is 62px and 47.2px of it is
+        // inside the padding. Measured with the face loaded: "Year or d." is
+        // 52px and clips to "Year or d", losing the period that IS the value;
+        // "Year / d." fits by 1.2px, which is no margin at all; this one is
+        // 40px real and 37.6px in the fallback stack. The sentence lives in
+        // the spoken label, which has no width.
+        this.yearField("field-death", "Death", "death", {
+          placeholder: "Year/d.",
+          accepts: ", or d. for any recorded death",
+        }),
         el("div", { class: "field field-clan" },
           el("span", { class: "field-label", text: "Clan" }),
           this.clanFilter.node)),
