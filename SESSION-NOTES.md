@@ -4,15 +4,12 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-21**, at the end of a short second session that **closed
-the two owed publish checks** — the user ran both from the Mac and both came
-back clean, so the 2026-08-21 publish is verified rather than deployed —
-recorded the remote egress block as a standing property of the environment
-(`CLAUDE.md`, PR #63), and deleted the two merged branches. It ran **remotely**,
-like the session before it, and wrote no code: nothing in `scripts/` or `docs/`
-moved. The session before it read Genealogy III block 1's **orthography** — the
-last reading owed on any plate, and it needed no correction — fixed
-`/search/`'s **Death filter**, and published both.
+Last updated **2026-08-21**, at the end of a short third session that day. It
+**closed one item off the list below and wrote no code**: the `/search/`
+provenance line stays exactly where it is, the second `.foot-note` in that
+page's own footer. Nothing in `scripts/` or `docs/` moved. The two sessions
+before it closed the owed publish checks (both clean, from the Mac) and
+published Genealogy III block 1's orthography plus the `/search/` Death filter.
 
 **There is no open thread.** Nothing is owed on any plate, nothing is in
 flight, and every item on the list below needs the user.
@@ -39,19 +36,21 @@ with `document.body.style.transform` rather than scrolling. **The pane caches
 
 ## State
 
-**Published and VERIFIED 2026-08-21. `main` at `92b9984` plus this wrap's own
-commit, working tree clean, and `docs/` reproduces byte-identically from
-`--public`** — run at the end of this session, exit 0, 7 pages, 10 JSON-LD
-blocks valid, no date drift because the publish was the same day. The publish
-itself was `8a092d5` — Genealogy III block 1's orthography (docs of record
-only) and the `/search/` Death filter (upstream + re-vendor). Everything after
-it is docs of record.
+**Published and VERIFIED 2026-08-21, and nothing has moved in the edition
+since.** The publish was `8a092d5` — Genealogy III block 1's orthography (docs
+of record only) and the `/search/` Death filter (upstream + re-vendor).
+Everything committed after it touches only `CLAUDE.md`, `CHANGELOG.md` and this
+file.
+
+**Re-checked at the end of this session**: working tree clean, `--public` exits
+0 — 7 pages, 10 JSON-LD blocks valid, leak gate clear — and `git status
+--porcelain docs/` is **empty**, so `docs/` still reproduces byte-identically.
+No date drift, the publish having been the same day.
 
 **Both owed checks were run from the Mac and both came back clean** (user,
-2026-08-21): Gate 6's page-by-page SHA-256 comparison against the live site,
-and `laguna-search`'s post-publish `build.py --refresh`. So the publish is
-**verified**, not merely deployed, and no re-vendor was due. The commands, for
-the next publish:
+2026-08-21): Gate 6's page-by-page SHA-256 comparison against the live site, and
+`laguna-search`'s post-publish `build.py --refresh`. The commands, for the next
+publish:
 
 ```bash
 (cd docs && find . -name '*.html' | sed 's|^\./||') | while read -r f; do
@@ -63,80 +62,64 @@ python3 build.py --refresh          # in the laguna-search checkout
 
 Two things about that pair worth keeping. The `--refresh` run's first line must
 say **`re-fetched`** and not `cached in cache/`, or its gates pass against the
-site as it was. And **`docs/` had not moved since the publish commit** —
-everything after `8a092d5` touched only `CLAUDE.md`, `CHANGELOG.md` and this
-file — so the hash check ran straight off a fresh `git pull` with no need to
-check out the published commit. Check that with
+site as it was. And **`docs/` had not moved since the publish commit**, so the
+hash check ran straight off a fresh `git pull` with no need to check out the
+published commit. Check that with
 `git diff --stat <publish-sha> main -- docs/` before assuming it again.
 
-`laguna-search` is at **`58965e5`** on its **`main`**, merged and pushed
-2026-08-21 — the same build the site is serving, confirmed by the `--refresh`.
+`laguna-search` is at **`58965e5`** on its **`main`** — the same build the site
+is serving, confirmed by the `--refresh`.
 
 **Take all of that from the repo, not from here** — it is the least reliable
-paragraph in this file, and this session proved it again: `laguna-search`'s two
-commits were sitting local with a clean `git status` until the end.
+paragraph in this file, and this session proved it a third way: the branch
+deletion recorded below as owed had already happened.
 
 ```bash
 gh pr list --state open      # remotely there is no gh: use the GitHub MCP tools
 git rev-list --left-right --count origin/main...HEAD
 ```
 
-Both came back clean at the end of this session — no open PRs, `0 1` before the
-wrap branch was merged.
+At the end of this session: **no open PRs**, and `0 1` before this wrap's own
+commit — one commit ahead of `origin/main`, nothing behind.
 
 Counts unchanged: 713 entries, 620 distinct people, 261/72/192 on III.
 
-### Branches — one deletion is owed, and it is the only thing owed at all
+### Branches — nothing is owed
 
-**`claude/gracious-hawking-fuklkp` is on `origin`, merged, and should be
-deleted.** It carries this wrap and nothing else once that merges; a remote
-session cannot delete it, so:
+`git ls-remote --heads origin` carries **three refs and no more**: `main`, this
+session's `claude/resume-b6s8bz`, and the keeper below.
 
-```bash
-git push origin --delete claude/gracious-hawking-fuklkp
-```
-
-Nothing is at risk while it sits there — it holds no unique commit — but it is
-the shape `CLAUDE.md` warns turns into a revert if anything is branched off it
-or `main` moves far enough. **Verify with `git ls-remote --heads origin`, not
-by ancestry**: PRs here are squash-merged, so a branch's own commit is never an
-ancestor of `main` and `--no-merged` reports merged work as unmerged. The proof
-that a squash landed is the tree: `git rev-parse <branch>^{tree}` against
-`main^{tree}`, which matched for both of this session's merges.
+**The deletion the last handoff recorded as owed is done.**
+`claude/gracious-hawking-fuklkp` went with GitHub's auto-delete when PR #65
+merged, so no machine-with-egress errand is outstanding. That handoff wrote its
+branch state before its own PR merged, which is exactly the one-step-behind
+failure `CLAUDE.md` names — **read `ls-remote`, not this file.**
 
 **Keep `handoff-2026-08-09-search-link-safari-scroll`** (at `d260b72`). It is
 **not** stale and must not be swept: it is the only thing keeping **`938b8e8`**
 — the unverified Safari scroll fix — reachable. See the Safari row below.
 
-**`claude/resume-jntfyn` is gone from both repos**, and so was
-`claude/gracious-hawking-fuklkp` until this wrap re-created it — deleted from
-the Mac on 2026-08-21 after two remote sessions had a delete-push refused with
-**HTTP 403** while ordinary pushes went through. That is egress policy, not a
-permissions problem at GitHub.
+**Verify with `git ls-remote --heads origin`, not by ancestry**: PRs here are
+squash-merged, so a branch's own commit is never an ancestor of `main` and
+`--no-merged` reports merged work as unmerged. The proof that a squash landed is
+the tree: `git rev-parse <branch>^{tree}` against `main^{tree}`.
 
 **Delete one command at a time, never batched**: a batch
 `git push origin --delete a b c` fails whole if any one ref is already gone,
-deletes nothing, and reads exactly like a permissions problem.
-
-Everything else was cleaned up on 2026-08-18: `plate-audit-w31-leader-row` and
-`search-sic-reading-open-param` were deleted after `git merge-base
---is-ancestor` confirmed both were fully reachable from `main`, and PR #62's
-branch was deleted by GitHub on merge. **If a future sweep makes you re-check
-one of these, the test is the ancestor check, not the diff**: `git diff main
-<branch>` reported 1154 and 492 lines for those two and they contained nothing
-unique — the lines were deletions, meaning the branch was *behind* `main`.
+deletes nothing, and reads exactly like a permissions problem. And **a remote
+session may be refused a delete-push outright** (HTTP 403) while ordinary pushes
+go through; that is egress policy, not GitHub permissions.
 
 ## The open thread — there isn't one
 
-The two checks the 2026-08-21 publish could not run were run and both came back
-clean; see *State*. Nothing is in flight, and no reading is owed on any plate:
+No reading is owed on any plate, nothing is in flight, and the list below is all
+there is. Every item on it needs the user.
 
 **Genealogy III's block 1 was read for ORTHOGRAPHY on 2026-08-21, and nothing
 changed.** All 229 entries of ids 1–229 held against the scan — name, sex
 letter, age, clan, vital note and cross-reference — read column by column at 4x
 with 6–7x re-crops on nine mark-dense names. That was the last reading owed on
-any plate, so **there is no open thread**; the list below is all there is, and
-every item on it needs the user.
+any plate.
 
 The crop commands are kept below: they are what a future reading of this plate
 starts from, and the scratchpad does not survive a session.
@@ -181,11 +164,11 @@ orthography pass tractable was **not** eyeballing where the lines are:
   six second-occurrence lines and the plate title. **A reconciling count is
   what licenses trusting the rest**, the same argument as the `_diag.html`
   DOM tally.
-- **Two magnifications, not one.** 380 native px at **4x** (1520px, which is
-  as much as a vision read carries) over the number-sex-name field, and 2.8x
-  over the tail for age, clan and cross-reference. Re-crop a name at **6–7x**
-  the moment a mark is ambiguous — that is what settled 60's `Kʼapokaʼă`,
-  where 4x read the second apostrophe as a raised dot.
+- **Two magnifications, not one.** 380 native px at **4x** (1520px, which is as
+  much as a vision read carries) over the number-sex-name field, and 2.8x over
+  the tail for age, clan and cross-reference. Re-crop a name at **6–7x** the
+  moment a mark is ambiguous — that is what settled 60's `Kʼapokaʼă`, where 4x
+  read the second apostrophe as a raised dot.
 - Generation columns for Table 3, native x of the right-aligned number:
   g1 145 · g2 755 · g3 1293 · g4 1833 · g5 2377 · g6 2920 · g7 3467. Band
   x from `col − 60`; a full line runs about 370px.
@@ -195,7 +178,7 @@ orthography pass tractable was **not** eyeballing where the lines are:
 | | Effort | Notes |
 |---|---|---|
 | Remove the empty state's `Clear filters` | small, needs you | Kept deliberately — the only moment a reader can see no control to undo. Offered four times |
-| Widen `/search/`'s Name column | small, needs you | Declined because `nowrap` would truncate a transcribed name; its numbers are stale again |
+| Widen `/search/`'s Name column | small, needs you | Declined because `nowrap` would truncate a transcribed name; its numbers are stale again, so re-measure before offering it |
 | The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. Flagged, not objected to |
 | **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. The fix attempt survives as commit **`938b8e8`** — cherry-pick onto a fresh branch off current `main` when it next appears. Ask first: **does clicking the prose below the plate free it?** **What keeps it reachable is the branch `handoff-2026-08-09-search-link-safari-scroll`, local and on origin. Do not delete that branch in a stale-branch sweep** |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first.** `digitallibrary.amnh.org` 403s automated fetches |
@@ -243,7 +226,10 @@ orthography pass tractable was **not** eyeballing where the lines are:
   footer. `/search/`'s footer note *is* its provenance block, so the line is
   already where "put it in provenance" asked for it, and the landing page's
   *Provenance and use* stays silent on identity joins by decision. Offered four
-  times before this; **do not offer a fifth.** No code changed.
+  times before this; **do not offer a fifth.** No code changed. The full
+  reasoning, including why the move would have needed an upstream change the
+  upstream-vs-host test refuses, is in `CLAUDE.md` beside the paragraph that
+  explains the line.
 - **Genealogy III block 1** — PLACEMENT read 2026-08-17, right at every group,
   all 15 audit problems explained; **ORTHOGRAPHY read 2026-08-21**, all 229
   entries, no corrections. Nothing is owed on this plate.

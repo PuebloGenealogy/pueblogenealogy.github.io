@@ -114,6 +114,40 @@ and reads like a permissions problem, so delete one at a time.
 A `--public` build at the end of this session left `docs/` **byte-identical** —
 no date drift, the publish having been the same day.
 
+### Closed in a third session the same day — the `/search/` provenance line stays put
+
+**The user chose to leave it exactly where it is**, the second `.foot-note` in
+that page's own footer, beside *"A read-only finding aid…"*. It had been offered
+four times, and the ambiguity being closed is that **three blocks on this site
+answer to the name *provenance***: `/search/`'s footer note, the landing page's
+*Provenance and use*, and each chart page's folded *Provenance* section. The
+first of those **is** that page's provenance block, so the line was already
+where *"put it in provenance"* asked for it. The landing page stays silent on
+identity joins by decision, not by oversight.
+
+**What the move would have cost, recorded so nobody re-derives it.** Taking the
+paragraph off `/search/` is not a host-side edit: `write_search()` wraps the
+vendored page and never rewrites it, so removal is an **upstream** change in
+`laguna-search` — and the upstream-vs-host test refuses it, because a finding
+aid standing alone wants to state what its index holds and which of its joins
+are its own. The counts in it are `ctx.meta` at runtime, so the landing page
+would have had to recompute them beside the `.c-across` row that says
+**entries** where this line says **people**.
+
+**No code changed.** `scripts/` and `docs/` are untouched, `--public` exits 0
+with `docs/` byte-identical, and the closure is recorded in `CLAUDE.md` beside
+the paragraph that already explains the line, so the durable copy carries the
+reasoning and not only the verdict.
+
+**The owed branch deletion turned out to be done.** `git ls-remote --heads
+origin` carries only `main`, this session's branch and
+`handoff-2026-08-09-search-link-safari-scroll` — the keeper that holds `938b8e8`
+reachable. `claude/gracious-hawking-fuklkp` went with GitHub's auto-delete when
+PR #65 merged, so nothing is owed to a machine with egress. **The handoff had it
+as outstanding**, which is the failure mode `CLAUDE.md` names: a wrap writes its
+branch state before its own PR merges, so it describes the repo one step behind
+itself. Read `ls-remote`, not the handoff.
+
 ## 2026-08-21 — Genealogy III block 1's orthography, read and clean
 
 **The open thread is closed and nothing changed.** Block 1's placement was read
