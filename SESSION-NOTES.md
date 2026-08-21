@@ -4,11 +4,16 @@
 History lives in `CHANGELOG.md`. How the project works lives in `CLAUDE.md`.
 This file answers one question only: *what would I pick up next?*
 
-Last updated **2026-08-21**, at the end of a session that read Genealogy III
-block 1's **orthography** — the last reading owed on any plate, and it needed no
-correction — fixed `/search/`'s **Death filter**, published both, and merged the
-upstream change. It ran **remotely**, on Claude Code on the web, which is why
-two of the publish checks are recorded as owed rather than done.
+Last updated **2026-08-21**, at the end of a short second session that **closed
+the two owed publish checks** — the user ran both from the Mac and both came
+back clean — recorded the remote egress block as a standing property of the
+environment (`CLAUDE.md`, PR #63), and deleted the two merged branches. The
+session before it read Genealogy III block 1's **orthography** — the last
+reading owed on any plate, and it needed no correction — fixed `/search/`'s
+**Death filter**, and published both.
+
+**There is no open thread.** Nothing is owed on any plate, nothing is in
+flight, and every item on the list below needs the user.
 
 ## Start here in a new chat
 
@@ -32,18 +37,16 @@ with `document.body.style.transform` rather than scrolling. **The pane caches
 
 ## State
 
-**Published 2026-08-21. `main` at `8fc5ef3`, pushed, working tree clean, and
-`docs/` reproduces byte-identically from `--public`.** Two commits went out
-together: Genealogy III block 1's orthography (docs of record only) and the
-`/search/` Death filter (upstream + re-vendor). GitHub's `pages build and
-deployment` run for `8a092d5` completed **success** at 19:15:28Z.
+**Published and VERIFIED 2026-08-21. `main` at `af3e789`, pushed, working tree
+clean, and `docs/` reproduces byte-identically from `--public`.** The publish
+itself was `8a092d5` — Genealogy III block 1's orthography (docs of record
+only) and the `/search/` Death filter (upstream + re-vendor).
 
-**The by-hash live verification is OWED, and could not be run.** That session's
-egress policy blocked `pueblogenealogy.github.io:443` — a 403 at the proxy on
-CONNECT — so Gate 6's page-by-page SHA-256 check never ran, and neither did the
-`--refresh` over in `laguna-search`. **A successful Pages run is not that
-check**: this file's own procedure says to verify by hash because the Pages API
-misreports the deployed commit. Run both from a machine that can reach the site:
+**Both owed checks were run from the Mac and both came back clean** (user,
+2026-08-21): Gate 6's page-by-page SHA-256 comparison against the live site,
+and `laguna-search`'s post-publish `build.py --refresh`. So the publish is
+**verified**, not merely deployed, and no re-vendor was due. The commands, for
+the next publish:
 
 ```bash
 (cd docs && find . -name '*.html' | sed 's|^\./||') | while read -r f; do
@@ -53,12 +56,16 @@ done
 python3 build.py --refresh          # in the laguna-search checkout
 ```
 
-The `--refresh` should return all three `dist/` files byte-identical to
-`vendor/search/` apart from `meta.generated`; if it disagrees, re-vendor from
-it.
+Two things about that pair worth keeping. The `--refresh` run's first line must
+say **`re-fetched`** and not `cached in cache/`, or its gates pass against the
+site as it was. And **`docs/` had not moved since the publish commit** —
+everything after `8a092d5` touched only `CLAUDE.md`, `CHANGELOG.md` and this
+file — so the hash check ran straight off a fresh `git pull` with no need to
+check out the published commit. Check that with
+`git diff --stat <publish-sha> main -- docs/` before assuming it again.
 
 `laguna-search` is at **`58965e5`** on its **`main`**, merged and pushed
-2026-08-21 — the same build the site is serving.
+2026-08-21 — the same build the site is serving, confirmed by the `--refresh`.
 
 **Take all of that from the repo, not from here** — it is the least reliable
 paragraph in this file, and this session proved it again: `laguna-search`'s two
@@ -71,28 +78,25 @@ git rev-list --left-right --count origin/main...HEAD
 
 Counts unchanged: 713 entries, 620 distinct people, 261/72/192 on III.
 
-### Branches — THREE on `origin`, and only one of them is load-bearing
+### Branches — TWO on `origin`, and one of them is load-bearing
 
-**`claude/resume-jntfyn` exists on `origin` in BOTH repos and is fully merged
-into each `main` by fast-forward — delete it in both.** It could not be deleted
-on 2026-08-21: that session's git proxy answered **HTTP 403 to a delete-push**
-in both repos while accepting ordinary pushes, which is a policy denial and not
-a permissions problem at GitHub. Nothing is at risk while it sits there — it
-contains no unique commit, so `git merge-base --is-ancestor` and a plain `git
-diff main claude/resume-jntfyn` both come back empty — but it is exactly the
-shape CLAUDE.md warns turns into a revert if anything is ever branched off it
-or if `main` moves far enough. Delete it from a machine that can:
+Verified by `git ls-remote --heads origin` on 2026-08-21: `refs/heads/main` and
+`refs/heads/handoff-2026-08-09-search-link-safari-scroll` (at `d260b72`), and
+nothing else. That second branch is **not** stale and must not be swept: it is
+the only thing keeping **`938b8e8`** — the unverified Safari scroll fix —
+reachable. See the Safari row below.
 
-```bash
-git push origin --delete claude/resume-jntfyn      # in both checkouts
-```
+**`claude/resume-jntfyn` and `claude/gracious-hawking-fuklkp` are gone**,
+deleted from the Mac on 2026-08-21 after two remote sessions had a delete-push
+refused with **HTTP 403** while ordinary pushes went through. That is egress
+policy, not a permissions problem at GitHub — see `CLAUDE.md` → *Environment*,
+which now records the block as a standing property of the remote environment
+rather than a transient state. `claude/resume-jntfyn` was deleted in
+`laguna-search` too.
 
-Then this heading goes back to TWO.
-
-`main`, and **`handoff-2026-08-09-search-link-safari-scroll`** (local and on
-`origin`, at `d260b72`). That second branch is **not** stale and must not be
-swept: it is the only thing keeping **`938b8e8`** — the unverified Safari
-scroll fix — reachable. See the Safari row below.
+**Delete them one command at a time, never batched**: a batch
+`git push origin --delete a b c` fails whole if any one ref is already gone,
+deletes nothing, and reads exactly like a permissions problem.
 
 Everything else was cleaned up on 2026-08-18: `plate-audit-w31-leader-row` and
 `search-sic-reading-open-param` were deleted after `git merge-base
@@ -102,17 +106,10 @@ one of these, the test is the ancestor check, not the diff**: `git diff main
 <branch>` reported 1154 and 492 lines for those two and they contained nothing
 unique — the lines were deletions, meaning the branch was *behind* `main`.
 
-## The open thread — two checks the last session could not run
+## The open thread — there isn't one
 
-**Do these first, from the Mac, and they take a minute.** The 2026-08-21
-publish went out from a remote session with no route to the published site, so
-`/publish` gate 6 never ran and neither did `laguna-search`'s post-publish
-`--refresh`. Both commands are in *State* above. Until the hash check passes,
-**the correct thing to say about that publish is "deployed, not verified"** —
-GitHub's Pages run reported success for `8a092d5`, and this repo does not treat
-that as the check. If either disagrees, re-vendor from the `--refresh` run.
-
-**Nothing else is in flight**, and no reading is owed on any plate:
+The two checks the 2026-08-21 publish could not run were run and both came back
+clean; see *State*. Nothing is in flight, and no reading is owed on any plate:
 
 **Genealogy III's block 1 was read for ORTHOGRAPHY on 2026-08-21, and nothing
 changed.** All 229 entries of ids 1–229 held against the scan — name, sex
