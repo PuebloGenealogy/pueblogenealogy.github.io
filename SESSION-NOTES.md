@@ -6,11 +6,13 @@ This file answers one question only: *what would I pick up next?*
 
 Last updated **2026-08-21**, at the end of a short second session that **closed
 the two owed publish checks** — the user ran both from the Mac and both came
-back clean — recorded the remote egress block as a standing property of the
-environment (`CLAUDE.md`, PR #63), and deleted the two merged branches. The
-session before it read Genealogy III block 1's **orthography** — the last
-reading owed on any plate, and it needed no correction — fixed `/search/`'s
-**Death filter**, and published both.
+back clean, so the 2026-08-21 publish is verified rather than deployed —
+recorded the remote egress block as a standing property of the environment
+(`CLAUDE.md`, PR #63), and deleted the two merged branches. It ran **remotely**,
+like the session before it, and wrote no code: nothing in `scripts/` or `docs/`
+moved. The session before it read Genealogy III block 1's **orthography** — the
+last reading owed on any plate, and it needed no correction — fixed
+`/search/`'s **Death filter**, and published both.
 
 **There is no open thread.** Nothing is owed on any plate, nothing is in
 flight, and every item on the list below needs the user.
@@ -37,10 +39,13 @@ with `document.body.style.transform` rather than scrolling. **The pane caches
 
 ## State
 
-**Published and VERIFIED 2026-08-21. `main` at `af3e789`, pushed, working tree
-clean, and `docs/` reproduces byte-identically from `--public`.** The publish
+**Published and VERIFIED 2026-08-21. `main` at `92b9984` plus this wrap's own
+commit, working tree clean, and `docs/` reproduces byte-identically from
+`--public`** — run at the end of this session, exit 0, 7 pages, 10 JSON-LD
+blocks valid, no date drift because the publish was the same day. The publish
 itself was `8a092d5` — Genealogy III block 1's orthography (docs of record
-only) and the `/search/` Death filter (upstream + re-vendor).
+only) and the `/search/` Death filter (upstream + re-vendor). Everything after
+it is docs of record.
 
 **Both owed checks were run from the Mac and both came back clean** (user,
 2026-08-21): Gate 6's page-by-page SHA-256 comparison against the live site,
@@ -72,29 +77,44 @@ paragraph in this file, and this session proved it again: `laguna-search`'s two
 commits were sitting local with a clean `git status` until the end.
 
 ```bash
-gh pr list --state open
+gh pr list --state open      # remotely there is no gh: use the GitHub MCP tools
 git rev-list --left-right --count origin/main...HEAD
 ```
 
+Both came back clean at the end of this session — no open PRs, `0 1` before the
+wrap branch was merged.
+
 Counts unchanged: 713 entries, 620 distinct people, 261/72/192 on III.
 
-### Branches — TWO on `origin`, and one of them is load-bearing
+### Branches — one deletion is owed, and it is the only thing owed at all
 
-Verified by `git ls-remote --heads origin` on 2026-08-21: `refs/heads/main` and
-`refs/heads/handoff-2026-08-09-search-link-safari-scroll` (at `d260b72`), and
-nothing else. That second branch is **not** stale and must not be swept: it is
-the only thing keeping **`938b8e8`** — the unverified Safari scroll fix —
-reachable. See the Safari row below.
+**`claude/gracious-hawking-fuklkp` is on `origin`, merged, and should be
+deleted.** It carries this wrap and nothing else once that merges; a remote
+session cannot delete it, so:
 
-**`claude/resume-jntfyn` and `claude/gracious-hawking-fuklkp` are gone**,
-deleted from the Mac on 2026-08-21 after two remote sessions had a delete-push
-refused with **HTTP 403** while ordinary pushes went through. That is egress
-policy, not a permissions problem at GitHub — see `CLAUDE.md` → *Environment*,
-which now records the block as a standing property of the remote environment
-rather than a transient state. `claude/resume-jntfyn` was deleted in
-`laguna-search` too.
+```bash
+git push origin --delete claude/gracious-hawking-fuklkp
+```
 
-**Delete them one command at a time, never batched**: a batch
+Nothing is at risk while it sits there — it holds no unique commit — but it is
+the shape `CLAUDE.md` warns turns into a revert if anything is branched off it
+or `main` moves far enough. **Verify with `git ls-remote --heads origin`, not
+by ancestry**: PRs here are squash-merged, so a branch's own commit is never an
+ancestor of `main` and `--no-merged` reports merged work as unmerged. The proof
+that a squash landed is the tree: `git rev-parse <branch>^{tree}` against
+`main^{tree}`, which matched for both of this session's merges.
+
+**Keep `handoff-2026-08-09-search-link-safari-scroll`** (at `d260b72`). It is
+**not** stale and must not be swept: it is the only thing keeping **`938b8e8`**
+— the unverified Safari scroll fix — reachable. See the Safari row below.
+
+**`claude/resume-jntfyn` is gone from both repos**, and so was
+`claude/gracious-hawking-fuklkp` until this wrap re-created it — deleted from
+the Mac on 2026-08-21 after two remote sessions had a delete-push refused with
+**HTTP 403** while ordinary pushes went through. That is egress policy, not a
+permissions problem at GitHub.
+
+**Delete one command at a time, never batched**: a batch
 `git push origin --delete a b c` fails whole if any one ref is already gone,
 deletes nothing, and reads exactly like a permissions problem.
 

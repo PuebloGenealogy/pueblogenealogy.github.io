@@ -10,7 +10,9 @@ run for that commit reported success. **The by-hash live check is owed**: this
 session's egress policy blocked `pueblogenealogy.github.io:443` at the proxy,
 so Gate 6's page-by-page SHA-256 comparison could not run, and a successful
 Pages run is explicitly not that check. `SESSION-NOTES.md` carries the two
-commands to run from a machine that can reach the site.
+commands to run from a machine that can reach the site. **Both were run later
+the same day and both were clean** — see *Closed later the same day* at the end
+of this entry.
 
 **`/search/` #5 is closed, by relabelling rather than by stripping.** The two
 year fields were both labelled *Year* and are not symmetric, and the reason
@@ -57,7 +59,8 @@ seeded from the local `docs/` build instead — the shortcut `CLAUDE.md` records
 for the inverted build order, sound because `docs/` is reproducible and those
 bytes are what is published. **A `--refresh` run from a machine that can reach
 the site is still due**, and should return the three files byte-identical apart
-from `meta.generated`.
+from `meta.generated`. **It was run later the same day and came back clean**, so
+the seeded-cache shortcut is confirmed sound and no re-vendor followed.
 
 **Closed out the same day.** `laguna-search`'s branch was fast-forwarded into
 its `main` (`58965e5`), so `vendor/search/SOURCE.md` no longer carries a
@@ -73,6 +76,43 @@ published site** — 403 on CONNECT, which removes `/publish` gate 6 and the
 post-publish `--refresh` — and may be **refused a delete-push**. It gains
 Pillow and a real headless Chromium in exchange, which is what made the plate
 crops and the 375px measurements possible without `sips` or the preview pane.
+
+### Closed later the same day — the publish is verified, from a second remote session
+
+**Both owed checks were run from the Mac by the user and both came back clean**:
+Gate 6's page-by-page SHA-256 comparison against the live site, and
+`laguna-search`'s post-publish `build.py --refresh`. So `8a092d5` is
+**verified**, not merely deployed, no re-vendor was due, and `58965e5` is
+confirmed as the build the site is serving.
+
+One thing that made the hash check cheaper than expected and is worth checking
+rather than assuming next time: **`docs/` had not moved since the publish
+commit**. Everything committed after `8a092d5` touched only `CLAUDE.md`,
+`CHANGELOG.md` and `SESSION-NOTES.md`, so the check ran straight off a fresh
+`git pull` with no need to check out the published commit —
+`git diff --stat <publish-sha> main -- docs/` is the one-line test.
+
+**The egress block was re-measured and is a standing property of the
+environment, not a transient state** (`af3e789`, PR #63). Two `curl`s ten
+seconds apart both returned `000`, and `$HTTPS_PROXY/__agentproxy/status`
+recorded a *fresh* `connect_rejected` — *gateway answered 403 to CONNECT* — for
+each. Three things now in `CLAUDE.md` → *Environment*: do not spend a turn
+re-testing it hopefully; **read the status endpoint, not the exit code**, since
+`curl` hides the body of a failed CONNECT and `000` alone cannot separate a
+policy denial from an outage; and **check that endpoint's timestamps against
+`date -u`**, because `recentRelayFailures` persists and a previous session's
+failure reads exactly like a live one. The remedy is outside the session — the
+Mac, or a wider egress policy set when the environment is created.
+
+**Both merged branches are gone from `origin`**, deleted from the Mac after two
+remote sessions were refused: `claude/resume-jntfyn` (both repos) and
+`claude/gracious-hawking-fuklkp`. Verified by `git ls-remote --heads origin`
+rather than by ancestry, since PRs here are squash-merged. A batched
+`git push origin --delete a b c` **fails whole** if any one ref is already gone
+and reads like a permissions problem, so delete one at a time.
+
+A `--public` build at the end of this session left `docs/` **byte-identical** —
+no date drift, the publish having been the same day.
 
 ## 2026-08-21 — Genealogy III block 1's orthography, read and clean
 
