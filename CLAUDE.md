@@ -1714,10 +1714,18 @@ own README says to report a 403 rather than route around it.
   leave the remote for a machine that can.
 
 What a remote session gains, which the Mac does not have: **Pillow and a real
-headless Chromium** (Playwright at `/opt/pw-browsers`), so a plate can be
+headless Chromium** (the browsers are at `/opt/pw-browsers`), so a plate can be
 cropped without `sips` and `/search/` can be measured at an actual 375px
 viewport — where the desktop preview pane widens to the content instead. See
 *The preview pane cannot simulate a NARROW viewport*.
+
+**The browsers are installed; the Playwright package is not.** Add it with
+`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 pip3 install playwright` — the flag matters,
+or it re-fetches a browser that is already there — and launch with
+`executable_path="/opt/pw-browsers/chromium"`, which is a **symlink to the
+binary, not a directory**. Serve the site with `python3 -m http.server` from
+`docs/` rather than reaching for the preview: it is the same pages without the
+pane's cache. Used this way on 2026-08-22 to walk all 620 rows of `/search/`.
 
 **PRs here are squash-merged, so `git branch --no-merged` is not a test of
 whether a branch holds unmerged work.** A squash puts the branch's *content*
@@ -2141,6 +2149,20 @@ same direction; if the answer is "it passes", the audit needs a **third,
 independent** reference — here, the neighbour the pair was colliding with. And
 **look at the thing at least once**: two measurements agreeing is not evidence
 they are right.
+
+**Three DOM measurements that return a plausible wrong number rather than an
+error**, all hit in one pass on 2026-08-22 and all cheap to re-lose. **`innerText`
+sweeps in child elements** — on a `/search/` name cell that is the namesake
+marker, which sits on its own line at every width, so it reported wrapping at
+1280px where nothing wraps. **`scrollWidth` clamps at the box** under visible
+overflow, so it can never tell you how much wider than its column a thing wants
+to be; it made 79px names look like they overflowed a 116px track. And
+**`white-space:nowrap` is not a way to measure a natural width in this edition**,
+because Chromium breaks at `<wbr>` through it. The measurement that works is a
+**clone**, off-screen, with the seams and any marker stripped and the computed
+font copied onto it. The pattern behind all three: each returned a number of the
+right order of magnitude, so nothing looked wrong until two of them disagreed
+with each other.
 
 **Under CSS `zoom`, never mix `getComputedStyle` with `getBoundingClientRect`.**
 The plate scale control is `zoom`, and computed styles come back **unzoomed**
