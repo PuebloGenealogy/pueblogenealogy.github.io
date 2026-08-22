@@ -2066,9 +2066,31 @@ transfer**: the test is that the stub-to-stub gaps hold **nothing below one
 row** (Table 1: 144–148 × 65, 290–292 × 5; Table 3: 24–26 × 43, 49–51 × 19)
 rather than spraying sub-row, and an uncalibrated run produces confident flags
 that are the rig's own noise. Read its README before trusting a number from it.
-**All three transcribed plates it has been pointed at are now calibrated there**
-— Table 1, Table 3 and, since 2026-08-18, **Table 4** (144–148 × 27,
-290–292 × 2, then a sparse tail).
+**Three of the four plates are calibrated there** — Table 1, Table 3 and, since
+2026-08-18, **Table 4** (144–148 × 27, 290–292 × 2, then a sparse tail).
+
+**Table 2 is the fourth, and it is HALF calibrated — the distinction is the
+whole of what is known about it.** Added 2026-08-22 (`a5edc8a`). Its **ink**
+reads: 209 stubs, gaps spiking at 50–56, then 100–113, then 152–170, with only
+two below a row. Its **group pairing does not**, and the run's **23 problems are
+not findings about the transcription and not a baseline to diff** — they are
+mostly groups paired by position rather than by leader, and on this plate that
+fallback reaches **across descent blocks**, handing a block-2 group a block-3
+bracket 2000px away. Do not quote a number from a Table 2 run without reading
+the README's Table 2 section first. Three flags were added for it, all
+defaulting to the previous behaviour (`--thresh`, `--yband`, `--xnear`), plus
+`audit.py`'s `--xrefrow`; Table 3's output is byte-identical across the change,
+which is the regression test to re-run if any of them is touched.
+
+**The 23 have somewhere to be read now: the bracket bench**, a published
+artifact holding all 52 groups beside a native-resolution crop of the column
+their bracket sits in. It is a **deliverable, not a source** — the script that
+built it lived in a session scratchpad and died with the container, so the
+strips had to be re-cut from the plate on 2026-08-22 and the x windows
+recovered by correlating the published images against the scan. If a bench is
+ever rebuilt from scratch, put its generator in the repo or accept re-running
+the whole pipeline. Its strip geometry, measured: generation 5 is x 4590 wide
+1290, generation 6 x 5750 wide 1250.
 
 **Table 4's calibration overturned what this file predicted would be wrong, and
 the lesson generalises: the row pitch is rarely the problem.** It measured
@@ -2127,6 +2149,18 @@ a bracket **no group claims**, and a group with **no bracket**. A pairing it
 cannot make by identity falls back to position and **says so in the output** —
 treat those lines as guesses, because that is exactly the basis that produced
 the false alarms.
+
+**So a bracketless group is bounded by its LEADER-matched neighbours, never by
+the positional ones.** Added 2026-08-22, cutting crops for Table 2's seven
+unmatched groups. Where a group's bracket must lie is decidable without finding
+it: take the brackets the run matched by leader either side of it in the same
+column and the same descent block, and the range between them is the answer.
+Feed the positional pairings into that and it collapses — they are what put
+U46's bracket in block 3, 2000px outside its own descent, and a bound taken
+from one is a crop of the wrong part of the plate. Within a column and a block,
+bracket y rises with the lowest child id, which is what orders the neighbours;
+**check that it holds on the leader-matched ones before relying on it** — it
+holds on every column and block of Table 2 but one.
 
 **A mother with no stub of her own cannot be anchored, and a LATER WIFE is the
 case that bites.** The plate sets a second wife below the whole of her
