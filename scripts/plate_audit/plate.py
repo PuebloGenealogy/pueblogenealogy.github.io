@@ -17,7 +17,8 @@ ROW_T1 = 146.6                  # the plate the constants below were tuned on
 
 
 class Band:
-    def __init__(self, path, x0, x1, thresh=170, row=ROW_T1, xmerge=5, skew=0.0):
+    def __init__(self, path, x0, x1, thresh=170, row=ROW_T1, xmerge=5, skew=0.0,
+                 y0=0, y1=None):
         self.f = open(path, "rb")
         head = self.f.read(64)
         self.off = struct.unpack_from("<I", head, 10)[0]
@@ -26,7 +27,18 @@ class Band:
         self.bpp = struct.unpack_from("<H", head, 28)[0]
         assert self.bpp == 24
         self.flip = h > 0
-        self.h = abs(h)
+        self.H = abs(h)
+        # A y window, so one REGION of a plate can be read with its own
+        # settings. Table 2 is a photograph of a folded sheet whose lower two
+        # thirds are a different scan in everything but name -- its rules run
+        # luma 91 where block 1's run 47, and the tracker that recovers block
+        # 1's drifting rules wanders off the faint ones and fuses three
+        # brackets into a 3400px run. Everything inside this class stays in
+        # BAND-LOCAL y; the caller adds `yoff` back. That keeps every window
+        # and every stub measurement exactly what it was, which is what makes
+        # a full-height band byte-identical to the old behaviour.
+        self.yoff = max(0, int(y0))
+        self.h = (self.H if y1 is None else min(int(y1), self.H)) - self.yoff
         self.stride = ((self.w * 3 + 3) // 4) * 4
         self.row = float(row)
         self.s = self.row / ROW_T1
@@ -46,8 +58,8 @@ class Band:
         self.x0, self.x1 = x0, min(x1, self.w)
         self.bw = self.x1 - self.x0
         self.rows = []                      # bytearray per y, 1 = dark
-        for y in range(self.h):
-            ry = (self.h - 1 - y) if self.flip else y
+        for y in range(self.yoff, self.yoff + self.h):
+            ry = (self.H - 1 - y) if self.flip else y
             self.f.seek(self.off + ry * self.stride + self.x0 * 3)
             raw = self.f.read(self.bw * 3)
             d = bytearray(self.bw)
