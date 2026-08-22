@@ -75,9 +75,10 @@ git rev-list --left-right --count origin/main...HEAD
 git ls-remote --heads origin
 ```
 
-At the moment of writing: `main` is `e434893`, this wrap sits on
-`claude/resume-read-handoff-l68abt` a few commits ahead with a PR being opened
-for it, and nothing is behind. **Verify, do not believe.**
+As of the merge of PR #67: `main` is `96a1d95`, it carries this wrap, and
+nothing is open or in flight. **Verify, do not believe** — that sentence was
+written twice today and was wrong the first time, because the wrap is committed
+before its own PR merges.
 
 For the next publish, the two checks a remote session cannot run:
 
@@ -96,18 +97,21 @@ plain `git pull`.
 
 ### Branches — nothing is owed
 
-`origin` carries **`main`**, this wrap's branch, and
+`origin` carries exactly two refs: **`main`** and
 **`handoff-2026-08-09-search-link-safari-scroll`** — a keeper, not stale. It is
 the only thing holding `938b8e8`, the unverified Safari scroll fix, reachable.
 **Do not sweep it.**
 
-Both merged branches are gone: `claude/gracious-hawking-fuklkp` with GitHub's
-auto-delete on PR #65, and `claude/resume-b6s8bz` deleted by the user from the
-Mac after this session's delete-push was refused **HTTP 403**. That is the
+All three of this day's branches are gone: `claude/gracious-hawking-fuklkp`
+with GitHub's auto-delete on PR #65, and `claude/resume-b6s8bz` and
+`claude/resume-read-handoff-l68abt` deleted by the user from the Mac after a
+delete-push from the remote session was refused **HTTP 403**. That is the
 standing remote egress policy, not a GitHub permission — a remote session
-cannot delete a ref, so leave one for the Mac and say so. Verify branch state
-with `ls-remote`, never by ancestry; `CLAUDE.md` has the reason (squash merges)
-and the two deletion traps.
+cannot delete a ref, so leave one for the Mac and say so. **GitHub's
+auto-delete is not reliable here**: it fired on #65 and not on #66 or #67, so
+check `ls-remote` after every merge rather than assuming. Verify branch state
+that way and never by ancestry; `CLAUDE.md` has the reason (squash merges) and
+the two deletion traps.
 
 Local `main` was found **9 commits behind** this session and fast-forwarded. A
 remote container is cloned fresh but its `main` is not necessarily current —
