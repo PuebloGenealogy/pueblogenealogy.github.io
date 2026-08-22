@@ -3,7 +3,37 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-21 (latest) — the Death filter says what it accepts
+## 2026-08-22 (latest) — the plate-reading method stops living in a file that gets thrown away
+
+**No code changed**, and nothing in the edition moved: `scripts/` and `docs/`
+are untouched, `--public` exits 0, and the only `docs/` diff a rebuild produces
+today is the **date** — `dateModified`, the "Last updated" line and
+`sitemap.xml`'s `lastmod` — which was reverted rather than committed, since
+committing it signals a content change to crawlers that did not happen.
+
+**How to read a plate for TYPE is now in `CLAUDE.md`**, a new bullet under
+*Facts worth knowing* beside the magnification floor: chunk rather than magnify;
+plan the tiles from an **ink-row profile** and reconcile the line count before
+trusting any of it; read at **two** magnifications — 4x over the
+number-sex-name field, 2.8x over the tail, 6–7x the moment a mark is ambiguous;
+Table 3's seven generation columns and its crop coordinates; and Pillow's
+`NEAREST` as the remote replacement for `sips`.
+
+It is how *any* future reading of these plates starts, and it had been living in
+`SESSION-NOTES.md` — the file `/wrap-session` overwrites. It survived the last
+two wraps only because each one copied it forward by hand, which is the same
+failure the illegible-passage rule had in 2026-07: **a rule kept only in the
+handoff is a rule with a countdown on it.** Reading for type is also genuinely
+distinct from reading for structure, which is why it wanted its own bullet
+rather than a line in the plate-audit section.
+
+`SESSION-NOTES.md` was rewritten for the same reason and is **a third shorter**
+(256 lines to 163). It now **points at `CLAUDE.md` instead of restating it** —
+the branch mechanics, the preview traps and the closed decisions are all durable
+already — and says so at the top, so the next wrap does not quietly re-absorb
+them.
+
+## 2026-08-21 — the Death filter says what it accepts
 
 **Published the same day**, `8a092d5`; GitHub's `pages build and deployment`
 run for that commit reported success. **The by-hash live check is owed**: this

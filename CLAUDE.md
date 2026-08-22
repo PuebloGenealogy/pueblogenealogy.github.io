@@ -1581,6 +1581,37 @@ to catch "58+59" links those too.
   `s` of `wits` and reported a known U+02BC as the questioned sort. The flood
   fill measures whatever blob it is handed, and a wrong box fails silently by
   producing a perfectly plausible number.
+- **Reading a plate for TYPE is a different job from reading it for STRUCTURE,
+  and the constraint is the display rather than the scan.** Recorded 2026-08-21,
+  from the pass that read Genealogy III block 1's 229 entries; it had lived only
+  in the handoff, which is overwritten every session. **Chunk rather than
+  magnify** — anything taller than ~1500px is downscaled on display, which is
+  what makes a big crop illegible.
+  - **Plan the tiles from an ink-row profile**, one generation band at a time:
+    count dark pixels per row inside the band's x range, group runs of ≥6 into
+    text lines, then pack lines into tiles ≤420 native px tall. It found 276
+    text lines in block 1, which **reconciles** against 229 people plus their
+    cross-reference rows, 155's four continuation lines, `(Sister of 10)`, the
+    six second-occurrence lines and the plate title. A reconciling count is what
+    licenses trusting the rest — the same argument as the `_diag.html` DOM tally.
+  - **Two magnifications, not one.** 380 native px at **4x** (1520px, as much as
+    a vision read carries) over the number-sex-name field, and **2.8x** over the
+    tail for age, clan and cross-reference. Re-crop at **6–7x** the moment a mark
+    is ambiguous: that is what settled 60's `Kʼapokaʼă`, where 4x read the second
+    apostrophe as a raised dot. Past ~8x see the magnification floor above.
+  - **Table 3's generation columns**, native x of the right-aligned number:
+    g1 145 · g2 755 · g3 1293 · g4 1833 · g5 2377 · g6 2920 · g7 3467. Band x
+    from `col − 60`; a full line runs about 370px. Block 1 crops as three chunks
+    × two strips with 830px of overlap —
+    `crop.py /tmp/t3.bmp {0,1470} {150,1590,3030} 2300 {1480,1480,1450}` — plus
+    block 2 at y 4440, h 1080. **A column-6 strip carrying the mother's column
+    beside it** is what settled the six groups the fold crease hides:
+    `crop.py /tmp/t3.bmp 2250 <y> 1150 1450` at y = 150, 1550, 2950 and
+    (h=1100) 4400. Table 4 is 12255 × 8409 — crop at native and chunk hard.
+  - **Remotely there is no `sips`, and the replacement is better for type.**
+    `pip3 install pillow`, then crop straight from the JPEG with
+    `Image.crop().resize(..., Image.NEAREST)`, which invents nothing exactly as
+    `crop.py` does not.
 - Google's structured-data validator is **stricter than schema.org** — valid
   schema.org has been rejected twice here. `check_structured_data()` guards the
   rules we have been told about, not all of them; a Search Console report
