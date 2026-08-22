@@ -102,6 +102,57 @@ delete-push was refused **HTTP 403**, which is the standing remote egress
 policy and not a GitHub permission. Local `main` was found **9 commits behind**
 and fast-forwarded.
 
+### Later the same day again — the last seven groups get a strip, and the Table 2 rig lands on `main`
+
+**Nothing in the edition moved.** `docs/` is untouched; `--public` exits 0 with
+7 pages and 10 JSON-LD blocks valid, and the only rebuild diff was the date
+again, reverted rather than committed. What changed on `main` is
+`scripts/plate_audit/` and one docstring, by **PR #69** (`a5edc8a`) — the two
+commits the previous session left unpushed and un-PR'd. The squash landed the
+branch content whole: branch tree `05777b6a` is identical to the merge
+commit's, which is the check to make here, since `git branch --no-merged` reads
+a squashed branch as unmerged.
+
+**The bracket bench now has a strip for every group.** Seven of its 52 —
+U46, U49, U50, U51, U52, U53, U60 — had sat in a closing section with no image
+beside them, because the rig matched them no bracket. Each has one now, cut over
+the range its bracket **must** lie in, bounded by the brackets matched **by
+leader** either side of it in the same column and descent block. Four strips
+carry the seven: block 2 gen 5 at y 8601–9016 and y 9451–10580, block 3 gen 5 at
+y 10780–12000, block 3 gen 6 at y 10780–12510.
+
+**Two of the seven look answerable from the crop, and neither was ticked** —
+adjudicating them is the user's read, not the rig's and not this session's:
+
+- **U60.** The generation-6 strip shows two brackets: 3 stubs over 270, 271, 272
+  and 2 stubs over 273, 274. U60 claims exactly 270–272 and U61 claims 273–274,
+  so the rig gave U60's bracket to U61 **by position** and left U60 with none.
+  That is two of the 23 problems in one — the bracketless group and the
+  generation-6 vertical whose leader "sits on no row".
+- **U46.** Its strip shows a 2-stub bracket over `207. M. — Bear` and
+  `208. F. Gaaish. Bear`, which is its claim. The rig **detected** that vertical,
+  at y 8747–8818, and could not attach it because 173 married in from
+  Genealogy I and so has no stub of her own.
+
+Three things about rebuilding the bench that cost this session an hour and need
+not cost the next one. **The generator was in a scratchpad and the scratchpad
+dies with the container**, so the BMP, the three block runs and the audit all had
+to be re-run from the plate — they reproduced the previous session's 23 problems
+exactly, which is the only reason the new bounds could be trusted. **The strips'
+x windows were recovered by correlation**, not guessed: each published strip's
+column-ink profile was matched against the plate, giving generation 5 at x 4590
+wide 1290 and generation 6 at x 5750 wide 1250, exactly. And **the section's
+lede said "Four groups" over seven cards** — written when there were four, and
+never revised.
+
+Also housekeeping, all of it read from the repo rather than the handoff.
+`origin` briefly carried the same two commits under **two** names, because this
+session's designated branch was based on the previous one's; the user deleted
+`claude/resume-av5lwm` from the Mac. **GitHub's auto-delete did not fire on
+#69** either, so `claude/confident-sagan-gpuzr6` is still on `origin` at
+`ef1bf3d` with its content fully in `main` — the third time in four merges, and
+a remote session cannot delete a ref (HTTP 403). Local `main` fast-forwarded.
+
 ## 2026-08-21 — the Death filter says what it accepts
 
 **Published the same day**, `8a092d5`; GitHub's `pages build and deployment`
