@@ -1711,7 +1711,11 @@ own README says to report a 403 rather than route around it.
 - **A delete-push is refused.** `git push origin --delete <branch>` returned
   **HTTP 403** in both repos while ordinary pushes went through, so a merged
   branch cannot be cleaned up from there. Delete the local one, say so, and
-  leave the remote for a machine that can.
+  leave the remote for a machine that can. **There is no API route around it**:
+  the GitHub MCP set has `create_branch` and no delete. Re-confirmed 2026-08-22
+  in a session that pushed a branch and merged two PRs through that same API
+  minutes either side of the refusal — so this is the egress policy on the git
+  path, not a permission the token lacks, and one attempt is all it is worth.
 
 What a remote session gains, which the Mac does not have: **Pillow and a real
 headless Chromium** (the browsers are at `/opt/pw-browsers`), so a plate can be
