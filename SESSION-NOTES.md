@@ -15,6 +15,10 @@ the last seven groups that had none. The first session of the day moved the
 plate-reading method into `CLAUDE.md`; the second re-measured `/search/`'s Name
 column. **Nothing in `docs/` or `vendor/` has moved since `8a092d5`.**
 
+`main` is **`26d4442`** (PR #70, this wrap). Nothing is open, nothing is in
+flight, and no branch deletion is outstanding — but **verify that from the repo
+rather than from this sentence**, which is written before its own commit lands.
+
 ## Start here in a new chat
 
 1. This file.
@@ -55,21 +59,21 @@ git rev-list --left-right --count origin/main...HEAD
 git ls-remote --heads origin
 ```
 
-### Branches — one deletion owed to the Mac
+### Branches — nothing is owed
 
-`origin` carries **`main`**, **`handoff-2026-08-09-search-link-safari-scroll`**
-(a keeper — the only thing holding `938b8e8`, the unverified Safari scroll fix,
-reachable; **do not sweep it**) and **`claude/confident-sagan-gpuzr6`**, whose
-content is fully in `main` via #69 and which should be deleted:
+`origin` carries exactly two refs: **`main`** and
+**`handoff-2026-08-09-search-link-safari-scroll`** — a keeper, the only thing
+holding `938b8e8`, the unverified Safari scroll fix, reachable. **Do not sweep
+it.**
 
-```bash
-git push origin --delete claude/confident-sagan-gpuzr6
-```
-
-A remote session cannot do it — HTTP 403, standing egress policy, not a GitHub
-permission. **GitHub's auto-delete did not fire on #69**, as it did not on #66
-or #67; it has now failed three times in four merges, so check `ls-remote` after
-every merge rather than assuming.
+`claude/confident-sagan-gpuzr6` is gone, deleted by the user from the Mac after
+a delete-push from this remote session was refused **HTTP 403** — re-measured
+2026-08-22 with an ordinary push and two API merges succeeding in the same
+session, so it is the egress policy and not a GitHub permission, and **the
+GitHub MCP set has `create_branch` but no delete**, so there is no API route
+either. **GitHub's auto-delete did not fire on #69 or #70**, as it did not on
+#66 or #67; four failures in five merges, so check `ls-remote` after every merge
+rather than assuming.
 
 ## The open thread — read the bench
 

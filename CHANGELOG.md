@@ -148,10 +148,18 @@ never revised.
 Also housekeeping, all of it read from the repo rather than the handoff.
 `origin` briefly carried the same two commits under **two** names, because this
 session's designated branch was based on the previous one's; the user deleted
-`claude/resume-av5lwm` from the Mac. **GitHub's auto-delete did not fire on
-#69** either, so `claude/confident-sagan-gpuzr6` is still on `origin` at
-`ef1bf3d` with its content fully in `main` — the third time in four merges, and
-a remote session cannot delete a ref (HTTP 403). Local `main` fast-forwarded.
+`claude/resume-av5lwm` from the Mac. **GitHub's auto-delete fired on neither #69
+nor #70** — four failures in five merges — so `claude/confident-sagan-gpuzr6`
+survived both, and the user deleted it too. Local `main` fast-forwarded twice.
+
+**The delete-push refusal was re-measured rather than recalled**, and it is
+worth one line because the evidence is now stronger than it was: the same
+session pushed a branch and merged two PRs through the API without complaint,
+and `git push origin --delete` still returned **HTTP 403** — so it is the egress
+policy on that path and not a GitHub permission. **The GitHub MCP set has
+`create_branch` and no delete**, so there is no API route around it either.
+A remote session should say the deletion is owed and leave it, exactly as
+`CLAUDE.md` records.
 
 ## 2026-08-21 — the Death filter says what it accepts
 
