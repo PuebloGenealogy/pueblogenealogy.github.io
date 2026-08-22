@@ -3,7 +3,37 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-21 (latest) — the Death filter says what it accepts
+## 2026-08-22 (latest) — the plate-reading method stops living in a file that gets thrown away
+
+**No code changed**, and nothing in the edition moved: `scripts/` and `docs/`
+are untouched, `--public` exits 0, and the only `docs/` diff a rebuild produces
+today is the **date** — `dateModified`, the "Last updated" line and
+`sitemap.xml`'s `lastmod` — which was reverted rather than committed, since
+committing it signals a content change to crawlers that did not happen.
+
+**How to read a plate for TYPE is now in `CLAUDE.md`**, a new bullet under
+*Facts worth knowing* beside the magnification floor: chunk rather than magnify;
+plan the tiles from an **ink-row profile** and reconcile the line count before
+trusting any of it; read at **two** magnifications — 4x over the
+number-sex-name field, 2.8x over the tail, 6–7x the moment a mark is ambiguous;
+Table 3's seven generation columns and its crop coordinates; and Pillow's
+`NEAREST` as the remote replacement for `sips`.
+
+It is how *any* future reading of these plates starts, and it had been living in
+`SESSION-NOTES.md` — the file `/wrap-session` overwrites. It survived the last
+two wraps only because each one copied it forward by hand, which is the same
+failure the illegible-passage rule had in 2026-07: **a rule kept only in the
+handoff is a rule with a countdown on it.** Reading for type is also genuinely
+distinct from reading for structure, which is why it wanted its own bullet
+rather than a line in the plate-audit section.
+
+`SESSION-NOTES.md` was rewritten for the same reason and is **a third shorter**
+(256 lines to 163). It now **points at `CLAUDE.md` instead of restating it** —
+the branch mechanics, the preview traps and the closed decisions are all durable
+already — and says so at the top, so the next wrap does not quietly re-absorb
+them.
+
+## 2026-08-21 — the Death filter says what it accepts
 
 **Published the same day**, `8a092d5`; GitHub's `pages build and deployment`
 run for that commit reported success. **The by-hash live check is owed**: this
@@ -113,6 +143,40 @@ and reads like a permissions problem, so delete one at a time.
 
 A `--public` build at the end of this session left `docs/` **byte-identical** —
 no date drift, the publish having been the same day.
+
+### Closed in a third session the same day — the `/search/` provenance line stays put
+
+**The user chose to leave it exactly where it is**, the second `.foot-note` in
+that page's own footer, beside *"A read-only finding aid…"*. It had been offered
+four times, and the ambiguity being closed is that **three blocks on this site
+answer to the name *provenance***: `/search/`'s footer note, the landing page's
+*Provenance and use*, and each chart page's folded *Provenance* section. The
+first of those **is** that page's provenance block, so the line was already
+where *"put it in provenance"* asked for it. The landing page stays silent on
+identity joins by decision, not by oversight.
+
+**What the move would have cost, recorded so nobody re-derives it.** Taking the
+paragraph off `/search/` is not a host-side edit: `write_search()` wraps the
+vendored page and never rewrites it, so removal is an **upstream** change in
+`laguna-search` — and the upstream-vs-host test refuses it, because a finding
+aid standing alone wants to state what its index holds and which of its joins
+are its own. The counts in it are `ctx.meta` at runtime, so the landing page
+would have had to recompute them beside the `.c-across` row that says
+**entries** where this line says **people**.
+
+**No code changed.** `scripts/` and `docs/` are untouched, `--public` exits 0
+with `docs/` byte-identical, and the closure is recorded in `CLAUDE.md` beside
+the paragraph that already explains the line, so the durable copy carries the
+reasoning and not only the verdict.
+
+**The owed branch deletion turned out to be done.** `git ls-remote --heads
+origin` carries only `main`, this session's branch and
+`handoff-2026-08-09-search-link-safari-scroll` — the keeper that holds `938b8e8`
+reachable. `claude/gracious-hawking-fuklkp` went with GitHub's auto-delete when
+PR #65 merged, so nothing is owed to a machine with egress. **The handoff had it
+as outstanding**, which is the failure mode `CLAUDE.md` names: a wrap writes its
+branch state before its own PR merges, so it describes the repo one step behind
+itself. Read `ls-remote`, not the handoff.
 
 ## 2026-08-21 — Genealogy III block 1's orthography, read and clean
 
