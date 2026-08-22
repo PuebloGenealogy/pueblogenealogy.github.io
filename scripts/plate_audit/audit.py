@@ -32,7 +32,21 @@ ROW_HINT = next((float(a.split("=")[1]) for a in sys.argv if a.startswith("--row
 # reports no leader and the check that finds a bracket on the wrong row goes
 # quietly dead. Hence the floor.
 YMATCH = max(5, int(round(12 * ROW_HINT / ROW_T1)))
-sys.argv = [a for a in sys.argv if not a.startswith("--row=")]
+# --xrefrow: a person who carries a cross-reference is printed with it on its
+# OWN line, so the '+' spouse beneath them sits two rows down, not one. The
+# model here assumes one, and on Table 2's block 2 that is wrong nearly
+# everywhere -- "See Gen. I, <n>" runs under most of it -- so a whole column of
+# mothers lands a row above their real line, loses its bracket to the group
+# genuinely there, and passes no rows to its own children. It is the same
+# defect as Table 4's four Johnsons, whose English name is likewise printed on
+# its own row; there it cost four leader flags, here it costs a block.
+#
+# Off by default because Tables 1, 3 and 4 have documented baselines and this
+# moves them. Turning it on for those plates should REMOVE flags, never add
+# them -- if it adds one, the assumption is wrong for that plate, not the
+# baseline.
+XREFROW = "--xrefrow" in sys.argv
+sys.argv = [a for a in sys.argv if not a.startswith("--row=") and a != "--xrefrow"]
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 mod_name = sys.argv[1]
@@ -40,6 +54,10 @@ spec = importlib.util.spec_from_file_location("t", f"{REPO}/scripts/{mod_name}")
 T = importlib.util.module_from_spec(spec); spec.loader.exec_module(T)
 
 GEN = {p[0]: p[1] for p in T.PERSONS}
+# PERSONS is (id, generation, sex, name, alt_name, age, clan, vital_note,
+# origin, cross_ref, plate_note) in all four modules -- index 9 is the
+# cross-reference, and a non-empty one is a printed row.
+XREF = {p[0]: bool(len(p) > 9 and p[9]) for p in T.PERSONS}
 UNION = {u[0]: u for u in T.UNIONS}
 ON_SPOUSE = set(getattr(T, "LEADER_ON_SPOUSE_ROW", ()) or ())
 
@@ -105,7 +123,10 @@ def mother_row(uid, mother):
         partner, order = (u[2], u[4]) if u[1] == mother else (u[1], u[3])
         if partner in rows:
             if order == 1:
-                return rows[partner] + ROW, f"one row under {partner}"
+                n = 2 if (XREFROW and XREF.get(partner)) else 1
+                return (rows[partner] + ROW * n,
+                        f"{'two' if n == 2 else 'one'} row{'s' if n == 2 else ''} "
+                        f"under {partner}" + (" (cross-reference row)" if n == 2 else ""))
             # "One row under her partner" is a FIRST wife's rule. The plate
             # sets a later wife below the whole of his earlier issue, which
             # here is 31 rows, not one: 19's line is at y 3186 and 21's at

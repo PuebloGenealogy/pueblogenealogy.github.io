@@ -59,15 +59,23 @@ row-ink profile of a dense list; do not estimate it from the page height.
 The rest are **not** row-scaled, because they answer to the scan rather than to
 the type, and each was forced by a specific measurement:
 
-| flag | Table 1 | Table 3 | what it answers |
-|---|---|---|---|
-| `--row` | 146.6 | **24.7** | the plate's row pitch; scales every window |
-| `--track` | 0 | **1** | px a rule's window may re-centre per row |
-| `--xmerge` | 5 | 5 | px apart two fragments are still one rule |
-| `--maxwidth` | 45 | 45 | px beyond which a candidate is type, not a rule |
-| `--maxthick` | off | **6** | px deep beyond which a "stub" is a blot |
-| `--ongrid` | off | **0.25** | rows of slack before a run is off the grid |
-| `minrun` (positional) | 110 | **12** | px of contiguous ink that makes a rule |
+| flag | Table 1 | Table 3 | Table 2 | what it answers |
+|---|---|---|---|---|
+| `--row` | 146.6 | **24.7** | **52** | the plate's row pitch; scales every window |
+| `--track` | 0 | **1** | **1** | px a rule's window may re-centre per row |
+| `--xmerge` | 5 | 5 | **15** | px apart two fragments are still one rule |
+| `--maxwidth` | 45 | 45 | 45 | px beyond which a candidate is type, not a rule |
+| `--maxthick` | off | **6** | **8** | px deep beyond which a "stub" is a blot |
+| `--ongrid` | off | **0.25** | off | rows of slack before a run is off the grid |
+| `--thresh` | 170 | 170 | **140** | luma below which a pixel is ink |
+| `--yband` | — | — | **per block** | read one horizontal region with its own settings |
+| `--xnear` | derived | derived | derived | px apart two detections are still one rule |
+| `minrun` (positional) | 110 | **12** | **40** | px of contiguous ink that makes a rule |
+
+`--thresh`, `--yband` and `--xnear` were added 2026-08-22 for Table 2 and all
+three default to the previous behaviour: Table 3's `brackets.py` and `audit.py`
+output is **byte-identical** across the change, which is the regression test to
+re-run if any of them is touched.
 
 `--skew` is **not used by Tables 1 or 3** — see the bow, below. Table 4 is the
 plate it was built for and it is still not needed there, because `--track`
@@ -104,6 +112,7 @@ then **nothing at all below one row**:
 | Table 1, calibrated | 144–148 × 65, 290–292 × 5, then a sparse tail |
 | Table 3, calibrated | 24–26 × 43, 49–51 × 19, then a sparse tail |
 | Table 4, calibrated | 144–148 × 27, 290–292 × 2, then a sparse tail |
+| Table 2, calibrated | 50–56 × 82, 100–113 × 26, 152–170 × 6, then a sparse tail (plus 82 × 3 and 94 × 2 — see *Table 2 has TWO row pitches*) |
 | Table 4, **before** calibration | 9.5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 … |
 
 Table 4's spray of small gaps corrupts the measured row pitch, which then
@@ -268,6 +277,115 @@ row is taken from the lower occurrence and the measurement comes back −6042px.
 
 **So Table 4's 10 are a known-clean baseline, like Table 3's 15.** An 11th
 problem, or a change in which V-ids appear, is the signal. Diff the list.
+
+## Table 2, calibration STARTED 2026-08-22 — the ink reads, the pairing does not
+
+**Read this before quoting a number from a Table 2 run.** The plate is
+7770 × 12681 and is the largest and most damaged scan of the four: a photograph
+of a **folded** sheet, with two horizontal creases, several vertical ones, paper
+repairs taped over the type, and rules that are three times fainter in the lower
+two thirds than in the upper. Its stub detection is calibrated by the gap test
+above. **Its group pairing is not**, and the difference matters more here than
+on any other plate.
+
+There is no `sips` in a remote session; the BMP comes from Pillow, which writes
+the same 24-bit bottom-up file `plate.py` expects:
+
+```python
+from PIL import Image
+Image.MAX_IMAGE_PIXELS = None
+Image.open("sources/parsons-1923-table-2.jpg").convert("RGB").save("/tmp/t2.bmp")
+```
+
+The plate is read in three passes, one per descent block, and the JSON lists are
+concatenated — `audit.py` takes a flat list and never asks where a rule came
+from. Blocks are separated by real blank paper, measured off the row-ink
+profile: **y 5769–6082, y 10567–10788**.
+
+```bash
+B='[[1180,1420],[2340,2650],[3550,3775],[4690,4935],[5860,6010]]'
+BASE="40 --row=52 --thresh=140 --maxthick=8 --track=1 --xmerge=15"
+python3 scripts/plate_audit/brackets.py /tmp/t2.bmp "$B" $BASE --yband=0:5790     > b1.json
+python3 scripts/plate_audit/brackets.py /tmp/t2.bmp "$B" $BASE --yband=6060:10580 --gapmax=30 > b2.json
+python3 scripts/plate_audit/brackets.py /tmp/t2.bmp "$B" $BASE --yband=10780:12510 > b3.json
+# concatenate the three JSON arrays into t2.json, then:
+python3 scripts/plate_audit/audit.py transcription_ii.py t2.json \
+    2:1292,3:2488,4:3662,5:4813,6:5933 80 --row=58 --xrefrow
+```
+
+### Four things its scan does that the others' do not
+
+**Two fold creases are read as INK at the default threshold, and one of them
+deletes the generation-2 bracket.** The creases at **y 2984–3032** and
+**y 9535–9553** are blank paper in shadow, and at `thresh=170` every x across
+the full width carries a 49px vertical run there. `verticals()` merges the
+crease with any rule it crosses; the merged candidate is **536px wide**, so
+`MAXWIDTH` throws the rule away — and the rule thrown away is 3100px of solid
+black carrying 1+2's three daughters. The separation is not a judgement call:
+**the crease shadow bottoms out at luma 133 and the rules sit under 60**, so
+`--thresh=140` takes both creases to nothing while every rule survives. Nothing
+errors at 170; the column simply comes back empty, which reads as a plate with
+no generation 2.
+
+**The lower two thirds are a different scan in everything but name.** Block 1's
+rules run **luma 47**; block 2's run **91**, median, with a p90 of 118 — thin
+grey lines on buckled paper. The consequence is not that they are missed but
+that `--track` behaves differently on them: the tracker that recovers block 1's
+drifting rules **wanders off** block 2's and fuses three brackets into a 3411px
+run. Hence `--yband`. Block 2 also needs **`--gapmax=30`** where blocks 1 and 3
+do not: its rules break by up to 30px, and at the default 11 the root bracket
+comes back with 2 stubs instead of 6. 30 is 0.58 of a row, so it still cannot
+fuse two brackets a row apart.
+
+**Table 2 has TWO row pitches.** Normal rows are **51.5px** (measured; the
+`audit.py` estimator agrees when given `--row=58`). But its runs of undifferentiated
+siblings — 85–96, `— Bear` / `— Water` and nothing else — are set **42–50px**
+apart. Both are real, and the second is why the gap histogram has a shoulder
+below one row rather than the clean spike the other three plates give.
+`--row=58` is a **hint, not the pitch**: it exists to lift the estimator's
+`0.5 × hint` floor above a single 28px artifact gap, which would otherwise be
+taken as the row and make every window half its proper size.
+
+**Its rules drift far more than Table 3's bow.** The generation-3 column runs
+x 2456 at y 187 and x 2546 at y 10240; generation 5 runs 4853 at y 230 and 4747
+at y 4200 — one column drifting **+90px** and another **−106px**, so no single
+skew or bow describes the plate. `--track=1` is what follows them, and `XTOL`
+of 80 is what still lets one x per generation name the column. The derived
+`--xnear` (11px at this row pitch) is too tight for rules that move this far,
+which is why it became a flag — though raising it measured **worse**, not
+better, and it is left derived.
+
+### What is NOT calibrated, and why no number from it is a finding yet
+
+At the settings above the run reports **23 problems**, and they are not evidence
+about the transcription. Nearly all are the README's own warning reproduced at
+scale: a group that cannot be matched by leader takes a leftover bracket **in
+plate order**, and on this plate that fallback reaches **across blocks** — a
+block-2 group at generation 5 was handed a block-3 bracket 2000px away. One
+unmatched group high in a column costs the whole column below it.
+
+Three causes are identified and only the first is fixed:
+
+- **A cross-reference is printed on its own row**, so a `+` spouse sits TWO rows
+  under their partner, not one. Block 2 is built on `See Gen. I, <n>` — 49
+  people on this plate carry a cross-reference, 44 of them into Genealogy I —
+  so the model was a row out almost everywhere in it.
+  `--xrefrow` reads the `cross_ref` field (PERSONS index 9, the same in all four
+  modules) and adds the row. It is **off by default** because Tables 1, 3 and 4
+  have documented baselines; it is inert on Table 3, and turning it on for a
+  plate should only ever REMOVE flags. It took Table 2 from 26 problems to 23.
+- **A person printed twice has one row.** 169 has two unions and Parsons prints
+  her under 156+157 and again under 164+165; `rows[169]` holds one y, so one of
+  the two groups is always a guess. This is Table 4's person-3 flag again.
+- **Other continuation rows are not modelled at all** — 14's braced two-line
+  name, `(David Leonia)`, `(Brother of Gen. IV, 9)`. Each is a row the plate
+  prints and the anchor model does not count.
+
+**So do not report any of the 23 as a defect, and do not treat this list as a
+baseline to diff.** It is not yet the known-clean list that Table 3's 15 and
+Table 4's 10 are: those were reached by explaining every entry, and none of
+these has been explained. The half this tool cannot do — the number printed
+against each stub — has not been done for this plate at all.
 
 ## Traps already paid for
 

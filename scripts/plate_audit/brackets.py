@@ -26,7 +26,8 @@ from plate import Band, ROW_T1
 # is a fraction of. Table 3 sets 24.7px to a row against Table 1's 146.6, so
 # leaving it at the default reads Table 3 with windows six times too wide.
 FLAGS = ("--row=", "--xmerge=", "--maxwidth=", "--skew=", "--track=",
-         "--maxthick=", "--ongrid=", "--gapmax=", "--overshoot=")
+         "--maxthick=", "--ongrid=", "--gapmax=", "--overshoot=", "--thresh=",
+         "--yband=", "--xnear=")
 argv = [a for a in sys.argv if not a.startswith(FLAGS)]
 
 
@@ -74,6 +75,34 @@ GAPMAX = int(flag("--gapmax=", 0)) or None
 # missed rule. Keep it under a row (24.75) or the search takes in the group
 # above.
 OVERSHOOT = int(flag("--overshoot=", 0)) or None
+# --thresh is the luma below which a pixel is ink. 170 is what Tables 1, 3 and
+# 4 are read at. Table 2 is a photograph of a FOLDED sheet, and two of its
+# creases cast a shadow across the full width -- y 2984-3032 and y 9535-9553 --
+# that is dark enough at 170 to give every x a 49px vertical run. `verticals()`
+# then merges the crease with any rule it crosses, and the merged candidate is
+# 536px wide, so MAXWIDTH throws the rule away: the generation-2 bracket, 3100px
+# of solid black, is simply not found. The separation is clean rather than a
+# judgement call -- the crease shadow bottoms out at luma 133 and the rules sit
+# under 60 -- so this is a threshold, not a tuning.
+THRESH = int(flag("--thresh=", 170))
+# --yband=y0:y1 reads one horizontal REGION of the plate. Everything else here
+# is a property of the whole scan; this is not, and Table 2 is why. Its three
+# descent blocks were photographed across two folds, and the settings that read
+# block 1 (rules at luma 47, drifting 8px, needing --track) fuse block 2's
+# faint ones into a single 3400px run. Merge the JSON of two runs -- audit.py
+# takes a flat list and never asks where a rule came from.
+# --xnear is how far apart two detections may sit in x and still be the same
+# rule. It is derived from the row pitch by default -- 30px on Table 1, 11 on
+# Table 2 -- and that derivation assumes a rule that barely moves. Table 2's
+# do: its block-2 generation-3 rule runs x 2495 at y 6107 and x 2546 at
+# y 10240, so the tracker's two detections of it sit 23px apart at their
+# midpoints and neither is recognised as the other. A spurious second copy is
+# worse than harmless -- it takes a slot in the column and pushes every later
+# group onto the wrong ink.
+XNEAR = int(flag("--xnear=", 0))
+YBAND = next((a.split("=")[1] for a in sys.argv if a.startswith("--yband=")), None)
+Y0, Y1 = (0, None) if not YBAND else (
+    int(YBAND.split(":")[0]), int(YBAND.split(":")[1]) if YBAND.split(":")[1] else None)
 
 bmp = argv[1]
 bands = json.loads(argv[2])              # [[x0,x1], ...]
@@ -81,7 +110,8 @@ minrun = int(argv[3]) if len(argv) > 3 else 110
 
 found = []
 for x0, x1 in bands:
-    b = Band(bmp, x0, x1, row=ROW, xmerge=XMERGE, skew=SKEW)
+    b = Band(bmp, x0, x1, thresh=THRESH, row=ROW, xmerge=XMERGE, skew=SKEW,
+             y0=Y0, y1=Y1)
     # Each candidate keeps its OWN x window. Pooling the windows of a whole
     # column merges brackets that merely sit at the same x at different y --
     # on Table 1's generation 3 that made one 52px window out of three rules
@@ -116,6 +146,12 @@ for x0, x1 in bands:
                 if any(g < ROW * 0.75 or (g < ROW * 6.5 and
                        abs(g / ROW - round(g / ROW)) > ONGRID) for g in gaps):
                     continue
+            # Band works in band-local y throughout, so the offset goes back on
+            # here -- after every window has been measured, and only once.
+            if b.yoff:
+                r["y0"] += b.yoff; r["y1"] += b.yoff
+                for s in r["right"] + r["left"]:
+                    s["y"] += b.yoff
             found.append(r)
 
 # One rule drifts enough in x to be detected two or three times, each run a
@@ -123,7 +159,7 @@ for x0, x1 in bands:
 # the expected groups out of step with the ink and flag brackets that are fine.
 # Containment is not enough to catch them; cluster on overlap instead.
 found.sort(key=lambda r: (-len(r["right"]), -r["len"]))
-keep, xnear = [], max(1, int(round(30 * ROW / ROW_T1)))
+keep, xnear = [], XNEAR or max(1, int(round(30 * ROW / ROW_T1)))
 for r in found:
     for k in keep:
         if abs(k["x"] - r["x"]) > xnear:
