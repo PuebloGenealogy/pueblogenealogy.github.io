@@ -10,18 +10,29 @@ sha256 d7d050f52c7e6d03bb60a1a4b338972e9dbb3b7e8cdc8299b97317d45339f7a6
 Read tile by tile at native resolution. This file is the immutable 1923
 baseline. Do NOT add research data here -- see the README's privacy boundary.
 
-*** WORK IN PROGRESS -- Gate 1 (reading) is not complete. ***
-Do not register this module in make_chart.py's TABLES until self_check() passes
-and the persons/unions/children counts reconcile.
+Published. All four plates are, and this module is registered in
+make_chart.py's TABLES. The banner that stood here until 2026-08-22 said the
+reading was incomplete and the module must not be registered; both had been
+false since the plate went live on 2026-07-30, and a stale scope claim is the
+one kind of error CLAUDE.md asks to be swept for after any change to what the
+edition covers.
+
+What is NOT settled is PLACEMENT -- which bracket each person hangs from. The
+user re-checked their own list on 2026-07-30 and reported no remaining errors,
+but the plate has never been read group by group against the scan the way
+Genealogy I and Genealogy III's two blocks have. See scripts/plate_audit/.
 
 HOW THIS PLATE DIFFERS FROM TABLES 1 AND 4
 ------------------------------------------
 1. ORIENTATION AND SIZE. This plate is portrait (7770 x 12681) where Tables 1
    and 4 are landscape, and it is much the largest of the three: the numbering
    runs past 269, against Table 1's 104 and Table 4's 73.
-2. TWO BLOCKS. An upper block of six generations and a lower block joined at
-   the couple 154+155. Table 1 has five generations; this is the first plate
-   here to reach six.
+2. THREE DESCENT BLOCKS -- 1+2, 154+155 and 232+233 -- separated by blank paper
+   at y 5769-6082 and y 10567-10788. Read as two here until 2026-07-30, when
+   232+233 was found to be a third rather than part of the second; 31+32 is NOT
+   a fourth, but a couple the plate prints inside the first block (see
+   UNATTACHED_BLOCKS). The upper block runs to six generations, where Table 1
+   reaches five; this is the first plate here to do so.
 3. HEAVY CROSS-REFERENCING INTO THE OTHER PLATES. Many entries carry
    "See Gen. I, <n>", and two carry references into Genealogy IV
    ("Brother of Gen. IV, 9"; "Presumedly brother of Gen. IV, 64"). Both target
