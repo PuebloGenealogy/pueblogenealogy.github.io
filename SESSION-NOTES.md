@@ -9,13 +9,15 @@ turns up in a session belongs there, not here — this file is designed to be
 thrown away, and the plate-reading method rode in it for two wraps before being
 moved on 2026-08-22.
 
-Last updated **2026-08-22**. That session **wrote no code**: it moved the
-plate-reading method into `CLAUDE.md` and shortened this file by a third. The
-session before it, on **2026-08-21**, closed the `/search/` provenance line
-where it stands; the two before that closed the owed publish checks (both clean,
-from the Mac) and published Genealogy III block 1's orthography plus the
-`/search/` Death filter. Nothing in `scripts/` or `docs/` has moved since
-`8a092d5`.
+Last updated **2026-08-22**, at the end of a second session that day. It
+**wrote no code**: it merged the first session's PR #66, re-measured
+`/search/`'s Name column across all 620 rows, and corrected `CLAUDE.md` where
+that measurement contradicted it. The first session moved the plate-reading
+method into `CLAUDE.md`; before that, **2026-08-21** closed the `/search/`
+provenance line where it stands, the owed publish checks (both clean, from the
+Mac), and published Genealogy III block 1's orthography with the `/search/`
+Death filter. **Nothing in `scripts/`, `docs/` or `vendor/` has moved since
+`8a092d5`.**
 
 ## Start here in a new chat
 
@@ -34,6 +36,13 @@ Preview: `preview_start`, config name `site`, serves `docs/` on
 viewport, `/search/` is served from cache, and the pane widens to content rather
 than simulating a narrow one — are in `CLAUDE.md` under *Commands*.
 
+**Measuring `/search/` remotely does not need the preview at all**, and is
+better without it: `pip3 install playwright` (with
+`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1`; the browser is already at
+`/opt/pw-browsers/chromium`), serve `docs/` with `python3 -m http.server`, and
+drive a real viewport. That is how 2026-08-22's measurements were taken, and
+the Mac cannot take them.
+
 ## State
 
 **Nothing is broken and nothing is half-finished.**
@@ -41,20 +50,24 @@ than simulating a narrow one — are in `CLAUDE.md` under *Commands*.
 The live site is `8a092d5`, published **and verified** 2026-08-21: the user ran
 Gate 6's page-by-page SHA-256 comparison and `laguna-search`'s post-publish
 `build.py --refresh` from the Mac, and both came back clean. `laguna-search` is
-at `58965e5` on its `main` — the same build the site serves.
+at `58965e5` on its `main` — the same build the site serves. **Nothing was
+published on 2026-08-22**, so that is still the live commit.
 
 Re-checked at the end of this session: working tree clean, `--public` exits 0
 (7 pages, 10 JSON-LD blocks valid, leak gate clear), and the only diff a rebuild
 now produces is the **date** — `dateModified`, the "Last updated" line,
-`sitemap.xml`'s `lastmod` — which was reverted, not committed. Everything
+`sitemap.xml`'s `lastmod` — which was reverted, not committed. `docs/search/`
+was byte-identical, so nothing about the vendored page moved. Everything
 committed after `8a092d5` touches only `CLAUDE.md`, `CHANGELOG.md` and this
 file.
 
 Counts unchanged: 713 entries, 620 distinct people, 261/72/192 on III.
 
-**Take the publication state from the repo, not from here** — `CLAUDE.md` says
-why, and this session proved it a third way: the branch deletion the last
-handoff called owed had already happened.
+**Take the publication state from the repo, not from here.** `CLAUDE.md` says
+why, and this session proved it twice more: the last handoff called a branch
+deletion owed that GitHub had already done, and said *no open PRs* in the same
+breath as opening one. This file is being written before its own branch is
+merged, so it is wrong about itself by construction.
 
 ```bash
 gh pr list --state open      # remotely there is no gh: use the GitHub MCP tools
@@ -62,8 +75,9 @@ git rev-list --left-right --count origin/main...HEAD
 git ls-remote --heads origin
 ```
 
-At the end of this session: **PR #66 open** (this wrap and the closure above,
-docs of record only), two commits ahead of `origin/main`, nothing behind.
+At the moment of writing: `main` is `e434893`, this wrap sits on
+`claude/resume-read-handoff-l68abt` a few commits ahead with a PR being opened
+for it, and nothing is behind. **Verify, do not believe.**
 
 For the next publish, the two checks a remote session cannot run:
 
@@ -78,43 +92,60 @@ python3 build.py --refresh          # in the laguna-search checkout
 The `--refresh` run's first line must say **`re-fetched`**, not `cached in
 cache/`, or its gates pass against the site as it was. And check
 `git diff --stat <publish-sha> main -- docs/` before running the hashes off a
-plain `git pull`: it worked this time only because `docs/` had not moved since
-the publish commit.
+plain `git pull`.
 
 ### Branches — nothing is owed
 
-`origin` carries three refs: `main`, this session's `claude/resume-b6s8bz`, and
+`origin` carries **`main`**, this wrap's branch, and
 **`handoff-2026-08-09-search-link-safari-scroll`** — a keeper, not stale. It is
 the only thing holding `938b8e8`, the unverified Safari scroll fix, reachable.
 **Do not sweep it.**
 
-`claude/gracious-hawking-fuklkp` went with GitHub's auto-delete when PR #65
-merged, so the deletion the last handoff recorded as outstanding is done. Verify
-branch state with `ls-remote`, never by ancestry — `CLAUDE.md` has the reason
-(squash merges) and the two deletion traps.
+Both merged branches are gone: `claude/gracious-hawking-fuklkp` with GitHub's
+auto-delete on PR #65, and `claude/resume-b6s8bz` deleted by the user from the
+Mac after this session's delete-push was refused **HTTP 403**. That is the
+standing remote egress policy, not a GitHub permission — a remote session
+cannot delete a ref, so leave one for the Mac and say so. Verify branch state
+with `ls-remote`, never by ancestry; `CLAUDE.md` has the reason (squash merges)
+and the two deletion traps.
+
+Local `main` was found **9 commits behind** this session and fast-forwarded. A
+remote container is cloned fresh but its `main` is not necessarily current —
+fetch before reading anything off it.
 
 ## The open thread — there isn't one
 
-No reading is owed on any plate, nothing is in flight, and every item below
-needs the user. Genealogy III block 1 was the last one open: its placement was
-read 2026-08-17 and its orthography 2026-08-21, all 229 entries, no corrections.
+No reading is owed on any plate, nothing is in flight, and every item in the
+table below needs the user.
 
-**How to read a plate for type** — tile planning, the two magnifications, and
-Table 3's crop coordinates — is now in `CLAUDE.md` → *Facts worth knowing*,
-beside the magnification floor. It used to live here, which is why it moved.
+Two small riders, neither blocking and neither needing a decision:
+
+- **The vendored `search.css` still states the pre-Sex-column threshold** —
+  its comment reads *"measured 675px before and after, panning at 674 either
+  way"*, where the figures are now 636 client / 651 window. The claim is still
+  true; only the numbers are superseded. It is **upstream in
+  `src/search.css`**, so fix it on the next re-vendor rather than here.
+- **One finding is Chromium-only and wants confirming in Safari**: that
+  `white-space: nowrap` does not suppress a `<wbr>` break. It matters only if
+  the Name column is ever widened. See `CLAUDE.md`, *Names still wrap there*.
 
 ## Other things that could be picked up
 
 | | Effort | Notes |
 |---|---|---|
 | Remove the empty state's `Clear filters` | small, needs you | Kept deliberately — the only moment a reader can see no control to undo. Offered four times |
-| Widen `/search/`'s Name column | small, needs you | Declined because `nowrap` would truncate a transcribed name. **Its numbers are stale — re-measure before offering it** |
+| Widen `/search/`'s Name column | small, needs you | **Re-measured 2026-08-22 across all 620 rows; the numbers are in `CLAUDE.md`.** A 200px track ends all name wrapping and moves the pan threshold 651 → 735px window, 1:1 with the track floor. It buys **nothing** on row height — that is the Clan column, not this one. The `nowrap` objection is also weaker than recorded: Chromium breaks at `<wbr>` through it (WebKit untested) |
 | The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. Flagged, not objected to |
 | **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. Cherry-pick `938b8e8` onto a fresh branch off current `main` when it next appears — never revive the parked branch itself. Ask first: **does clicking the prose below the plate free it?** |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first.** `digitallibrary.amnh.org` 403s automated fetches |
 
 ## Decisions already made — don't re-litigate
 
+- **A tall row on `/search/` is a CLAN-column question, not a Name one.** A
+  wrapped name sits inside a flat 56px row; `Chaparral Cock` does not. All 43
+  rows over 56px are that clan, and the single one still tall above 860px is
+  III·50's known misprint. `CLAUDE.md` has the measurements — **do not re-open
+  this at the Name column**, which is where this file used to point.
 - **`W31` is a reading, not a rule.** Some single-marriage leaders hang off the
   husband, some off the wife, ten rows apart. **Do not sweep for more by
   pattern**; each is read off the ink.

@@ -33,6 +33,75 @@ the branch mechanics, the preview traps and the closed decisions are all durable
 already — and says so at the top, so the next wrap does not quietly re-absorb
 them.
 
+### Later the same day — `/search/`'s Name column re-measured, and the row height was never the name's
+
+**No code changed here either.** `scripts/`, `docs/` and `vendor/` are
+untouched; `--public` exits 0 with 7 pages and 10 JSON-LD blocks valid, and the
+only rebuild diff was again the date, reverted rather than committed.
+
+The handoff's *Widen `/search/`'s Name column* row had been carried with
+**"its numbers are stale — re-measure before offering it"**. They were
+re-measured, in a headless Chromium at real viewports with the subset face
+resolved before any read — something the Mac cannot do, and the reason this ran
+remotely. Three of the numbers were a 60-row sample; **one attribution was
+simply wrong.**
+
+**A wrapping name does not make its row taller.** Two lines of name are
+37.63px against a 38.4px content box, so a wrapped name sits inside a flat
+56px row. The row-height cost belongs to the **Clan** column: `Chaparral Cock`
+is 89.49px natural in a 76px track, and **43 of 620 rows exceed 56px below the
+pan threshold — every one of them that clan.** The old sentence sent a reader
+at the Name column for a Clan-column symptom, and it read as self-consistent
+because the first 60 rows happen to hold **3** wrapping names and **4** tall
+rows. Two counts that nearly match, measuring different things — the same
+shape of error as the `scrollWidth` / client-width confusion recorded a
+fortnight earlier.
+
+Whole-index counts, never taken before: **32 of 620** names take two lines at
+or below the threshold, **21** still do at 860 and 1120px.
+
+**The `~756px` question is settled.** The threshold moves **1:1 with the Name
+track's floor** — verified at five floors, each landing exactly on
+`636 + (floor − 116)` — so 756 as a window width is a **221px** track, wider
+than the job needs, since **0 of 620 names break at 200px**. The trade is now
+stated rather than guessed: ending all name wrapping costs the pan threshold
+651 → 735px window, and buys nothing on row height.
+
+**`white-space: nowrap` does not suppress a `<wbr>` break in Chromium.**
+Isolated control in a 100px box: spaces hold one line, a ZWSP holds one line,
+`<wbr>` breaks anyway. So the objection recorded against this item — *forcing
+`nowrap` would truncate a transcribed name* — is not the argument it reads as;
+the seams break through it and the truncation never arrives. **Chromium only.**
+WebKit was not under test and the edition is read in Safari, so this is
+recorded as evidence to confirm, not as a finding to act on.
+
+**The one row still tall above 860px is III·50's known plate misprint** —
+`Chapparral Cock`, already in `PLATE_MISPRINTS`, ringed and carrying
+`data-reading`. The doubled `p` costs 7.6px and is exactly what puts it past
+the clan track's 92px maximum. Written down because this measurement nearly
+chased it as a data error.
+
+**Three measurement traps, all of which returned plausible wrong numbers**, and
+all worth having in advance because none of them errors:
+
+- `innerText` on a name cell sweeps in the **namesake marker**, which is its
+  own element on its own line at every width — reported 9 wrapping names where
+  6 were markers, including at 1280px where nothing wraps.
+- `scrollWidth` **clamps at the box** under visible overflow, so it reports a
+  name's natural width as no wider than its track — which made names of 79px
+  appear to wrap in a 116px column.
+- `nowrap` cannot be used to measure a natural width **in this edition at all**,
+  because of the `<wbr>` behaviour above. The widths were taken instead from
+  clones with the seams and the marker stripped, measured off-screen.
+
+Also housekeeping, from the repo rather than from the handoff: **PR #66 was
+merged** (`e434893`), and both merged branches are gone from `origin` —
+`claude/gracious-hawking-fuklkp` with GitHub's auto-delete on #65, and
+`claude/resume-b6s8bz` deleted by the user from the Mac after this session's
+delete-push was refused **HTTP 403**, which is the standing remote egress
+policy and not a GitHub permission. Local `main` was found **9 commits behind**
+and fast-forwarded.
+
 ## 2026-08-21 — the Death filter says what it accepts
 
 **Published the same day**, `8a092d5`; GitHub's `pages build and deployment`

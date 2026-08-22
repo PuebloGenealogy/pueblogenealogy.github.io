@@ -1043,9 +1043,38 @@ never an argument against it.
 
 **Names still wrap there, deliberately.** Where a name may be divided is an
 editorial question, answered in `build.py` and published as `<wbr>` seams
-(ratified 2026-08-08). Forcing `nowrap` would truncate a transcribed name, so
-4 of the first 60 rows take two lines below 860px and those rows run 59.3px
-against 56px. It was 12 of 60 until the name size came down on 2026-08-10.
+(ratified 2026-08-08). Re-measured across **all 620 rows** on 2026-08-22, in
+Chromium at real viewports: **32 names take two lines at or below the pan
+threshold, and 21 still do at 860px and 1120px**. The figures this paragraph
+carried before — 4 of the first 60, 12 before the name size came down — were a
+**60-row sample**; the whole index had never been walked. In that same sample
+the true split is **3 names wrapping and 4 tall rows**, and they are not the
+same rows. The near-match of those two counts is what made the old sentence
+look self-consistent for a year.
+
+**A wrapping name does NOT make its row taller, and this paragraph said it
+did.** The row-height cost belongs to the **Clan** column. Two lines of name
+are 37.63px and the row's content box is 56 − 17.6 = **38.4px**, so a wrapped
+name fits inside a flat row. What grows a row is `Chaparral Cock`, **89.49px**
+natural in a 76px track: **43 of 620 rows exceed 56px below the threshold and
+every one of them is that clan** — 42, plus one `Chapparral Cock`. At 860px and
+above exactly **one** row is still tall, that double-p spelling at 97.11px
+against the track's 92px maximum. **That one is III·50's known plate
+misprint**, ringed and carrying `data-reading`, not a transcription slip — the
+extra `p` costs 7.6px and is what puts it over. Check it against
+`PLATE_MISPRINTS` before chasing it as a data error, as this measurement nearly
+did. So the 4-of-60 rows at 59.3px were real and
+were Chaparral Cocks. **A report of tall rows on `/search/` is a Clan-column
+question**; do not send it at the Name column, which is where this file used to
+point.
+
+**And `nowrap` would not even stop the break — in Chromium.** Isolated control,
+a 100px box with `white-space:nowrap`: spaces hold one line, a ZWSP holds one
+line, and **`<wbr>` breaks anyway**. So "forcing `nowrap` would truncate a
+transcribed name" is not the argument it reads as — the seams break through it,
+and the truncation never arrives. **Measured in Chromium only.** The edition is
+read in Safari and WebKit was not under test, so confirm there before spending
+this on anything; it is the same asymmetry as every other engine question here.
 
 **The threshold is MEASURED, and it is 651px** — the document is clean at
 **636px of client width** and pans at 635, so 651 as a window width with a 15px
@@ -1056,9 +1085,17 @@ carried a disagreement for a session because they were confused, and there is a
 third number that looks like both: the document's `scrollWidth` at phone
 widths, **617px** at 375–480px (641 before the Sex column narrowed) and 636
 once the viewport is near the threshold. Two quantities that both read as "the
-width it pans at" and are not the same measurement. The claim that **widening
-the Name column** moves the threshold to ~756px is **still unverified**; only
-the base is known.
+width it pans at" and are not the same measurement. **All three re-confirmed
+2026-08-22** — 636 clean, 635 pans, `scrollWidth` 617px at 375–480px — so this
+paragraph is measurement, not memory.
+
+**The ~756px claim is SETTLED, and it was the right shape.** The threshold
+moves **1:1 with the Name track's floor**, verified at five floors: 140→660,
+150→670, 170→690, 190→710, 210→730px of client width, each exactly
+`636 + (floor − 116)`. So 756 as a *window* width is a **221px** track — and
+that is wider than the job needs, because **0 of 620 names break at 200px**
+(720 client / 735 window). Widening that column costs the pan threshold pixel
+for pixel, and buys **nothing** on row height, which is Clan's.
 
 **The SIZE of the name is NOT a second lever on it, and that was measured on
 2026-08-10 rather than reasoned.** The expectation — smaller name, narrower
@@ -1069,8 +1106,21 @@ minimum. Dropping `1.15rem` to `1.05rem` left the threshold where it was, at
 but the threshold is the whole grid's, so **any** column's floor moves it, and
 the Sex column proved it the same day: shortening one option's text took 24px
 out and the threshold with it. What the size *does* move is the
-wrapping, and it moves it a lot: 12 of the first 60 rows to 4 at 375px, and at
-1120px 2 rows to 0, every row back to a flat 56px.
+wrapping, and it moves it a lot: 12 of the first 60 rows to 4 at 375px. **Read
+that as wrapping and nothing else** — the "every row back to a flat 56px" this
+sentence used to end on was the Clan column's doing, not the name's. It is true
+of the first 60 rows, and for a reason that has nothing to do with the name:
+above 860px the clan track's 92px maximum fits `Chaparral Cock` at 89.49px, so
+those four rows go flat on their own. Across all 620, **one** row is still tall
+at 1120px — the `Chapparral Cock` at 97.11px, which is not in the first 60. See
+*A wrapping name does NOT make its row taller* above.
+
+**The vendored stylesheet still records this finding in the OLD numbers.** Its
+comment beside the narrow-grid rule reads *"measured 675px before and after,
+panning at 674 either way"* — the pre-Sex-column threshold. The claim it makes
+is still true; only its figures are superseded, by the Sex column's own change
+later the same day. It lives **upstream in `src/search.css`**, so correct it
+there on the next re-vendor rather than here.
 
 **`.laguna-search .cell.name` is declared TWICE** in the vendored stylesheet —
 the base rule (`1.2rem`/`700`/`1.12`, and `1.45rem` before 2026-08-10) and
@@ -1664,10 +1714,18 @@ own README says to report a 403 rather than route around it.
   leave the remote for a machine that can.
 
 What a remote session gains, which the Mac does not have: **Pillow and a real
-headless Chromium** (Playwright at `/opt/pw-browsers`), so a plate can be
+headless Chromium** (the browsers are at `/opt/pw-browsers`), so a plate can be
 cropped without `sips` and `/search/` can be measured at an actual 375px
 viewport — where the desktop preview pane widens to the content instead. See
 *The preview pane cannot simulate a NARROW viewport*.
+
+**The browsers are installed; the Playwright package is not.** Add it with
+`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 pip3 install playwright` — the flag matters,
+or it re-fetches a browser that is already there — and launch with
+`executable_path="/opt/pw-browsers/chromium"`, which is a **symlink to the
+binary, not a directory**. Serve the site with `python3 -m http.server` from
+`docs/` rather than reaching for the preview: it is the same pages without the
+pane's cache. Used this way on 2026-08-22 to walk all 620 rows of `/search/`.
 
 **PRs here are squash-merged, so `git branch --no-merged` is not a test of
 whether a branch holds unmerged work.** A squash puts the branch's *content*
@@ -2091,6 +2149,20 @@ same direction; if the answer is "it passes", the audit needs a **third,
 independent** reference — here, the neighbour the pair was colliding with. And
 **look at the thing at least once**: two measurements agreeing is not evidence
 they are right.
+
+**Three DOM measurements that return a plausible wrong number rather than an
+error**, all hit in one pass on 2026-08-22 and all cheap to re-lose. **`innerText`
+sweeps in child elements** — on a `/search/` name cell that is the namesake
+marker, which sits on its own line at every width, so it reported wrapping at
+1280px where nothing wraps. **`scrollWidth` clamps at the box** under visible
+overflow, so it can never tell you how much wider than its column a thing wants
+to be; it made 79px names look like they overflowed a 116px track. And
+**`white-space:nowrap` is not a way to measure a natural width in this edition**,
+because Chromium breaks at `<wbr>` through it. The measurement that works is a
+**clone**, off-screen, with the seams and any marker stripped and the computed
+font copied onto it. The pattern behind all three: each returned a number of the
+right order of magnitude, so nothing looked wrong until two of them disagreed
+with each other.
 
 **Under CSS `zoom`, never mix `getComputedStyle` with `getBoundingClientRect`.**
 The plate scale control is `zoom`, and computed styles come back **unzoomed**
