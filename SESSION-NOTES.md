@@ -108,7 +108,7 @@ beside the magnification floor. It used to live here, which is why it moved.
 | | Effort | Notes |
 |---|---|---|
 | Remove the empty state's `Clear filters` | small, needs you | Kept deliberately — the only moment a reader can see no control to undo. Offered four times |
-| Widen `/search/`'s Name column | small, needs you | Declined because `nowrap` would truncate a transcribed name. **Its numbers are stale — re-measure before offering it** |
+| Widen `/search/`'s Name column | small, needs you | **Re-measured 2026-08-22 across all 620 rows; the numbers are in `CLAUDE.md`.** A 200px track ends all name wrapping and moves the pan threshold 651 → 735px window, 1:1 with the track floor. It buys **nothing** on row height — that is the Clan column, not this one. The `nowrap` objection is also weaker than recorded: Chromium breaks at `<wbr>` through it (WebKit untested) |
 | The masthead no longer names the edition | needs you | A consequence of "Home", not a defect. Flagged, not objected to |
 | **The Safari scroll freeze** | needs you, awaiting recurrence | Unchanged and untested. Cherry-pick `938b8e8` onto a fresh branch off current `main` when it next appears — never revive the parked branch itself. Ask first: **does clicking the prose below the plate free it?** |
 | A better AMNH scan | needs you | `2246/158`. **Ask for a photograph first.** `digitallibrary.amnh.org` 403s automated fetches |

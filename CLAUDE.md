@@ -1059,7 +1059,11 @@ name fits inside a flat row. What grows a row is `Chaparral Cock`, **89.49px**
 natural in a 76px track: **43 of 620 rows exceed 56px below the threshold and
 every one of them is that clan** — 42, plus one `Chapparral Cock`. At 860px and
 above exactly **one** row is still tall, that double-p spelling at 97.11px
-against the track's 92px maximum. So the 4-of-60 rows at 59.3px were real and
+against the track's 92px maximum. **That one is III·50's known plate
+misprint**, ringed and carrying `data-reading`, not a transcription slip — the
+extra `p` costs 7.6px and is what puts it over. Check it against
+`PLATE_MISPRINTS` before chasing it as a data error, as this measurement nearly
+did. So the 4-of-60 rows at 59.3px were real and
 were Chaparral Cocks. **A report of tall rows on `/search/` is a Clan-column
 question**; do not send it at the Name column, which is where this file used to
 point.
