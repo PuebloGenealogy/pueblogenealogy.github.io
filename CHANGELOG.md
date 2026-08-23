@@ -3,7 +3,66 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-23 (latest) — Genealogy II's brackets are read, and every plate's placement is now checked
+## 2026-08-23 (latest) — Genealogy II·248's medial marks corrected; 249's confirmed
+
+**One character reading changed on one plate.** `transcription_ii.py`'s person
+**248** reads **`Oyo˙ʼʼy˙ăi`**, not `Oyo˙ʼyʼăi`: two apostrophes before the
+`y`, and a raised dot after it rather than a third apostrophe. **249
+(`Dzi˙ʼyaid˙yiʼwă`) is correct as transcribed** — what looked doubled at 4x is
+the `i` of `Dzi` and its tittle sitting beside the raised dot.
+
+These were the only flag `TABLE2-BENCH.md` carried under *Open, flagged not
+settled*; that section is now empty and the reasoning has moved into a
+*Settled* section there.
+
+### What settled it was measuring, not magnifying
+
+The flag had been raised at 6.5x and left unresolved because a raised dot and an
+apostrophe are hard to tell apart by eye at that size — and past ~8x the
+resampler invents letterform, so a bigger crop is not the answer. **The answer
+was to stop looking and measure at 1:1**: flood-fill every blob in the name's
+band and record height, ink count, fill ratio, and the drift of the bottom
+third's centroid against the top third's.
+
+The two populations do not overlap on this plate. `ʼ` U+02BC runs h12–17, ink
+42–75, drift −0.9 to −4.4, top/bottom mass 1.31–1.73; `˙` U+02D9 and every
+i-tittle run h6–8, ink 27–38, drift ≈ 0; 244's ring `˚` U+02DA is h13, ink 105.
+248's two disputed slants measure h15, drift −3.63 and −1.79, mass 1.44 and
+1.40 — squarely `ʼ`, and the same sort as each other, so no U+02BD is involved.
+Its mark after the `y` measures h7, drift +0.3, ink 28 — squarely `˙`.
+**Generalisable: where a glyph question is a choice between two known sorts
+already present on the page, measure both populations and read the gap; a
+photograph is for the case where the scan holds no usable ink at all.**
+
+### Two things that corroborate it, and one that keeps it cheap
+
+`ʼʼy˙` is **the plate's own sequence** — person **158** on this same plate
+prints `Niʼʼy˙ŭyăiʼ`, and doubled apostrophes occur **nine** times across the
+edition, so this is a shape Parsons sets rather than a novel reading.
+
+And the **fold key is unchanged**, `oyoyai` before and after, because both `ʼ`
+and `˙` fold to `""`. So no fourth namesake collision is created in
+`laguna-search`, and **no new character enters the edition** — checked against
+all four transcription modules — so the four `_FOLD` maps and the font subset
+are all untouched. `subset_font.py` was deliberately **not** run: it is not
+deterministic and would dirty every page for nothing.
+
+`transcription_ii.py` self-check passes (275 persons, 61 unions, 214 child
+links) and `--public` exits 0 — 7 pages, 10 JSON-LD blocks valid, leak gate
+clear. The only pages that moved in substance are `genealogy-ii/`; everything
+else differs by the **date** alone.
+
+### Owed, and not doable from a remote session
+
+**A publish and a re-vendor are both owed.** This is a plate data change, so
+`laguna-search`'s index is stale by the standing rule (*always when a plate's
+data changes*) — and the index is built by fetching these pages, so the order
+is publish first, then `build.py --refresh`, then re-vendor if
+`search-index.json` moves. Neither can run here: this session has no route to
+`pueblogenealogy.github.io` (403 to CONNECT, egress policy), which also removes
+`/publish` gate 6. **Run both from the Mac.**
+
+## 2026-08-23 — Genealogy II's brackets are read, and every plate's placement is now checked
 
 **No code changed and nothing in the edition moved.** `scripts/` apart from one
 new document and `docs/` are untouched, `--public` exits 0 (7 pages, 10 JSON-LD

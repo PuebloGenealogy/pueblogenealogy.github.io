@@ -242,12 +242,45 @@ explained — which is what this file does.
 
 ## Open, flagged not settled
 
-- **248 and 249's medial marks** (U52). At 6.5x, 248 reads `Oyo` + a raised dot
-  + what may be **two** apostrophes before the `y`, against the transcription's
-  `Oyo˙ʼyʼăi` — one before the `y` and one after. 249 is the same shape. Both
-  are plausible as transcribed and neither is confirmed; a raised dot and an
-  apostrophe are hard to separate at this size. **Belongs to an orthography
-  pass. Do not correct either on the strength of this note** — and note the
-  magnification floor: past ~8x the resampler invents letterform, so if the
-  scan cannot settle it, the answer is a photograph of the page, not a bigger
-  crop.
+**Nothing. The one flag this file carried — 248 and 249's medial marks — was
+settled 2026-08-23 and is recorded below.**
+
+## Settled — 248 and 249's medial marks (U52)
+
+Both read on 2026-08-23 by **measuring** the marks at native resolution rather
+than magnifying them: flood-fill every blob in the name's band and record its
+bounding box, ink count, fill ratio, and the drift of the bottom third's
+centroid against the top third's. That separates the two sorts cleanly and
+never approaches the magnification floor, where the resampler invents
+letterform.
+
+The two populations on this plate, measured against known controls (244's
+apostrophe, 246's two, 249's two, and 244's ring):
+
+| sort | h | ink | drift | top/bottom mass |
+|---|---|---|---|---|
+| `ʼ` U+02BC | 12–17 | 42–75 | **−0.9 to −4.4** | 1.31–1.73 |
+| `˙` U+02D9 and i-tittles | 6–8 | 27–38 | **≈ 0** | — |
+| `˚` U+02DA (244 only) | 13 | 105 | ≈ 0 | — |
+
+Height and drift do not overlap, so the two marks are decidable at 1:1.
+
+- **249 `Dzi˙ʼyaid˙yiʼwă` is CORRECT as transcribed.** Its blob inventory is
+  five round marks and two slanted ones, in the transcribed order. What read as
+  a doubled mark at 4x is the `i` of `Dzi` and its tittle sitting beside the
+  raised dot — the tittle is a round mark of exactly the `˙` profile, which is
+  what makes a 4x look misleading here.
+- **248 was WRONG and is corrected** to **`Oyo˙ʼʼy˙ăi`** (was `Oyo˙ʼyʼăi`), in
+  two places at once: there are **two** apostrophes before the `y` — h15,
+  drift −3.63 and −1.79, top-heavy 1.44 and 1.40, both inside the `ʼ`
+  population — and the mark **after** the `y` is a **raised dot**, h7, drift
+  +0.3, ink 28, indistinguishable from the `˙` earlier in the same name and
+  from every i-tittle on the row. `Oyo` has no `i`, so neither round mark can
+  be a tittle.
+
+Two things corroborate the correction rather than resting on the metrics
+alone. The sequence `ʼʼy˙` is **the plate's own**: person **158** on this same
+plate prints `Niʼʼy˙ŭyăiʼ`, and doubled apostrophes occur **nine** times across
+the edition. And the fold key is **unchanged** — `oyoyai` before and after —
+so no namesake collision is created in `laguna-search` and no new character
+enters the edition, which means the font subset is untouched.
