@@ -536,7 +536,7 @@ PERSONS = [
     (247, 5, "M", "Joe Mantoya of Jemez", "",   "",   "",       "",   "", "",
      "no clan printed. The plate prints the name with a place, spelled "
      "'Mantoya' and 'Jemez'. Recorded as printed, not normalised"),
-    (248, 5, "M", "Oyo˙ʼyʼăi",        "",       "",   "Eagle",  "",   "", "", ""),
+    (248, 5, "M", "Oyo˙ʼʼy˙ăi",       "",       "",   "Eagle",  "",   "", "", "medial marks re-read off the scan 2026-08-23, blob metrics at native resolution: two apostrophes before the 'y' (h15, top-heavy 1.44/1.40, drift -3.6/-1.8, matching every measured U+02BC on this plate) and a raised dot after it (h7, drift +0.3, matching the U+02D9 earlier in the same name). Previously read as one apostrophe before and one after. The 'ʼʼy˙' sequence is the plate's own; 158 on this plate prints it too"),
     (249, 5, "M", "Dzi˙ʼyaid˙yiʼwă",  "",       "",   "Eagle",  "",   "", "", ""),
     (250, 5, "F", "Ga˙ʼwiaitsʼă",     "",       "",   "Eagle",  "",   "", "", ""),
     (251, 5, "M", "Rioʼ",             "",       "",   "Eagle",  "",   "", "", ""),
