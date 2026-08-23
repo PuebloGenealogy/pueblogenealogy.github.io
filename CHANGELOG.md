@@ -3,7 +3,110 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-22 (latest) — the plate-reading method stops living in a file that gets thrown away
+## 2026-08-23 (latest) — Genealogy II's brackets are read, and every plate's placement is now checked
+
+**No code changed and nothing in the edition moved.** `scripts/` apart from one
+new document and `docs/` are untouched, `--public` exits 0 (7 pages, 10 JSON-LD
+blocks valid, leak gate clear), and the only rebuild diff today is the **date**,
+reverted rather than committed.
+
+### The last unread plate
+
+**All 52 of Genealogy II's bracketed groups were read group by group against the
+scan, and no correction is owed to `transcription_ii.py`** (PR #72, `4120f9c`).
+Every group's stubs carry exactly the numbers the transcription lists, in order;
+clan descent holds at all 52; and every leader sits on the line of the parent
+the transcription names — for the 42 groups the rig pairs by identity that
+pairing is the check, and the 10 it pairs by position were each traced by hand.
+
+This closes the gap that let **Genealogy IV ship with 20 on the wrong marriage
+for ten days**. Genealogy II was the one transcribed plate whose brackets had
+never been read this way; **placement is now verified on all four**.
+
+The verdicts, the method and the mechanisms are in a new
+`scripts/plate_audit/TABLE2-BENCH.md`. The **23 problems are now a known-clean
+baseline** in the sense Table 3's 15 and Table 4's 10 are: diff the list, do not
+read it fresh.
+
+**Seven mechanisms produce those 23 and two were not in the README's list of
+three.** A **vertical detected below its own top stub, that stub then read as a
+leader** — Table 4's `V01` failure reproduced, and the commonest shortfall here,
+costing U30, U43 and U38 their first children; `--overshoot` cannot rescue any
+of them because it widens the left side only. And **a fold crease read as a
+stub**: the extra fifth on 53's group measures 153px where a real stub two rows
+below measures 139px, so it is stub-shaped on width alone and only a 5x crop
+shows the torn paper edge with no stub on the row. **That one inflates a count
+rather than shortening it**, which is the case the ink test alone points the
+wrong way on. The others: positional pairing (which reaches across descent
+blocks here — U60 was handed a bracket 8000px away), two abutting brackets
+merged into one run carrying two leaders (U50 ends on 224, U44 begins on 225,
+29px below — one merge, two problems), one bracket split across a paper repair
+(U33's, which then displaced U34), near-duplicate detections, and two faint
+brackets not detected at all.
+
+**Two readings worth not re-deriving.** U53's plate shows **6 stubs against 5
+transcribed children and the transcription is right** — the sixth enters 255,
+the `+` line already recorded as the only one on the plate to take a leader, and
+not descent, 255 being Eagle where every child is Water. It is the one group
+where counting stubs alone would convict a sound reading. And **U46's leader
+ends in mid-air**: measured, the vertical is y 8747–8817 while 173's leader runs
+to x 4818 at y 8703 — one row above the top corner, 5px short in x, across paper
+at luma 215–230 where these rules run under 60. Still unmistakably 173's line.
+
+**This was a placement pass, not an orthography one**, and the document says so.
+**248 and 249's medial marks are flagged and unsettled** — they may carry an
+apostrophe more than transcribed. Genealogy III took placement (2026-08-17) and
+orthography (2026-08-21) as separate passes and this plate should too.
+
+**What made the read affordable was `stubs.py`** — twenty lines that stack the
+plate rows a bracket's stubs enter into **one** image, hairline-separated. A
+nine-child group becomes one picture rather than nine, and a group whose stubs
+are 1500px apart (U41) costs exactly what one whose stubs adjoin costs. The
+whole plate went in about twenty images. It lived in a scratchpad, so the
+document records what it does rather than assuming the file survives — the
+bracket bench already died that way once.
+
+### `--ongrid` is the wrong tool for Table 2, and this is settled
+
+Tested at 0.25, 0.35 and 0.45 against the new baseline and **rejected. Leave it
+off; do not try it again** — what defeats it is a property of the plate, not a
+tolerance nobody has found.
+
+**`--ongrid` assumes one row pitch. Table 2 has two**, which this changelog's
+own calibration entry already recorded one paragraph from where the flag is
+described: runs of undifferentiated siblings are set 42–50px apart against a
+51.5px normal row, so many real stubs sit **1.58–1.60 rows** from their
+neighbour, which is 0.42 off-grid at best.
+
+**The falling problem count is the trap**: 23 → 21 at 0.25 and 0.35, 23 → 18 at
+0.45, and every one of those is silence bought by deleting ink. At 0.25 it drops
+four runs and 22 stubs including **U42's confirmed nine-stub bracket**, and
+takes 53's group from bracketing 5 where the plate prints 4 to bracketing **2** —
+worse in the direction the flag was meant to fix. It also newly flags U31, U42
+and U57, and the README's own rule is that this flag may only ever *remove*
+flags. At 0.45 it drops the merged U50+U44 run and U33's upper fragment, **nine
+real stubs**, taking U44, U49 and U50's brackets with them. It rejects per
+**run**, never per stub, and Table 2's sub-row gaps are made by the rig's own
+merges and artifacts (0.54, 0.56) — so it deletes real brackets to hide the
+rig's errors.
+
+**And at no tolerance does it do the job it was proposed for.** The crease stub
+sits 1.58 rows below 122's — the *same* off-grid offset as the real second-pitch
+stubs — so below 0.42 the flag rejects both and at or above 0.42 it accepts
+both. Confirmed directly: at 0.45 the group still returns all five, crease
+included. There is no value in between because there is nothing in between.
+
+### Housekeeping
+
+PR **#71** (`7fe9119`) corrected the previous handoff, which claimed a branch
+deletion was owed after the user had already done it. **Then the merge of #71
+recreated the very ref it said was gone**, because that PR's own head branch was
+`claude/confident-sagan-gpuzr6` — a handoff can be falsified by the act of
+merging it. **GitHub's auto-delete has now failed six times in seven merges**;
+the user cleared both refs from the Mac and `origin` carries exactly `main` and
+the `handoff-2026-08-09-search-link-safari-scroll` keeper.
+
+## 2026-08-22 — the plate-reading method stops living in a file that gets thrown away
 
 **No code changed**, and nothing in the edition moved: `scripts/` and `docs/`
 are untouched, `--public` exits 0, and the only `docs/` diff a rebuild produces
