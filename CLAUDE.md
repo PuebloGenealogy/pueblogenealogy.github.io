@@ -1631,6 +1631,24 @@ to catch "58+59" links those too.
   `s` of `wits` and reported a known U+02BC as the questioned sort. The flood
   fill measures whatever blob it is handed, and a wrong box fails silently by
   producing a perfectly plausible number.
+  **A photograph is NOT always the next step, and 2026-08-23 found the cheaper
+  half of this rule.** Genealogy II's 248 and 249 had been flagged as
+  undecidable at 6.5x — a raised dot against an apostrophe — and the flag
+  prescribed a photograph. It was not needed: **measure both populations on the
+  page and read the gap**. Flood-fill every blob in the name's band and record
+  height, ink, fill and the drift above; on Table 2 the two sorts do not
+  overlap at all — `ʼ` U+02BC is h12–17, ink 42–75, drift −0.9 to −4.4,
+  top/bottom mass 1.31–1.73, while `˙` U+02D9 and every i-tittle is h6–8, ink
+  27–38, drift ≈ 0, and 244's ring `˚` U+02DA is h13, ink 105. So the question
+  was decidable **at 1:1**, and 248 turned out wrong in two places at once.
+  **Generalise it: a photograph is for the case where the scan holds no usable
+  ink; where the choice is between two known sorts already set elsewhere on the
+  page, measure the populations first.** Note what makes it safe — controls
+  drawn from the *same plate and the same row band*, and an inventory that
+  reconciles (rounds and slants counted against what the transcription
+  predicts), which is the same argument as the `_diag.html` DOM tally.
+  **And check the fold before assuming a cost**: 248's key stayed `oyoyai`, so
+  no `_FOLD` map, no namesake gate and no font subset was touched.
 - **Reading a plate for TYPE is a different job from reading it for STRUCTURE,
   and the constraint is the display rather than the scan.** Recorded 2026-08-21,
   from the pass that read Genealogy III block 1's 229 entries; it had lived only
@@ -1716,6 +1734,42 @@ own README says to report a 403 rather than route around it.
   in a session that pushed a branch and merged two PRs through that same API
   minutes either side of the refusal — so this is the egress policy on the git
   path, not a permission the token lacks, and one attempt is all it is worth.
+  **The failure mode changed shape on 2026-08-23 and the error message is now
+  useless as evidence.** Two delete-pushes that session both ended
+  `send-pack: unexpected disconnect while reading sideband packet` /
+  `fatal: the remote end hung up unexpectedly` — and the **first one had
+  actually deleted the ref** (the Mac's later attempt returned *remote ref does
+  not exist*), while the second had not. So a remote delete-push is neither
+  reliably refused nor reliably applied. **Read `git ls-remote --heads origin`
+  afterwards; never conclude anything from the error text.** Note also that
+  GitHub's auto-delete-on-merge is still failing — three for three that day, on
+  PRs #74, #75 and #76.
+
+**A remote session CAN now run the whole publish loop except two checks, and
+that is broader than this section used to imply.** Proven 2026-08-23: gates 1–5
+run normally, the merge goes through the GitHub MCP tools, and **`laguna-search`
+can be attached with `add_repo` and cloned** — its remote is a real checkout,
+not just a backstop, so gate 8's re-vendor is doable from there. What is *not*
+doable is anything that must reach the live site: **`/publish` gate 6** and
+**`build.py --refresh`**. For the second, seed `cache/` from the local `docs/`
+build and run without the flag — and that shortcut is now **confirmed rather
+than argued for**: the Mac's later `--refresh` returned all three files
+byte-identical to what the seeded build produced. Merging to `main` *before*
+building the index makes it stronger still, since the seeded bytes are then the
+published tree. **The confirming `--refresh` is still owed every time**; record
+it as owed, and never write "verified" for a check that did not run.
+
+**And the Mac's own checkouts are the thing most likely to be stale, not the
+remote's.** Both were behind on 2026-08-23 — the site repo at PR #63 and
+`laguna-search` at `80e0d2d` against `58965e5` — so the first confirming
+`--refresh` was green while built from a two-commit-old widget, and the file
+comparison it fed was meaningless. **`git log --oneline -1` in both before
+comparing anything.** The second trap that day was `find ~`: a
+`find ~ -name make_chart.py -path '*pueblogenealogy*'` matched a **27 July
+archived backup** under `BACKUPS/…/ARCHIVED BACKUPS/…` before the working repo,
+so a comparison ran against July's files and reported every file changed —
+a perfectly plausible wrong answer. Pin the path to the working directory, or
+print it and read it before trusting anything underneath.
 
 What a remote session gains, which the Mac does not have: **Pillow and a real
 headless Chromium** (the browsers are at `/opt/pw-browsers`), so a plate can be
@@ -1974,8 +2028,13 @@ to stay *allowed*, so the two must not be combined. Neither is deployed here.
   the stubs were read off the scan, not who read them.
   **Placement read is not orthography read**, and Genealogy II has had only the
   first. Genealogy III took the two as separate passes (placement 2026-08-17,
-  orthography 2026-08-21) and Genealogy II should too; **248 and 249's medial
-  marks are the open item**.
+  orthography 2026-08-21) and Genealogy II should too. **The one item that was
+  named as open is now CLOSED**: 248 and 249's medial marks were read
+  2026-08-23 — 249 is right as transcribed, and **248 was wrong and is
+  corrected to `Oyo˙ʼʼy˙ăi`** (PR #74), two apostrophes before the `y` and a
+  raised dot after it. That closes the flag, **not the plate**: the other 273
+  entries have still never been read for orthography, and 248 having been wrong
+  is the argument for reading them rather than against it.
   **Genealogy III's BLOCK 2 is read and corrected as of 2026-08-17; its
   BLOCK 1 is not, and the distinction is the whole of what is known.** Block 2
   gave up **two placement errors on one bracket column**, both settled by the

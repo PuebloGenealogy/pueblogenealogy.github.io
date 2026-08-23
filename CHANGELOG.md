@@ -101,7 +101,29 @@ keeper `handoff-2026-08-09-search-link-safari-scroll` remains. A delete-push
 from the remote session reported `send-pack: unexpected disconnect` and
 **had in fact succeeded** — the Mac's later attempt returned `remote ref does
 not exist`. So that failure mode is not always a failure; check `ls-remote`
-before assuming the ref survived.
+before assuming the ref survived. **A second one that day reported the same
+error and had NOT succeeded**, so the error text is evidence of nothing in
+either direction; `ls-remote` is the only answer. GitHub's auto-delete-on-merge
+failed on all three of PRs #74, #75 and #76.
+
+### What went into `CLAUDE.md`
+
+Three things, because each is a rule that will otherwise be re-derived wrongly:
+
+- **Measure the populations before asking for a photograph** — the method
+  above, in the magnification-floor block, with the caveats that make it safe
+  (controls from the same plate and row band, an inventory that reconciles).
+- **A remote session can run the whole publish loop except gate 6 and
+  `--refresh`**, `laguna-search` included — `add_repo` attaches it and the
+  clone is a real checkout. The *Environment* section had implied the re-vendor
+  was Mac-only.
+- **The Mac's checkouts are the ones most likely to be stale**, plus the
+  `find ~` backup trap, both under *Environment*.
+
+And the *Outstanding* list's claim that "248 and 249's medial marks are the
+open item" is corrected — that flag is closed, **but the plate is not**: the
+other 273 entries have still never been read for orthography, and 248 having
+been wrong is the argument for reading them.
 
 ## 2026-08-23 — Genealogy II's brackets are read, and every plate's placement is now checked
 
