@@ -52,15 +52,39 @@ links) and `--public` exits 0 — 7 pages, 10 JSON-LD blocks valid, leak gate
 clear. The only pages that moved in substance are `genealogy-ii/`; everything
 else differs by the **date** alone.
 
-### Owed, and not doable from a remote session
+### Published, and re-vendored
 
-**A publish and a re-vendor are both owed.** This is a plate data change, so
-`laguna-search`'s index is stale by the standing rule (*always when a plate's
-data changes*) — and the index is built by fetching these pages, so the order
-is publish first, then `build.py --refresh`, then re-vendor if
-`search-index.json` moves. Neither can run here: this session has no route to
-`pueblogenealogy.github.io` (403 to CONNECT, egress policy), which also removes
-`/publish` gate 6. **Run both from the Mac.**
+**Merged to `main` as `de09f56` (PR #74), then the index rebuilt and vendored.**
+The squash carried the whole branch — merged tree and branch-head tree are the
+same object, `fd7675b`.
+
+The re-vendor is the **data shape**: `laguna-search` did not move (still
+`58965e5`), so `index.html` and `search.js` came back byte-identical and only
+`search-index.json` did. **Exactly one record**, `people[351]` = II·248: `name`
+corrected and `nameSeams` `[1, 5]` → `[1, 6]`, the second seam moving one
+character right over the extra apostrophe. `key` stays `oyoyai`, so **gate 4
+still reports the same three namesake pairs with the same one open**;
+`identities`, `namesakes` and `relationships` are byte-identical, and `meta`
+differs only in `generated`. All seven of that project's gates pass.
+`leak_report()` run by hand over all three files in both `vendor/search/` and
+`docs/search/`: clean.
+
+### Two checks still owed, and both need a machine that can reach the site
+
+This session has no route to `pueblogenealogy.github.io` — 403 to CONNECT,
+egress policy, a standing property of the environment rather than a transient
+failure. So:
+
+- **`/publish` gate 6 was not run**: no 200 sweep, no sitemap `<loc>` count, no
+  page-by-page SHA-256 comparison against the live site. A green Pages
+  deployment is **not** a substitute — this repo verifies by hash precisely
+  because the Pages API misreports the deployed commit.
+- **`build.py --refresh` was not run.** The index was built from a `cache/`
+  seeded by hand from the local `docs/` build, the documented shortcut. It is
+  on firmer ground than usual here, because the correction was merged to `main`
+  **first** and the seeded bytes are the merged tree — but the confirming
+  `--refresh` is still owed, and should return the three files byte-identical
+  apart from `meta.generated`. **If it disagrees, re-vendor from it.**
 
 ## 2026-08-23 — Genealogy II's brackets are read, and every plate's placement is now checked
 

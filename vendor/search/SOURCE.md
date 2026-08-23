@@ -7,12 +7,55 @@ next time they are re-vendored, exactly as `docs/` is.
 |---|---|
 | Source | `PuebloGenealogy/laguna-search` (private) |
 | Vendored from | `dist/`, at `58965e5` |
-| Vendored on | 2026-08-21 |
+| Vendored on | 2026-08-23 |
 
 `58965e5` is on that project's **`main`**, merged 2026-08-21. Its
 `claude/resume-jntfyn` branch is fully contained in `main` and is awaiting
 deletion — see `SESSION-NOTES.md`; the session that merged it could not delete
 a remote branch.
+
+## 2026-08-23 — 248's medial marks, and only the index moved
+
+**A re-vendor where the source project did not change at all**, the same shape
+as 2026-08-17's second entry. `laguna-search` is still at `58965e5`; what
+changed is its *input*, because this site corrected Genealogy II·248 from
+`Oyo˙ʼyʼăi` to **`Oyo˙ʼʼy˙ăi`** — two apostrophes before the `y` and a raised
+dot after it, settled by measuring the marks at 1:1 rather than magnifying
+them.
+
+So `index.html` and `search.js` came back **byte-identical** and only
+`search-index.json` moved. **The diff is exactly one record**, and nothing
+else:
+
+```
+people[351]  II·248   name       "Oyo˙ʼyʼăi" -> "Oyo˙ʼʼy˙ăi"
+                      nameSeams  [1, 5] -> [1, 6]
+                      key        "oyoyai" (unchanged)
+```
+
+`identities`, `namesakes` and `relationships` are byte-identical, and `meta`
+differs only in `generated`, 2026-08-21 → 2026-08-23, which is the clock.
+
+**The fold key did not move**, because both `ʼ` and `˙` fold to `""` — so no
+fourth namesake collision was created and **gate 4 still reports the same three
+pairs with the same one open** (II-182 / IV-69). The name-break gate is the one
+that noticed the change at all: the second seam moves one character right,
+which is `NAME_MARKS` doing its job over an extra apostrophe. All seven gates
+pass.
+
+**Built from a cache seeded by hand, and this time the pages were ALREADY
+published.** Egress policy blocks `pueblogenealogy.github.io:443` from this
+session, so `--refresh` cannot run; `cache/` was seeded from the local `docs/`
+build instead. That shortcut is normally justified by "those exact bytes ship
+in the same publish" — here it is stronger, because the correction was
+**merged to `main` first** (`de09f56`, PR #74) and the seeded bytes are the
+merged tree, verified identical to the branch head. **A `--refresh` run is
+still owed** from a machine that can reach the site; it should return these
+three files byte-identical apart from `meta.generated`. If it ever disagrees,
+re-vendor from it.
+
+`leak_report()` run by hand over all three files, in `vendor/search/` and in
+`docs/search/`: clean.
 
 ## 2026-08-21 — the Death filter says what it accepts
 
