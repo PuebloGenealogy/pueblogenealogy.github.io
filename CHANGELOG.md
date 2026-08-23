@@ -69,22 +69,39 @@ differs only in `generated`. All seven of that project's gates pass.
 `leak_report()` run by hand over all three files in both `vendor/search/` and
 `docs/search/`: clean.
 
-### Two checks still owed, and both need a machine that can reach the site
+### Both owed checks were then RUN from the Mac, and both passed
 
-This session has no route to `pueblogenealogy.github.io` — 403 to CONNECT,
-egress policy, a standing property of the environment rather than a transient
-failure. So:
+Recorded here because the interesting result is the **negative** one: the
+cache-seeding shortcut produced exactly what a real fetch produces, so the next
+session that takes it has evidence rather than an argument.
 
-- **`/publish` gate 6 was not run**: no 200 sweep, no sitemap `<loc>` count, no
-  page-by-page SHA-256 comparison against the live site. A green Pages
-  deployment is **not** a substitute — this repo verifies by hash precisely
-  because the Pages API misreports the deployed commit.
-- **`build.py --refresh` was not run.** The index was built from a `cache/`
-  seeded by hand from the local `docs/` build, the documented shortcut. It is
-  on firmer ground than usual here, because the correction was merged to `main`
-  **first** and the seeded bytes are the merged tree — but the confirming
-  `--refresh` is still owed, and should return the three files byte-identical
-  apart from `meta.generated`. **If it disagrees, re-vendor from it.**
+- **`build.py --refresh` re-fetched the live site** (`4 table pages,
+  re-fetched`) and all seven of that project's gates passed. Its `dist/` then
+  compared **byte-identical on all three files** against what this session had
+  vendored from a hand-seeded cache. Gate 4 reported the same three namesake
+  pairs with the same one open, as predicted.
+- **`/publish` gate 6 passed**: all 7 `.html` files under `docs/` match the
+  live site by SHA-256, and the sitemap carries **5** `<loc>` entries — the
+  landing page plus one per plate, with `404.html` and `/search/` deliberately
+  absent.
+
+**Two traps cost a round each, and both are about `find ~` rather than the
+edition.** A `find ~ -name make_chart.py -path '*pueblogenealogy*'` matched an
+**archived backup from 27 July** before it matched the working repo, so the
+first file comparison ran against July's files and reported all three moved —
+a completely plausible wrong answer. Pin the path to the working directory, or
+read the `SITE=`/`D=` line before trusting anything under it. Separately, both
+local checkouts were **behind their remotes** — the site repo at PR #63 and
+`laguna-search` at `80e0d2d` — so the first `--refresh` run was green while
+built from a stale widget. **Check `git log --oneline -1` on both before
+comparing anything.**
+
+The remote branch is gone and `main` is at `324d605`; only the deliberate
+keeper `handoff-2026-08-09-search-link-safari-scroll` remains. A delete-push
+from the remote session reported `send-pack: unexpected disconnect` and
+**had in fact succeeded** — the Mac's later attempt returned `remote ref does
+not exist`. So that failure mode is not always a failure; check `ls-remote`
+before assuming the ref survived.
 
 ## 2026-08-23 — Genealogy II's brackets are read, and every plate's placement is now checked
 
