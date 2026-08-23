@@ -1959,13 +1959,23 @@ to stay *allowed*, so the two must not be combined. Neither is deployed here.
   20 attached to the wrong marriage, and it survived four self-checks, every
   publish gate and ten days of the plate being live. Nothing structural could
   see it: 19 and 20 are both Bear, exactly like their mother, so clan descent
-  cannot discriminate; the counts close either way. **Placement is unverified
-  wherever the user has not personally read it against the scan** — which is
-  true of II (checked 2026-07-30), IV's 5/6/7 (2026-08-10) and **the whole of
-  Genealogy I (2026-08-17: the user read the printed number against every one
-  of its 76 stubs and every number matched)**. Treat a report of a "misaligned"
-  or "broken" bracket as possibly a data error, not automatically a rendering
-  one.
+  cannot discriminate; the counts close either way. Treat a report of a
+  "misaligned" or "broken" bracket as possibly a data error, not automatically
+  a rendering one.
+  **PLACEMENT IS NOW READ ON ALL FOUR PLATES, and the gap that let Genealogy IV
+  ship wrong is closed.** Genealogy I on 2026-08-17 (the printed number against
+  every one of its 76 stubs); Genealogy III's block 2 on 2026-08-17 and block 1
+  the same day; Genealogy IV's 5/6/7 on 2026-08-10; and **Genealogy II, the last
+  of them, on 2026-08-23** — all 52 bracketed groups against the scan, stub by
+  stub, **no correction owed**. See `scripts/plate_audit/TABLE2-BENCH.md`. The
+  old form of this paragraph said placement was unverified wherever *the user*
+  had not personally read it; that is superseded, and the distinction it drew
+  was never the right one — what matters is that the numbers printed against
+  the stubs were read off the scan, not who read them.
+  **Placement read is not orthography read**, and Genealogy II has had only the
+  first. Genealogy III took the two as separate passes (placement 2026-08-17,
+  orthography 2026-08-21) and Genealogy II should too; **248 and 249's medial
+  marks are the open item**.
   **Genealogy III's BLOCK 2 is read and corrected as of 2026-08-17; its
   BLOCK 1 is not, and the distinction is the whole of what is known.** Block 2
   gave up **two placement errors on one bracket column**, both settled by the
@@ -1999,7 +2009,13 @@ to stay *allowed*, so the two must not be combined. Neither is deployed here.
   unable to see a placement error, after Genealogy IV's Bear and Genealogy
   II's 31. When a mother and her candidate alternative share a clan, assume
   **no** structural check is watching.
-- **Genealogy II is published and its reading is closed.** The user re-checked
+- **Genealogy II is published and its reading is closed — and since 2026-08-23
+  that is the strong claim, not the weak one.** The whole plate has been read
+  group by group against the scan: all **52** bracketed groups, the number
+  against every stub, **no correction owed**. That is a different and larger
+  check than the one this bullet used to rest on, which was *the list the user
+  raised* rather than the plate. Both hold.
+  The user re-checked
   their full list on 2026-07-30 and reported **no remaining placement errors**.
   Everything they had flagged is resolved: **31, 32 and 97** via
   `UNATTACHED_BLOCKS`; **49 under 47** confirmed; **154+155 and 232+233** moved
@@ -2070,31 +2086,57 @@ transfer**: the test is that the stub-to-stub gaps hold **nothing below one
 row** (Table 1: 144–148 × 65, 290–292 × 5; Table 3: 24–26 × 43, 49–51 × 19)
 rather than spraying sub-row, and an uncalibrated run produces confident flags
 that are the rig's own noise. Read its README before trusting a number from it.
-**Three of the four plates are calibrated there** — Table 1, Table 3 and, since
-2026-08-18, **Table 4** (144–148 × 27, 290–292 × 2, then a sparse tail).
+**All four plates are calibrated there** — Table 1, Table 3, **Table 4** since
+2026-08-18 (144–148 × 27, 290–292 × 2, then a sparse tail), and **Table 2**
+since 2026-08-23.
 
-**Table 2 is the fourth, and it is HALF calibrated — the distinction is the
-whole of what is known about it.** Added 2026-08-22 (`a5edc8a`). Its **ink**
-reads: 209 stubs, gaps spiking at 50–56, then 100–113, then 152–170, with only
-two below a row. Its **group pairing does not**, and the run's **23 problems are
-not findings about the transcription and not a baseline to diff** — they are
-mostly groups paired by position rather than by leader, and on this plate that
-fallback reaches **across descent blocks**, handing a block-2 group a block-3
-bracket 2000px away. Do not quote a number from a Table 2 run without reading
-the README's Table 2 section first. Three flags were added for it, all
-defaulting to the previous behaviour (`--thresh`, `--yband`, `--xnear`), plus
-`audit.py`'s `--xrefrow`; Table 3's output is byte-identical across the change,
-which is the regression test to re-run if any of them is touched.
+**Table 2's 23 problems ARE a baseline now — that reversed on 2026-08-23 and
+the old sentence is gone.** It was half calibrated when the flags landed
+(`a5edc8a`, 2026-08-22): the **ink** read — 209 stubs, gaps spiking at 50–56,
+then 100–113, then 152–170, only two below a row — while the **pairing** did
+not, so the 23 were guesses and explicitly not a list to diff. All 52 groups
+were then read against the scan and **every one of the 23 is explained**
+(`4120f9c`, PR #72), so it now stands with Table 3's 15 and Table 4's 10:
+**diff the list, don't read it fresh.** The verdicts and the seven mechanisms
+behind them are in `scripts/plate_audit/TABLE2-BENCH.md`; read it and the
+README's Table 2 section before quoting a number. Three flags were added for
+this plate, all defaulting to the previous behaviour (`--thresh`, `--yband`,
+`--xnear`), plus `audit.py`'s `--xrefrow`; Table 3's output is byte-identical
+across the change, which is the regression test to re-run if any is touched.
 
-**The 23 have somewhere to be read now: the bracket bench**, a published
-artifact holding all 52 groups beside a native-resolution crop of the column
-their bracket sits in. It is a **deliverable, not a source** — the script that
-built it lived in a session scratchpad and died with the container, so the
-strips had to be re-cut from the plate on 2026-08-22 and the x windows
-recovered by correlating the published images against the scan. If a bench is
-ever rebuilt from scratch, put its generator in the repo or accept re-running
-the whole pipeline. Its strip geometry, measured: generation 5 is x 4590 wide
-1290, generation 6 x 5750 wide 1250.
+**`--ongrid` is the WRONG TOOL for Table 2 and this is settled — leave it off.**
+Tested at 0.25, 0.35 and 0.45 against that baseline on 2026-08-23. **It assumes
+one row pitch and this plate has two**: its runs of undifferentiated siblings
+sit 42–50px apart against a 51.5px row, so many real stubs are **1.58–1.60 rows**
+from their neighbour, 0.42 off-grid at best. The falling problem count is the
+trap — 23 → 21 → 18, every one of them silence bought by **deleting ink**: at
+0.25 it drops four runs and 22 stubs including a confirmed nine-stub bracket,
+and at 0.45 nine more stubs with three groups' brackets. It rejects per **run**,
+never per stub. And it never does the job anyway: the crease stub it was meant
+to catch sits at the same 1.58-row offset as the real second-pitch stubs, so
+below 0.42 it rejects both and above 0.42 it accepts both. **The generalisable
+half: a filter keyed on one row pitch is unusable on a plate with two, and a
+problem count that falls is not evidence the filter helped.**
+
+**The bracket bench** is a published artifact holding all 52 groups beside a
+native-resolution crop of the column their bracket sits in. It is a
+**deliverable, not a source** — the script that built it lived in a session
+scratchpad and died with the container, so the strips had to be re-cut from the
+plate on 2026-08-22 and the x windows recovered by correlating the published
+images against the scan. If a bench is ever rebuilt from scratch, put its
+generator in the repo or accept re-running the whole pipeline. Its strip
+geometry, measured: generation 5 is x 4590 wide 1290, generation 6 x 5750 wide
+1250. **Its 52 cards were never ticked**; the read was done directly off the
+scan and `TABLE2-BENCH.md` is the verdict record.
+
+**The cheap way to read a plate's stubs is to STACK them.** `stubs.py` — twenty
+lines, written 2026-08-23 and living in a scratchpad — cuts the ~46px band
+around each of a bracket's stub rows and stacks them, hairline-separated, into
+one image. A nine-child group is one picture rather than nine, and a group whose
+stubs are 1500px apart costs exactly what one whose stubs adjoin costs. All 52
+of Genealogy II's groups went in about twenty images. Rebuild it rather than
+hunt for it; identify each group from **the numbers printed against its stubs**,
+never from the rig's pairing, which is the part that cannot be trusted.
 
 **Table 4's calibration overturned what this file predicted would be wrong, and
 the lesson generalises: the row pitch is rarely the problem.** It measured
