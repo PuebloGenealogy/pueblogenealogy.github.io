@@ -196,15 +196,49 @@ runs right into the bracket. 60's line sits two rows above it because
 `See Gen. I, 68` is printed between them, which is what the audit's
 "two rows under 60" model is for.
 
-## Suggested next step for the rig, not taken here
+## `--ongrid` was tried against this baseline, and it is the WRONG TOOL for Table 2
 
-Mechanism 5 is the one a flag might fix: **`--ongrid` is off for Table 2** and
-it is precisely the tool Table 3 uses to reject crease blots, on the grounds
-that a crease lands off the row grid while every real stub sits a whole number
-of rows from its neighbour. Turning it on should drop the (53) group's phantom
-fifth stub. It was **not** changed here, because a flag change has to be
-re-baselined — and until today Table 2 had no baseline to diff against. It has
-one now, which is what makes the experiment safe to run.
+Tested 2026-08-23 at 0.25, 0.35 and 0.45, diffed against the 23. **Leave it
+off. Do not try it again** — the reason is a property of the plate, not a
+tolerance that needs finding.
+
+The idea was that mechanism 5 is what Table 3's `--ongrid` exists to kill: a
+crease lands off the row grid while every real stub sits a whole number of
+rows from its neighbour. **That second half is false on Table 2**, and the
+README already says why one paragraph away — *Table 2 has TWO row pitches*.
+Its runs of undifferentiated siblings are set 42–50px apart against a 51.5px
+normal row, so a great many real stubs sit at **1.58–1.60 rows** from their
+neighbour. That is **0.42 off-grid at best**, and it puts them on the wrong
+side of any threshold tight enough to catch a crease.
+
+The measurements, all against `--row=52`:
+
+| tolerance | verticals | stubs | problems | what happened |
+|---|---|---|---|---|
+| off (baseline) | 51 | 209 | **23** | — |
+| 0.25 | 48 | 187 | 21 | drops 4 runs, 22 stubs |
+| 0.35 | 48 | 187 | 21 | identical to 0.25 |
+| 0.45 | 49 | 200 | 18 | drops 2 runs, 9 stubs |
+
+**The falling problem count is not an improvement, and this is the trap.** At
+0.25 the four runs it drops include **U42's confirmed 9-stub bracket** (gaps of
+1.58 and 1.59 rows) and **the (53) group whole** — so that group goes from
+"brackets 5" (one too many) to "brackets 2" (two too few), which is worse in
+the direction the flag was supposed to fix. At 0.45 the two runs it drops are
+the merged U50+U44 run and U33's upper fragment, **nine real stubs**, taking
+U44, U49 and U50 with them. Five problems go quiet because the ink they
+described was deleted. `--ongrid` rejects per **run**, never per stub, so one
+bad gap costs every stub in the bracket.
+
+**And at no tolerance does it do the job.** The crease stub sits at y 2968,
+which is **1.58 rows** below 122's stub — the *same* off-grid offset as the
+plate's real second-pitch stubs. Confirmed directly: at 0.45 the (53) group
+still comes back with all five, crease included. Below 0.42 the flag rejects
+the crease **and** the real 1.58-row stubs; at or above 0.42 it accepts both.
+There is no value in between, because there is nothing in between.
+
+So the crease has to be caught some other way, or left in the baseline and
+explained — which is what this file does.
 
 ## Open, flagged not settled
 
