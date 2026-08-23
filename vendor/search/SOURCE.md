@@ -49,10 +49,11 @@ session, so `--refresh` cannot run; `cache/` was seeded from the local `docs/`
 build instead. That shortcut is normally justified by "those exact bytes ship
 in the same publish" — here it is stronger, because the correction was
 **merged to `main` first** (`de09f56`, PR #74) and the seeded bytes are the
-merged tree, verified identical to the branch head. **A `--refresh` run is
-still owed** from a machine that can reach the site; it should return these
-three files byte-identical apart from `meta.generated`. If it ever disagrees,
-re-vendor from it.
+merged tree, verified identical to the branch head. **The `--refresh` run was then made from the Mac the same
+day, and it agreed**: it re-fetched the four pages, passed all seven gates, and
+its `dist/` compared **byte-identical on all three files** against what was
+vendored here. So the seeded-cache shortcut is confirmed rather than merely
+argued for — nothing was re-vendored.
 
 `leak_report()` run by hand over all three files, in `vendor/search/` and in
 `docs/search/`: clean.
