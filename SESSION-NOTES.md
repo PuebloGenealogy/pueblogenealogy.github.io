@@ -8,11 +8,21 @@ This file answers one question only: *what would I pick up next?*
 turns up in a session belongs there, not here — this file is designed to be
 thrown away.
 
-Last updated **2026-08-23**. The session read **Genealogy II's brackets, all 52
-groups, against the scan** and found **no correction owed** (PR #72,
-`4120f9c`), then tested `--ongrid` against the resulting baseline and rejected
-it. It also merged PR #71, the previous session's handoff correction. **Nothing
-in `docs/` or `vendor/` has moved since `8a092d5`.**
+Last updated **2026-08-23**. This session distilled Claude Code's own memory
+system: `CLAUDE.md` cut from five inline sections to four `@import`ed
+`memory/*.md` files (durable rules only), two subsystems moved to path-scoped
+`.claude/rules/`, and narrative/historical content moved to on-demand
+`reference/`. Committed and pushed as **`c56b72d`** (16 files, 1,610
+insertions / 1,932 deletions). A fresh Claude Code session confirmed the
+result directly: `/context` reports **56.1K → 23.1K memory tokens (7 → 6
+files)**, and both `.claude/rules/` files load automatically when their
+trigger paths are read. A full preservation audit ran before the four
+superseded originals were removed — nothing durable was lost; see
+`CHANGELOG.md`'s newest entry for the detail. **This touched only how Claude
+loads its own context — no genealogy content, `docs/`, or `vendor/` changed.**
+The previous entry here (Genealogy II's brackets read, `--ongrid` rejected,
+PR #72) is now history, captured below under *Decisions already made* and
+*Closed*.
 
 ## Start here in a new chat
 
