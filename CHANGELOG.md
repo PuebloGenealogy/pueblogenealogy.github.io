@@ -3,7 +3,77 @@
 What changed, when, and anything a future session would otherwise re-derive.
 Newest first.
 
-## 2026-08-23 (latest) — Genealogy II·248's medial marks corrected; 249's confirmed
+## 2026-08-23 (latest) — Second context-optimization pass: `memory/` distilled, `.claude/rules/` and `reference/` added
+
+**Follow-up to the same day's earlier split**, documented in the (uncommitted)
+`Claude-Memory-Optimization.md` note rather than here. That first pass only
+relocated content — five `CLAUDE.md` sections moved verbatim into
+`memory/*.md`, still all `@import`ed, so nothing about what loads
+automatically actually shrank. This pass distills.
+
+### What changed
+
+`memory/` now holds exactly four files — `architecture-and-design.md`,
+`facts-worth-knowing.md`, `standing-decisions.md`, `measurement-gotchas.md` —
+durable rules only, still `@import`ed into `CLAUDE.md` and loaded
+automatically every session. The four files they replace
+(`search-integration.md`, `facts-and-environment.md`, `state-and-policy.md`,
+`working-style.md`) are retired; their content did not move verbatim, it was
+re-sorted three ways:
+
+- **Durable, project-wide rules** stayed in the four `memory/*.md` files above
+  (e.g. the `_FOLD`-map identity rule, promoted into `facts-worth-knowing.md`
+  so it stays always-loaded even though the search-integration content around
+  it moved out).
+- **Durable, but scoped to one subsystem** moved to two new `.claude/rules/`
+  files — `search-integration.md` (triggers on reading a file under
+  `vendor/search/` or `docs/search/`) and `plate-audit.md` (triggers on
+  `scripts/plate_audit/`). Claude Code's own path-scoped-rule mechanism loads
+  these automatically, but only the first time a matching file is actually
+  read in a session — this is triggering, not enforcement.
+- **Narrative, historical, or already-superseded** moved to a new
+  `reference/` directory, on-demand only: `environment-notes.md` plus four
+  `reference/history/*.md` files (`search-pan-threshold.md`,
+  `zenodo-and-exposure-posture.md`, `plate-reading-chronology.md`,
+  `webkit-and-measurement-postmortems.md`) and an `INDEX.md`.
+
+`CLAUDE.md`'s five old pointer-and-`@import` blocks were replaced with one
+always-loaded block (four `@import`s) and one routing section, *Specialized
+references*, listing every `.claude/rules/` and `reference/` file with what
+triggers it or when to read it. Everything else in `CLAUDE.md` — the privacy
+rule, the hard-rules table, the `resume` protocol, *Start here*, *Commands* —
+is byte-identical, confirmed by diff. `SESSION-NOTES.md` had five stale
+pointers repaired (they pointed at content that had just moved) and was not
+otherwise restructured.
+
+### Measured, not estimated
+
+Bytes/characters/lines, counted directly — not from the ~3.5–4.0
+chars/token heuristic, which this file has previously warned against citing
+as if it were measured:
+
+| | Before this pass | After |
+|---|---|---|
+| Always `@import`ed (loads every session) | 155,575 bytes / 154,475 chars / 2,358 lines across `CLAUDE.md` + 5 `memory/*.md` | 57,929 bytes / 57,534 chars / 909 lines across `CLAUDE.md` + 4 `memory/*.md` — **63% smaller** |
+| Conditionally loaded (`.claude/rules/`, opens only when a matching path is first read) | 0 (didn't exist) | 18,365 bytes / 18,221 chars / 298 lines across 2 files |
+| On-demand only (`reference/`, nothing loads it automatically) | 0 (didn't exist) | 29,119 bytes / 28,893 chars / 467 lines across 6 files |
+
+The authoritative measure is Claude Code's own `/context`: **56.1K memory
+tokens across 7 files**, measured on the Mac before this pass (of the 7, 6
+were the `CLAUDE.md` + 5 `memory/*.md` files above; the 7th was not
+identified with certainty — see the session's own report). Re-run `/context`
+after this pass for the real post-optimization figure; a heuristic
+conversion of the byte counts above is not a substitute for it.
+
+### What this doesn't change
+
+No genealogical content changed — no plate, transcription, chart, or
+published page was touched. This is entirely a `CLAUDE.md` /
+`memory/` / `.claude/rules/` / `reference/` / `SESSION-NOTES.md`
+reorganization. Nothing here was committed; the four superseded `memory/*.md`
+files were moved to `memory/_to_delete/` rather than deleted, pending review.
+
+## 2026-08-23 — Genealogy II·248's medial marks corrected; 249's confirmed
 
 **One character reading changed on one plate.** `transcription_ii.py`'s person
 **248** reads **`Oyo˙ʼʼy˙ăi`**, not `Oyo˙ʼyʼăi`: two apostrophes before the

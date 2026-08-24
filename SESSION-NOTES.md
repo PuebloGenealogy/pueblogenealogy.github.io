@@ -22,7 +22,7 @@ in `docs/` or `vendor/` has moved since `8a092d5`.**
    Genealogy II's brackets or the rig's 23, and `scripts/plate_audit/README.md`
    before running anything in that directory.
 4. **If this session is running remotely** — Claude Code on the web rather than
-   the Mac — `CLAUDE.md` → *Environment*. There may be no route to the published
+   the Mac — `reference/environment-notes.md` (on-demand; not auto-loaded). There may be no route to the published
    site, which removes `/publish` gate 6, and a delete-push may be refused; in
    exchange there is Pillow and a headless Chromium, which the Mac has not.
 
@@ -86,8 +86,9 @@ neither is confirmed.
 **Before starting:**
 
 - **`stubs.py` transfers directly** and is what makes this affordable — see
-  `CLAUDE.md`, *The cheap way to read a plate's stubs is to STACK them*. It is
-  twenty lines in a scratchpad; rebuild it, don't hunt for it.
+  `.claude/rules/plate-audit.md` (loads automatically once you open a file
+  under `scripts/plate_audit/`). It is twenty lines in a scratchpad; rebuild
+  it, don't hunt for it.
 - **Past ~8x the resampler invents letterform.** If the scan cannot settle a
   mark, the answer is **a photograph of the page**, not a bigger crop — that is
   what closed Genealogy III's five U+02BD instances after a week of being told
@@ -104,7 +105,7 @@ neither is confirmed.
 | `--xrefrow` for Tables 1, 3 and 4 | small | Turn it on and re-baseline. It should only ever **remove** flags; if it adds one, the assumption is wrong for that plate. Moves three documented baselines, so do it deliberately |
 | Shrink the rig's 23 | half a session | Teach `audit.py` the twice-printed people (169 has two unions and one row) and the continuation rows. **Worth less than it was** — the 23 are explained and diffable now, so this buys tidiness, not signal |
 | Remove `/search/`'s empty-state `Clear filters` | small, **needs you** | Kept deliberately — the only moment a reader can see no control to undo. Offered four times |
-| Widen `/search/`'s Name column | small, **needs you** | Measured across all 620 rows 2026-08-22; numbers in `CLAUDE.md`. A 200px track ends all name wrapping and moves the pan threshold 651 → 735px window, 1:1 with the track floor. Buys **nothing** on row height — that is the Clan column |
+| Widen `/search/`'s Name column | small, **needs you** | Measured across all 620 rows 2026-08-22; numbers in `reference/history/search-pan-threshold.md`. A 200px track ends all name wrapping and moves the pan threshold 651 → 735px window, 1:1 with the track floor. Buys **nothing** on row height — that is the Clan column |
 | The masthead no longer names the edition | **needs you** | A consequence of "Home", not a defect. Flagged, not objected to |
 | **The Safari scroll freeze** | **needs you**, awaiting recurrence | Unchanged and untested. Cherry-pick `938b8e8` onto a fresh branch off current `main` when it next appears — never revive the parked branch. Ask first: **does clicking the prose below the plate free it?** |
 | A better AMNH scan | **needs you** | `2246/158`. **Ask for a photograph first.** `digitallibrary.amnh.org` 403s automated fetches |
@@ -114,8 +115,8 @@ neither is confirmed.
 ## Decisions already made — don't re-litigate
 
 - **`--ongrid` is the wrong tool for Table 2.** Tested at 0.25, 0.35 and 0.45
-  and rejected; the reasoning is in `CLAUDE.md` and the changelog. **Do not try
-  it again** — the crease and the plate's real second-pitch stubs sit at the
+  and rejected; the reasoning is in `.claude/rules/plate-audit.md` and the
+  changelog. **Do not try it again** — the crease and the plate's real second-pitch stubs sit at the
   same 1.58-row offset, so no tolerance separates them, and the falling problem
   count is ink being deleted.
 - **Table 2's 23 problems ARE a baseline now.** Diff the list; do not read it
@@ -167,5 +168,6 @@ neither is confirmed.
 - **The second sort on Genealogy III** — settled at all five instances, U+02BD.
 - **Phonetic glyph rendering** — proven from the cmap and checked on device.
 - **De-indexing**, **Wikidata**, **the custom domain**, **releases and Zenodo** —
-  all closed, with the reasoning in `CLAUDE.md`. A doi reappearing is a
+  all closed, with the reasoning in `reference/history/zenodo-and-exposure-posture.md`
+  (conclusions in `memory/standing-decisions.md`). A doi reappearing is a
   regression.
