@@ -80,20 +80,27 @@ A handoff can be falsified by the act of merging it.
 
 ## The open thread — Genealogy II's orthography
 
-**Placement is now read on all four plates. Orthography is not.**
+**Placement is now read on all four plates. Orthography is not, except for
+248/249, resolved below.**
 
-Genealogy II has had a placement pass and only that. Genealogy III took the two
-separately — placement 2026-08-17, orthography 2026-08-21, all 229 of block 1's
-entries read at 4x with 6–7x confirmation on mark-dense names — and this plate
-should have the same. It is **275 people**, so budget about a session.
+Genealogy II has had a placement pass and, for 248/249 only, an orthography
+check. Genealogy III took the two separately — placement 2026-08-17,
+orthography 2026-08-21, all 229 of block 1's entries read at 4x with 6–7x
+confirmation on mark-dense names — and Genealogy II's remaining people still
+need that same full pass. It is **275 people**, so budget about a session.
 
-**The one concrete open item** is `TABLE2-BENCH.md`'s flag: **248 and 249's
-medial marks**. At 6.5x, 248 reads `Oyo` + a raised dot + what may be **two**
-apostrophes before the `y`, against the transcription's `Oyo˙ʼyʼăi` — one before
-and one after. 249 is the same shape. Both are plausible as transcribed and
-neither is confirmed.
+**248/249's medial marks — resolved 2026-08-23.** `TABLE2-BENCH.md`'s flag
+was closed by measuring the mark/sort populations already present on the page
+rather than by re-cropping or requesting a new photograph: 249 was confirmed
+correct as transcribed; 248 was corrected to `Oyo˙ʼʼy˙ăi`. The correction
+merged in PR #74 (`de09f56`); PR #75 (`324d605`) re-vendored the search
+index to match. Measurement detail:
+`reference/history/plate-reading-chronology.md`; durable method:
+`memory/facts-worth-knowing.md`. There is nothing left to re-investigate on
+248/249 specifically — the open work is the rest of Genealogy II's
+orthography pass.
 
-**Before starting:**
+**Before starting the rest of that pass:**
 
 - **`stubs.py` transfers directly** and is what makes this affordable — see
   `.claude/rules/plate-audit.md` (loads automatically once you open a file

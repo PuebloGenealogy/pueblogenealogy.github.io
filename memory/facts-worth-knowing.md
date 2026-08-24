@@ -114,6 +114,12 @@
   distinguish a mirror from a rotation; look at the crop before trusting a
   number, since a mis-boxed crop fails silently with a plausible-looking
   result. Method and worked numbers: `transcription_iii.py`'s docstring.
+- **When a glyph question is a choice between known mark/sort populations
+  already present on the page, measure those populations first** — don't
+  reach for a bigger crop or a new photograph until that has been tried.
+  Only request a better photograph when the scan itself lacks the evidence
+  to settle the question. (Worked example — Genealogy II's 248/249, resolved
+  2026-08-23: `reference/history/plate-reading-chronology.md`.)
 - **Reading a plate for TYPE is a different job from reading it for
   STRUCTURE**, constrained by the display rather than the scan — chunk into
   tiles ≤420 native px tall rather than magnifying a whole generation band

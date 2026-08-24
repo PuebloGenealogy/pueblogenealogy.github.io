@@ -48,8 +48,13 @@ U+02BD reading — is settled at all five instances, persons 154, 156, 157,
   than the user's list alone — with no correction owed. 116–118's paternity
   was encoded the same day it was first considered (2026-07-30), once the
   user found the citable source (Parsons p. 195, on 47 dying childless).
-  **Orthography has had only the first pass (placement); 248 and 249's medial
-  marks remain the one open reading question on any plate** — see
+  **248 and 249's medial marks were read 2026-08-23**, by measuring the
+  mark/sort populations already present on the page rather than by
+  re-cropping or requesting a new photograph: 249 was confirmed correct as
+  transcribed; 248 was corrected to `Oyo˙ʼʼy˙ăi`. The correction merged in
+  PR #74 (`de09f56`); PR #75 (`324d605`) re-vendored the search index to
+  match. That flag is closed, but **the rest of Genealogy II's orthography
+  has still had only the first pass (placement)** and remains open — see
   `SESSION-NOTES.md` for current status.
 
 **Every one of these placement errors that clan descent missed shared a clan

@@ -18,6 +18,13 @@ instead of the intended one.)
 The repo lives under Google Drive, whose sync daemon can touch `.git`
 mid-write; if git reports object corruption, that's the likely cause.
 
+**Verify checkout identity before comparing repositories or checkouts** —
+run `git log --oneline -1` (and check the remote/branch) rather than
+assuming a path is the active repo. A broad `find ~` can match an archived
+backup (e.g. `_backup-v1-laguna-genealogy-tables-2026-07-27/`, see below)
+before it reaches the active repo, so verify the returned path is the one
+you meant.
+
 ## Remote / web sessions
 
 **A remote session is a different machine, and two of its limits change what
@@ -60,6 +67,10 @@ re-testing it hopefully.**
   or the project — don't assume the target is unwritable in the real repo.
   Use a verified workaround (e.g. shell redirection through a remote-bash
   tool) or a local write path instead.
+- **`/publish`'s remote scope, under current tooling**: gates 1–5 work
+  remotely. Gate 6 (live verification) and a standalone `--refresh` do not —
+  see the no-route-to-the-published-site note above. `laguna-search` can be
+  attached via `add_repo` when gate 8 (re-vendoring) needs it.
 
 ## Plate cropping
 

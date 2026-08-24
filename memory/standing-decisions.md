@@ -42,5 +42,8 @@ Full reasoning and history for each: `reference/history/zenodo-and-exposure-post
   `SITE` in `make_chart.py` never changes; no `CNAME` file is ever added.
 - **All four plates are published and fully read** — placement on all four,
   orthography on Genealogy I, III and IV. Genealogy II has had placement only;
-  its orthography (248/249's medial marks) is the one open reading question on
-  any plate. See `SESSION-NOTES.md` for current status, not this file.
+  its 248/249 medial-marks flag was resolved 2026-08-23 (249 confirmed
+  correct, 248 corrected to `Oyo˙ʼʼy˙ăi`, PR #74/`de09f56` merged, PR
+  #75/`324d605` re-vendored the search index). The rest of Genealogy II's
+  orthography still needs its own pass — treat that as open, not this
+  specific flag. See `SESSION-NOTES.md` for current status, not this file.
